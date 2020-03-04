@@ -2,7 +2,10 @@
 
 This is the successor project of the old [toop-interface](https://github.com/TOOP4EU/toop-interface) and [toop-connector](https://github.com/TOOP4EU/toop-connector) projects.
 
-## New design considerations
+The TOOP Connector NG is a set of shared utility functions that you include in your DC (Data Consumer) and/or DP (Data Provider) to perform common tasks that are required for a safe and interoperable data exchange.
+The TOOP Connector NG is a Java only solution. Other environments like .NET etc. are currently not supported.
+
+## Design considerations
 
 Compared to the old design, certain architectural decisions changed which lead to a new architecture of the TOOP Connector.
 Previously the application was designed to be a separate web application that was deployed between the DC/DP and the AS4 Gateway.
@@ -12,12 +15,14 @@ Major changes compared to the old TOOP Connector:
 * The semantic mapping service invocation was removed. The old solution was not satisfying.
 * The "multiple DPs" option was removed. This responsibility was moved to the DC.
 * The TOOP Directory was replaced by the DSD (Data Service Directory)
+* No external configuration file anymore. Everything must passed as a parameter.
 
 What is now contained in the TOOP Connector NG:
-* Support for creating ASIC containers
-* Support for creating XHE envelopes
-* Support for performing dynamic discovery lookups
-* Support for querying the DSD
-* Support for communicating with the AS4 gateway
+* Support for creating ASIC containers (as before in toop-interface)
+* Support for creating XHE envelopes (new)
+* Support for performing dynamic discovery lookups (as before)
+* Support for Schematron validation of the EDM Requests and Responses (as before)
+* Support for querying the DSD (new - was previously the TOOP Directory)
+* Support for communicating with the AS4 gateway (as before)
 
-Note: the toop-commons project is not affected by these refactorings
+Note: the [toop-commons](https://github.com/TOOP4EU/toop-commons) projects are not affected by these refactorings
