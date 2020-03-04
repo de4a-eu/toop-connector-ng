@@ -12,3 +12,12 @@ Major changes compared to the old TOOP Connector:
 * The semantic mapping service invocation was removed. The old solution was not satisfying.
 * The "multiple DPs" option was removed. This responsibility was moved to the DC.
 * The TOOP Directory was replaced by the DSD (Data Service Directory)
+
+What is now contained in the TOOP Connector NG:
+* Support for creating ASIC containers
+* Support for creating XHE envelopes
+* Support for performing dynamic discovery lookups
+* Support for querying the DSD
+* Support for communicating with the AS4 gateway
+
+Note: the toop-commons project is not affected by these refactorings
