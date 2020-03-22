@@ -74,7 +74,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-xsds-parent-pom</artifactId>
-        <version>2.2.3</version>
+        <version>2.2.4</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -116,7 +116,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>phase4-parent-pom</artifactId>
-        <version>0.9.12</version>
+        <version>0.9.13</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -125,8 +125,49 @@
         <artifactId>ph-asic</artifactId>
         <version>1.5.0</version>
       </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-xhe</artifactId>
+        <version>1.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-poi</artifactId>
+        <version>5.0.7</version>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>jcodemodel</artifactId>
+        <version>3.3.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
+        <artifactId>ph-genericode</artifactId>
+        <version>6.1.0</version>
+      </dependency>
 
       <!-- The sub-projects of this project have a constant version -->
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>toop-regrep</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>toop-commons</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>toop-kafka-client</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>toop-schematron</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>toop-connector-api</artifactId>
@@ -166,6 +207,11 @@
 
   <!-- Sub-projects - must match child directory names; order is important! -->
   <modules>
+    <module>toop-regrep</module>
+    <module>toop-commons</module>
+    <module>toop-kafka-client</module>
+    <module>toop-schematron</module>
+    <module>toop-codelist-tools</module>
   </modules>
   
   <build>
