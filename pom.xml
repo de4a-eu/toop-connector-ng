@@ -66,6 +66,12 @@
       <!-- Import all BOMs -->
       <dependency>
         <groupId>com.helger</groupId>
+        <artifactId>ph-jaxb-pom</artifactId>
+        <version>1.0.3</version>
+        <type>pom</type>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
         <version>9.3.9</version>
         <type>pom</type>
@@ -122,6 +128,13 @@
       </dependency>
       <dependency>
         <groupId>com.helger</groupId>
+        <artifactId>phoss-directory-parent-pom</artifactId>
+        <version>0.8.6</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>com.helger</groupId>
         <artifactId>ph-asic</artifactId>
         <version>1.5.0</version>
       </dependency>
@@ -167,6 +180,11 @@
         <artifactId>toop-schematron</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>toop-interface</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>eu.toop</groupId>
@@ -207,11 +225,12 @@
 
   <!-- Sub-projects - must match child directory names; order is important! -->
   <modules>
+    <module>toop-codelist-tools</module>
     <module>toop-regrep</module>
     <module>toop-commons</module>
     <module>toop-kafka-client</module>
     <module>toop-schematron</module>
-    <module>toop-codelist-tools</module>
+    <module>toop-interface</module>
   </modules>
   
   <build>

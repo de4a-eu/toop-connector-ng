@@ -13,13 +13,12 @@ Work in progress - not functional
 
 Compared to the old design, certain architectural decisions changed which lead to a new architecture of the TOOP Connector.
 Previously the application was designed to be a separate web application that was deployed between the DC/DP and the AS4 Gateway.
-The TOOP Connector NG is a pure library solution that helps you do common stuff on the DC and the DP side.
+The TOOP Connector NG is a both a library and a standalone solution that helps you do common stuff on the DC and the DP side.
 
 Major changes compared to the old TOOP Connector:
 * The semantic mapping service invocation was removed. The old solution was not satisfying.
 * The "multiple DPs" option was removed. This responsibility was moved to the DC.
 * The TOOP Directory was replaced by the DSD (Data Service Directory)
-* No external configuration file anymore. Everything must passed as a parameter.
 
 What is now contained in the TOOP Connector NG:
 * Support for creating ASIC containers (as before in toop-interface)
