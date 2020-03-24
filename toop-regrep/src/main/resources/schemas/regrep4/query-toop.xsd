@@ -1,0 +1,12 @@
+<?xml version = "1.0" encoding = "UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+        attributeFormDefault="unqualified" 
+        elementFormDefault="qualified"
+        targetNamespace="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0" 
+        xmlns:tns="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0"
+        >
+  <include schemaLocation="query.xsd" />
+
+  <!-- [ph] added -->
+  <element name="QueryException" type="tns:QueryExceptionType" />
+</schema>

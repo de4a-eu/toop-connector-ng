@@ -101,7 +101,4 @@
       </extension>
     </complexContent>
   </complexType>
-  <!-- [ph] added -->
-  <element name="QueryException" type="tns:QueryExceptionType" />
-    
 </schema>
