@@ -28,6 +28,7 @@
   <packaging>bundle</packaging>
   <name>toop-regrep</name>
   <description>Library for reading and writing OASIS RegRep documents</description>
+  <url>https://github.com/toop4eu/toop-connector-ng/toop-regrep</url>
   <inceptionYear>2020</inceptionYear>
 
   <licenses>

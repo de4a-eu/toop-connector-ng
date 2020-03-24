@@ -36,13 +36,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-  
-  <scm>
-    <connection>scm:git:git@github.com:toop4eu/toop-interface.git</connection>
-    <developerConnection>scm:git:git@github.com:toop4eu/toop-interface.git</developerConnection>
-    <url>http://github.com/toop4eu/toop-interface</url>
-    <tag>HEAD</tag>
-  </scm>
 
   <organization>
     <name>toop.eu</name>
