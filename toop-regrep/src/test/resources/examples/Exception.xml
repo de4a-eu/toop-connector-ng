@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rs:QueryException xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<rs:RegistryException xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:4.0"
-    xsi:schemaLocation="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0  
-    http://docs.oasis-open.org/regrep/regrep-core/v4.0/os/xsd/query.xsd"
-    xsi:type="rs:AuthorizationExceptionType" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0"
+    xsi:type="rs:AuthorizationExceptionType" 
+    xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0"
     severity="urn:oasis:names:tc:ebxml-regrep:ErrorSeverityType:Error" 
     message="Data requested not found."
     detail="An error occured while getting the requested data. These are the technical details."
@@ -42,4 +41,4 @@
         </rim:SlotValue>
     </rim:Slot>
 
-</rs:QueryException>
+</rs:RegistryException>

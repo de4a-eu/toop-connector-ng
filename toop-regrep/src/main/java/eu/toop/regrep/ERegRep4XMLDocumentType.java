@@ -16,6 +16,7 @@
 package eu.toop.regrep;
 
 import javax.annotation.Nonnull;
+import javax.xml.namespace.QName;
 import javax.xml.validation.Schema;
 
 import com.helger.commons.annotation.Nonempty;
@@ -33,13 +34,14 @@ import com.helger.jaxb.builder.JAXBDocumentType;
  */
 public enum ERegRep4XMLDocumentType implements IJAXBDocumentType
 {
+  REGISTRY_EXCEPTION (eu.toop.regrep.rs.RegistryExceptionType.class, CRegRep4.getAllXSDsQuery ()),
+
   SUBMIT_OBJECTS_REQUEST (eu.toop.regrep.lcm.SubmitObjectsRequest.class, CRegRep4.getAllXSDsLCM ()),
   UPDATE_OBJECTS_REQUEST (eu.toop.regrep.lcm.UpdateObjectsRequest.class, CRegRep4.getAllXSDsLCM ()),
   REMOVE_OBJECTS_REQUEST (eu.toop.regrep.lcm.RemoveObjectsRequest.class, CRegRep4.getAllXSDsLCM ()),
 
   QUERY_REQUEST (eu.toop.regrep.query.QueryRequest.class, CRegRep4.getAllXSDsQuery ()),
   QUERY_RESPONSE (eu.toop.regrep.query.QueryResponse.class, CRegRep4.getAllXSDsQuery ()),
-  QUERY_EXCEPTION (eu.toop.regrep.query.QueryExceptionType.class, CRegRep4.getAllXSDsQuery ()),
 
   VALIDATE_OBJECTS_REQUEST (eu.toop.regrep.spi.ValidateObjectsRequest.class, CRegRep4.getAllXSDsSPI ()),
   VALIDATE_OBJECTS_RESPONSE (eu.toop.regrep.spi.ValidateObjectsResponse.class, CRegRep4.getAllXSDsSPI ()),
@@ -54,6 +56,13 @@ public enum ERegRep4XMLDocumentType implements IJAXBDocumentType
                                    @Nonnull final ICommonsList <ClassPathResource> aXSDs)
   {
     m_aDocType = new JAXBDocumentType (aClass, aXSDs, x -> StringHelper.trimEnd (x, "Type"));
+  }
+
+  private ERegRep4XMLDocumentType (@Nonnull final Class <?> aClass,
+                                   @Nonnull final ICommonsList <ClassPathResource> aXSDs,
+                                   @Nonnull final QName aQName)
+  {
+    m_aDocType = new JAXBDocumentType (aClass, aXSDs, aQName.getNamespaceURI (), aQName.getLocalPart ());
   }
 
   @Nonnull

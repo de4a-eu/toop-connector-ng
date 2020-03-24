@@ -22,9 +22,9 @@ import com.helger.jaxb.builder.JAXBWriterBuilder;
 import eu.toop.regrep.lcm.RemoveObjectsRequest;
 import eu.toop.regrep.lcm.SubmitObjectsRequest;
 import eu.toop.regrep.lcm.UpdateObjectsRequest;
-import eu.toop.regrep.query.QueryExceptionType;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.rs.RegistryExceptionType;
 import eu.toop.regrep.spi.CatalogObjectsRequest;
 import eu.toop.regrep.spi.CatalogObjectsResponse;
 import eu.toop.regrep.spi.FilterObjectsRequest;
@@ -51,6 +51,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   public RegRep4Writer (@Nonnull final ERegRep4XMLDocumentType eDocType)
   {
     super (eDocType);
+    setNamespaceContext (RegRep4NamespaceContext.getInstance ());
   }
 
   /**
@@ -109,14 +110,14 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link QueryExceptionType}.
+   * Create a reader builder for {@link RegistryExceptionType}.
    *
    * @return The builder and never <code>null</code>
    */
   @Nonnull
-  public static RegRep4Writer <QueryExceptionType> queryException ()
+  public static RegRep4Writer <RegistryExceptionType> registryException ()
   {
-    return new RegRep4Writer <> (ERegRep4XMLDocumentType.QUERY_EXCEPTION);
+    return new RegRep4Writer <> (ERegRep4XMLDocumentType.REGISTRY_EXCEPTION);
   }
 
   /**

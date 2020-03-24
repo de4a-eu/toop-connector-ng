@@ -2,14 +2,16 @@ package eu.toop.regrep;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
 import org.junit.Test;
 
-import eu.toop.regrep.query.QueryExceptionType;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.rs.AuthorizationExceptionType;
+import eu.toop.regrep.rs.RegistryExceptionType;
 
 /**
  * Test class for class {@link RegRep4Reader}.
@@ -43,14 +45,15 @@ public final class RegRep4ReaderTest
   }
 
   @Test
-  public void testQueryException ()
+  public void testRegistryException ()
   {
-    final QueryExceptionType qe = RegRep4Reader.queryException ()
-                                               .read (new File ("src/test/resources/examples/Exception.xml"));
-    assertNotNull (qe);
+    final RegistryExceptionType re = RegRep4Reader.registryException ()
+                                                  .read (new File ("src/test/resources/examples/Exception.xml"));
+    assertNotNull (re);
+    assertTrue (re instanceof AuthorizationExceptionType);
 
-    assertEquals ("DD-004", qe.getCode ());
+    assertEquals ("DD-004", re.getCode ());
 
-    assertNotNull (RegRep4Writer.queryException ().getAsBytes (qe));
+    assertNotNull (RegRep4Writer.registryException ().getAsBytes (re));
   }
 }

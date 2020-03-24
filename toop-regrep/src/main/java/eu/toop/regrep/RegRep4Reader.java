@@ -22,9 +22,9 @@ import com.helger.jaxb.builder.JAXBReaderBuilder;
 import eu.toop.regrep.lcm.RemoveObjectsRequest;
 import eu.toop.regrep.lcm.SubmitObjectsRequest;
 import eu.toop.regrep.lcm.UpdateObjectsRequest;
-import eu.toop.regrep.query.QueryExceptionType;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.rs.RegistryExceptionType;
 import eu.toop.regrep.spi.CatalogObjectsRequest;
 import eu.toop.regrep.spi.CatalogObjectsResponse;
 import eu.toop.regrep.spi.FilterObjectsRequest;
@@ -111,14 +111,14 @@ public class RegRep4Reader <JAXBTYPE> extends JAXBReaderBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link QueryExceptionType}.
+   * Create a reader builder for {@link RegistryExceptionType}.
    *
    * @return The builder and never <code>null</code>
    */
   @Nonnull
-  public static RegRep4Reader <QueryExceptionType> queryException ()
+  public static RegRep4Reader <RegistryExceptionType> registryException ()
   {
-    return new RegRep4Reader <> (ERegRep4XMLDocumentType.QUERY_EXCEPTION, QueryExceptionType.class);
+    return new RegRep4Reader <> (ERegRep4XMLDocumentType.REGISTRY_EXCEPTION, RegistryExceptionType.class);
   }
 
   /**
