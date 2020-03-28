@@ -97,7 +97,7 @@ final class ToopKafkaManager
   public static KafkaProducer <String, String> getOrCreateProducer ()
   {
     // Read-lock first
-    KafkaProducer <String, String> ret = s_aRWLock.readLocked ( () -> s_aProducer);
+    KafkaProducer <String, String> ret = s_aRWLock.readLockedGet ( () -> s_aProducer);
     if (ret == null)
     {
       s_aRWLock.writeLock ().lock ();
