@@ -27,6 +27,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.CollectionHelper;
+import com.helger.commons.mime.CMimeType;
 import com.helger.commons.mime.IMimeType;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.peppolid.IDocumentTypeIdentifier;
@@ -52,7 +53,7 @@ import com.helger.xhe.v10.cbc.ProfileIDType;
 @Immutable
 public final class XHEHelper
 {
-  public static final String ID_TOOP = "toop";
+  public static final String ID_TOOP = "TOOP";
 
   private XHEHelper ()
   {}
@@ -151,6 +152,14 @@ public final class XHEHelper
       ret.setPayloadExternalReference (aER);
     }
     return ret;
+  }
+
+  @Nonnull
+  public static PayloadType createXMLPayload (@Nonnull @Nonempty final String sID,
+                                              @Nonnull final IDocumentTypeIdentifier aDocTypeID,
+                                              @Nonnull final IProcessIdentifier aProcessID)
+  {
+    return createPayload (sID, aDocTypeID, aProcessID, CMimeType.APPLICATION_XML, sID + ".xml");
   }
 
   /**

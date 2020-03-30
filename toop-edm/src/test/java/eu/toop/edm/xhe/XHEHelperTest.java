@@ -47,6 +47,7 @@ public final class XHEHelperTest
   {
     assertNotNull (aXHE);
 
+    if (false)
     {
       final XHE10Marshaller x = new XHE10Marshaller (false);
       x.setFormattedOutput (true);
