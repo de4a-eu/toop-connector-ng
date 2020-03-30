@@ -1,0 +1,84 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] --------------------------< eu.toop:toop-edm >--------------------------
+[INFO] Building toop-edm 1.0.0-SNAPSHOT
+[INFO] -------------------------------[ bundle ]-------------------------------
+[INFO] 
+[INFO] --- maven-clean-plugin:3.1.0:clean (default-clean) @ toop-edm ---
+[INFO] Deleting C:\dev\git\toop-connector-ng\toop-edm\target
+[INFO] 
+[INFO] --- maven-jaxb2-plugin:0.14.0:generate (default) @ toop-edm ---
+[INFO] Sources are not up-to-date, XJC will be executed.
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.IdentifierType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.IdentifierType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.IdentifierType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.IdentifierType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.IdentifierType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.IdentifierType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load un.unece.uncefact.data.specification.unqualifieddatatypesschemamodule._2.TextType
+[WARNING] Failed to load com.helger.xsds.ccts.cct.schemamodule.IndicatorType
+[INFO] Episode file [C:\dev\git\toop-connector-ng\toop-edm\target\generated-sources\xjc\META-INF\sun-jaxb.episode] was augmented with if-exists="true" attributes.
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.8:run (default) @ toop-edm ---
+[INFO] Executing tasks
+
+main:
+   [delete] Deleting directory C:\dev\git\toop-connector-ng\toop-edm\target\generated-sources\xjc\oasis\names
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  3.605 s
+[INFO] Finished at: 2020-03-30T22:58:39+02:00
+[INFO] ------------------------------------------------------------------------
