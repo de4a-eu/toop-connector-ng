@@ -15,7 +15,6 @@
  */
 package eu.toop.kafkaclient;
 
-import java.util.Properties;
 import java.util.concurrent.Future;
 
 import javax.annotation.Nonnull;
@@ -77,9 +76,9 @@ final class ToopKafkaManager
 
   @Nonnull
   @ReturnsMutableObject
-  private static Properties _getCreationProperties ()
+  private static ICommonsMap <String, Object> _getCreationProperties ()
   {
-    final Properties aProps = new Properties ();
+    final ICommonsMap <String, Object> aProps = new CommonsHashMap <> ();
     // Use all default props
     aProps.putAll (s_aDefaultProps);
     return aProps;

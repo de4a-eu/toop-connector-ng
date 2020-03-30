@@ -250,6 +250,7 @@
           </signaturesArtifacts>
           <excludes>
             <!-- uses Properties internally -->
+            <exclude>**/MainCreateCert.class</exclude>
             <exclude>**/MEMTest*Servlet*.class</exclude>
             <exclude>eu/toop/connector/mem/def/test/*.class</exclude>
           </excludes>
