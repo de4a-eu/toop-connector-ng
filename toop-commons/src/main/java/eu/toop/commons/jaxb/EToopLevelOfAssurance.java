@@ -39,7 +39,7 @@ public enum EToopLevelOfAssurance implements IHasID <String>
 
   private final String m_sID;
 
-  private EToopLevelOfAssurance (@Nonnull @Nonempty final String sID)
+  EToopLevelOfAssurance (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

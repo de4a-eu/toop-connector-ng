@@ -38,7 +38,7 @@ public enum EToopXMLDocumentType implements IJAXBDocumentType
 
   private final JAXBDocumentType m_aDocType;
 
-  private EToopXMLDocumentType (@Nonnull final Class <?> aClass, @Nonnull final ClassPathResource aXSD)
+  EToopXMLDocumentType (@Nonnull final Class <?> aClass, @Nonnull final ClassPathResource aXSD)
   {
     m_aDocType = new JAXBDocumentType (aClass,
                                        new CommonsArrayList <> (aXSD),

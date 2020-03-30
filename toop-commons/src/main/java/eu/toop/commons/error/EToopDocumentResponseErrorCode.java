@@ -48,8 +48,7 @@ public enum EToopDocumentResponseErrorCode implements IToopErrorCode
   private final String m_sID;
   private final String m_sDisplayName;
 
-  private EToopDocumentResponseErrorCode (@Nonnull @Nonempty final String sID,
-                                          @Nonnull @Nonempty final String sDisplayName)
+  EToopDocumentResponseErrorCode (@Nonnull @Nonempty final String sID, @Nonnull @Nonempty final String sDisplayName)
   {
     m_sID = sID;
     m_sDisplayName = sDisplayName;

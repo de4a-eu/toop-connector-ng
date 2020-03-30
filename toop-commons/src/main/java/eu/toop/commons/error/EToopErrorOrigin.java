@@ -43,7 +43,7 @@ public enum EToopErrorOrigin implements IHasID <String>
 
   private final String m_sID;
 
-  private EToopErrorOrigin (@Nonnull @Nonempty final String sID)
+  EToopErrorOrigin (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

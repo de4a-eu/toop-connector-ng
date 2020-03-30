@@ -46,13 +46,9 @@ public enum EToopErrorCategory implements IHasID <String>
   /** Technical Error */
   TECHNICAL_ERROR ("TechnicalError");
 
-  /** Typo in enum name up to 0.10.0 */
-  @Deprecated
-  public static final EToopErrorCategory RESULT_AGGREGATION = RESULTS_AGGREGATION;
-
   private final String m_sID;
 
-  private EToopErrorCategory (@Nonnull @Nonempty final String sID)
+  EToopErrorCategory (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

@@ -36,6 +36,8 @@ import com.helger.commons.string.ToStringGenerator;
  */
 public class AsicWriteEntry implements Serializable
 {
+  public static final IMimeType FALLBACK_MIME_TYPE = CMimeType.APPLICATION_OCTET_STREAM;
+
   private final String m_sEntryName;
   private final byte [] m_aPayload;
   private final IMimeType m_aMimeType;
@@ -111,7 +113,7 @@ public class AsicWriteEntry implements Serializable
   @Nonnull
   public static AsicWriteEntry create (@Nonnull final AsicReadEntry aEntry)
   {
-    return create (aEntry, CMimeType.APPLICATION_OCTET_STREAM);
+    return create (aEntry, FALLBACK_MIME_TYPE);
   }
 
   /**

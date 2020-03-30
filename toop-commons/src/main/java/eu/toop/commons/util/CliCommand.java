@@ -15,12 +15,16 @@
  */
 package eu.toop.commons.util;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.CommonsLinkedHashMap;
+import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.collection.impl.ICommonsMap;
 
 /**
  * This class parses an argument list with an optional main command
@@ -45,12 +49,12 @@ public class CliCommand
   /**
    * The main command, the first word in the list
    */
-  private String mainCommand;
+  private String m_sMainCommand;
 
   /**
    * The map that associates an option with its parameters
    */
-  private Map <String, List <String>> options;
+  private final ICommonsMap <String, ICommonsList <String>> m_aOptions = new CommonsLinkedHashMap <> ();
 
   /**
    * Private constructor
@@ -61,9 +65,10 @@ public class CliCommand
   /**
    * @return the actual command
    */
+  @Nullable
   public String getMainCommand ()
   {
-    return mainCommand;
+    return m_sMainCommand;
   }
 
   /**
@@ -73,12 +78,35 @@ public class CliCommand
    *        the option
    * @return the parameter list or null (if the map is empty or key doesn't hit)
    */
-  public List <String> getArguments (final String key)
+  public ICommonsList <String> getArguments (final String key)
   {
-    if (options == null || options.size () == 0)
-      return null;
+    return m_aOptions.get (key);
+  }
 
-    return options.get (key);
+  /**
+   * @return the entire options map
+   */
+  public ICommonsMap <String, ICommonsList <String>> getOptions ()
+  {
+    return m_aOptions;
+  }
+
+  /**
+   * @return the parameters that don't have a leading option
+   */
+  public ICommonsList <String> getEmptyParameters ()
+  {
+    return getArguments ("");
+  }
+
+  /**
+   * @param key
+   *        key to check
+   * @return true if the options map contains the given <code>key</code>
+   */
+  public boolean hasOption (final String key)
+  {
+    return m_aOptions.containsKey (key);
   }
 
   /**
@@ -102,29 +130,29 @@ public class CliCommand
    *        word list
    * @return A new command
    */
+  @Nonnull
   public static CliCommand parse (final List <String> words)
   {
     return parse (words, false);
   }
 
+  @Nonnull
   public static CliCommand parse (final List <String> words, final boolean hasMainCommand)
   {
     ValueEnforcer.notEmpty (words, "The word list cannot be null or empty");
 
     final CliCommand command = new CliCommand ();
     if (hasMainCommand)
-      command.mainCommand = words.get (0);
+      command.m_sMainCommand = words.get (0);
 
     final int startIndex = hasMainCommand ? 1 : 0;
+    final int listSize = words.size ();
 
-    if (words.size () > startIndex)
+    if (listSize > startIndex)
     {
-      final Map <String, List <String>> options = new LinkedHashMap <> ();
-
-      final int listSize = words.size ();
       String currentKey = ""; // empty key
-      ArrayList <String> currentList = new ArrayList <> ();
-      options.put (currentKey, currentList);
+      ICommonsList <String> currentList = new CommonsArrayList <> ();
+      command.m_aOptions.put (currentKey, currentList);
 
       for (int i = startIndex; i < listSize; ++i)
       {
@@ -133,8 +161,8 @@ public class CliCommand
         {
           // skip dash
           currentKey = current.substring (1);
-          currentList = new ArrayList <> ();
-          options.put (currentKey, currentList);
+          currentList = new CommonsArrayList <> ();
+          command.m_aOptions.put (currentKey, currentList);
         }
         else
         {
@@ -142,37 +170,7 @@ public class CliCommand
           currentList.add (current);
         }
       }
-      command.options = options;
     }
     return command;
-  }
-
-  /**
-   * @return the entire options map
-   */
-  public Map <String, List <String>> getOptions ()
-  {
-    return options;
-  }
-
-  /**
-   * @return the parameters that don't have a leading option
-   */
-  public List <String> getEmptyParameters ()
-  {
-    return getArguments ("");
-  }
-
-  /**
-   * @param key
-   *        key to check
-   * @return true if the options map contains the given <code>key</code>
-   */
-  public boolean hasOption (final String key)
-  {
-    if (options == null || options.isEmpty ())
-      return false;
-
-    return options.containsKey (key);
   }
 }

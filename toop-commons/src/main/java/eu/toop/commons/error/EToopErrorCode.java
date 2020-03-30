@@ -76,7 +76,7 @@ public enum EToopErrorCode implements IToopErrorCode
 
   private final String m_sID;
 
-  private EToopErrorCode (@Nonnull @Nonempty final String sID)
+  EToopErrorCode (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

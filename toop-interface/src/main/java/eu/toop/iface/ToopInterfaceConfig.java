@@ -79,7 +79,7 @@ public final class ToopInterfaceConfig
                                                            .addPath (PATH_PRIVATE_TOOP_INTERFACE_PROPERTIES)
                                                            .addPath (PATH_TOOP_INTERFACE_PROPERTIES);
 
-    return s_aRWLock.writeLocked ( () -> {
+    return s_aRWLock.writeLockedGet ( () -> {
       s_aConfigFile = aCFB.build ();
       if (s_aConfigFile.isRead ())
       {
@@ -101,7 +101,7 @@ public final class ToopInterfaceConfig
   @Nonnull
   public static ConfigFile getConfigFile ()
   {
-    return s_aRWLock.readLocked ( () -> s_aConfigFile);
+    return s_aRWLock.readLockedGet ( () -> s_aConfigFile);
   }
 
   public static boolean isGlobalDebug ()

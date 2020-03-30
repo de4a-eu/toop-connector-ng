@@ -40,7 +40,7 @@ public enum EConceptType implements IHasID <String>
 
   private final String m_sID;
 
-  private EConceptType (@Nonnull @Nonempty final String sID)
+  EConceptType (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

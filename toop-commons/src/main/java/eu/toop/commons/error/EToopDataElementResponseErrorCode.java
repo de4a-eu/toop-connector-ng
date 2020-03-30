@@ -46,8 +46,7 @@ public enum EToopDataElementResponseErrorCode implements IToopErrorCode
   private final String m_sID;
   private final String m_sDisplayName;
 
-  private EToopDataElementResponseErrorCode (@Nonnull @Nonempty final String sID,
-                                             @Nonnull @Nonempty final String sDisplayName)
+  EToopDataElementResponseErrorCode (@Nonnull @Nonempty final String sID, @Nonnull @Nonempty final String sDisplayName)
   {
     m_sID = sID;
     m_sDisplayName = sDisplayName;

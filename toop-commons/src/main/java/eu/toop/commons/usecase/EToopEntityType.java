@@ -35,7 +35,7 @@ public enum EToopEntityType implements IHasID <String>
 
   private final String m_sID;
 
-  private EToopEntityType (@Nonnull @Nonempty final String sID)
+  EToopEntityType (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }

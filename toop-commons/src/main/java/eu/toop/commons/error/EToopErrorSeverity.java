@@ -35,7 +35,7 @@ public enum EToopErrorSeverity implements IHasID <String>
 
   private final String m_sID;
 
-  private EToopErrorSeverity (@Nonnull @Nonempty final String sID)
+  EToopErrorSeverity (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }
