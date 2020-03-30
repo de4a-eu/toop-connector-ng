@@ -18,7 +18,6 @@ package eu.toop.edm.xhe;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.ICommonsOrderedMap;
@@ -51,16 +50,16 @@ public class TOOPXHEBuilder
    * Add an optional parameter.
    *
    * @param sKey
-   *        Parameter name
+   *        Parameter name. May not be <code>null</code>.
    * @param sValue
-   *        Parameter value
+   *        Parameter value. May not be <code>null</code>.
    * @return this for chaining
    */
   @Nonnull
-  public TOOPXHEBuilder addParameter (@Nonnull @Nonempty final String sKey, @Nonnull @Nonempty final String sValue)
+  public TOOPXHEBuilder addParameter (@Nonnull final String sKey, @Nonnull final String sValue)
   {
-    ValueEnforcer.notEmpty (sKey, "Key");
-    ValueEnforcer.notEmpty (sValue, "Value");
+    ValueEnforcer.notNull (sKey, "Key");
+    ValueEnforcer.notNull (sValue, "Value");
     m_aParams.put (sKey, sValue);
     return this;
   }
@@ -140,6 +139,27 @@ public class TOOPXHEBuilder
     return this;
   }
 
+  /**
+   * @return <code>true</code> if all mandatory fields are set and build will
+   *         succeed.
+   */
+  public boolean areAllMandatoryFieldsSet ()
+  {
+    return m_aFromParty != null &&
+           m_aToParty != null &&
+           m_aDocTypeID != null &&
+           m_aProcessID != null &&
+           m_ePayloadType != null;
+  }
+
+  /**
+   * Build the respective TOOP XHE. This method can be called over and over
+   * again and will always create new XHEs.
+   *
+   * @return The new {@link XHE10XHEType} object.
+   * @throws IllegalStateException
+   *         Of any of the mandatory fields is not set
+   */
   @Nonnull
   public XHE10XHEType build ()
   {
