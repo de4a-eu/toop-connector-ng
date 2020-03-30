@@ -13,32 +13,35 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.commons.usecase;
+package eu.toop.commons.xml;
 
 import javax.annotation.Nonnull;
+import javax.xml.XMLConstants;
 
-import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.annotation.ReturnsMutableCopy;
-import com.helger.commons.id.IHasID;
-
-import eu.toop.commons.concept.ConceptValue;
+import com.helger.commons.annotation.Singleton;
+import com.helger.xml.namespace.MapBasedNamespaceContext;
 
 /**
- * Abstract interface for a predefined TOOP concept.
+ * The namespace context to be used as the namespace prefix mapper.
  *
  * @author Philip Helger
- * @since 0.10.8
  */
-public interface IToopConcept extends IHasID <String>
+@Singleton
+public class ToopNamespaceContext extends MapBasedNamespaceContext
 {
-  @Nonnull
-  @Nonempty
-  String getConceptNamespaceURI ();
+  private static final class SingletonHolder
+  {
+    static final ToopNamespaceContext s_aInstance = new ToopNamespaceContext ();
+  }
+
+  protected ToopNamespaceContext ()
+  {
+    addMapping ("xsi", XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
+  }
 
   @Nonnull
-  @ReturnsMutableCopy
-  default ConceptValue getAsConceptValue ()
+  public static ToopNamespaceContext getInstance ()
   {
-    return new ConceptValue (getConceptNamespaceURI (), getID ());
+    return SingletonHolder.s_aInstance;
   }
 }

@@ -30,12 +30,12 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 
+import eu.toop.commons.asic.AsicReadEntry;
+import eu.toop.commons.asic.ToopMessageBuilder140;
+import eu.toop.commons.asic.ToopRequestWithAttachments140;
+import eu.toop.commons.asic.ToopResponseWithAttachments140;
 import eu.toop.commons.dataexchange.v140.TDETOOPRequestType;
 import eu.toop.commons.dataexchange.v140.TDETOOPResponseType;
-import eu.toop.commons.exchange.AsicReadEntry;
-import eu.toop.commons.exchange.ToopMessageBuilder140;
-import eu.toop.commons.exchange.ToopRequestWithAttachments140;
-import eu.toop.commons.exchange.ToopResponseWithAttachments140;
 import eu.toop.iface.ToopInterfaceManager;
 
 @WebServlet ("/to-dp")

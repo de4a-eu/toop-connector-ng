@@ -29,16 +29,16 @@ import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.io.resource.FileSystemResource;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
+import eu.toop.commons.asic.ToopMessageBuilder140;
 import eu.toop.commons.codelist.EPredefinedDocumentTypeIdentifier;
 import eu.toop.commons.codelist.EPredefinedProcessIdentifier;
 import eu.toop.commons.concept.ConceptValue;
 import eu.toop.commons.dataexchange.v140.TDEDataRequestSubjectType;
 import eu.toop.commons.dataexchange.v140.TDETOOPRequestType;
 import eu.toop.commons.dataexchange.v140.TDETOOPResponseType;
-import eu.toop.commons.exchange.ToopMessageBuilder140;
-import eu.toop.commons.jaxb.ToopWriter;
-import eu.toop.commons.jaxb.ToopXSDHelper140;
-import eu.toop.commons.usecase.EToopConcept;
+import eu.toop.commons.pilot.gbm.EToopConcept;
+import eu.toop.commons.xml.ToopWriter;
+import eu.toop.commons.xml.ToopXSDHelper140;
 import oasis.names.specification.ubl.schema.xsd.unqualifieddatatypes_21.IdentifierType;
 
 /**

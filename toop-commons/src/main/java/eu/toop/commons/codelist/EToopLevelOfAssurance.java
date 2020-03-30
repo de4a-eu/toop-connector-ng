@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.commons.usecase;
+package eu.toop.commons.codelist;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,19 +23,23 @@ import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
 
 /**
- * Difference between legal entity and ERegOrgEntityType.
+ * Source: LevelOfAssuranceCode-CodeList.gc
  *
  * @author Philip Helger
  * @since 0.10.0
  */
-public enum EToopEntityType implements IHasID <String>
+public enum EToopLevelOfAssurance implements IHasID <String>
 {
-  LEGAL_ENTITY ("LE"),
-  NATURAL_PERSON ("NP");
+  NONE_120 ("none"),
+  // Casing changed in data model 1.4.0
+  NONE ("None"),
+  LOW ("Low"),
+  SUBSTANTIAL ("Substantial"),
+  HIGH ("High");
 
   private final String m_sID;
 
-  EToopEntityType (@Nonnull @Nonempty final String sID)
+  EToopLevelOfAssurance (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }
@@ -48,8 +52,8 @@ public enum EToopEntityType implements IHasID <String>
   }
 
   @Nullable
-  public static EToopEntityType getFromIDOrNull (@Nullable final String sID)
+  public static EToopLevelOfAssurance getFromIDOrNull (@Nullable final String sID)
   {
-    return EnumHelper.getFromIDOrNull (EToopEntityType.class, sID);
+    return EnumHelper.getFromIDOrNull (EToopLevelOfAssurance.class, sID);
   }
 }

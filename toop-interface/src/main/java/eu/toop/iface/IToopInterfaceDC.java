@@ -19,8 +19,8 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import eu.toop.commons.asic.ToopResponseWithAttachments140;
 import eu.toop.commons.dataexchange.v140.TDETOOPResponseType;
-import eu.toop.commons.exchange.ToopResponseWithAttachments140;
 
 /**
  * This interface must be implemented by DC receiving components to retrieve

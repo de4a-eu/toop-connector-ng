@@ -34,6 +34,8 @@ import com.helger.httpclient.response.ResponseHandlerByteArray;
 import com.helger.pd.searchapi.PDSearchAPIReader;
 import com.helger.pd.searchapi.v1.ResultListType;
 
+import eu.toop.commons.asic.AsicWriteEntry;
+import eu.toop.commons.asic.ToopMessageBuilder140;
 import eu.toop.commons.codelist.EPredefinedDocumentTypeIdentifier;
 import eu.toop.commons.codelist.EPredefinedProcessIdentifier;
 import eu.toop.commons.concept.ConceptValue;
@@ -41,8 +43,6 @@ import eu.toop.commons.dataexchange.v140.TDEDataRequestSubjectType;
 import eu.toop.commons.dataexchange.v140.TDETOOPRequestType;
 import eu.toop.commons.dataexchange.v140.TDETOOPResponseType;
 import eu.toop.commons.error.ToopErrorException;
-import eu.toop.commons.exchange.AsicWriteEntry;
-import eu.toop.commons.exchange.ToopMessageBuilder140;
 import eu.toop.iface.util.HttpClientInvoker;
 import oasis.names.specification.ubl.schema.xsd.unqualifieddatatypes_21.IdentifierType;
 

@@ -13,30 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.commons.util;
+package eu.toop.commons.cli;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import org.junit.Test;
 
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.regex.RegExHelper;
 
-public class CliCommandTest
+/**
+ * Test class for class {@link CliCommand}.
+ * 
+ * @author Philip Helger
+ */
+public final class CliCommandTest
 {
   @Test
   public void parseEmptyCommandList ()
   {
     try
     {
-      CliCommand.parse (new ArrayList <> (), true);
+      CliCommand.parse (new CommonsArrayList <> (), true);
       fail ();
     }
     catch (final IllegalArgumentException ex)
@@ -48,18 +50,18 @@ public class CliCommandTest
   @Test
   public void parseOneCommand ()
   {
-    final CliCommand singleCommand = CliCommand.parse (Arrays.asList ("singleCommand"), true);
+    final CliCommand singleCommand = CliCommand.parse (new CommonsArrayList <> ("singleCommand"), true);
 
     assertEquals ("singleCommand", singleCommand.getMainCommand ());
-    assertNull (singleCommand.getOptions ());
+    assertNotNull (singleCommand.getOptions ());
+    assertTrue (singleCommand.getOptions ().isEmpty ());
   }
 
   @Test
   public void parseComplexCommand () throws Exception
   {
     final String s = "sampleCommand optionwithoutdash1 optionwithoutdash2 -f file1 -q -t option1 option2 -c option3";
-    final String [] tokens = RegExHelper.getSplitToArray (s, "\\s");
-    final CliCommand singleCommand = CliCommand.parse (new CommonsArrayList <> (tokens), true);
+    final CliCommand singleCommand = CliCommand.parse (RegExHelper.getSplitToList (s, "\\s"), true);
 
     assertEquals ("sampleCommand", singleCommand.getMainCommand ());
     assertNotNull (singleCommand.getOptions ());

@@ -19,9 +19,9 @@ import java.io.IOException;
 
 import javax.annotation.Nonnull;
 
+import eu.toop.commons.asic.ToopRequestWithAttachments140;
+import eu.toop.commons.asic.ToopResponseWithAttachments140;
 import eu.toop.commons.dataexchange.v140.TDETOOPRequestType;
-import eu.toop.commons.exchange.ToopRequestWithAttachments140;
-import eu.toop.commons.exchange.ToopResponseWithAttachments140;
 
 /**
  * This interface must be implemented by DP receiving components to retrieve
