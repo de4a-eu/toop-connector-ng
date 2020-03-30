@@ -17,12 +17,14 @@ package eu.toop.edm.schematron;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.schematron.svrl.ISVRLLocationBeautifierSPI;
 import com.helger.xhe.XHE10NamespaceContext;
 
 @IsSPIImplementation
+@Immutable
 public final class TOOPSVRLLocationBeautifier implements ISVRLLocationBeautifierSPI
 {
   @Nullable

@@ -66,6 +66,10 @@
     </dependency>
     <dependency>
       <groupId>eu.toop</groupId>
+      <artifactId>toop-regrep</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>eu.toop</groupId>
       <artifactId>toop-commons</artifactId>
     </dependency>
   

@@ -16,6 +16,7 @@
 package eu.toop.edm.xhe;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.impl.CommonsArrayList;
@@ -34,6 +35,7 @@ import com.helger.xhe.v10.cac.PayloadType;
  *
  * @author Philip Helger
  */
+@NotThreadSafe
 public class TOOPXHEBuilder
 {
   private final ICommonsOrderedMap <String, String> m_aParams = new CommonsLinkedHashMap <> ();

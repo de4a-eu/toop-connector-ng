@@ -224,8 +224,7 @@ public final class XHEHelper
     if (CollectionHelper.isNotEmpty (aPayloadList))
     {
       final PayloadsType aPayloads = new PayloadsType ();
-      for (final PayloadType aPayload : aPayloadList)
-        aPayloads.addPayload (aPayload);
+      aPayloads.getPayload ().addAll (aPayloadList);
       ret.setPayloads (aPayloads);
     }
     return ret;
