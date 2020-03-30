@@ -59,19 +59,11 @@
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>
-      <artifactId>ph-jaxb</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.helger</groupId>
       <artifactId>ph-asic</artifactId>
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>
-      <artifactId>ph-xsds-ccts-cct-schemamodule</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-ubl21</artifactId>
+      <artifactId>ph-schematron</artifactId>
     </dependency>
     
     <dependency>
@@ -106,68 +98,6 @@
           </excludes>
         </configuration>
       </plugin>
-<!--
-      <plugin>
-        <groupId>org.jvnet.jaxb2.maven2</groupId>
-        <artifactId>maven-jaxb2-plugin</artifactId>
-        <version>0.14.0</version>
-        <executions>
-          <execution>
-            <id>toop-exchange-141</id>
-            <goals>
-              <goal>generate</goal>
-            </goals>
-            <configuration>
-              <generateDirectory>${project.build.directory}/generated-sources/toop-exchange-140</generateDirectory>
-              <schemaDirectory>${basedir}/src/main/resources/xsd/toop</schemaDirectory>
-              <schemaIncludes>
-                <schemaInclude>TOOP_DataExchange-1.4.1.xsd</schemaInclude>
-              </schemaIncludes>
-              <bindingIncludes>
-                <bindingInclude>toop-data-exchange-141.xjb</bindingInclude>
-              </bindingIncludes>
-            </configuration>
-          </execution>
-        </executions>
-        <configuration>
-          <bindingDirectory>${basedir}/src/main/jaxb</bindingDirectory>
-          <extension>true</extension>
-          <args>
-            <arg>-no-header</arg>
-            <arg>-Xph-default-locale</arg>
-            <arg>en_US</arg>
-            <arg>-Xph-annotate</arg>
-            <arg>-Xph-fields-private</arg>
-            <arg>-Xph-code-quality</arg>
-            <arg>-Xph-implements</arg>
-            <arg>java.io.Serializable</arg>
-            <arg>-Xph-equalshashcode</arg>
-            <arg>-Xph-tostring</arg>
-            <arg>-Xph-list-extension</arg>
-            <arg>-Xph-csu</arg>
-            <arg>-Xph-cloneable</arg>
-            <arg>-Xph-value-extender</arg>
-          </args>
-          <episodes>
-            <episode>
-              <groupId>com.helger</groupId>
-              <artifactId>ph-xsds-ccts-cct-schemamodule</artifactId>
-            </episode>
-            <episode>
-              <groupId>com.helger</groupId>
-              <artifactId>ph-ubl21</artifactId>
-            </episode>
-          </episodes>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>com.helger</groupId>
-            <artifactId>ph-jaxb22-plugin</artifactId>
-            <version>2.3.2.4</version>
-          </dependency>
-        </dependencies>
-      </plugin>
--->
     </plugins>
   </build>
 </project>
