@@ -45,6 +45,8 @@ import com.helger.jcodemodel.JMethod;
 import com.helger.jcodemodel.JMod;
 import com.helger.jcodemodel.JVar;
 import com.helger.jcodemodel.writer.JCMWriter;
+import com.helger.peppolid.IDocumentTypeIdentifier;
+import com.helger.peppolid.IProcessIdentifier;
 import com.helger.xml.microdom.IMicroDocument;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.serialize.MicroReader;
@@ -107,8 +109,7 @@ public final class MainCreateJavaCodeFromCodeList extends AbstractMain
   {
     final JDefinedClass jEnum = s_aCodeModel._package (RESULT_JAVA_PACKAGE)
                                             ._enum ("EPredefinedDocumentTypeIdentifier")
-                                            ._implements (s_aCodeModel.ref (RESULT_JAVA_PACKAGE +
-                                                                            ".IPredefinedIdentifier"));
+                                            ._implements (s_aCodeModel.ref (IDocumentTypeIdentifier.class));
     jEnum.annotate (CodingStyleguideUnaware.class);
     jEnum.javadoc ().add (DO_NOT_EDIT);
 
@@ -201,6 +202,12 @@ public final class MainCreateJavaCodeFromCodeList extends AbstractMain
 
     // public String getID ()
     m = jEnum.method (JMod.PUBLIC, String.class, "getID");
+    m.annotate (Nonnull.class);
+    m.annotate (Nonempty.class);
+    m.body ()._return (fID);
+
+    // public String getValue ()
+    m = jEnum.method (JMod.PUBLIC, String.class, "getValue");
     m.annotate (Nonnull.class);
     m.annotate (Nonempty.class);
     m.body ()._return (fID);
@@ -398,8 +405,7 @@ public final class MainCreateJavaCodeFromCodeList extends AbstractMain
   {
     final JDefinedClass jEnum = s_aCodeModel._package (RESULT_JAVA_PACKAGE)
                                             ._enum ("EPredefinedProcessIdentifier")
-                                            ._implements (s_aCodeModel.ref (RESULT_JAVA_PACKAGE +
-                                                                            ".IPredefinedIdentifier"));
+                                            ._implements (s_aCodeModel.ref (IProcessIdentifier.class));
     jEnum.annotate (CodingStyleguideUnaware.class);
     jEnum.javadoc ().add (DO_NOT_EDIT);
 
@@ -491,6 +497,12 @@ public final class MainCreateJavaCodeFromCodeList extends AbstractMain
 
     // public String getID ()
     m = jEnum.method (JMod.PUBLIC, String.class, "getID");
+    m.annotate (Nonnull.class);
+    m.annotate (Nonempty.class);
+    m.body ()._return (fID);
+
+    // public String getValue ()
+    m = jEnum.method (JMod.PUBLIC, String.class, "getValue");
     m.annotate (Nonnull.class);
     m.annotate (Nonempty.class);
     m.body ()._return (fID);
