@@ -1,7 +1,6 @@
 package eu.toop.edm.regrep;
 
 import java.math.BigInteger;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
@@ -206,7 +205,7 @@ public final class RegRepHelper
 
   @Nonnull
   public static QueryRequest createQueryRequest (@Nonnull @Nonempty final String sQueryDefinition,
-                                                 @Nonnull @Nonempty final List <? extends SlotType> aSlots)
+                                                 @Nonnull @Nonempty final SlotType... aSlots)
   {
     ValueEnforcer.notEmpty (sQueryDefinition, "sQueryDefinition");
     ValueEnforcer.notEmptyNoNullValue (aSlots, "Slots");
@@ -214,7 +213,8 @@ public final class RegRepHelper
 
     final QueryType aQuery = new QueryType ();
     aQuery.setQueryDefinition (sQueryDefinition);
-    aQuery.getSlot ().addAll (aSlots);
+    for (final SlotType aSlot : aSlots)
+      aQuery.addSlot (aSlot);
     ret.setQuery (aQuery);
     return ret;
   }

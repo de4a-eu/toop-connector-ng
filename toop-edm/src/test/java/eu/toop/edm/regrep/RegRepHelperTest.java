@@ -11,7 +11,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.datetime.PDTFactory;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.xml.serialize.read.DOMReader;
 
@@ -45,15 +45,21 @@ public final class RegRepHelperTest
     final Document aDoc = DOMReader.readXMLDOM ("<root attr='a' xmlns='urn:anything-weird/bla-foo'><child><child2>value</child2></child></root>");
 
     final QueryRequest aQR = RegRepHelper.createQueryRequest ("mock-data-request",
-                                                              new CommonsArrayList <> (RegRepHelper.createSlot ("IssueDateTime",
-                                                                                                                RegRepHelper.createSlotValue (PDTXMLConverter.getXMLCalendarNow ())),
-                                                                                       RegRepHelper.createSlot ("DataConsumerRequestPurpose",
-                                                                                                                RegRepHelper.createSlotValue (RegRepHelper.createInternationalStringType (RegRepHelper.createLocalizedString (Locale.ENGLISH,
-                                                                                                                                                                                                                              "Qualification Procedure in Public Procurement"),
-                                                                                                                                                                                          RegRepHelper.createLocalizedString (Locale.GERMAN,
-                                                                                                                                                                                                                              "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))),
-                                                                                       RegRepHelper.createSlot ("DummyXML",
-                                                                                                                RegRepHelper.createSlotValue (aDoc.getDocumentElement ()))));
+                                                              new SlotBuilder ().setName ("IssueDateTime")
+                                                                                .setValue (PDTXMLConverter.getXMLCalendarNow ())
+                                                                                .build (),
+                                                              new SlotBuilder ().setName ("LocalDateTime")
+                                                                                .setValue (PDTFactory.getCurrentLocalDateTime ())
+                                                                                .build (),
+                                                              new SlotBuilder ().setName ("DataConsumerRequestPurpose")
+                                                                                .setValue (RegRepHelper.createInternationalStringType (RegRepHelper.createLocalizedString (Locale.ENGLISH,
+                                                                                                                                                                           "Qualification Procedure in Public Procurement"),
+                                                                                                                                       RegRepHelper.createLocalizedString (Locale.GERMAN,
+                                                                                                                                                                           "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
+                                                                                .build (),
+                                                              new SlotBuilder ().setName ("DummyXML")
+                                                                                .setValue (aDoc.getDocumentElement ())
+                                                                                .build ());
     _validate (aQR);
   }
 }

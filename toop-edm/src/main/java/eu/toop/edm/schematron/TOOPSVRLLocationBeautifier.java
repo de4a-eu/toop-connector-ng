@@ -23,6 +23,11 @@ import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.schematron.svrl.ISVRLLocationBeautifierSPI;
 import com.helger.xhe.XHE10NamespaceContext;
 
+/**
+ * Beautify Schematron SVRL output.
+ * 
+ * @author Philip Helger
+ */
 @IsSPIImplementation
 @Immutable
 public final class TOOPSVRLLocationBeautifier implements ISVRLLocationBeautifierSPI
