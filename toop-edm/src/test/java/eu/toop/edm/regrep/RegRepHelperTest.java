@@ -11,12 +11,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
-import com.helger.commons.datetime.PDTFactory;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.xml.serialize.read.DOMReader;
 
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
+import eu.toop.regrep.query.QueryResponse;
 
 /**
  * Test class for class {@link RegRepHelper}
@@ -31,25 +31,20 @@ public final class RegRepHelperTest
   {
     assertNotNull (aQR);
 
-    if (true)
-    {
+    if (false)
       LOGGER.info (RegRep4Writer.queryRequest ().setFormattedOutput (true).getAsString (aQR));
-    }
 
     assertNotNull (RegRep4Writer.queryRequest ().getAsDocument (aQR));
   }
 
   @Test
-  public void testBasic ()
+  public void testRequest ()
   {
     final Document aDoc = DOMReader.readXMLDOM ("<root attr='a' xmlns='urn:anything-weird/bla-foo'><child><child2>value</child2></child></root>");
 
     final QueryRequest aQR = RegRepHelper.createQueryRequest ("mock-data-request",
                                                               new SlotBuilder ().setName ("IssueDateTime")
                                                                                 .setValue (PDTXMLConverter.getXMLCalendarNow ())
-                                                                                .build (),
-                                                              new SlotBuilder ().setName ("LocalDateTime")
-                                                                                .setValue (PDTFactory.getCurrentLocalDateTime ())
                                                                                 .build (),
                                                               new SlotBuilder ().setName ("DataConsumerRequestPurpose")
                                                                                 .setValue (RegRepHelper.createInternationalStringType (RegRepHelper.createLocalizedString (Locale.ENGLISH,
@@ -60,6 +55,37 @@ public final class RegRepHelperTest
                                                               new SlotBuilder ().setName ("DummyXML")
                                                                                 .setValue (aDoc.getDocumentElement ())
                                                                                 .build ());
+    _validate (aQR);
+  }
+
+  private static void _validate (@Nonnull final QueryResponse aQR)
+  {
+    assertNotNull (aQR);
+
+    if (true)
+      LOGGER.info (RegRep4Writer.queryResponse ().setFormattedOutput (true).getAsString (aQR));
+
+    assertNotNull (RegRep4Writer.queryResponse ().getAsDocument (aQR));
+  }
+
+  @Test
+  public void testResponse ()
+  {
+    final Document aDoc = DOMReader.readXMLDOM ("<root attr='a' xmlns='urn:anything-weird/bla-foo'><child><child2>value</child2></child></root>");
+
+    final QueryResponse aQR = RegRepHelper.createQueryResponse ("mock-data-Response",
+                                                                new SlotBuilder ().setName ("IssueDateTime")
+                                                                                  .setValue (PDTXMLConverter.getXMLCalendarNow ())
+                                                                                  .build (),
+                                                                new SlotBuilder ().setName ("DataConsumerResponsePurpose")
+                                                                                  .setValue (RegRepHelper.createInternationalStringType (RegRepHelper.createLocalizedString (Locale.ENGLISH,
+                                                                                                                                                                             "Qualification Procedure in Public Procurement"),
+                                                                                                                                         RegRepHelper.createLocalizedString (Locale.GERMAN,
+                                                                                                                                                                             "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
+                                                                                  .build (),
+                                                                new SlotBuilder ().setName ("DummyXML")
+                                                                                  .setValue (aDoc.getDocumentElement ())
+                                                                                  .build ());
     _validate (aQR);
   }
 }

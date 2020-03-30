@@ -159,6 +159,12 @@ public class SlotBuilder
     return setValue (RegRepHelper.createSlotValue (x));
   }
 
+  @Nonnull
+  public SlotBuilder setVocabularyTermValue (@Nonnull final String sVocabulary, @Nonnull final String sTerm)
+  {
+    return setValue (RegRepHelper.createVocabularyTerm (sVocabulary, sTerm));
+  }
+
   /**
    * @return <code>true</code> if all mandatory fields are set and build will
    *         succeed.

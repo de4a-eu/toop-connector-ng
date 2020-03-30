@@ -1,5 +1,7 @@
 package eu.toop.edm.regrep;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.math.BigInteger;
 import java.util.Date;
 import java.util.Locale;
@@ -74,7 +76,10 @@ public final class SlotBuilderTest
                                                  .build (),
                                            _sb ().setValue ("text only").build (),
                                            _sb ().setValue (RegRepHelper.createVocabularyTerm ("myVoc", "myTerm"))
-                                                 .build ());
+                                                 .build (),
+                                           _sb ().setVocabularyTermValue ("myVoc2", "myTerm2").build ());
+    assertNotNull (RegRep4Writer.queryRequest ().getAsDocument (aQR));
+
     LOGGER.info (RegRep4Writer.queryRequest ().setFormattedOutput (true).getAsString (aQR));
   }
 }

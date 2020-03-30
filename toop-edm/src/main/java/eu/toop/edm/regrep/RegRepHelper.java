@@ -16,6 +16,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.regrep.query.QueryRequest;
+import eu.toop.regrep.query.QueryResponse;
 import eu.toop.regrep.query.ResponseOptionType;
 import eu.toop.regrep.rim.AnyValueType;
 import eu.toop.regrep.rim.BooleanValueType;
@@ -216,6 +217,26 @@ public final class RegRepHelper
     for (final SlotType aSlot : aSlots)
       aQuery.addSlot (aSlot);
     ret.setQuery (aQuery);
+    return ret;
+  }
+
+  @Nonnull
+  public static QueryResponse createEmptyQueryResponse ()
+  {
+    final QueryResponse ret = new QueryResponse ();
+    // Assume success
+    ret.setStatus ("urn:oasis:nammes:tc:ebxml-regrep:ResponseStatusType:Success");
+    return ret;
+  }
+
+  @Nonnull
+  public static QueryResponse createQueryResponse (@Nullable final String sRequestID,
+                                                   @Nonnull @Nonempty final SlotType... aSlots)
+  {
+    final QueryResponse ret = createEmptyQueryResponse ();
+    ret.setRequestId (sRequestID);
+    for (final SlotType aSlot : aSlots)
+      ret.addSlot (aSlot);
     return ret;
   }
 }
