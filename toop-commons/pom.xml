@@ -65,6 +65,10 @@
       <groupId>com.helger</groupId>
       <artifactId>ph-schematron</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>peppol-id</artifactId>
+    </dependency>
     
     <dependency>
       <groupId>org.slf4j</groupId>

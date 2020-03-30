@@ -109,6 +109,7 @@ public final class MainCreateJavaCodeFromCodeList extends AbstractMain
   {
     final JDefinedClass jEnum = s_aCodeModel._package (RESULT_JAVA_PACKAGE)
                                             ._enum ("EPredefinedDocumentTypeIdentifier")
+                                            ._implements (s_aCodeModel.ref (RESULT_JAVA_PACKAGE + ".IPredefined"))
                                             ._implements (s_aCodeModel.ref (IDocumentTypeIdentifier.class));
     jEnum.annotate (CodingStyleguideUnaware.class);
     jEnum.javadoc ().add (DO_NOT_EDIT);
@@ -405,6 +406,7 @@ public final class MainCreateJavaCodeFromCodeList extends AbstractMain
   {
     final JDefinedClass jEnum = s_aCodeModel._package (RESULT_JAVA_PACKAGE)
                                             ._enum ("EPredefinedProcessIdentifier")
+                                            ._implements (s_aCodeModel.ref (RESULT_JAVA_PACKAGE + ".IPredefined"))
                                             ._implements (s_aCodeModel.ref (IProcessIdentifier.class));
     jEnum.annotate (CodingStyleguideUnaware.class);
     jEnum.javadoc ().add (DO_NOT_EDIT);
