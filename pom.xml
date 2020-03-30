@@ -94,7 +94,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-web-parent-pom</artifactId>
-        <version>9.1.11</version>
+        <version>9.1.12</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -177,7 +177,7 @@
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-schematron</artifactId>
+        <artifactId>toop-edm</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -229,7 +229,7 @@
     <module>toop-regrep</module>
     <module>toop-commons</module>
     <module>toop-kafka-client</module>
-    <module>toop-schematron</module>
+    <module>toop-edm</module>
     <module>toop-interface</module>
   </modules>
   
