@@ -1,11 +1,14 @@
-# cpsv-ap_xml_schema_v0.01.helper
+This file contains all the changes necessary in the XSDs to make them work in the TOOP context.
 
-Added:
+## cpsv-ap_xml_schema_v0.01.helper
+
+Added
+
 ```xml
 <xsd:element name="Agent" type="AgentType" />
 ```
 
-# dcat-ap.xsd
+## dcat-ap.xsd
 
 ### first
 
