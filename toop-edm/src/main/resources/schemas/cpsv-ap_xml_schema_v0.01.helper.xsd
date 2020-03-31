@@ -32,6 +32,7 @@ version="1.00">
 	<xsd:element name="AgentID" type="cva:CvidentifierType"/>
 	<xsd:element name="AgentHasAddress" type="AddressType"/>
 	<xsd:element name="ContactPointType" type="udt:TextType"/>
+  <xsd:element name="Agent" type="AgentType" />
 
 	<!--	<xsd:element name="AgentName" type="xsd:string"/>
 	<xsd:element name="AgentType" type="xsd:string"/>
