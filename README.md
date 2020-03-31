@@ -29,3 +29,17 @@ What is now contained in the TOOP Connector NG:
 * Support for communicating with the AS4 gateway (as before)
 
 Note: the [toop-commons](https://github.com/TOOP4EU/toop-commons) projects are not affected by these refactorings
+
+## Building
+
+Requires at least
+
+* Java 1.8 or later
+* Apache Maven for building
+
+Do an initial `mvn clean install` on the command line.
+
+Afterwards don't forget to add the following paths to your build path (in the IDE):
+
+* toop-regrep/target/generated-sources/xjc
+* toop-edm/target/generated-sources/xjc
