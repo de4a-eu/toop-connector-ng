@@ -118,7 +118,7 @@
       <plugin>
         <groupId>com.helger.maven</groupId>
         <artifactId>maven-jaxb2-plugin</artifactId>
-        <version>0.14.2-SNAPSHOT</version>
+        <version>0.14.2</version>
         <executions>
           <execution>
             <goals>
@@ -149,10 +149,6 @@
             <arg>-Xph-value-extender</arg>
           </args>
           <episodes>
-            <episode>
-              <groupId>com.helger</groupId>
-              <artifactId>ph-xsds-xmldsig</artifactId>
-            </episode>
             <episode>
               <groupId>com.helger</groupId>
               <artifactId>ph-xsds-ccts-cct-schemamodule</artifactId>
