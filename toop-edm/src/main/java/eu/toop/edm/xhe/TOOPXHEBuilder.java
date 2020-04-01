@@ -26,7 +26,7 @@ import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
 import com.helger.xhe.v10.XHE10XHEType;
-import com.helger.xhe.v10.cac.PayloadType;
+import com.helger.xhe.v10.cac.XHE10PayloadType;
 
 /**
  * TOOP XHE builder.<br>
@@ -176,7 +176,7 @@ public class TOOPXHEBuilder
     if (m_ePayloadType == null)
       throw new IllegalStateException ("PayloadType is missing");
 
-    final PayloadType aPayload = XHEHelper.createXMLPayload (m_ePayloadType.getID (), m_aDocTypeID, m_aProcessID);
+    final XHE10PayloadType aPayload = XHEHelper.createXMLPayload (m_ePayloadType.getID (), m_aDocTypeID, m_aProcessID);
     return XHEHelper.createXHE (m_aParams,
                                 m_aFromParty,
                                 new CommonsArrayList <> (m_aToParty),

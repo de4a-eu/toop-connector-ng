@@ -108,7 +108,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>peppol-commons-parent-pom</artifactId>
-        <version>8.0.2</version>
+        <version>8.0.3</version>
         <scope>import</scope>
         <type>pom</type>
       </dependency>
@@ -141,7 +141,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>ph-xhe</artifactId>
-        <version>1.0.2</version>
+        <version>1.1.0</version>
       </dependency>
       <dependency>
         <groupId>com.helger</groupId>

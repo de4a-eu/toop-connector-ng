@@ -34,16 +34,16 @@ import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
 import com.helger.xhe.v10.XHE10XHEType;
-import com.helger.xhe.v10.cac.BusinessScopeCriterionType;
-import com.helger.xhe.v10.cac.BusinessScopeType;
-import com.helger.xhe.v10.cac.ExternalReferenceType;
-import com.helger.xhe.v10.cac.HeaderType;
-import com.helger.xhe.v10.cac.PartyIdentificationType;
-import com.helger.xhe.v10.cac.PartyType;
-import com.helger.xhe.v10.cac.PayloadType;
-import com.helger.xhe.v10.cac.PayloadsType;
-import com.helger.xhe.v10.cbc.DocumentTypeCodeType;
-import com.helger.xhe.v10.cbc.ProfileIDType;
+import com.helger.xhe.v10.cac.XHE10BusinessScopeCriterionType;
+import com.helger.xhe.v10.cac.XHE10BusinessScopeType;
+import com.helger.xhe.v10.cac.XHE10ExternalReferenceType;
+import com.helger.xhe.v10.cac.XHE10HeaderType;
+import com.helger.xhe.v10.cac.XHE10PartyIdentificationType;
+import com.helger.xhe.v10.cac.XHE10PartyType;
+import com.helger.xhe.v10.cac.XHE10PayloadType;
+import com.helger.xhe.v10.cac.XHE10PayloadsType;
+import com.helger.xhe.v10.cbc.XHE10DocumentTypeCodeType;
+import com.helger.xhe.v10.cbc.XHE10ProfileIDType;
 
 /**
  * Helper class to create XHE data structures more easily.
@@ -69,13 +69,13 @@ public final class XHEHelper
    */
   @Nonnull
   @ReturnsMutableCopy
-  public static BusinessScopeCriterionType createBusinessScopeCriterion (@Nonnull final String sKey,
-                                                                         @Nonnull final String sValue)
+  public static XHE10BusinessScopeCriterionType createBusinessScopeCriterion (@Nonnull final String sKey,
+                                                                              @Nonnull final String sValue)
   {
     ValueEnforcer.notNull (sKey, "Key");
     ValueEnforcer.notNull (sValue, "Value");
 
-    final BusinessScopeCriterionType ret = new BusinessScopeCriterionType ();
+    final XHE10BusinessScopeCriterionType ret = new XHE10BusinessScopeCriterionType ();
     ret.setBusinessScopeCriterionTypeCode (sKey);
     ret.setBusinessScopeCriterionValue (sValue);
     return ret;
@@ -90,10 +90,10 @@ public final class XHEHelper
    */
   @Nonnull
   @ReturnsMutableCopy
-  public static PartyType createParty (@Nonnull final IParticipantIdentifier aParticipantID)
+  public static XHE10PartyType createParty (@Nonnull final IParticipantIdentifier aParticipantID)
   {
-    final PartyType ret = new PartyType ();
-    final PartyIdentificationType aPartyID = new PartyIdentificationType ();
+    final XHE10PartyType ret = new XHE10PartyType ();
+    final XHE10PartyIdentificationType aPartyID = new XHE10PartyIdentificationType ();
     aPartyID.setID (aParticipantID.getValue ()).setSchemeID (aParticipantID.getScheme ());
     ret.addPartyIdentification (aPartyID);
     return ret;
@@ -117,21 +117,21 @@ public final class XHEHelper
    */
   @Nonnull
   @ReturnsMutableCopy
-  public static PayloadType createPayload (@Nonnull @Nonempty final String sID,
-                                           @Nonnull final IDocumentTypeIdentifier aDocTypeID,
-                                           @Nonnull final IProcessIdentifier aProcessID,
-                                           @Nonnull final IMimeType aMimeType,
-                                           @Nonnull @Nonempty final String sFilename)
+  public static XHE10PayloadType createPayload (@Nonnull @Nonempty final String sID,
+                                                @Nonnull final IDocumentTypeIdentifier aDocTypeID,
+                                                @Nonnull final IProcessIdentifier aProcessID,
+                                                @Nonnull final IMimeType aMimeType,
+                                                @Nonnull @Nonempty final String sFilename)
   {
     ValueEnforcer.notEmpty (sID, "ID");
     ValueEnforcer.notNull (aDocTypeID, "DocTypeID");
     ValueEnforcer.notNull (aProcessID, "ProcessID");
     ValueEnforcer.notNull (aMimeType, "MimeType");
 
-    final PayloadType ret = new PayloadType ();
+    final XHE10PayloadType ret = new XHE10PayloadType ();
     ret.setID (sID).setSchemeID (ID_TOOP);
     {
-      final DocumentTypeCodeType aDTC = new DocumentTypeCodeType ();
+      final XHE10DocumentTypeCodeType aDTC = new XHE10DocumentTypeCodeType ();
       aDTC.setValue (aDocTypeID.getValue ());
       aDTC.setListID (aDocTypeID.getScheme ());
       aDTC.setListAgencyID (ID_TOOP);
@@ -139,7 +139,7 @@ public final class XHEHelper
     }
     ret.setContentTypeCode (aMimeType.getAsString ());
     {
-      final ProfileIDType aPID = new ProfileIDType ();
+      final XHE10ProfileIDType aPID = new XHE10ProfileIDType ();
       aPID.setValue (aProcessID.getValue ());
       aPID.setSchemeID (aProcessID.getScheme ());
       aPID.setSchemeAgencyID (ID_TOOP);
@@ -147,7 +147,7 @@ public final class XHEHelper
     }
     ret.setInstanceEncryptionIndicator (false);
     {
-      final ExternalReferenceType aER = new ExternalReferenceType ();
+      final XHE10ExternalReferenceType aER = new XHE10ExternalReferenceType ();
       aER.setID (sFilename);
       ret.setPayloadExternalReference (aER);
     }
@@ -155,9 +155,9 @@ public final class XHEHelper
   }
 
   @Nonnull
-  public static PayloadType createXMLPayload (@Nonnull @Nonempty final String sID,
-                                              @Nonnull final IDocumentTypeIdentifier aDocTypeID,
-                                              @Nonnull final IProcessIdentifier aProcessID)
+  public static XHE10PayloadType createXMLPayload (@Nonnull @Nonempty final String sID,
+                                                   @Nonnull final IDocumentTypeIdentifier aDocTypeID,
+                                                   @Nonnull final IProcessIdentifier aProcessID)
   {
     return createPayload (sID, aDocTypeID, aProcessID, CMimeType.APPLICATION_XML, sID + ".xml");
   }
@@ -172,7 +172,7 @@ public final class XHEHelper
   {
     final XHE10XHEType ret = new XHE10XHEType ();
     ret.setXHEVersionID ("1.0");
-    final HeaderType aHeader = new HeaderType ();
+    final XHE10HeaderType aHeader = new XHE10HeaderType ();
     aHeader.setID (UUID.randomUUID ().toString ());
     aHeader.setCreationDateTime (PDTXMLConverter.getXMLCalendarNow ());
     ret.setHeader (aHeader);
@@ -198,17 +198,17 @@ public final class XHEHelper
   public static XHE10XHEType createXHE (@Nullable final Map <String, String> aParams,
                                         @Nullable final IParticipantIdentifier aFromParty,
                                         @Nonnull final List <IParticipantIdentifier> aToParties,
-                                        @Nullable final List <PayloadType> aPayloadList)
+                                        @Nullable final List <XHE10PayloadType> aPayloadList)
   {
     ValueEnforcer.notEmptyNoNullValue (aToParties, "ToParties");
 
     final XHE10XHEType ret = createEmptyXHE ();
-    final HeaderType aHeader = ret.getHeader ();
+    final XHE10HeaderType aHeader = ret.getHeader ();
 
     // Custom parameters
     if (CollectionHelper.isNotEmpty (aParams))
     {
-      final BusinessScopeType aBusinessScope = new BusinessScopeType ();
+      final XHE10BusinessScopeType aBusinessScope = new XHE10BusinessScopeType ();
       for (final Map.Entry <String, String> aEntry : aParams.entrySet ())
         aBusinessScope.addBusinessScopeCriterion (createBusinessScopeCriterion (aEntry.getKey (), aEntry.getValue ()));
       aHeader.setBusinessScope (aBusinessScope);
@@ -223,7 +223,7 @@ public final class XHEHelper
     // Payloads
     if (CollectionHelper.isNotEmpty (aPayloadList))
     {
-      final PayloadsType aPayloads = new PayloadsType ();
+      final XHE10PayloadsType aPayloads = new XHE10PayloadsType ();
       aPayloads.getPayload ().addAll (aPayloadList);
       ret.setPayloads (aPayloads);
     }
