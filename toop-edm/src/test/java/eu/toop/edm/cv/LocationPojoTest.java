@@ -2,6 +2,8 @@ package eu.toop.edm.cv;
 
 import static org.junit.Assert.assertNotNull;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,6 +18,17 @@ public final class LocationPojoTest
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (LocationPojoTest.class);
 
+  private static void _validate (@Nonnull final LocationPojo x)
+  {
+    final CvlocationType aLocation = x.getAsLocation ();
+    assertNotNull (aLocation);
+
+    final LocationMarshaller m = new LocationMarshaller ();
+    m.setFormattedOutput (true);
+    assertNotNull (m.getAsDocument (aLocation));
+    LOGGER.info (m.getAsString (aLocation));
+  }
+
   @Test
   public void testBasic ()
   {
@@ -25,12 +38,6 @@ public final class LocationPojoTest
                                              "Town",
                                              "PostalCode",
                                              "CountryCode");
-    final CvlocationType aLocation = x.getAsLocation ();
-    assertNotNull (aLocation);
-
-    final LocationMarshaller m = new LocationMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aLocation));
-    LOGGER.info (m.getAsString (aLocation));
+    _validate (x);
   }
 }
