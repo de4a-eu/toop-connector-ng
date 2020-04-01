@@ -1,4 +1,4 @@
-package eu.toop.edm.dc;
+package eu.toop.edm.agent;
 
 import javax.annotation.Nonnull;
 
