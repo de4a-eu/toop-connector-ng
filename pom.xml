@@ -159,9 +159,9 @@
         <version>6.1.0</version>
       </dependency>
       <dependency>
-        <groupId>javax.activation</groupId>
-        <artifactId>activation</artifactId>
-        <version>1.1.1</version>
+        <groupId>com.sun.activation</groupId>
+        <artifactId>jakarta.activation</artifactId>
+        <version>1.2.2</version>
       </dependency>
 
       <!-- The sub-projects of this project have a constant version -->
