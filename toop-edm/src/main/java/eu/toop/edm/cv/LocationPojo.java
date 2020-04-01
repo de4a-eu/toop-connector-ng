@@ -2,16 +2,7 @@ package eu.toop.edm.cv;
 
 import javax.annotation.Nonnull;
 
-import org.w3.ns.corevocabulary.aggregatecomponents.CvaddressType;
-import org.w3.ns.corevocabulary.basiccomponents.AdminunitFirstlineType;
-import org.w3.ns.corevocabulary.basiccomponents.FullCvaddressType;
-import org.w3.ns.corevocabulary.basiccomponents.LocatorDesignatorType;
-import org.w3.ns.corevocabulary.basiccomponents.PostCodeType;
-import org.w3.ns.corevocabulary.basiccomponents.PostNameType;
-import org.w3.ns.corevocabulary.basiccomponents.ThoroughfareType;
 import org.w3.ns.corevocabulary.location.CvlocationType;
-
-import com.helger.commons.string.StringHelper;
 
 public class LocationPojo
 {
@@ -42,45 +33,19 @@ public class LocationPojo
   {
     final CvlocationType ret = new CvlocationType ();
 
-    final CvaddressType aAddress = new CvaddressType ();
-    if (StringHelper.hasText (m_sFullAddress))
-    {
-      final FullCvaddressType aFullAddress = new FullCvaddressType ();
-      aFullAddress.setValue (m_sFullAddress);
-      aAddress.addFullCvaddress (aFullAddress);
-    }
-    if (StringHelper.hasText (m_sStreetName))
-    {
-      final ThoroughfareType aThoroughfare = new ThoroughfareType ();
-      aThoroughfare.setValue (m_sStreetName);
-      aAddress.addThoroughfare (aThoroughfare);
-    }
-    if (StringHelper.hasText (m_sBuildingNumber))
-    {
-      final LocatorDesignatorType aLD = new LocatorDesignatorType ();
-      aLD.setValue (m_sBuildingNumber);
-      aAddress.addLocatorDesignator (aLD);
-    }
-    if (StringHelper.hasText (m_sTown))
-    {
-      final PostNameType aPostName = new PostNameType ();
-      aPostName.setValue (m_sTown);
-      aAddress.addPostName (aPostName);
-    }
-    if (StringHelper.hasText (m_sPostalCode))
-    {
-      final PostCodeType aPostCode = new PostCodeType ();
-      aPostCode.setValue (m_sPostalCode);
-      aAddress.addPostCode (aPostCode);
-    }
-    if (StringHelper.hasText (m_sCountryCode))
-    {
-      final AdminunitFirstlineType aAdmin1 = new AdminunitFirstlineType ();
-      aAdmin1.setValue (m_sCountryCode);
-      aAddress.addAdminunitFirstline (aAdmin1);
-    }
-    ret.addCvaddress (aAddress);
+    ret.addCvaddress (BusinessPojo.createAddress (m_sFullAddress,
+                                                  m_sStreetName,
+                                                  m_sBuildingNumber,
+                                                  m_sTown,
+                                                  m_sPostalCode,
+                                                  m_sCountryCode));
 
     return ret;
+  }
+
+  @Nonnull
+  public static LocationPojo createMinimum ()
+  {
+    return new LocationPojo (null, null, null, null, null, null);
   }
 }

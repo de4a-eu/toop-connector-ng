@@ -40,4 +40,11 @@ public final class LocationPojoTest
                                              "CountryCode");
     _validate (x);
   }
+
+  @Test
+  public void testMinimum ()
+  {
+    final LocationPojo x = LocationPojo.createMinimum ();
+    _validate (x);
+  }
 }

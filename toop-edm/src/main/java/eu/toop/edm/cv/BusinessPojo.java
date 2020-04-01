@@ -1,6 +1,7 @@
 package eu.toop.edm.cv;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import org.w3.ns.corevocabulary.aggregatecomponents.CvaddressType;
 import org.w3.ns.corevocabulary.aggregatecomponents.CvidentifierType;
@@ -56,6 +57,61 @@ public class BusinessPojo
     m_sCountryCode = sCountryCode;
   }
 
+  @Nullable
+  public static CvaddressType createAddress (final String sFullAddress,
+                                             final String sStreetName,
+                                             final String sBuildingNumber,
+                                             final String sTown,
+                                             final String sPostalCode,
+                                             final String sCountryCode)
+  {
+    boolean bAny = false;
+    final CvaddressType aAddress = new CvaddressType ();
+    if (StringHelper.hasText (sFullAddress))
+    {
+      final FullCvaddressType aFullAddress = new FullCvaddressType ();
+      aFullAddress.setValue (sFullAddress);
+      aAddress.addFullCvaddress (aFullAddress);
+      bAny = true;
+    }
+    if (StringHelper.hasText (sStreetName))
+    {
+      final ThoroughfareType aThoroughfare = new ThoroughfareType ();
+      aThoroughfare.setValue (sStreetName);
+      aAddress.addThoroughfare (aThoroughfare);
+      bAny = true;
+    }
+    if (StringHelper.hasText (sBuildingNumber))
+    {
+      final LocatorDesignatorType aLD = new LocatorDesignatorType ();
+      aLD.setValue (sBuildingNumber);
+      aAddress.addLocatorDesignator (aLD);
+      bAny = true;
+    }
+    if (StringHelper.hasText (sTown))
+    {
+      final PostNameType aPostName = new PostNameType ();
+      aPostName.setValue (sTown);
+      aAddress.addPostName (aPostName);
+      bAny = true;
+    }
+    if (StringHelper.hasText (sPostalCode))
+    {
+      final PostCodeType aPostCode = new PostCodeType ();
+      aPostCode.setValue (sPostalCode);
+      aAddress.addPostCode (aPostCode);
+      bAny = true;
+    }
+    if (StringHelper.hasText (sCountryCode))
+    {
+      final AdminunitFirstlineType aAdmin1 = new AdminunitFirstlineType ();
+      aAdmin1.setValue (sCountryCode);
+      aAddress.addAdminunitFirstline (aAdmin1);
+      bAny = true;
+    }
+    return bAny ? aAddress : null;
+  }
+
   @Nonnull
   public CvbusinessType getAsBusiness ()
   {
@@ -101,46 +157,18 @@ public class BusinessPojo
       ret.addIdentifierCvidentifier (aLegalID);
     }
 
-    {
-      final CvaddressType aAddress = new CvaddressType ();
-      if (StringHelper.hasText (m_sFullAddress))
-      {
-        final FullCvaddressType aFullAddress = new FullCvaddressType ();
-        aFullAddress.setValue (m_sFullAddress);
-        aAddress.addFullCvaddress (aFullAddress);
-      }
-      if (StringHelper.hasText (m_sStreetName))
-      {
-        final ThoroughfareType aThoroughfare = new ThoroughfareType ();
-        aThoroughfare.setValue (m_sStreetName);
-        aAddress.addThoroughfare (aThoroughfare);
-      }
-      if (StringHelper.hasText (m_sBuildingNumber))
-      {
-        final LocatorDesignatorType aLD = new LocatorDesignatorType ();
-        aLD.setValue (m_sBuildingNumber);
-        aAddress.addLocatorDesignator (aLD);
-      }
-      if (StringHelper.hasText (m_sTown))
-      {
-        final PostNameType aPostName = new PostNameType ();
-        aPostName.setValue (m_sTown);
-        aAddress.addPostName (aPostName);
-      }
-      if (StringHelper.hasText (m_sPostalCode))
-      {
-        final PostCodeType aPostCode = new PostCodeType ();
-        aPostCode.setValue (m_sPostalCode);
-        aAddress.addPostCode (aPostCode);
-      }
-      if (StringHelper.hasText (m_sCountryCode))
-      {
-        final AdminunitFirstlineType aAdmin1 = new AdminunitFirstlineType ();
-        aAdmin1.setValue (m_sCountryCode);
-        aAddress.addAdminunitFirstline (aAdmin1);
-      }
-      ret.setCvaddress (aAddress);
-    }
+    ret.setCvaddress (createAddress (m_sFullAddress,
+                                     m_sStreetName,
+                                     m_sBuildingNumber,
+                                     m_sTown,
+                                     m_sPostalCode,
+                                     m_sCountryCode));
     return ret;
+  }
+
+  @Nonnull
+  public static BusinessPojo createMinimum ()
+  {
+    return new BusinessPojo (null, null, null, null, null, null, null, null, null, null, null);
   }
 }

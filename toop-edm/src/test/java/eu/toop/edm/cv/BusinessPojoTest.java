@@ -45,4 +45,11 @@ public final class BusinessPojoTest
                                              "CountryCode");
     _validate (x);
   }
+
+  @Test
+  public void testMinimum ()
+  {
+    final BusinessPojo x = BusinessPojo.createMinimum ();
+    _validate (x);
+  }
 }
