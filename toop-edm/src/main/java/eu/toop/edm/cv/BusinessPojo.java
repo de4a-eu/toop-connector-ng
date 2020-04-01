@@ -1,4 +1,4 @@
-package eu.toop.edm.cv.business;
+package eu.toop.edm.cv;
 
 import javax.annotation.Nonnull;
 

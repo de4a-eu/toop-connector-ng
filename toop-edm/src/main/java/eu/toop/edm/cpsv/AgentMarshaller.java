@@ -1,9 +1,7 @@
-package eu.toop.edm.cpsv.agent;
+package eu.toop.edm.cpsv;
 
 import com.helger.jaxb.GenericJAXBMarshaller;
 
-import eu.toop.edm.cpsv.CCPSV;
-import eu.toop.edm.cpsv.CPSVNamespaceContext;
 import eu.toop.edm.jaxb.cpsv.helper.AgentType;
 import eu.toop.edm.jaxb.cpsv.helper.ObjectFactory;
 

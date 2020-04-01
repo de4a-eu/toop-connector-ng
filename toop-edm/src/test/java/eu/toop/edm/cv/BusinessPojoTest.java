@@ -1,4 +1,4 @@
-package eu.toop.edm.cv.business;
+package eu.toop.edm.cv;
 
 import static org.junit.Assert.assertNotNull;
 
