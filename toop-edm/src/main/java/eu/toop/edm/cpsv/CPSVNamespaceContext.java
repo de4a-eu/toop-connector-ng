@@ -1,10 +1,11 @@
-package eu.toop.edm.agent;
+package eu.toop.edm.cpsv;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.annotation.Singleton;
-import com.helger.ubl20.UBL20NamespaceContext;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
+
+import eu.toop.edm.cv.CCVNamespaceContext;
 
 /**
  * XML Namespace context for CPSV
@@ -21,11 +22,10 @@ public class CPSVNamespaceContext extends MapBasedNamespaceContext
 
   protected CPSVNamespaceContext ()
   {
-    addMappings (UBL20NamespaceContext.getInstance ());
+    // Based on CV
+    addMappings (CCVNamespaceContext.getInstance ());
     addMapping ("cpsvh", "http://data.europa.eu/m8g/CPSVAP2.0.Helper");
     addMapping ("cpsv", "http://data.europa.eu/m8g/CPSVAP2.0");
-    addMapping ("cva", "http://www.w3.org/ns/corevocabulary/AggregateComponents");
-    addMapping ("cvb", "http://www.w3.org/ns/corevocabulary/BasicComponents");
   }
 
   @Nonnull

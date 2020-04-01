@@ -1,4 +1,4 @@
-package eu.toop.edm.agent;
+package eu.toop.edm.cpsv.agent;
 
 import javax.annotation.Nonnull;
 
