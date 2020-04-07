@@ -21,11 +21,10 @@ import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.schematron.svrl.ISVRLLocationBeautifierSPI;
-import com.helger.xhe.XHE10NamespaceContext;
 
 /**
  * Beautify Schematron SVRL output.
- * 
+ *
  * @author Philip Helger
  */
 @IsSPIImplementation
@@ -35,7 +34,7 @@ public final class TOOPSVRLLocationBeautifier implements ISVRLLocationBeautifier
   @Nullable
   public String getReplacementText (@Nonnull final String sNamespaceURI, @Nonnull final String sLocalName)
   {
-    final String sPrefix = XHE10NamespaceContext.getInstance ().getCustomPrefix (sNamespaceURI);
+    final String sPrefix = null;
     if (sPrefix != null)
       return sPrefix + ":" + sLocalName;
     return null;

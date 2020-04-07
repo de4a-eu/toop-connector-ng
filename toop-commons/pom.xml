@@ -59,7 +59,11 @@
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>
-      <artifactId>ph-asic</artifactId>
+      <artifactId>ph-bc</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-security</artifactId>
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>

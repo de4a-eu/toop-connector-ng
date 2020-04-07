@@ -135,16 +135,6 @@
       </dependency>
       <dependency>
         <groupId>com.helger</groupId>
-        <artifactId>ph-asic</artifactId>
-        <version>1.5.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.helger</groupId>
-        <artifactId>ph-xhe</artifactId>
-        <version>1.1.0</version>
-      </dependency>
-      <dependency>
-        <groupId>com.helger</groupId>
         <artifactId>ph-poi</artifactId>
         <version>5.0.7</version>
       </dependency>
