@@ -1,7 +1,6 @@
 package eu.toop.edm;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -21,22 +20,21 @@ import eu.toop.edm.jaxb.cpsv.helper.AgentType;
 import eu.toop.edm.regrep.ISlotProvider;
 import eu.toop.edm.regrep.SlotConsentToken;
 import eu.toop.edm.regrep.SlotDataConsumer;
+import eu.toop.edm.regrep.SlotDataProvider;
 import eu.toop.edm.regrep.SlotDataSetIdentifier;
 import eu.toop.edm.regrep.SlotDataSubjectLegalPerson;
 import eu.toop.edm.regrep.SlotDataSubjectNaturalPerson;
 import eu.toop.edm.regrep.SlotIssueDateTime;
 import eu.toop.regrep.RegRepHelper;
-import eu.toop.regrep.query.QueryRequest;
+import eu.toop.regrep.query.QueryResponse;
 
-public class DataRequestCreator
+public class DataResponseCreator
 {
   private static final ICommonsOrderedSet <String> HEADER_SLOTS = new CommonsLinkedHashSet <> (SlotIssueDateTime.NAME,
-                                                                                               SlotDataConsumer.NAME,
-                                                                                               SlotConsentToken.NAME,
-                                                                                               SlotDataSetIdentifier.NAME);
+                                                                                               SlotDataProvider.NAME);
   private final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
 
-  private DataRequestCreator (@Nonnull final ICommonsList <ISlotProvider> aProviders)
+  private DataResponseCreator (@Nonnull final ICommonsList <ISlotProvider> aProviders)
   {
     for (final ISlotProvider aItem : aProviders)
     {
@@ -48,9 +46,9 @@ public class DataRequestCreator
   }
 
   @Nonnull
-  QueryRequest createQueryRequest ()
+  QueryResponse createQueryResponse ()
   {
-    final QueryRequest ret = RegRepHelper.createEmptyQueryRequest ();
+    final QueryResponse ret = RegRepHelper.createEmptyQueryResponse ();
     // All slots outside of query
     for (final String sHeader : HEADER_SLOTS)
     {
@@ -59,9 +57,12 @@ public class DataRequestCreator
         ret.addSlot (aSP.createSlot ());
     }
     // All slots inside of query
-    for (final Map.Entry <String, ISlotProvider> aEntry : m_aProviders.entrySet ())
-      if (!HEADER_SLOTS.contains (aEntry.getKey ()))
-        ret.getQuery ().addSlot (aEntry.getValue ().createSlot ());
+    // TODO
+    // for (final Map.Entry <String, ISlotProvider> aEntry :
+    // m_aProviders.entrySet ())
+    // if (!HEADER_SLOTS.contains (aEntry.getKey ()))
+    // ret.getRegistryObjectList ().getQuery ().addSlot (aEntry.getValue
+    // ().createSlot ());
 
     return ret;
   }
@@ -75,6 +76,7 @@ public class DataRequestCreator
   {
     private LocalDateTime m_aIssueDateTime;
     private AgentType m_aDCAgent;
+    private AgentType m_aDPAgent;
     private String m_sConsentToken;
     private String m_sDataSetIdentifier;
     private CvbusinessType m_aDSLegalPerson;
@@ -101,6 +103,13 @@ public class DataRequestCreator
     public Builder setDataConsumer (@Nullable final AgentType aAgent)
     {
       m_aDCAgent = aAgent;
+      return this;
+    }
+
+    @Nonnull
+    public Builder setDataProvider (@Nullable final AgentType aAgent)
+    {
+      m_aDPAgent = aAgent;
       return this;
     }
 
@@ -135,13 +144,15 @@ public class DataRequestCreator
     }
 
     @Nonnull
-    public QueryRequest build ()
+    public QueryResponse build ()
     {
       final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
       if (m_aIssueDateTime != null)
         x.add (new SlotIssueDateTime (m_aIssueDateTime));
       if (m_aDCAgent != null)
         x.add (new SlotDataConsumer (m_aDCAgent));
+      if (m_aDPAgent != null)
+        x.add (new SlotDataProvider (m_aDPAgent));
       if (m_sConsentToken != null)
         x.add (new SlotConsentToken (m_sConsentToken));
       if (m_sDataSetIdentifier != null)
@@ -151,7 +162,7 @@ public class DataRequestCreator
       else
         if (m_aDSNaturalPerson != null)
           x.add (new SlotDataSubjectNaturalPerson (m_aDSNaturalPerson));
-      return new DataRequestCreator (x).createQueryRequest ();
+      return new DataResponseCreator (x).createQueryResponse ();
     }
   }
 }
