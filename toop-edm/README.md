@@ -12,6 +12,8 @@ Added
 
 ### first
 
+replaced
+
 ```xml
   <xsd:import namespace="http://purl.org/dc/terms/" schemaLocation="skos.xsd"/>
 ```

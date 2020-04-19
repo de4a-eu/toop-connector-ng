@@ -17,11 +17,23 @@ package eu.toop.edm.regrep;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.name.IHasName;
+
 import eu.toop.regrep.rim.SlotType;
 
-@FunctionalInterface
-public interface ISlotProvider <T>
+/**
+ * TOOP slot provider.
+ *
+ * @author Philip Helger
+ */
+public interface ISlotProvider extends IHasName
 {
+  /**
+   * @return A newly created slot. Never <code>null</code>. Each invocation must
+   *         create a new instance.
+   */
   @Nonnull
-  SlotType createSlot (@Nonnull String sName, T aValue);
+  @ReturnsMutableCopy
+  SlotType createSlot ();
 }

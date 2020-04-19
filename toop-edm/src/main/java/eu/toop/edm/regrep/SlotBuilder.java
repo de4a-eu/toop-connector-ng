@@ -26,12 +26,13 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.datetime.util.PDTXMLConverter;
 
+import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.MapType;
 import eu.toop.regrep.rim.SlotType;
@@ -69,9 +70,9 @@ public class SlotBuilder
   }
 
   @Nonnull
-  public SlotBuilder setValue (@Nonnull final Element aElement)
+  public SlotBuilder setValue (@Nonnull final Node aNode)
   {
-    return setValue (RegRepHelper.createSlotValue (aElement));
+    return setValue (RegRepHelper.createSlotValue (aNode));
   }
 
   @Nonnull
