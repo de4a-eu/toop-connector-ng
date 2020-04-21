@@ -74,7 +74,8 @@ public final class MainCreateCodeListsFromExcel extends AbstractMain
     aMarshaller.setFormattedOutput (true);
     if (aMarshaller.write (aCodeList, new File (sFilename)).isFailure ())
       throw new IllegalStateException ("Failed to write file " + sFilename);
-    LOGGER.info ("Wrote Genericode file " + sFilename);
+    if (LOGGER.isInfoEnabled ())
+      LOGGER.info ("Wrote Genericode file " + sFilename);
   }
 
   private static void _emitDocumentTypes (final Sheet aDocumentSheet) throws URISyntaxException

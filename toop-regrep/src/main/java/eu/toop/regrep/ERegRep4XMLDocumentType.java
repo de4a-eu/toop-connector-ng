@@ -52,15 +52,14 @@ public enum ERegRep4XMLDocumentType implements IJAXBDocumentType
 
   private final JAXBDocumentType m_aDocType;
 
-  private ERegRep4XMLDocumentType (@Nonnull final Class <?> aClass,
-                                   @Nonnull final ICommonsList <ClassPathResource> aXSDs)
+  ERegRep4XMLDocumentType (@Nonnull final Class <?> aClass, @Nonnull final ICommonsList <ClassPathResource> aXSDs)
   {
     m_aDocType = new JAXBDocumentType (aClass, aXSDs, x -> StringHelper.trimEnd (x, "Type"));
   }
 
-  private ERegRep4XMLDocumentType (@Nonnull final Class <?> aClass,
-                                   @Nonnull final ICommonsList <ClassPathResource> aXSDs,
-                                   @Nonnull final QName aQName)
+  ERegRep4XMLDocumentType (@Nonnull final Class <?> aClass,
+                           @Nonnull final ICommonsList <ClassPathResource> aXSDs,
+                           @Nonnull final QName aQName)
   {
     m_aDocType = new JAXBDocumentType (aClass, aXSDs, aQName.getNamespaceURI (), aQName.getLocalPart ());
   }
