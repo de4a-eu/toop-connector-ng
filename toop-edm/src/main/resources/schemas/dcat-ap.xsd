@@ -98,6 +98,12 @@
 		The XML serialisation extends the CCTS CodeTye to take advantage of the attributes listID, 
 		listAgencyID, listeVersionID, etc. therein defined. The RDF serialisation uses skos:Concept 
 	-->
+  <xsd:complexType name="RoleType">
+    <xsd:simpleContent>
+      <xsd:extension base="cbc:CodeType" />
+    </xsd:simpleContent>
+  </xsd:complexType>
+  <!--   
 	<xsd:complexType name="RoleType">
 		<xsd:complexContent>
 			<xsd:extension base="cbc:CodeType">
@@ -105,4 +111,5 @@
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
+   -->
 </xsd:schema>

@@ -33,4 +33,18 @@
       <package name="eu.toop.edm.jaxb.cpsv.helper" />
     </schemaBindings>
   </bindings>
+  <bindings schemaLocation="../resources/schemas/CV-CommonAggregateComponents.xsd" node="/xs:schema">
+    <bindings node="//xs:attributeGroup[@name='ThingAttributes']">
+      <bindings node="./xs:attribute[@name='versionId']">
+        <property name="VersionIdAttr"/>
+      </bindings>
+    </bindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/CV-CommonAggregateComponents.xsd" node="/xs:schema">
+    <bindings node="//xs:attributeGroup[@name='ThingAttributes']">
+      <bindings node="./xs:attribute[@name='versionId']">
+        <property name="VersionIdAttr"/>
+      </bindings>
+    </bindings>
+  </bindings>
 </bindings>

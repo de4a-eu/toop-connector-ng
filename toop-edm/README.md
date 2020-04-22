@@ -15,20 +15,6 @@ Added
 replaced
 
 ```xml
-  <xsd:import namespace="http://purl.org/dc/terms/" schemaLocation="skos.xsd"/>
-```
-
-with
-
-```xml
-  <xsd:import namespace="http://www.w3.org/2004/02/skos/core#" schemaLocation="skos.xsd"/>
-```
-
-### second
-
-replaced
-
-```xml
   <xsd:complexType name="RoleType">
     <xsd:complexContent>
       <xsd:extension base="cbc:CodeType">

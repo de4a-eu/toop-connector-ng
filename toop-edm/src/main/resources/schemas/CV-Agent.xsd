@@ -138,7 +138,7 @@
 				<xsd:sequence>
 					<xsd:element ref="size" minOccurs="0"/>
 				</xsd:sequence>
-				<xsd:attributeGroup ref="cac:ThingAttributes"/>
+<!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
 			</xsd:extension>
 		</xsd:complexContent>				
 	</xsd:complexType>
@@ -181,7 +181,7 @@
 				<xsd:sequence>
 					<xsd:group ref="org_OrganizationElements"/>
 				</xsd:sequence>
-				<xsd:attributeGroup ref="cac:ThingAttributes"/>
+<!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
 			</xsd:extension>
 		</xsd:complexContent>		
 	</xsd:complexType>
@@ -195,7 +195,7 @@
 					<xsd:element ref="formalName" minOccurs="0" maxOccurs="unbounded"/>
 					<xsd:element ref="formalLocation" minOccurs="0"/>
 				</xsd:sequence>
-				<xsd:attributeGroup ref="cac:ThingAttributes"/>
+<!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
 			</xsd:extension>
 		</xsd:complexContent>		
 	</xsd:complexType>
@@ -233,7 +233,7 @@
 					<xsd:element ref="placeOfBirth" minOccurs="0" maxOccurs="unbounded"/>
 					<xsd:element ref="placeOfDeath" minOccurs="0" maxOccurs="unbounded"/>					
 				</xsd:sequence>
-				<xsd:attributeGroup ref="cac:ThingAttributes"/>
+<!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
 			</xsd:extension>
 		</xsd:complexContent>		
 	</xsd:complexType>
@@ -254,7 +254,7 @@
 					<xsd:element ref="legalForm" minOccurs="0"/>
 					<xsd:element ref="registeredLocation" minOccurs="0"/>
 				</xsd:sequence>
-				<xsd:attributeGroup ref="cac:ThingAttributes"/>
+<!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
 			</xsd:extension>
 		</xsd:complexContent>		
 	</xsd:complexType>
@@ -272,7 +272,7 @@
 				<xsd:sequence>
 					<xsd:element name="isOwnedBy"/>
 				</xsd:sequence>
-				<xsd:attributeGroup ref="cac:ThingAttributes"/>
+<!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
 			</xsd:extension>
 		</xsd:complexContent>				
 	</xsd:complexType>			
