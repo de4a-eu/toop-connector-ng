@@ -16,7 +16,7 @@
 	<xsd:import namespace="http://data.europa.eu/r5r/"
 		schemaLocation="dcat-ap.xsd"/>
 	<xsd:import namespace="https://semic.org/sa/cv/cagv/agent-2.0.0#"
-		schemaLocation="../../../cagv/2.0.0/xml/CV-Agent.xsd"/>
+		schemaLocation="CV-Agent.xsd"/>
 	<xsd:import namespace="http://xmlns.com/foaf/0.1/"
 		schemaLocation="foaf.xsd"/>
 

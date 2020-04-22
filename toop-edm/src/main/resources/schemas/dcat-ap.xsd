@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- the CAV namespace has not been created yet, hence the same node number for the cccev and the cav, for the time being -->
+<xsd:schema xmlns="http://data.europa.eu/r5r/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#" 
+	xmlns:dct="http://purl.org/dc/terms/"
+	xmlns:foaf="http://xmlns.com/foaf/0.1/"
+	xmlns:adms="http://www.w3.org/ns/adms#"
+	targetNamespace="http://data.europa.eu/r5r/" elementFormDefault="qualified"
+	attributeFormDefault="unqualified" version="2.0.0">
+
+	<xsd:import namespace="http://purl.org/dc/terms/"
+		schemaLocation="dcterms.xsd"/>
+	<xsd:import namespace="https://semic.org/sa/cv/common/cbc-2.0.0#"
+		schemaLocation="CV-CommonBasicComponents.xsd"/>
+	<xsd:import namespace="http://xmlns.com/foaf/0.1/"
+		schemaLocation="foaf.xsd"/>
+	<xsd:import namespace="http://www.w3.org/ns/adms#"
+		schemaLocation="adms.xsd"/>
+
+	<!-- Element declaration -->
+	<!-- data properties -->
+	<!-- rdfs:Resource is mapped (considered equivalent) to xsd:anyURI --> 
+	<xsd:element name="accessURL" type="xsd:anyURI"/>
+	<xsd:element name="downloadURL" type="xsd:anyURI"/>
+	<xsd:element name="endpointURL" type="xsd:anyURI"/>
+	<xsd:element name="endpointDescription" type="xsd:string"/>
+	<xsd:element name="hadRole" type="RoleType"/>
+
+	<!-- object properties -->
+	<xsd:element name="accessService" type="DataServiceType"/>
+	<xsd:element name="distribution" type="DistributionType"/>
+	<xsd:element name="qualifiedRelation" type="RelationshipType"/>
+	<xsd:element name="servesDataset" type="DatasetType"/>
+	<xsd:element name="landingPage" type="foaf:DocumentType"/>	
+	
+	<!-- Classes -->
+	<xsd:element name="Dataset" type="DatasetType"/>
+	<xsd:element name="Distribution" type="DistributionType"/>
+	<xsd:element name="DatasetService" type="DataServiceType"/>
+	<xsd:element name="Relationship" type="RelationshipType"/>
+	<xsd:element name="Role" type="RoleType"/>
+
+	<xsd:complexType name="DatasetType">
+		<xsd:sequence>
+			<xsd:element ref="dct:identifier" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="adms:identifier" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="dct:type" minOccurs="0"/>
+			<xsd:element ref="dct:issued" minOccurs="0"/>
+			<xsd:element ref="dct:modified" minOccurs="0"/>
+			<xsd:element ref="dct:title" minOccurs="1" maxOccurs="unbounded"/>
+			<xsd:element ref="dct:description" minOccurs="1" maxOccurs="unbounded"/>
+			<xsd:element ref="foaf:page" minOccurs="0"/>
+			<xsd:element ref="landingPage" minOccurs="0"/>
+			<xsd:element ref="dct:language" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="dct:creator" minOccurs="0"/>
+			<xsd:element ref="dct:publisher" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="dct:temporal" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element ref="distribution" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element ref="qualifiedRelation" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="DataServiceType">
+		<xsd:sequence>
+			<xsd:element ref="dct:identifier"/>
+			<xsd:element ref="dct:title"/>
+			<xsd:element ref="dct:description" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="dct:acccessRights" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="endpointDescription" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="endpointURL" minOccurs="1" maxOccurs="unbounded"/>
+			<xsd:element ref="servesDataset" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="DistributionType">
+		<xsd:sequence>
+			<xsd:element ref="foaf:page" minOccurs="0"/>
+			<xsd:element ref="dct:issued" minOccurs="0" maxOccurs="1"/>
+			<xsd:element ref="dct:title" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="dct:description" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="dct:format" minOccurs="0"/>
+			<xsd:element ref="accessURL" minOccurs="0"/>
+			<xsd:element ref="downloadURL" minOccurs="0"/>
+			<xsd:element ref="accessService" minOccurs="0" maxOccurs="1"/>			
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="RelationshipType">
+		<xsd:sequence>
+			<xsd:element ref="dct:relation" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element ref="hadRole" minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+	<!--
+		The XML serialisation extends the CCTS CodeTye to take advantage of the attributes listID, 
+		listAgencyID, listeVersionID, etc. therein defined. The RDF serialisation uses skos:Concept 
+	-->
+	<xsd:complexType name="RoleType">
+		<xsd:complexContent>
+			<xsd:extension base="cbc:CodeType">
+				<xsd:sequence/>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
+</xsd:schema>

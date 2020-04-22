@@ -21,7 +21,7 @@
 	<xsd:import namespace="http://xmlns.com/foaf/0.1/" schemaLocation="foaf.xsd"/>
 	<xsd:import namespace="http://www.w3.org/ns/locn#" schemaLocation="locn.xsd"/>
 	<xsd:import namespace="http://www.w3.org/ns/org#" schemaLocation="org.xsd"/>	
-	<xsd:import namespace="http://www.w3.org/ns/regorg#" schemaLocation="../../../rov/2.0.0/xml/regorg.xsd"/>
+	<xsd:import namespace="http://www.w3.org/ns/regorg#" schemaLocation="regorg.xsd"/>
 	<xsd:import namespace="http://www.w3.org/2004/02/skos/core#" schemaLocation="skos.xsd"/>
 	
 	
