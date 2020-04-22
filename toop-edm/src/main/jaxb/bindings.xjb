@@ -21,7 +21,9 @@
           xsi:schemaLocation="http://java.sun.com/xml/ns/jaxb http://java.sun.com/xml/ns/jaxb/bindingschema_2_0.xsd" 
           version="2.1" 
           xmlns="http://java.sun.com/xml/ns/jaxb">
-  <globalBindings typesafeEnumMaxMembers="2000" typesafeEnumMemberName="generateError">
+  <globalBindings fixedAttributeAsConstantProperty="true"
+                  typesafeEnumMemberName="generateError"
+                  underscoreBinding="asCharInWord">
   </globalBindings>
   <bindings schemaLocation="../resources/schemas/cpsv-ap_xml_schema_v0.01.xsd" node="/xs:schema">
     <schemaBindings>
@@ -40,11 +42,43 @@
       </bindings>
     </bindings>
   </bindings>
-  <bindings schemaLocation="../resources/schemas/CV-CommonAggregateComponents.xsd" node="/xs:schema">
-    <bindings node="//xs:attributeGroup[@name='ThingAttributes']">
-      <bindings node="./xs:attribute[@name='versionId']">
-        <property name="VersionIdAttr"/>
-      </bindings>
+  <bindings schemaLocation="../resources/schemas/dcat-ap.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.dcatap" />
+      <nameXmlTransform>
+        <typeName prefix="DCatAP"/>
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+  
+  <!-- 
+  <bindings schemaLocation="../resources/schemas/cccev-2.0.0.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.cccev" />
+      <nameXmlTransform>
+        <typeName prefix="CCCEV"/>
+      </nameXmlTransform>
+    </schemaBindings>
+    <bindings node="./xs:element[@name='concept']">
+      <property name="ConceptProp"/>
+    </bindings>
+    <bindings node="./xs:element[@name='constraint']">
+      <property name="ConstraintProp"/>
+    </bindings>
+    <bindings node="./xs:element[@name='evidence']">
+      <property name="EvidenceProp"/>
     </bindings>
   </bindings>
+  <bindings schemaLocation="../resources/schemas/CV-Agent.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.agent" />
+      <nameXmlTransform>
+        <typeName prefix="CVA"/>
+      </nameXmlTransform>
+    </schemaBindings>
+    <bindings node="./xs:element[@name='channel']">
+      <property name="ChannelProp"/>
+    </bindings>
+  </bindings>
+   -->
 </bindings>

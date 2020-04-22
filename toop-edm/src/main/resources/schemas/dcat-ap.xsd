@@ -36,7 +36,8 @@
 	
 	<!-- Classes -->
 	<xsd:element name="Dataset" type="DatasetType"/>
-	<xsd:element name="Distribution" type="DistributionType"/>
+  <!-- [ph] hack for JAXB -->
+	<xsd:element name="Distribution_" type="DistributionType"/>
 	<xsd:element name="DatasetService" type="DataServiceType"/>
 	<xsd:element name="Relationship" type="RelationshipType"/>
 	<xsd:element name="Role" type="RoleType"/>
