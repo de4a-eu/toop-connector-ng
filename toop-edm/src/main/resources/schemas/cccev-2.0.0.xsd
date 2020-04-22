@@ -82,16 +82,21 @@
 	<xsd:element name="specifiedIn" type="ConceptType"/>
 	
 	<!-- Class declarations -->
-	<xsd:element name="Concept" type="ConceptType"/>
-	<xsd:element name="Constraint" type="ConstraintType"/>
+  <!-- [ph] hack for JAXB -->
+	<xsd:element name="Concept_" type="ConceptType"/>
+  <!-- [ph] hack for JAXB -->
+	<xsd:element name="Constraint_" type="ConstraintType"/>
 	<xsd:element name="Criterion" type="CriterionType"/>
 	<xsd:element name="DocumentReference" type="DocumentReferenceType"/>
 	<xsd:element name="EvidenceTypeList" type="EvidenceTypeListType"/>
 	<xsd:element name="InformationRequirement" type="InformationRequirementType"/>
-	<xsd:element name="PeriodValue" type="cac:PeriodType"/>	
+  <!-- [ph] hack for JAXB -->
+	<xsd:element name="PeriodValue_" type="cac:PeriodType"/>	
 	<xsd:element name="ReferenceFramework" type="ReferenceFrameworkType"/>
-	<xsd:element name="Requirement" type="RequirementType"/>
-	<xsd:element name="Value" type="ValueType"/>
+  <!-- [ph] hack for JAXB -->
+	<xsd:element name="Requirement_" type="RequirementType"/>
+  <!-- [ph] hack for JAXB -->
+	<xsd:element name="Value_" type="ValueType"/>
 
 	<!-- Element definition -->
 

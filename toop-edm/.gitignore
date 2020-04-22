@@ -25,6 +25,7 @@ bin/
 target/
 .idea/
 *.iml
-/.settings/
-/.project
-/.classpath
+.settings/
+.project
+.classpath
+zz

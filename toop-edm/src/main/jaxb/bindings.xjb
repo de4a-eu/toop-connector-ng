@@ -50,6 +50,14 @@
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
+  <bindings schemaLocation="../resources/schemas/CV-Agent.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.agent" />
+      <nameXmlTransform>
+        <typeName prefix="CVA"/>
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
   
   <!-- 
   <bindings schemaLocation="../resources/schemas/cccev-2.0.0.xsd" node="/xs:schema">
@@ -67,17 +75,6 @@
     </bindings>
     <bindings node="./xs:element[@name='evidence']">
       <property name="EvidenceProp"/>
-    </bindings>
-  </bindings>
-  <bindings schemaLocation="../resources/schemas/CV-Agent.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.edm.jaxb.agent" />
-      <nameXmlTransform>
-        <typeName prefix="CVA"/>
-      </nameXmlTransform>
-    </schemaBindings>
-    <bindings node="./xs:element[@name='channel']">
-      <property name="ChannelProp"/>
     </bindings>
   </bindings>
    -->
