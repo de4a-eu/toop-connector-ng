@@ -23,6 +23,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.edm.cv.BusinessMarshaller;
+import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**

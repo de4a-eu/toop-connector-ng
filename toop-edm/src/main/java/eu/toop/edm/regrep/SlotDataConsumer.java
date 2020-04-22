@@ -22,6 +22,7 @@ import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.edm.cpsv.AgentMarshaller;
 import eu.toop.edm.jaxb.cpsv.helper.AgentType;
+import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**

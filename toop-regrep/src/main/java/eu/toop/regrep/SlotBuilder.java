@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.regrep;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -32,7 +32,6 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.datetime.util.PDTXMLConverter;
 
-import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.MapType;
 import eu.toop.regrep.rim.SlotType;

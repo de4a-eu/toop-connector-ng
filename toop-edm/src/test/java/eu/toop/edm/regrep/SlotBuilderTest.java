@@ -35,9 +35,9 @@ import com.helger.commons.mutable.MutableInt;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.xml.serialize.read.DOMReader;
 
-import eu.toop.edm.regrep.SlotBuilder;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
+import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.ValueType;
 

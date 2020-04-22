@@ -20,26 +20,25 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.cpsv.AgentMarshaller;
-import eu.toop.edm.jaxb.cpsv.helper.AgentType;
 import eu.toop.regrep.SlotBuilder;
+import eu.toop.regrep.rim.InternationalStringValueType;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "DataProvider" slot
+ * "Procedure" slot
  *
  * @author Philip Helger
  */
-public class SlotDataProvider implements ISlotProvider
+public class SlotProcedure implements ISlotProvider
 {
-  public static final String NAME = "DataProvider";
+  public static final String NAME = "Procedure";
 
-  private final AgentType m_aAgent;
+  private final InternationalStringValueType m_aString;
 
-  public SlotDataProvider (@Nonnull final AgentType aAgent)
+  public SlotProcedure (@Nonnull final InternationalStringValueType aString)
   {
-    ValueEnforcer.notNull (aAgent, "Agent");
-    m_aAgent = aAgent;
+    ValueEnforcer.notNull (aString, "String");
+    m_aString = aString;
   }
 
   @Nonnull
@@ -52,6 +51,6 @@ public class SlotDataProvider implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (new AgentMarshaller ().getAsDocument (m_aAgent)).build ();
+    return new SlotBuilder ().setName (NAME).setValue (m_aString).build ();
   }
 }
