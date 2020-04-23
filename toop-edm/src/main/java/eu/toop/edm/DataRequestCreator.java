@@ -14,6 +14,7 @@ import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
 
+import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cpsv.helper.AgentType;
 import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
 import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
@@ -23,13 +24,18 @@ import eu.toop.edm.regrep.SlotDataConsumer;
 import eu.toop.edm.regrep.SlotDataSetIdentifier;
 import eu.toop.edm.regrep.SlotDataSubjectLegalPerson;
 import eu.toop.edm.regrep.SlotDataSubjectNaturalPerson;
+import eu.toop.edm.regrep.SlotFullfillingRequirement;
 import eu.toop.edm.regrep.SlotIssueDateTime;
+import eu.toop.edm.regrep.SlotProcedure;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
+import eu.toop.regrep.rim.InternationalStringValueType;
 
 public class DataRequestCreator
 {
   private static final ICommonsOrderedSet <String> HEADER_SLOTS = new CommonsLinkedHashSet <> (SlotIssueDateTime.NAME,
+                                                                                               SlotProcedure.NAME,
+                                                                                               SlotFullfillingRequirement.NAME,
                                                                                                SlotDataConsumer.NAME,
                                                                                                SlotConsentToken.NAME,
                                                                                                SlotDataSetIdentifier.NAME);
@@ -73,6 +79,8 @@ public class DataRequestCreator
   public static class Builder
   {
     private LocalDateTime m_aIssueDateTime;
+    private InternationalStringValueType m_aProcedure;
+    private CCCEVRequirementType m_aFullfillingRequirement;
     private AgentType m_aDCAgent;
     private String m_sConsentToken;
     private String m_sDataSetIdentifier;
@@ -92,8 +100,21 @@ public class DataRequestCreator
     @Nonnull
     public Builder setIssueDateTimeNow ()
     {
-
       return setIssueDateTime (PDTFactory.getCurrentLocalDateTime ());
+    }
+
+    @Nonnull
+    public Builder setProcedure (@Nullable final InternationalStringValueType aProcedure)
+    {
+      m_aProcedure = aProcedure;
+      return this;
+    }
+
+    @Nonnull
+    public Builder setFullfillingRequirement (@Nullable final CCCEVRequirementType aFullfillingRequirement)
+    {
+      m_aFullfillingRequirement = aFullfillingRequirement;
+      return this;
     }
 
     @Nonnull
@@ -139,6 +160,10 @@ public class DataRequestCreator
       final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
       if (m_aIssueDateTime != null)
         x.add (new SlotIssueDateTime (m_aIssueDateTime));
+      if (m_aProcedure != null)
+        x.add (new SlotProcedure (m_aProcedure));
+      if (m_aFullfillingRequirement != null)
+        x.add (new SlotFullfillingRequirement (m_aFullfillingRequirement));
       if (m_aDCAgent != null)
         x.add (new SlotDataConsumer (m_aDCAgent));
       if (m_sConsentToken != null)

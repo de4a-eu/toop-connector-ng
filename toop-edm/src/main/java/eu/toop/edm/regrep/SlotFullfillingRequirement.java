@@ -20,8 +20,8 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.cpsv.AgentMarshaller;
-import eu.toop.edm.jaxb.cpsv.helper.AgentType;
+import eu.toop.edm.cccev.RequirementMarshaller;
+import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
@@ -34,12 +34,12 @@ public class SlotFullfillingRequirement implements ISlotProvider
 {
   public static final String NAME = "FullfillingRequirement";
 
-  private final AgentType m_aAgent;
+  private final CCCEVRequirementType m_aRequirement;
 
-  public SlotFullfillingRequirement (@Nonnull final AgentType aAgent)
+  public SlotFullfillingRequirement (@Nonnull final CCCEVRequirementType aRequirement)
   {
-    ValueEnforcer.notNull (aAgent, "Agent");
-    m_aAgent = aAgent;
+    ValueEnforcer.notNull (aRequirement, "Requirement");
+    m_aRequirement = aRequirement;
   }
 
   @Nonnull
@@ -52,6 +52,8 @@ public class SlotFullfillingRequirement implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (new AgentMarshaller ().getAsDocument (m_aAgent)).build ();
+    return new SlotBuilder ().setName (NAME)
+                             .setValue (new RequirementMarshaller ().getAsDocument (m_aRequirement))
+                             .build ();
   }
 }

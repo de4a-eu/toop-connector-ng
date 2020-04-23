@@ -33,12 +33,12 @@ public class SlotProcedure implements ISlotProvider
 {
   public static final String NAME = "Procedure";
 
-  private final InternationalStringValueType m_aString;
+  private final InternationalStringValueType m_aProcedure;
 
-  public SlotProcedure (@Nonnull final InternationalStringValueType aString)
+  public SlotProcedure (@Nonnull final InternationalStringValueType aProcedure)
   {
-    ValueEnforcer.notNull (aString, "String");
-    m_aString = aString;
+    ValueEnforcer.notNull (aProcedure, "Procedure");
+    m_aProcedure = aProcedure;
   }
 
   @Nonnull
@@ -51,6 +51,6 @@ public class SlotProcedure implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (m_aString).build ();
+    return new SlotBuilder ().setName (NAME).setValue (m_aProcedure).build ();
   }
 }
