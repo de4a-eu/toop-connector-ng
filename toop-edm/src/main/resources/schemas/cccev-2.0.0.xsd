@@ -68,35 +68,30 @@
 	<!-- Object properties -->
 	
 	<xsd:element name="derivedFrom" type="ReferenceFrameworkType"/>
-	<xsd:element name="concept" type="ConceptType"/>
+<!--   <xsd:element name="concept" type="ConceptType" /> -->
 	<xsd:element name="evidence" type="EvidenceType"/>
 	<xsd:element name="evidenceType" type="EvidenceTypeType"/>
 	<xsd:element name="evidenceTypeCombinationList" type="EvidenceTypeListType"/>
-	<xsd:element name="constraint" type="ConstraintType"/>
+<!-- 	<xsd:element name="constraint" type="ConstraintType"/> -->
 	<xsd:element name="providedBy" type="cbc:IDReferenceType"/>
 	<xsd:element name="qualifiedRelation" type="dcat-ap:RelationshipType"/>
-	<xsd:element name="requirement" type="RequirementType"/>	
-	<xsd:element name="value" type="ValueType"/>
-	<xsd:element name="periodValue" type="cac:PeriodType"/>
+<!-- 	<xsd:element name="requirement" type="RequirementType"/>	 -->
+<!-- 	<xsd:element name="value" type="ValueType"/> -->
+<!-- 	<xsd:element name="periodValue" type="cac:PeriodType"/> -->
 	<xsd:element name="validityPeriod" type="cac:PeriodType"/>		
 	<xsd:element name="specifiedIn" type="ConceptType"/>
 	
 	<!-- Class declarations -->
-  <!-- [ph] hack for JAXB -->
-	<xsd:element name="Concept_" type="ConceptType"/>
-  <!-- [ph] hack for JAXB -->
-	<xsd:element name="Constraint_" type="ConstraintType"/>
+	<xsd:element name="Concept" type="ConceptType"/>
+	<xsd:element name="Constraint" type="ConstraintType"/>
 	<xsd:element name="Criterion" type="CriterionType"/>
 	<xsd:element name="DocumentReference" type="DocumentReferenceType"/>
 	<xsd:element name="EvidenceTypeList" type="EvidenceTypeListType"/>
 	<xsd:element name="InformationRequirement" type="InformationRequirementType"/>
-  <!-- [ph] hack for JAXB -->
-	<xsd:element name="PeriodValue_" type="cac:PeriodType"/>	
+	<xsd:element name="PeriodValue" type="cac:PeriodType"/>	
 	<xsd:element name="ReferenceFramework" type="ReferenceFrameworkType"/>
-  <!-- [ph] hack for JAXB -->
-	<xsd:element name="Requirement_" type="RequirementType"/>
-  <!-- [ph] hack for JAXB -->
-	<xsd:element name="Value_" type="ValueType"/>
+	<xsd:element name="Requirement" type="RequirementType"/>
+	<xsd:element name="Value" type="ValueType"/>
 
 	<!-- Element definition -->
 
@@ -107,9 +102,9 @@
 			<xsd:element ref="cbc:description" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="cbc:type" minOccurs="0" maxOccurs="1"/>
 			<xsd:element ref="cbc:QName" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="constraint" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="value" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="concept" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element name="constraint" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="value" type="ValueType" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="concept" type="ConceptType" minOccurs="0" maxOccurs="unbounded"/>			
 		</xsd:sequence>
 		<xsd:attributeGroup ref="cac:ThingAttributes"/>
 	</xsd:complexType>
@@ -225,8 +220,8 @@
 			<xsd:element ref="cbc:name" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="cbc:description" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="cbc:type" minOccurs="0"/>
-			<xsd:element ref="requirement" minOccurs="0" maxOccurs="unbounded"/>			
-			<xsd:element ref="concept" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="requirement" type="RequirementType" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element name="concept" type="ConceptType" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="evidence" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="evidenceTypeCombinationList" minOccurs="0" maxOccurs="unbounded"/>			
 			<xsd:element ref="partOf" minOccurs="0" maxOccurs="unbounded"/>
@@ -252,9 +247,9 @@
 			<xsd:element ref="customDataType" minOccurs="0"/>
 			<xsd:element ref="customFunction" minOccurs="0"/>
 			<xsd:element ref="error" minOccurs="0"/>
-			<xsd:element ref="periodValue" minOccurs="0"/>			
+			<xsd:element name="periodValue" type="cac:PeriodType" minOccurs="0"/>			
 			<xsd:element ref="valueOf" minOccurs="0"/>
-			<xsd:element ref="value" minOccurs="0" maxOccurs="unbounded"/>
+			<xsd:element name="value" type="ValueType" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:sequence>
 		<xsd:attributeGroup ref="cac:ThingAttributes"/>
 	</xsd:complexType>
