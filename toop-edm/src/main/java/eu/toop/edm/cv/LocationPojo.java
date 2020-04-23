@@ -17,7 +17,7 @@ package eu.toop.edm.cv;
 
 import javax.annotation.Nonnull;
 
-import org.w3.ns.corevocabulary.location.CvlocationType;
+import eu.toop.edm.jaxb.w3.cv.location.CvlocationType;
 
 public class LocationPojo
 {

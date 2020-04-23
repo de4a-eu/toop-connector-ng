@@ -17,13 +17,12 @@ package eu.toop.edm.cpsv;
 
 import javax.annotation.Nonnull;
 
-import org.w3.ns.corevocabulary.aggregatecomponents.CvidentifierType;
-import org.w3.ns.corevocabulary.basiccomponents.IdentifierType;
-import org.w3.ns.corevocabulary.basiccomponents.IdentifierTypeType;
-
 import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.cpsv.helper.AgentType;
+import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
+import eu.toop.edm.jaxb.w3.cv.bc.IdentifierType;
+import eu.toop.edm.jaxb.w3.cv.bc.IdentifierTypeType;
 
 public class DataProviderPojo
 {

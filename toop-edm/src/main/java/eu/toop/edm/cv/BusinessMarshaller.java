@@ -15,10 +15,10 @@
  */
 package eu.toop.edm.cv;
 
-import org.w3.ns.corevocabulary.business.CvbusinessType;
-import org.w3.ns.corevocabulary.business.ObjectFactory;
-
 import com.helger.jaxb.GenericJAXBMarshaller;
+
+import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
+import eu.toop.edm.jaxb.w3.cv.business.ObjectFactory;
 
 public class BusinessMarshaller extends GenericJAXBMarshaller <CvbusinessType>
 {

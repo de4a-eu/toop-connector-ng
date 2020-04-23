@@ -15,10 +15,10 @@
  */
 package eu.toop.edm.cv;
 
-import org.w3.ns.corevocabulary.person.CvpersonType;
-import org.w3.ns.corevocabulary.person.ObjectFactory;
-
 import com.helger.jaxb.GenericJAXBMarshaller;
+
+import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
+import eu.toop.edm.jaxb.w3.cv.person.ObjectFactory;
 
 public class PersonMarshaller extends GenericJAXBMarshaller <CvpersonType>
 {

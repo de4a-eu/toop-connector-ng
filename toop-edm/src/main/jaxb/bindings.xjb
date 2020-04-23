@@ -25,6 +25,31 @@
                   typesafeEnumMemberName="generateError"
                   underscoreBinding="asCharInWord">
   </globalBindings>
+  <bindings schemaLocation="../resources/schemas/CoreBusiness-v1.00.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.cv.business" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/CoreLocation-v1.00.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.cv.location" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/CorePerson-v1.00.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.cv.person" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/CoreVocabularyAggregateComponents-v1.00.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.cv.ac" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/CoreVocabularyBasicComponents-v1.00.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.cv.bc" />
+    </schemaBindings>
+  </bindings>
   <bindings schemaLocation="../resources/schemas/cpsv-ap_xml_schema_v0.01.xsd" node="/xs:schema">
     <schemaBindings>
       <package name="eu.toop.edm.jaxb.cpsv" />
@@ -36,6 +61,11 @@
     </schemaBindings>
   </bindings>
 
+  <bindings schemaLocation="../resources/schemas/adms.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.adms" />
+    </schemaBindings>
+  </bindings>
   <bindings schemaLocation="../resources/schemas/cccev-2.0.0.xsd" node="/xs:schema">
     <schemaBindings>
       <package name="eu.toop.edm.jaxb.cccev" />
@@ -75,6 +105,42 @@
       <nameXmlTransform>
         <typeName prefix="DCatAP"/>
       </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/dcterms.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.dcterms" />
+      <nameXmlTransform>
+        <typeName prefix="DC"/>
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/foaf.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.foaf" />
+      <nameXmlTransform>
+        <typeName prefix="Foaf"/>
+      </nameXmlTransform>
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/locn.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.locn" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/org.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.org" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/regorg.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.regorg" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/skos.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.skos" />
     </schemaBindings>
   </bindings>
 </bindings>

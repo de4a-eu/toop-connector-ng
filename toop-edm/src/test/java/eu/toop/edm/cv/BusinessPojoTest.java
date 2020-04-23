@@ -22,7 +22,8 @@ import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3.ns.corevocabulary.business.CvbusinessType;
+
+import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
 
 /**
  * Test class for class {@link BusinessPojo}.

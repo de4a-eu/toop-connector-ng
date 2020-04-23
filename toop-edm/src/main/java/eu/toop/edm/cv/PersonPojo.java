@@ -19,17 +19,16 @@ import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
 
-import org.w3.ns.corevocabulary.aggregatecomponents.CvidentifierType;
-import org.w3.ns.corevocabulary.basiccomponents.BirthDateType;
-import org.w3.ns.corevocabulary.basiccomponents.BirthNameType;
-import org.w3.ns.corevocabulary.basiccomponents.GenderCodeType;
-import org.w3.ns.corevocabulary.basiccomponents.GivenNameType;
-import org.w3.ns.corevocabulary.basiccomponents.IdentifierType;
-import org.w3.ns.corevocabulary.person.CvpersonType;
-
 import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
+import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
+import eu.toop.edm.jaxb.w3.cv.bc.BirthDateType;
+import eu.toop.edm.jaxb.w3.cv.bc.BirthNameType;
+import eu.toop.edm.jaxb.w3.cv.bc.GenderCodeType;
+import eu.toop.edm.jaxb.w3.cv.bc.GivenNameType;
+import eu.toop.edm.jaxb.w3.cv.bc.IdentifierType;
+import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
 import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_2.FamilyNameType;
 
 public class PersonPojo

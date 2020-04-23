@@ -22,9 +22,10 @@ import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3.ns.corevocabulary.person.CvpersonType;
 
 import com.helger.commons.datetime.PDTFactory;
+
+import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
 
 /**
  * Test class for class {@link PersonPojo}.

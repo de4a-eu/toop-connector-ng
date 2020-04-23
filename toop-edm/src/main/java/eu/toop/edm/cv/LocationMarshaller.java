@@ -15,10 +15,10 @@
  */
 package eu.toop.edm.cv;
 
-import org.w3.ns.corevocabulary.location.CvlocationType;
-import org.w3.ns.corevocabulary.location.ObjectFactory;
-
 import com.helger.jaxb.GenericJAXBMarshaller;
+
+import eu.toop.edm.jaxb.w3.cv.location.CvlocationType;
+import eu.toop.edm.jaxb.w3.cv.location.ObjectFactory;
 
 public class LocationMarshaller extends GenericJAXBMarshaller <CvlocationType>
 {

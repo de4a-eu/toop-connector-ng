@@ -18,20 +18,20 @@ package eu.toop.edm.cv;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.w3.ns.corevocabulary.aggregatecomponents.CvaddressType;
-import org.w3.ns.corevocabulary.aggregatecomponents.CvidentifierType;
-import org.w3.ns.corevocabulary.basiccomponents.AdminunitFirstlineType;
-import org.w3.ns.corevocabulary.basiccomponents.FullCvaddressType;
-import org.w3.ns.corevocabulary.basiccomponents.IdentifierType;
-import org.w3.ns.corevocabulary.basiccomponents.IdentifierTypeType;
-import org.w3.ns.corevocabulary.basiccomponents.LegalNameType;
-import org.w3.ns.corevocabulary.basiccomponents.LocatorDesignatorType;
-import org.w3.ns.corevocabulary.basiccomponents.PostCodeType;
-import org.w3.ns.corevocabulary.basiccomponents.PostNameType;
-import org.w3.ns.corevocabulary.basiccomponents.ThoroughfareType;
-import org.w3.ns.corevocabulary.business.CvbusinessType;
-
 import com.helger.commons.string.StringHelper;
+
+import eu.toop.edm.jaxb.w3.cv.ac.CvaddressType;
+import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
+import eu.toop.edm.jaxb.w3.cv.bc.AdminunitFirstlineType;
+import eu.toop.edm.jaxb.w3.cv.bc.FullCvaddressType;
+import eu.toop.edm.jaxb.w3.cv.bc.IdentifierType;
+import eu.toop.edm.jaxb.w3.cv.bc.IdentifierTypeType;
+import eu.toop.edm.jaxb.w3.cv.bc.LegalNameType;
+import eu.toop.edm.jaxb.w3.cv.bc.LocatorDesignatorType;
+import eu.toop.edm.jaxb.w3.cv.bc.PostCodeType;
+import eu.toop.edm.jaxb.w3.cv.bc.PostNameType;
+import eu.toop.edm.jaxb.w3.cv.bc.ThoroughfareType;
+import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
 
 public class BusinessPojo
 {

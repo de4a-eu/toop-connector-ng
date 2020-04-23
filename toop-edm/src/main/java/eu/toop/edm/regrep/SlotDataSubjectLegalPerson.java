@@ -17,12 +17,11 @@ package eu.toop.edm.regrep;
 
 import javax.annotation.Nonnull;
 
-import org.w3.ns.corevocabulary.business.CvbusinessType;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.edm.cv.BusinessMarshaller;
+import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 

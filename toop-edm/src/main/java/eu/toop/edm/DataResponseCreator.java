@@ -5,9 +5,6 @@ import java.time.LocalDateTime;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import org.w3.ns.corevocabulary.business.CvbusinessType;
-import org.w3.ns.corevocabulary.person.CvpersonType;
-
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
@@ -17,6 +14,8 @@ import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
 
 import eu.toop.edm.jaxb.cpsv.helper.AgentType;
+import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
+import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
 import eu.toop.edm.regrep.ISlotProvider;
 import eu.toop.edm.regrep.SlotConsentToken;
 import eu.toop.edm.regrep.SlotDataConsumer;
