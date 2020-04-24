@@ -36,6 +36,7 @@ public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller <DCatAPDatase
   {
     return JAXBContext.newInstance (eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
                                     eu.toop.edm.jaxb.foaf.ObjectFactory.class,
-                                    eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class);
+                                    eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
+                                    eu.toop.edm.jaxb.w3.adms.ObjectFactory.class);
   }
 }
