@@ -15,9 +15,12 @@
  */
 package eu.toop.edm.cccev;
 
+import javax.annotation.Nullable;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 import com.helger.jaxb.GenericJAXBMarshaller;
 
-import eu.toop.edm.cpsv.CCPSV;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cccev.ObjectFactory;
 
@@ -25,8 +28,16 @@ public class RequirementMarshaller extends GenericJAXBMarshaller <CCCEVRequireme
 {
   public RequirementMarshaller ()
   {
-    // TODO XSDs
-    super (CCCEVRequirementType.class, CCPSV.XSDS, x -> new ObjectFactory ().createRequirement (x));
+    super (CCCEVRequirementType.class, CCCEV.XSDS, x -> new ObjectFactory ().createRequirement (x));
     setNamespaceContext (CCCEVNamespaceContext.getInstance ());
+  }
+
+  @Override
+  protected JAXBContext getJAXBContext (@Nullable final ClassLoader aClassLoader) throws JAXBException
+  {
+    return JAXBContext.newInstance (eu.toop.edm.jaxb.cccev.ObjectFactory.class,
+                                    eu.toop.edm.jaxb.w3.adms.ObjectFactory.class,
+                                    eu.toop.edm.jaxb.foaf.ObjectFactory.class,
+                                    eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class);
   }
 }
