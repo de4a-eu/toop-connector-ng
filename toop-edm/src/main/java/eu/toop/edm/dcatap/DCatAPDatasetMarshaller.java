@@ -15,6 +15,10 @@
  */
 package eu.toop.edm.dcatap;
 
+import javax.annotation.Nullable;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+
 import com.helger.jaxb.GenericJAXBMarshaller;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
@@ -25,5 +29,13 @@ public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller <DCatAPDatase
   public DCatAPDatasetMarshaller ()
   {
     super (DCatAPDatasetType.class, CDCatAP.XSDS, x -> new ObjectFactory ().createDataset (x));
+  }
+
+  @Override
+  protected JAXBContext getJAXBContext (@Nullable final ClassLoader aClassLoader) throws JAXBException
+  {
+    return JAXBContext.newInstance (eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
+                                    eu.toop.edm.jaxb.foaf.ObjectFactory.class,
+                                    eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class);
   }
 }
