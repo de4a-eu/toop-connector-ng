@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xsd:schema xmlns="https://semic.org/sa/cv/cccev-2.0.0#" 
+<xsd:schema xmlns="https://semic.org/sa/cv/cccev-2.0.0#"
 	xmlns:dcat-ap="http://data.europa.eu/r5r/"
 	xmlns:cac="https://semic.org/sa/cv/common/cac-2.0.0#"
 	xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#"
+	xmlns:ccts="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"
+	xmlns:an="https://semic.org/sa/cv/common/semic-annot-2.0.0#"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#" 
+	xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#"
 	xmlns:foaf="http://xmlns.com/foaf/0.1/"
 	targetNamespace="https://semic.org/sa/cv/cccev-2.0.0#" elementFormDefault="qualified"
 	attributeFormDefault="unqualified" version="2.0.0">
@@ -13,6 +15,7 @@
 		schemaLocation="CV-CommonAggregateComponents.xsd"/>
 	<xsd:import namespace="https://semic.org/sa/cv/common/cbc-2.0.0#"
 		schemaLocation="CV-CommonBasicComponents.xsd"/>
+	<xsd:import namespace="urn:un:unece:uncefact:data:specification:CoreComponentTypeSchemaModule:2"/>
 	<xsd:import namespace="http://data.europa.eu/r5r/"
 		schemaLocation="dcat-ap.xsd"/>
 	<xsd:import namespace="https://semic.org/sa/cv/cagv/agent-2.0.0#"
@@ -21,7 +24,7 @@
 		schemaLocation="foaf.xsd"/>
 
 	<!-- Declaration of elements -->
-	
+
 	<!-- Data properties declarations -->
 	<xsd:element name="amountValue" type="cbc:AmountType"/>
 	<xsd:element name="bias" type="cbc:NumericType"/>
@@ -53,7 +56,7 @@
 	<xsd:element name="quantityValue" type="cbc:QuantityType"/>
 	<xsd:element name="evidenceTypology" type="cbc:CodeType"/>
 	<xsd:element name="statusCode" type="cbc:CodeType"/>
-	<xsd:element name="supportsRequirement" type="cbc:IDReferenceType"/>		
+	<xsd:element name="supportsRequirement" type="cbc:IDReferenceType"/>
 	<xsd:element name="supportsConcept" type="cbc:IDReferenceType"/>
 	<xsd:element name="textValue" type="cbc:TextType"/>
 	<xsd:element name="timeValue" type="cbc:TimeType"/>
@@ -66,21 +69,52 @@
 	<xsd:element name="xPath" type="cbc:TextType"/>
 
 	<!-- Object properties -->
-	
-	<xsd:element name="derivedFrom" type="ReferenceFrameworkType"/>
-<!--   <xsd:element name="concept" type="ConceptType" /> -->
-	<xsd:element name="evidence" type="EvidenceType"/>
+
+	<xsd:element name="derivedFrom" type="ReferenceFrameworkType">
+		<!--<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				<ObjectProperty>
+					<ccts:ComponentType>Object property</ccts:ComponentType>
+					<ccts:DictionaryEntryName>derivedFrom. Details</ccts:DictionaryEntryName>
+					<ccts:Definition></ccts:Definition>
+					<ccts:ObjectClass>ReferenceFrameworkType</ccts:ObjectClass>
+					<Domain>Requirement</Domain>
+					<Range>Class</Range>
+					<Predicate>objectProperty</Predicate>
+					<Axiom>ClassA objectProperty ClassB</Axiom>
+				</ObjectProperty>
+			</xsd:documentation>
+		</xsd:annotation>-->
+	</xsd:element>
+<!--	<xsd:element name="concept" type="ConceptType"/> -->
+	<xsd:element name="evidence" type="EvidenceType">
+		<xsd:annotation>
+			<xsd:documentation xml:lang="en">
+				<an:ObjectProperty>
+					<ccts:ComponentType>Object property</ccts:ComponentType>
+					<ccts:DictionaryEntryName>cccev:hasSupportive. Details</ccts:DictionaryEntryName>
+					<ccts:Definition></ccts:Definition>
+					<ccts:ObjectClass>cccev:EvidenceType</ccts:ObjectClass>
+					<an:Domain>cccev:Requirement</an:Domain>
+					<an:Range>cagv:Agent</an:Range>
+					<an:Range>cccev:Concept</an:Range>
+					<an:Range>cccev:EvidenceType</an:Range>
+					<an:Axiom>owl:inverseOf cccev:supports</an:Axiom>
+				</an:ObjectProperty>
+			</xsd:documentation>
+		</xsd:annotation>
+	</xsd:element>
 	<xsd:element name="evidenceType" type="EvidenceTypeType"/>
 	<xsd:element name="evidenceTypeCombinationList" type="EvidenceTypeListType"/>
 <!-- 	<xsd:element name="constraint" type="ConstraintType"/> -->
 	<xsd:element name="providedBy" type="cbc:IDReferenceType"/>
 	<xsd:element name="qualifiedRelation" type="dcat-ap:RelationshipType"/>
-<!-- 	<xsd:element name="requirement" type="RequirementType"/>	 -->
-<!-- 	<xsd:element name="value" type="ValueType"/> -->
-<!-- 	<xsd:element name="periodValue" type="cac:PeriodType"/> -->
-	<xsd:element name="validityPeriod" type="cac:PeriodType"/>		
+<!--	<xsd:element name="requirement" type="RequirementType"/> -->
+<!--	<xsd:element name="value" type="ValueType"/> -->
+<!--	<xsd:element name="periodValue" type="cac:PeriodType"/> -->
+	<xsd:element name="validityPeriod" type="cac:PeriodType"/>
 	<xsd:element name="specifiedIn" type="ConceptType"/>
-	
+
 	<!-- Class declarations -->
 	<xsd:element name="Concept" type="ConceptType"/>
 	<xsd:element name="Constraint" type="ConstraintType"/>
@@ -88,7 +122,7 @@
 	<xsd:element name="DocumentReference" type="DocumentReferenceType"/>
 	<xsd:element name="EvidenceTypeList" type="EvidenceTypeListType"/>
 	<xsd:element name="InformationRequirement" type="InformationRequirementType"/>
-	<xsd:element name="PeriodValue" type="cac:PeriodType"/>	
+	<xsd:element name="PeriodValue" type="cac:PeriodType"/>
 	<xsd:element name="ReferenceFramework" type="ReferenceFrameworkType"/>
 	<xsd:element name="Requirement" type="RequirementType"/>
 	<xsd:element name="Value" type="ValueType"/>
@@ -96,21 +130,140 @@
 	<!-- Element definition -->
 
 	<xsd:complexType name="ConceptType">
+		<xsd:annotation>
+			<xsd:documentation>
+				<an:Class>
+					<ccts:ComponentType>Class</ccts:ComponentType>
+					<ccts:DictionaryEntryName>Concept. Details</ccts:DictionaryEntryName>
+					<ccts:Definition>
+					</ccts:Definition>
+					<DefinitionSource/>
+					<ccts:ObjectClass>Concept</ccts:ObjectClass>
+				</an:Class>
+			</xsd:documentation>
+		</xsd:annotation>
 		<xsd:sequence>
-			<xsd:element ref="cbc:id" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="cbc:name" minOccurs="0" maxOccurs="1"/>
-			<xsd:element ref="cbc:description" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="cbc:type" minOccurs="0" maxOccurs="1"/>
-			<xsd:element ref="cbc:QName" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element name="constraint" type="ConstraintType" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element name="value" type="ValueType" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element name="concept" type="ConceptType" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element ref="cbc:id" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">
+						<an:DataProperty>
+							<ccts:ComponentType>Data property</ccts:ComponentType>
+							<ccts:DictionaryEntryName>Concept. Identifier</ccts:DictionaryEntryName>
+							<ccts:Definition>
+								<DefinitionSource/>
+							</ccts:Definition>
+							<ccts:Cardinality>0..n</ccts:Cardinality>
+							<ccts:ObjectClass>Concept</ccts:ObjectClass>
+							<ccts:PropertyTerm>Identifier</ccts:PropertyTerm>
+							<ccts:RepresentationTerm>Identifier</ccts:RepresentationTerm>
+							<ccts:DataType>ID. Type</ccts:DataType>
+						</an:DataProperty>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cbc:name" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">
+						<an:DataProperty>
+							<ccts:ComponentType>Data property</ccts:ComponentType>
+							<ccts:DictionaryEntryName>Concept. Name</ccts:DictionaryEntryName>
+							<ccts:Definition>
+								<DefinitionSource/>
+							</ccts:Definition>
+							<ccts:Cardinality>0..1</ccts:Cardinality>
+							<ccts:ObjectClass>Concept</ccts:ObjectClass>
+							<ccts:PropertyTerm>Text</ccts:PropertyTerm>
+							<ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+							<ccts:DataType>Name. Type</ccts:DataType>
+						</an:DataProperty>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cbc:description" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">
+						<an:DataProperty>
+							<ccts:ComponentType>Data property</ccts:ComponentType>
+							<ccts:DictionaryEntryName>Concept. Description</ccts:DictionaryEntryName>
+							<ccts:Definition>
+								<DefinitionSource/>
+							</ccts:Definition>
+							<ccts:Cardinality>0..n</ccts:Cardinality>
+							<ccts:ObjectClass>Concept</ccts:ObjectClass>
+							<ccts:PropertyTerm>Text</ccts:PropertyTerm>
+							<ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+							<ccts:DataType>Description. Type</ccts:DataType>
+						</an:DataProperty>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cbc:type" minOccurs="0" maxOccurs="1">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">
+						<an:DataProperty>
+							<ccts:ComponentType>Data property</ccts:ComponentType>
+							<ccts:DictionaryEntryName>Concept. Type</ccts:DictionaryEntryName>
+							<ccts:Definition>
+								<DefinitionSource/>
+							</ccts:Definition>
+							<ccts:Cardinality>0..1</ccts:Cardinality>
+							<ccts:ObjectClass>Concept</ccts:ObjectClass>
+							<ccts:PropertyTerm>Code</ccts:PropertyTerm>
+							<ccts:RepresentationTerm>Code</ccts:RepresentationTerm>
+							<ccts:DataType>Type. Type</ccts:DataType>
+						</an:DataProperty>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element ref="cbc:QName" minOccurs="0" maxOccurs="unbounded">
+				<xsd:annotation>
+					<xsd:documentation xml:lang="en">
+						<an:DataProperty>
+							<ccts:ComponentType>Data property</ccts:ComponentType>
+							<ccts:DictionaryEntryName>Concept. QName</ccts:DictionaryEntryName>
+							<ccts:Definition>
+								<DefinitionSource/>
+							</ccts:Definition>
+							<ccts:Cardinality>0..n</ccts:Cardinality>
+							<ccts:ObjectClass>Concept</ccts:ObjectClass>
+							<ccts:PropertyTerm>anySimpleType</ccts:PropertyTerm>
+							<ccts:RepresentationTerm>anySimpleType</ccts:RepresentationTerm>
+							<ccts:DataType>QName. Type</ccts:DataType>
+						</an:DataProperty>
+					</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+      <!-- JAXB hack -->
+			<xsd:element name="constraint" type="ConstraintType" minOccurs="0" maxOccurs="unbounded">
+				
+			</xsd:element>
+      <!-- JAXB hack -->
+			<xsd:element name="value" type="ValueType" minOccurs="0" maxOccurs="unbounded">
+				
+			</xsd:element>
+      <!-- JAXB hack -->
+			<xsd:element name="concept" type="ConceptType" minOccurs="0" maxOccurs="unbounded">
+				
+			</xsd:element>
 		</xsd:sequence>
 		<xsd:attributeGroup ref="cac:ThingAttributes"/>
 	</xsd:complexType>
 
 	<xsd:complexType name="ConstraintType">
 		<xsd:complexContent>
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<an:Class>
+						<ccts:ComponentType>Class</ccts:ComponentType>
+						<ccts:DictionaryEntryName>Constraint. Details</ccts:DictionaryEntryName>
+						<ccts:Definition>
+							<DefinitionSource></DefinitionSource>
+						</ccts:Definition>
+						<ccts:ObjectClass>Constraint</ccts:ObjectClass>
+						<PrimitiveClass>RequirementType</PrimitiveClass>
+					</an:Class>
+				</xsd:documentation>
+			</xsd:annotation>
 			<xsd:extension base="RequirementType">
 				<xsd:sequence>
 					<xsd:element ref="constraintOn" minOccurs="0" maxOccurs="unbounded"/>
@@ -122,12 +275,94 @@
 
 	<xsd:complexType name="CriterionType">
 		<xsd:complexContent>
+			<xsd:annotation>
+				<xsd:documentation xml:lang="en">
+					<an:Class>
+						<ccts:ComponentType>Class</ccts:ComponentType>
+						<ccts:DictionaryEntryName>cccev:Criterion. Details</ccts:DictionaryEntryName>
+						<ccts:Definition>
+							<DefinitionSource></DefinitionSource>
+						</ccts:Definition>
+						<ccts:ObjectClass>cccev:Criterion</ccts:ObjectClass>
+						<PrimitiveClass>cccev:RequirementType</PrimitiveClass>
+					</an:Class>
+				</xsd:documentation>
+			</xsd:annotation>
 			<xsd:extension base="RequirementType">
 				<xsd:sequence>
-					<xsd:element ref="weight" minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="weightingConsiderationDescription" minOccurs="0" maxOccurs="unbounded"/>
-					<xsd:element ref="weightingType" minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="bias" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element ref="weight" minOccurs="0" maxOccurs="1">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">
+								<an:DataProperty>
+									<ccts:ComponentType>Data property</ccts:ComponentType>
+									<ccts:DictionaryEntryName>Criterion. Weight</ccts:DictionaryEntryName>
+									<ccts:Definition>
+										<DefinitionSource/>
+									</ccts:Definition>
+									<ccts:Cardinality>0..1</ccts:Cardinality>
+									<ccts:ObjectClass>Criterion</ccts:ObjectClass>
+									<ccts:PropertyTerm>NumericType</ccts:PropertyTerm>
+									<ccts:RepresentationTerm>NumericType</ccts:RepresentationTerm>
+									<ccts:DataType>Numeric. Type</ccts:DataType>
+								</an:DataProperty>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="weightingConsiderationDescription" minOccurs="0"
+						maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">
+								<an:DataProperty>
+									<ccts:ComponentType>Data property</ccts:ComponentType>
+									<ccts:DictionaryEntryName>Criterion. Weighting Consideration Description</ccts:DictionaryEntryName>
+									<ccts:Definition>
+										<DefinitionSource/>
+									</ccts:Definition>
+									<ccts:Cardinality>0..n</ccts:Cardinality>
+									<ccts:ObjectClass>Criterion</ccts:ObjectClass>
+									<ccts:PropertyTerm>Text</ccts:PropertyTerm>
+									<ccts:RepresentationTerm>Text</ccts:RepresentationTerm>
+									<ccts:DataType>Description. Type</ccts:DataType>
+								</an:DataProperty>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="weightingType" minOccurs="0" maxOccurs="1">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">
+								<an:DataProperty>
+									<ccts:ComponentType>Data property</ccts:ComponentType>
+									<ccts:DictionaryEntryName>Concept. QName</ccts:DictionaryEntryName>
+									<ccts:Definition>
+										<DefinitionSource/>
+									</ccts:Definition>
+									<ccts:Cardinality>0..n</ccts:Cardinality>
+									<ccts:ObjectClass>Concept</ccts:ObjectClass>
+									<ccts:PropertyTerm>anySimpleType</ccts:PropertyTerm>
+									<ccts:RepresentationTerm>anySimpleType</ccts:RepresentationTerm>
+									<ccts:DataType>QName. Type</ccts:DataType>
+								</an:DataProperty>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
+					<xsd:element ref="bias" minOccurs="0" maxOccurs="unbounded">
+						<xsd:annotation>
+							<xsd:documentation xml:lang="en">
+								<an:DataProperty>
+									<ccts:ComponentType>Data property</ccts:ComponentType>
+									<ccts:DictionaryEntryName>Concept. QName</ccts:DictionaryEntryName>
+									<ccts:Definition>
+										<DefinitionSource/>
+									</ccts:Definition>
+									<ccts:Cardinality>0..n</ccts:Cardinality>
+									<ccts:ObjectClass>Concept</ccts:ObjectClass>
+									<ccts:PropertyTerm>anySimpleType</ccts:PropertyTerm>
+									<ccts:RepresentationTerm>anySimpleType</ccts:RepresentationTerm>
+									<ccts:DataType>QName. Type</ccts:DataType>
+								</an:DataProperty>
+							</xsd:documentation>
+						</xsd:annotation>
+					</xsd:element>
 				</xsd:sequence>
 <!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
 			</xsd:extension>
@@ -149,8 +384,8 @@
 					<xsd:element ref="languageID" minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="localeCode" minOccurs="0" maxOccurs="1"/>
 					<xsd:element ref="versionID" minOccurs="0" maxOccurs="1"/>
-					<xsd:element ref="xPath" minOccurs="0" maxOccurs="unbounded"/>		
-					<xsd:element ref="validityPeriod" minOccurs="0"/>			
+					<xsd:element ref="xPath" minOccurs="0" maxOccurs="unbounded"/>
+					<xsd:element ref="validityPeriod" minOccurs="0"/>
 				</xsd:sequence>
 				<xsd:attributeGroup ref="cac:ThingAttributes"/>
 			</xsd:extension>
@@ -176,7 +411,7 @@
 	<xsd:complexType name="EvidenceTypeListType">
 		<xsd:sequence>
 			<xsd:element ref="cbc:id" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="evidenceType" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element ref="evidenceType" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:sequence>
 		<xsd:attributeGroup ref="cac:ThingAttributes"/>
 	</xsd:complexType>
@@ -196,6 +431,21 @@
 
 	<xsd:complexType name="InformationRequirementType">
 		<xsd:complexContent>
+			<xsd:annotation>
+				<xsd:documentation>
+					<an:Class>
+						<ccts:ComponentType>Class</ccts:ComponentType>
+						<ccts:DictionaryEntryName>cccev:InformationRequirementType.
+							Details</ccts:DictionaryEntryName>
+						<ccts:Definition>
+							<DefinitionSource/>
+						</ccts:Definition>
+						<ccts:ObjectClass>cccev:InformationRequirementType</ccts:ObjectClass>
+						<an:PrimitiveClass> cccev:RequirementType
+						</an:PrimitiveClass>
+					</an:Class>
+				</xsd:documentation>
+			</xsd:annotation>
 			<xsd:extension base="RequirementType">
 				<xsd:sequence/>
 <!-- 				<xsd:attributeGroup ref="cac:ThingAttributes"/> -->
@@ -223,10 +473,10 @@
 			<xsd:element name="requirement" type="RequirementType" minOccurs="0" maxOccurs="unbounded"/>			
 			<xsd:element name="concept" type="ConceptType" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="evidence" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="evidenceTypeCombinationList" minOccurs="0" maxOccurs="unbounded"/>			
+			<xsd:element ref="evidenceTypeCombinationList" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="partOf" minOccurs="0" maxOccurs="unbounded"/>
 			<xsd:element ref="qualifiedRelation" minOccurs="0" maxOccurs="unbounded"/>
-			<xsd:element ref="derivedFrom" minOccurs="0" maxOccurs="unbounded"/>						
+			<xsd:element ref="derivedFrom" minOccurs="0" maxOccurs="unbounded"/>
 		</xsd:sequence>
 		<xsd:attributeGroup ref="cac:ThingAttributes"/>
 	</xsd:complexType>

@@ -128,9 +128,19 @@
       <package name="eu.toop.edm.jaxb.w3.locn" />
     </schemaBindings>
   </bindings>
+  <bindings schemaLocation="../resources/schemas/odrl.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.w3.odrl" />
+    </schemaBindings>
+  </bindings>
   <bindings schemaLocation="../resources/schemas/org.xsd" node="/xs:schema">
     <schemaBindings>
       <package name="eu.toop.edm.jaxb.w3.org" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/rdf.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.rdf" />
     </schemaBindings>
   </bindings>
   <bindings schemaLocation="../resources/schemas/regorg.xsd" node="/xs:schema">
@@ -141,6 +151,11 @@
   <bindings schemaLocation="../resources/schemas/skos.xsd" node="/xs:schema">
     <schemaBindings>
       <package name="eu.toop.edm.jaxb.w3.skos" />
+    </schemaBindings>
+  </bindings>
+  <bindings schemaLocation="../resources/schemas/spdx.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.spdx" />
     </schemaBindings>
   </bindings>
 </bindings>
