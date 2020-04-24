@@ -13,20 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.cccev;
+package eu.toop.edm.dcatap;
 
 import com.helger.jaxb.GenericJAXBMarshaller;
 
-import eu.toop.edm.cpsv.CCPSV;
-import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
-import eu.toop.edm.jaxb.cccev.ObjectFactory;
+import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import eu.toop.edm.jaxb.dcatap.ObjectFactory;
 
-public class RequirementMarshaller extends GenericJAXBMarshaller <CCCEVRequirementType>
+public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller <DCatAPDatasetType>
 {
-  public RequirementMarshaller ()
+  public DCatAPDatasetMarshaller ()
   {
-    // TODO XSDs
-    super (CCCEVRequirementType.class, CCPSV.XSDS, x -> new ObjectFactory ().createRequirement (x));
-    setNamespaceContext (CCCEVNamespaceContext.getInstance ());
+    super (DCatAPDatasetType.class, CDCatAP.XSDS, x -> new ObjectFactory ().createDataset (x));
   }
 }
