@@ -19,7 +19,9 @@ import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.jaxb.GenericJAXBMarshaller;
+import com.helger.jaxb.JAXBContextCache;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcatap.ObjectFactory;
@@ -34,9 +36,13 @@ public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller <DCatAPDatase
   @Override
   protected JAXBContext getJAXBContext (@Nullable final ClassLoader aClassLoader) throws JAXBException
   {
-    return JAXBContext.newInstance (eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
-                                    eu.toop.edm.jaxb.foaf.ObjectFactory.class,
-                                    eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
-                                    eu.toop.edm.jaxb.w3.adms.ObjectFactory.class);
+    final Class <?> [] aClasses = new Class <?> [] { eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
+                                                     eu.toop.edm.jaxb.foaf.ObjectFactory.class,
+                                                     eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
+                                                     eu.toop.edm.jaxb.w3.adms.ObjectFactory.class };
+
+    if (isUseContextCache ())
+      return JAXBContextCache.getInstance ().getFromCache (new CommonsArrayList <> (aClasses));
+    return JAXBContext.newInstance (aClasses);
   }
 }
