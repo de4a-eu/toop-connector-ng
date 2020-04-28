@@ -139,6 +139,15 @@ public final class CRegRep4
   {
     final ICommonsList <ClassPathResource> ret = getAllXSDIncludes ();
     ret.add (getXSDResourceQuery ());
+
+    //FIXME muhammet: I added these here because it wasn't being able to
+    // serialize the cagv:PublicOrganizationType as dct:publisher because
+    // it couldn't validate against the xsd (not being able to find it).
+    // however this is the 'regrep' module and these xsds shouldn't be
+    // here. We need to find a better place for them.
+    ret.add(new ClassPathResource("schemas/CV-Agent.xsd", _getCL()));
+    ret.add(new ClassPathResource("schemas/dcterms.xsd", _getCL()));
+    ret.add(new ClassPathResource("schemas/locn.xsd", _getCL()));
     return ret;
   }
 

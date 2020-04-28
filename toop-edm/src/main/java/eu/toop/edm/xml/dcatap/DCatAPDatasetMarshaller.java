@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2018-2020 toop.eu
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -25,25 +25,27 @@ import com.helger.jaxb.JAXBContextCache;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcatap.ObjectFactory;
+import eu.toop.edm.xml.cagv.CAGVNamespaceContext;
 
-public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller <DCatAPDatasetType>
-{
-  public DCatAPDatasetMarshaller ()
-  {
-    super (DCatAPDatasetType.class, CDCatAP.XSDS, x -> new ObjectFactory ().createDataset (x));
+public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller<DCatAPDatasetType> {
+  public DCatAPDatasetMarshaller() {
+    super(DCatAPDatasetType.class, CDCatAP.XSDS, x -> new ObjectFactory().createDataset(x));
+    setNamespaceContext(DCATNamespaceContext.getInstance());
   }
 
   @Override
-  protected JAXBContext getJAXBContext (@Nullable final ClassLoader aClassLoader) throws JAXBException
-  {
-    final Class <?> [] aClasses = new Class <?> [] { eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.foaf.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.w3.adms.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.cv.agent.ObjectFactory.class};
+  protected JAXBContext getJAXBContext(@Nullable final ClassLoader aClassLoader) throws JAXBException {
+    final Class<?>[] aClasses = new Class<?>[]{
+        eu.toop.edm.jaxb.cv.agent.ObjectFactory.class,
+        eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
+        eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
+        eu.toop.edm.jaxb.dcterms.ObjectFactory.class,
+        eu.toop.edm.jaxb.foaf.ObjectFactory.class,
+        eu.toop.edm.jaxb.w3.adms.ObjectFactory.class,
+        eu.toop.edm.jaxb.w3.locn.ObjectFactory.class};
 
-    if (isUseContextCache ())
-      return JAXBContextCache.getInstance ().getFromCache (new CommonsArrayList <> (aClasses));
-    return JAXBContext.newInstance (aClasses);
+    if (isUseContextCache())
+      return JAXBContextCache.getInstance().getFromCache(new CommonsArrayList<>(aClasses));
+    return JAXBContext.newInstance(aClasses);
   }
 }
