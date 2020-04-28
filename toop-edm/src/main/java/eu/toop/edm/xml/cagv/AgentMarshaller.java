@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cpsv;
+package eu.toop.edm.xml.cagv;
 
 import javax.annotation.Nullable;
 import javax.xml.bind.JAXBContext;
@@ -30,8 +30,8 @@ public class AgentMarshaller extends GenericJAXBMarshaller <AgentType>
 {
   public AgentMarshaller ()
   {
-    super (AgentType.class, CCPSV.XSDS, x -> new ObjectFactory ().createAgent (x));
-    setNamespaceContext (CPSVNamespaceContext.getInstance ());
+    super (AgentType.class, CCAGV.XSDS, x -> new ObjectFactory ().createAgent (x));
+    setNamespaceContext (CAGVNamespaceContext.getInstance ());
   }
 
   @Override

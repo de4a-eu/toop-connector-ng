@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cpsv;
+package eu.toop.edm.xml.cagv;
 
 import java.util.List;
 
@@ -24,12 +24,12 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.xsds.ccts.cct.schemamodule.CCCTS;
 
-public final class CCPSV
+public final class CCAGV
 {
   @Nonnull
   private static final ClassLoader _getCL ()
   {
-    return CCPSV.class.getClassLoader ();
+    return CCAGV.class.getClassLoader ();
   }
 
   public static final List <ClassPathResource> XSDS;
@@ -51,6 +51,6 @@ public final class CCPSV
     XSDS = aList.getAsUnmodifiable ();
   }
 
-  private CCPSV ()
+  private CCAGV ()
   {}
 }

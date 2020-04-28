@@ -13,14 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cpsv;
+package eu.toop.edm.xml.cagv;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.annotation.Singleton;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
-
-import eu.toop.edm.xml.cv.CCVNamespaceContext;
 
 /**
  * XML Namespace context for CPSV
@@ -28,21 +26,25 @@ import eu.toop.edm.xml.cv.CCVNamespaceContext;
  * @author Philip Helger
  */
 @Singleton
-public class CPSVNamespaceContext extends MapBasedNamespaceContext
+public class CAGVNamespaceContext extends MapBasedNamespaceContext
 {
   private static final class SingletonHolder
   {
-    static final CPSVNamespaceContext s_aInstance = new CPSVNamespaceContext ();
+    static final CAGVNamespaceContext s_aInstance = new CAGVNamespaceContext ();
   }
 
-  protected CPSVNamespaceContext ()
+  protected CAGVNamespaceContext ()
   {
-    // Based on CV
-    addMappings (CCVNamespaceContext.getInstance ());
+    addMapping ("cagv", "https://semic.org/sa/cv/cagv/agent-2.0.0#");
+    addMapping ("cbc", "https://semic.org/sa/cv/common/cbc-2.0.0#");
+    addMapping ("cac", "https://semic.org/sa/cv/common/cac-2.0.0#");
+    addMapping ("locn", "http://www.w3.org/ns/locn#");
+    addMapping ("skos", "http://www.w3.org/2004/02/skos/core#");
+    addMapping ("regorg", "http://www.w3.org/ns/regorg#");
   }
 
   @Nonnull
-  public static CPSVNamespaceContext getInstance ()
+  public static CAGVNamespaceContext getInstance ()
   {
     return SingletonHolder.s_aInstance;
   }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cpsv;
+package eu.toop.edm.xml.cagv;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -24,26 +24,18 @@ import org.slf4j.LoggerFactory;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 
 /**
- * Test class for class {@link DataConsumerPojo}
+ * Test class for class {@link DataProviderPojo}
  *
  * @author Philip Helger
  */
-public final class DataConsumerPojoTest
+public final class DataProviderPojoTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (DataConsumerPojoTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (DataProviderPojoTest.class);
 
   @Test
   public void testBasic ()
   {
-    final DataConsumerPojo x = new DataConsumerPojo ("ID",
-                                                     "IDType",
-                                                     "Name",
-                                                     "FullAddress",
-                                                     "StreetName",
-                                                     "BuildingNumber",
-                                                     "Town",
-                                                     "PostalCode",
-                                                     "CountryCode");
+    final DataProviderPojo x = new DataProviderPojo ("ID", "IDType", "Name");
     final AgentType aAgent = x.getAsAgent ();
     assertNotNull (aAgent);
 

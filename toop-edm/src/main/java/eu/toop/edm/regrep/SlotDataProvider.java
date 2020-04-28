@@ -21,7 +21,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.xml.cpsv.AgentMarshaller;
+import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
