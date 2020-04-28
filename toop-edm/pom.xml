@@ -85,10 +85,6 @@
       <artifactId>toop-regrep</artifactId>
     </dependency>
     <dependency>
-      <groupId>eu.toop</groupId>
-      <artifactId>toop-commons</artifactId>
-    </dependency>
-    <dependency>
       <groupId>com.sun.activation</groupId>
       <artifactId>jakarta.activation</artifactId>
     </dependency>
