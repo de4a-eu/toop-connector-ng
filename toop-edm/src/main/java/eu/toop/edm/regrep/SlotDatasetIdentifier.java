@@ -24,17 +24,17 @@ import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "DatasetTypeIdentifier" slot
+ * "DatasetIdentifier" slot
  *
  * @author Philip Helger
  */
-public class SlotDataSetIdentifier implements ISlotProvider
+public class SlotDatasetIdentifier implements ISlotProvider
 {
-  public static final String NAME = "DatasetTypeIdentifier";
+  public static final String NAME = "DatasetIdentifier";
 
   private final String m_sValue;
 
-  public SlotDataSetIdentifier (@Nonnull final String sValue)
+  public SlotDatasetIdentifier (@Nonnull final String sValue)
   {
     ValueEnforcer.notNull (sValue, "Value");
     m_sValue = sValue;

@@ -21,7 +21,7 @@ import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.regrep.ISlotProvider;
 import eu.toop.edm.regrep.SlotConsentToken;
 import eu.toop.edm.regrep.SlotDataConsumer;
-import eu.toop.edm.regrep.SlotDataSetIdentifier;
+import eu.toop.edm.regrep.SlotDatasetIdentifier;
 import eu.toop.edm.regrep.SlotDataSubjectLegalPerson;
 import eu.toop.edm.regrep.SlotDataSubjectNaturalPerson;
 import eu.toop.edm.regrep.SlotFullfillingRequirement;
@@ -36,9 +36,9 @@ public class DataRequestCreator
   private static final ICommonsOrderedSet <String> HEADER_SLOTS = new CommonsLinkedHashSet <> (SlotIssueDateTime.NAME,
                                                                                                SlotProcedure.NAME,
                                                                                                SlotFullfillingRequirement.NAME,
-                                                                                               SlotDataConsumer.NAME,
                                                                                                SlotConsentToken.NAME,
-                                                                                               SlotDataSetIdentifier.NAME);
+                                                                                               SlotDatasetIdentifier.NAME,
+                                                                                               SlotDataConsumer.NAME);
   private final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
 
   private DataRequestCreator (@Nonnull final ICommonsList <ISlotProvider> aProviders)
@@ -169,7 +169,7 @@ public class DataRequestCreator
       if (m_sConsentToken != null)
         x.add (new SlotConsentToken (m_sConsentToken));
       if (m_sDataSetIdentifier != null)
-        x.add (new SlotDataSetIdentifier (m_sDataSetIdentifier));
+        x.add (new SlotDatasetIdentifier (m_sDataSetIdentifier));
       if (m_aDSLegalPerson != null)
         x.add (new SlotDataSubjectLegalPerson (m_aDSLegalPerson));
       else

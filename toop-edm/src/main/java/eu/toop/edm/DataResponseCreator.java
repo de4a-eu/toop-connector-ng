@@ -20,7 +20,7 @@ import eu.toop.edm.regrep.ISlotProvider;
 import eu.toop.edm.regrep.SlotConsentToken;
 import eu.toop.edm.regrep.SlotDataConsumer;
 import eu.toop.edm.regrep.SlotDataProvider;
-import eu.toop.edm.regrep.SlotDataSetIdentifier;
+import eu.toop.edm.regrep.SlotDatasetIdentifier;
 import eu.toop.edm.regrep.SlotDataSubjectLegalPerson;
 import eu.toop.edm.regrep.SlotDataSubjectNaturalPerson;
 import eu.toop.edm.regrep.SlotIssueDateTime;
@@ -155,7 +155,7 @@ public class DataResponseCreator
       if (m_sConsentToken != null)
         x.add (new SlotConsentToken (m_sConsentToken));
       if (m_sDataSetIdentifier != null)
-        x.add (new SlotDataSetIdentifier (m_sDataSetIdentifier));
+        x.add (new SlotDatasetIdentifier (m_sDataSetIdentifier));
       if (m_aDSLegalPerson != null)
         x.add (new SlotDataSubjectLegalPerson (m_aDSLegalPerson));
       else
