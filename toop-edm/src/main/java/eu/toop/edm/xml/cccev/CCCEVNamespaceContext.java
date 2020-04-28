@@ -13,43 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.xml.cccev;
 
 import javax.annotation.Nonnull;
 
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
-
-import eu.toop.regrep.SlotBuilder;
-import eu.toop.regrep.rim.SlotType;
+import com.helger.commons.annotation.Singleton;
+import com.helger.xml.namespace.MapBasedNamespaceContext;
 
 /**
- * "DatasetTypeIdentifier" slot
+ * XML Namespace context for CCCEV
  *
  * @author Philip Helger
  */
-public class SlotDataSetIdentifier implements ISlotProvider
+@Singleton
+public class CCCEVNamespaceContext extends MapBasedNamespaceContext
 {
-  public static final String NAME = "DatasetTypeIdentifier";
-
-  private final String m_sValue;
-
-  public SlotDataSetIdentifier (@Nonnull final String sValue)
+  private static final class SingletonHolder
   {
-    ValueEnforcer.notNull (sValue, "Value");
-    m_sValue = sValue;
+    static final CCCEVNamespaceContext s_aInstance = new CCCEVNamespaceContext ();
+  }
+
+  protected CCCEVNamespaceContext ()
+  {
+    addMapping ("cccev", "https://semic.org/sa/cv/common/cbc-2.0.0#");
   }
 
   @Nonnull
-  @Nonempty
-  public String getName ()
+  public static CCCEVNamespaceContext getInstance ()
   {
-    return NAME;
-  }
-
-  @Nonnull
-  public SlotType createSlot ()
-  {
-    return new SlotBuilder ().setName (NAME).setValue (m_sValue).build ();
+    return SingletonHolder.s_aInstance;
   }
 }

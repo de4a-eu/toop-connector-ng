@@ -20,8 +20,8 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.cccev.RequirementMarshaller;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
+import eu.toop.edm.xml.cccev.RequirementMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
