@@ -32,7 +32,6 @@ import eu.toop.commons.codelist.EPredefinedDocumentTypeIdentifier;
  *
  * @author Philip Helger
  */
-@SuppressWarnings ("deprecation")
 public final class ReverseDocumentTypeMapping
 {
   private static final ICommonsMap <EPredefinedDocumentTypeIdentifier, EPredefinedDocumentTypeIdentifier> MAP = new CommonsEnumMap <> (EPredefinedDocumentTypeIdentifier.class);
@@ -47,8 +46,6 @@ public final class ReverseDocumentTypeMapping
   static
   {
     // Fill the map
-    _add (EPredefinedDocumentTypeIdentifier.URN_EU_TOOP_NS_DATAEXCHANGE_1P10_REQUEST_URN_EU_TOOP_REQUEST_REGISTEREDORGANIZATION_1_10,
-          EPredefinedDocumentTypeIdentifier.URN_EU_TOOP_NS_DATAEXCHANGE_1P10_RESPONSE_URN_EU_TOOP_RESPONSE_REGISTEREDORGANIZATION_1_10);
     _add (EPredefinedDocumentTypeIdentifier.URN_EU_TOOP_NS_DATAEXCHANGE_1P40_REQUEST_URN_EU_TOOP_REQUEST_REGISTEREDORGANIZATION_LIST_1_40,
           EPredefinedDocumentTypeIdentifier.URN_EU_TOOP_NS_DATAEXCHANGE_1P40_RESPONSE_URN_EU_TOOP_RESPONSE_REGISTEREDORGANIZATION_LIST_1_40);
     _add (EPredefinedDocumentTypeIdentifier.URN_EU_TOOP_NS_DATAEXCHANGE_1P40_REQUEST_URN_EU_TOOP_REQUEST_REGISTEREDORGANIZATION_1_40,
