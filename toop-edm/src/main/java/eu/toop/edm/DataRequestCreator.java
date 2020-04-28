@@ -16,8 +16,8 @@ import com.helger.commons.datetime.PDTFactory;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
-import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
+import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
+import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.regrep.ISlotProvider;
 import eu.toop.edm.regrep.SlotConsentToken;
 import eu.toop.edm.regrep.SlotDataConsumer;
@@ -84,8 +84,8 @@ public class DataRequestCreator
     private AgentType m_aDCAgent;
     private String m_sConsentToken;
     private String m_sDataSetIdentifier;
-    private CvbusinessType m_aDSLegalPerson;
-    private CvpersonType m_aDSNaturalPerson;
+    private CoreBusinessType m_aDSLegalPerson;
+    private CorePersonType m_aDSNaturalPerson;
 
     public Builder ()
     {}
@@ -139,7 +139,7 @@ public class DataRequestCreator
     }
 
     @Nonnull
-    public Builder setDataSubject (@Nullable final CvbusinessType aBusiness)
+    public Builder setDataSubject (@Nullable final CoreBusinessType aBusiness)
     {
       m_aDSLegalPerson = aBusiness;
       m_aDSNaturalPerson = null;
@@ -147,7 +147,7 @@ public class DataRequestCreator
     }
 
     @Nonnull
-    public Builder setDataSubject (@Nullable final CvpersonType aPerson)
+    public Builder setDataSubject (@Nullable final CorePersonType aPerson)
     {
       m_aDSLegalPerson = null;
       m_aDSNaturalPerson = aPerson;

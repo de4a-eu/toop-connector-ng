@@ -23,7 +23,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
+import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 
 /**
  * Test class for class {@link BusinessPojo}.
@@ -36,7 +36,7 @@ public final class BusinessPojoTest
 
   private static void _validate (@Nonnull final BusinessPojo x)
   {
-    final CvbusinessType aBusiness = x.getAsBusiness ();
+    final CoreBusinessType aBusiness = x.getAsBusiness ();
     assertNotNull (aBusiness);
 
     final BusinessMarshaller m = new BusinessMarshaller ();
@@ -48,17 +48,13 @@ public final class BusinessPojoTest
   @Test
   public void testBasic ()
   {
-    final BusinessPojo x = new BusinessPojo ("LegalName",
-                                             "LegalID",
-                                             "LegalIDType",
-                                             "ID",
-                                             "IDType",
-                                             "FullAddress",
-                                             "StreetName",
-                                             "BuildingNumber",
-                                             "Town",
-                                             "PostalCode",
-                                             "CountryCode");
+    final AddressPojo a = new AddressPojo ("FullAddress",
+                                           "StreetName",
+                                           "BuildingNumber",
+                                           "Town",
+                                           "PostalCode",
+                                           "CountryCode");
+    final BusinessPojo x = new BusinessPojo ("LegalID", "LegalIDType", "ID", "IDType", "LegalName", a);
     _validate (x);
   }
 

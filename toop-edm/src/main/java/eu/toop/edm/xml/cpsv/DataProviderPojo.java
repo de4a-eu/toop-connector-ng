@@ -20,19 +20,19 @@ import javax.annotation.Nonnull;
 import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
-import eu.toop.edm.jaxb.w3.cv.bc.IdentifierTypeType;
+import eu.toop.edm.jaxb.cv.cbc.IDType;
+import eu.toop.edm.jaxb.cv.cbc.NameType;
 
 public class DataProviderPojo
 {
   private final String m_sID;
-  private final String m_sIDType;
+  private final String m_sIDSchemeID;
   private final String m_sName;
 
-  public DataProviderPojo (final String sID, final String sIDType, final String sName)
+  public DataProviderPojo (final String sID, final String sIDSchemeID, final String sName)
   {
     m_sID = sID;
-    m_sIDType = sIDType;
+    m_sIDSchemeID = sIDSchemeID;
     m_sName = sName;
   }
 
@@ -42,19 +42,17 @@ public class DataProviderPojo
     final AgentType ret = new AgentType ();
     if (StringHelper.hasText (m_sID))
     {
-      final CvidentifierType aAgentID = new CvidentifierType ();
-      final IdentifierType aID = new IdentifierType ();
+      final IDType aID = new IDType ();
       aID.setValue (m_sID);
-      aAgentID.setIdentifier (aID);
-      if (StringHelper.hasText (m_sIDType))
-      {
-        final IdentifierTypeType aIdentifierType = new IdentifierTypeType ();
-        aIdentifierType.setValue (m_sIDType);
-        aAgentID.setIdentifierType (aIdentifierType);
-      }
-      ret.setAgentID (aAgentID);
+      aID.setSchemeID (m_sIDSchemeID);
+      ret.addId (aID);
     }
-    ret.setAgentName (m_sName);
+    if (StringHelper.hasText (m_sName))
+    {
+      final NameType aName = new NameType ();
+      aName.setValue (m_sName);
+      ret.addName (aName);
+    }
     return ret;
   }
 }

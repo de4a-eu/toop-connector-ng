@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.toop.edm.jaxb.cpsv.helper.AgentType;
+import eu.toop.edm.jaxb.cv.agent.AgentType;
 
 /**
  * Test class for class {@link DataConsumerPojo}

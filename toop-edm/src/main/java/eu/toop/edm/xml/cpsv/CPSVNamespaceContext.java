@@ -39,8 +39,6 @@ public class CPSVNamespaceContext extends MapBasedNamespaceContext
   {
     // Based on CV
     addMappings (CCVNamespaceContext.getInstance ());
-    addMapping ("cpsvh", "http://data.europa.eu/m8g/CPSVAP2.0.Helper");
-    addMapping ("cpsv", "http://data.europa.eu/m8g/CPSVAP2.0");
   }
 
   @Nonnull

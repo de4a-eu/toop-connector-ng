@@ -18,6 +18,7 @@ package eu.toop.edm.xml.cpsv;
 import com.helger.jaxb.GenericJAXBMarshaller;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.jaxb.cv.agent.ObjectFactory;
 
 public class AgentMarshaller extends GenericJAXBMarshaller <AgentType>
 {

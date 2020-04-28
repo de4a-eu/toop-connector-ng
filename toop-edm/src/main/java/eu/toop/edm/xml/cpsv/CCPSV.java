@@ -22,8 +22,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
-
-import eu.toop.edm.xml.cv.CCV;
+import com.helger.xsds.ccts.cct.schemamodule.CCCTS;
 
 public final class CCPSV
 {
@@ -37,9 +36,18 @@ public final class CCPSV
   static
   {
     final ICommonsList <ClassPathResource> aList = new CommonsArrayList <> ();
-    aList.addAll (CCV.XSDS);
-    aList.addAll (new ClassPathResource ("schemas/cpsv-ap_xml_schema_v0.01.xsd", _getCL ()),
-                  new ClassPathResource ("schemas/cpsv-ap_xml_schema_v0.01.helper.xsd", _getCL ()));
+    aList.addAll (CCCTS.getXSDResource (),
+                  new ClassPathResource ("schemas/skos.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/regorg.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/org.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/locn.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/foaf.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/rdf.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/dcterms.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/CV-DataTypes.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/CV-CommonBasicComponents.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/CV-CommonAggregateComponents.xsd", _getCL ()),
+                  new ClassPathResource ("schemas/CV-Agent.xsd", _getCL ()));
     XSDS = aList.getAsUnmodifiable ();
   }
 

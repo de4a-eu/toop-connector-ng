@@ -17,13 +17,14 @@ package eu.toop.edm.xml.cv;
 
 import com.helger.jaxb.GenericJAXBMarshaller;
 
-import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
+import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.jaxb.w3.cv.ac.ObjectFactory;
 
-public class PersonMarshaller extends GenericJAXBMarshaller <CvpersonType>
+public class PersonMarshaller extends GenericJAXBMarshaller <CorePersonType>
 {
   public PersonMarshaller ()
   {
-    super (CvpersonType.class, CCV.XSDS, x -> new ObjectFactory ().createCvperson (x));
+    super (CorePersonType.class, CCV.XSDS, x -> new ObjectFactory ().createCorePerson (x));
     setNamespaceContext (CCVNamespaceContext.getInstance ());
   }
 }

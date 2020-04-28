@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
+import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.xml.cv.PersonMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
@@ -34,9 +34,9 @@ public class SlotDataSubjectNaturalPerson implements ISlotProvider
 {
   public static final String NAME = "NaturalPerson";
 
-  private final CvpersonType m_aNaturalPerson;
+  private final CorePersonType m_aNaturalPerson;
 
-  public SlotDataSubjectNaturalPerson (@Nonnull final CvpersonType aNaturalPerson)
+  public SlotDataSubjectNaturalPerson (@Nonnull final CorePersonType aNaturalPerson)
   {
     ValueEnforcer.notNull (aNaturalPerson, "NaturalPerson");
     m_aNaturalPerson = aNaturalPerson;

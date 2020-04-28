@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
 
-import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
+import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 
 /**
  * Test class for class {@link PersonPojo}.
@@ -38,7 +38,7 @@ public final class PersonPojoTest
 
   private static void _validate (@Nonnull final PersonPojo x)
   {
-    final CvpersonType aPerson = x.getAsPerson ();
+    final CorePersonType aPerson = x.getAsPerson ();
     assertNotNull (aPerson);
 
     final PersonMarshaller m = new PersonMarshaller ();
@@ -50,12 +50,20 @@ public final class PersonPojoTest
   @Test
   public void testBasic ()
   {
-    final PersonPojo x = new PersonPojo ("FamilyName",
+    final AddressPojo a = new AddressPojo ("FullAddress",
+                                           "StreetName",
+                                           "BuildingNumber",
+                                           "Town",
+                                           "PostalCode",
+                                           "CountryCode");
+    final PersonPojo x = new PersonPojo ("ID",
+                                         "idSchemeID",
+                                         "FamilyName",
                                          "GivenName",
                                          "GenderCode",
                                          "BirthName",
                                          PDTFactory.getCurrentLocalDate (),
-                                         "ID");
+                                         a);
     _validate (x);
   }
 

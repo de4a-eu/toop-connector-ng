@@ -20,17 +20,10 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.string.StringHelper;
 
-import eu.toop.edm.jaxb.w3.cv.ac.CvaddressType;
-import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
-import eu.toop.edm.jaxb.w3.cv.bc.AdminunitFirstlineType;
-import eu.toop.edm.jaxb.w3.cv.bc.FullCvaddressType;
-import eu.toop.edm.jaxb.w3.cv.bc.IdentifierTypeType;
-import eu.toop.edm.jaxb.w3.cv.bc.LegalNameType;
-import eu.toop.edm.jaxb.w3.cv.bc.LocatorDesignatorType;
-import eu.toop.edm.jaxb.w3.cv.bc.PostCodeType;
-import eu.toop.edm.jaxb.w3.cv.bc.PostNameType;
-import eu.toop.edm.jaxb.w3.cv.bc.ThoroughfareType;
-import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
+import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
+import eu.toop.edm.jaxb.w3.cv.bc.LegalEntityIDType;
+import eu.toop.edm.jaxb.w3.cv.bc.LegalEntityLegalIDType;
+import eu.toop.edm.jaxb.w3.cv.bc.LegalEntityLegalNameType;
 
 public class BusinessPojo
 {
@@ -39,151 +32,57 @@ public class BusinessPojo
   private final String m_sID;
   private final String m_sIDSchemeID;
   private final String m_sLegalName;
+  private final AddressPojo m_aAddress;
 
-  private final String m_sFullAddress;
-  private final String m_sStreetName;
-  private final String m_sBuildingNumber;
-  private final String m_sTown;
-  private final String m_sCountryCode;
-  private final String m_sPostalCode;
-
-  public BusinessPojo (final String sLegalName,
-                       final String sLegalID,
-                       final String sLegalIDType,
-                       final String sID,
-                       final String sIDType,
-                       @Nullable final String sFullAddress,
-                       final String sStreetName,
-                       final String sBuildingNumber,
-                       final String sTown,
-                       final String sPostalCode,
-                       final String sCountryCode)
+  public BusinessPojo (@Nullable final String sLegalID,
+                       @Nullable final String sLegalIDType,
+                       @Nullable final String sID,
+                       @Nullable final String sIDType,
+                       @Nullable final String sLegalName,
+                       @Nullable final AddressPojo aAddress)
   {
     m_sLegalID = sLegalID;
-    m_sLegalIDType = sLegalIDType;
+    m_sLegalIDSchemeID = sLegalIDType;
     m_sID = sID;
-    m_sIDType = sIDType;
+    m_sIDSchemeID = sIDType;
     m_sLegalName = sLegalName;
-    m_sFullAddress = sFullAddress;
-    m_sStreetName = sStreetName;
-    m_sBuildingNumber = sBuildingNumber;
-    m_sTown = sTown;
-    m_sCountryCode = sCountryCode;
-    m_sPostalCode = sPostalCode;
-  }
-
-  @Nullable
-  public static CvaddressType createAddress (final String sFullAddress,
-                                             final String sStreetName,
-                                             final String sBuildingNumber,
-                                             final String sTown,
-                                             final String sPostalCode,
-                                             final String sCountryCode)
-  {
-    boolean bAny = false;
-    final CvaddressType aAddress = new CvaddressType ();
-    if (StringHelper.hasText (sFullAddress))
-    {
-      final FullCvaddressType aFullAddress = new FullCvaddressType ();
-      aFullAddress.setValue (sFullAddress);
-      aAddress.addFullCvaddress (aFullAddress);
-      bAny = true;
-    }
-    if (StringHelper.hasText (sStreetName))
-    {
-      final ThoroughfareType aThoroughfare = new ThoroughfareType ();
-      aThoroughfare.setValue (sStreetName);
-      aAddress.addThoroughfare (aThoroughfare);
-      bAny = true;
-    }
-    if (StringHelper.hasText (sBuildingNumber))
-    {
-      final LocatorDesignatorType aLD = new LocatorDesignatorType ();
-      aLD.setValue (sBuildingNumber);
-      aAddress.addLocatorDesignator (aLD);
-      bAny = true;
-    }
-    if (StringHelper.hasText (sTown))
-    {
-      final PostNameType aPostName = new PostNameType ();
-      aPostName.setValue (sTown);
-      aAddress.addPostName (aPostName);
-      bAny = true;
-    }
-    if (StringHelper.hasText (sPostalCode))
-    {
-      final PostCodeType aPostCode = new PostCodeType ();
-      aPostCode.setValue (sPostalCode);
-      aAddress.addPostCode (aPostCode);
-      bAny = true;
-    }
-    if (StringHelper.hasText (sCountryCode))
-    {
-      final AdminunitFirstlineType aAdmin1 = new AdminunitFirstlineType ();
-      aAdmin1.setValue (sCountryCode);
-      aAddress.addAdminunitFirstline (aAdmin1);
-      bAny = true;
-    }
-    return bAny ? aAddress : null;
+    m_aAddress = aAddress;
   }
 
   @Nonnull
-  public CvbusinessType getAsBusiness ()
+  public CoreBusinessType getAsBusiness ()
   {
-    final CvbusinessType ret = new CvbusinessType ();
-    if (StringHelper.hasText (m_sLegalName))
-    {
-      final LegalNameType aLegalName = new LegalNameType ();
-      aLegalName.setValue (m_sLegalName);
-      ret.addLegalName (aLegalName);
-    }
+    final CoreBusinessType ret = new CoreBusinessType ();
 
-    // Legal ID is mandatory
+    if (StringHelper.hasText (m_sLegalID))
     {
-      final CvidentifierType aLegalID = new CvidentifierType ();
-      {
-        final IdentifierType aID = new IdentifierType ();
-        aID.setValue (m_sLegalID);
-        aLegalID.setIdentifier (aID);
-      }
-      if (StringHelper.hasText (m_sLegalIDType))
-      {
-        final IdentifierTypeType aIDType = new IdentifierTypeType ();
-        aIDType.setValue (m_sLegalIDType);
-        aLegalID.setIdentifierType (aIDType);
-      }
-      ret.setLegalIdentifierCvidentifier (aLegalID);
+      final LegalEntityLegalIDType aLegalID = new LegalEntityLegalIDType ();
+      aLegalID.setValue (m_sLegalID);
+      aLegalID.setSchemeID (m_sLegalIDSchemeID);
+      ret.addLegalEntityLegalID (aLegalID);
     }
-
     if (StringHelper.hasText (m_sID))
     {
-      final CvidentifierType aLegalID = new CvidentifierType ();
-      {
-        final IdentifierType aID = new IdentifierType ();
-        aID.setValue (m_sID);
-        aLegalID.setIdentifier (aID);
-      }
-      if (StringHelper.hasText (m_sIDType))
-      {
-        final IdentifierTypeType aIDType = new IdentifierTypeType ();
-        aIDType.setValue (m_sIDType);
-        aLegalID.setIdentifierType (aIDType);
-      }
-      ret.addIdentifierCvidentifier (aLegalID);
+      final LegalEntityIDType aLegalID = new LegalEntityIDType ();
+      aLegalID.setValue (m_sID);
+      aLegalID.setSchemeID (m_sIDSchemeID);
+      ret.addLegalEntityID (aLegalID);
     }
+    if (StringHelper.hasText (m_sLegalName))
+    {
+      final LegalEntityLegalNameType aLegalName = new LegalEntityLegalNameType ();
+      aLegalName.setValue (m_sLegalName);
+      ret.addLegalEntityLegalName (aLegalName);
+    }
+    if (m_aAddress != null)
+      ret.setLegalEntityCoreAddress (m_aAddress.getAsAddress ());
 
-    ret.setCvaddress (createAddress (m_sFullAddress,
-                                     m_sStreetName,
-                                     m_sBuildingNumber,
-                                     m_sTown,
-                                     m_sPostalCode,
-                                     m_sCountryCode));
     return ret;
   }
 
   @Nonnull
   public static BusinessPojo createMinimum ()
   {
-    return new BusinessPojo (null, null, null, null, null, null, null, null, null, null, null);
+    return new BusinessPojo (null, null, null, null, null, null);
   }
 }

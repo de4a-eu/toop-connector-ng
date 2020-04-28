@@ -16,17 +16,20 @@
 package eu.toop.edm.xml.cpsv;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
-import eu.toop.edm.jaxb.w3.cv.bc.IdentifierTypeType;
+import eu.toop.edm.jaxb.cv.agent.LocationType;
+import eu.toop.edm.jaxb.cv.cac.AddressType;
+import eu.toop.edm.jaxb.cv.cbc.IDType;
+import eu.toop.edm.jaxb.cv.cbc.NameType;
 
 public class DataConsumerPojo
 {
   private final String m_sID;
-  private final String m_sIDType;
+  private final String m_sIDSchemeID;
   private final String m_sName;
   private final String m_sFullAddress;
   private final String m_sStreetName;
@@ -35,18 +38,18 @@ public class DataConsumerPojo
   private final String m_sPostalCode;
   private final String m_sCountryCode;
 
-  public DataConsumerPojo (final String sID,
-                           final String sIDType,
-                           final String sName,
-                           final String sFullAddress,
-                           final String sStreetName,
-                           final String sBuildingNumber,
-                           final String sTown,
-                           final String sPostalCode,
-                           final String sCountryCode)
+  public DataConsumerPojo (@Nullable final String sID,
+                           @Nullable final String sIDSchemeID,
+                           @Nullable final String sName,
+                           @Nullable final String sFullAddress,
+                           @Nullable final String sStreetName,
+                           @Nullable final String sBuildingNumber,
+                           @Nullable final String sTown,
+                           @Nullable final String sPostalCode,
+                           @Nullable final String sCountryCode)
   {
     m_sID = sID;
-    m_sIDType = sIDType;
+    m_sIDSchemeID = sIDSchemeID;
     m_sName = sName;
     m_sFullAddress = sFullAddress;
     m_sStreetName = sStreetName;
@@ -62,29 +65,34 @@ public class DataConsumerPojo
     final AgentType ret = new AgentType ();
     if (StringHelper.hasText (m_sID))
     {
-      final CvidentifierType aAgentID = new CvidentifierType ();
-      final IdentifierType aID = new IdentifierType ();
+      final IDType aID = new IDType ();
       aID.setValue (m_sID);
-      aAgentID.setIdentifier (aID);
-      if (StringHelper.hasText (m_sIDType))
-      {
-        final IdentifierTypeType aIdentifierType = new IdentifierTypeType ();
-        aIdentifierType.setValue (m_sIDType);
-        aAgentID.setIdentifierType (aIdentifierType);
-      }
-      ret.setAgentID (aAgentID);
+      aID.setSchemeID (m_sIDSchemeID);
+      ret.addId (aID);
     }
-    ret.setAgentName (m_sName);
-    if (StringHelper.hasText (m_sFullAddress))
+    if (StringHelper.hasText (m_sName))
     {
+      final NameType aName = new NameType ();
+      aName.setValue (m_sName);
+      ret.addName (aName);
+    }
+    if (StringHelper.hasText (m_sFullAddress) ||
+        StringHelper.hasText (m_sStreetName) ||
+        StringHelper.hasText (m_sBuildingNumber) ||
+        StringHelper.hasText (m_sTown) ||
+        StringHelper.hasText (m_sPostalCode) ||
+        StringHelper.hasText (m_sCountryCode))
+    {
+      final LocationType aLocation = new LocationType ();
       final AddressType aAddress = new AddressType ();
-      aAddress.setAddressFullAddress (m_sFullAddress);
-      aAddress.setAddressThoroughfare (m_sStreetName);
-      aAddress.setAddressLocatorDesignator (m_sBuildingNumber);
-      aAddress.setAddressPostName (m_sTown);
-      aAddress.setAddressPostCode (m_sPostalCode);
-      aAddress.setAddressAdminUnitL1 (m_sCountryCode);
-      ret.setAgentHasAddress (aAddress);
+      aAddress.setFullAddress (m_sFullAddress);
+      aAddress.setThoroughfare (m_sStreetName);
+      aAddress.setLocatorDesignator (m_sBuildingNumber);
+      aAddress.setPostName (m_sTown);
+      aAddress.setPostCode (m_sPostalCode);
+      aAddress.setAdminUnitLevel1 (m_sCountryCode);
+      aLocation.setAddress (aAddress);
+      ret.addLocation (aLocation);
     }
     return ret;
   }

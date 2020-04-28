@@ -18,17 +18,18 @@ package eu.toop.edm.xml.cv;
 import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
-import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
-import eu.toop.edm.jaxb.w3.cv.bc.BirthNameType;
-import eu.toop.edm.jaxb.w3.cv.bc.GivenNameType;
-import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
-import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.BirthDateType;
-import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.FamilyNameType;
-import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.GenderCodeType;
+import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.jaxb.w3.cv.bc.PersonBirthDateType;
+import eu.toop.edm.jaxb.w3.cv.bc.PersonBirthNameType;
+import eu.toop.edm.jaxb.w3.cv.bc.PersonFamilyNameType;
+import eu.toop.edm.jaxb.w3.cv.bc.PersonGenderCodeType;
+import eu.toop.edm.jaxb.w3.cv.bc.PersonGivenNameType;
+import eu.toop.edm.jaxb.w3.cv.bc.PersonIDType;
 
 public class PersonPojo
 {
@@ -39,73 +40,71 @@ public class PersonPojo
   private final String m_sGenderCode;
   private final String m_sBirthName;
   private final LocalDate m_aBirthDate;
+  private final AddressPojo m_aAddress;
 
-  // PersonCoreAddress
-  private final String m_sFullAddress;
-  private final String m_sStreetName;
-  private final String m_sBuildingNumber;
-  private final String m_sTown;
-  private final String m_sCountryCode;
-  private final String m_sPostalCode;
-
-  public PersonPojo (final String sFamilyName,
-                     final String sGivenName,
-                     final String sGenderCode,
-                     final String sBirthName,
-                     final LocalDate aBirthDate,
-                     final String sID)
+  public PersonPojo (@Nullable final String sID,
+                     @Nullable final String sIDSchemeID,
+                     @Nullable final String sFamilyName,
+                     @Nullable final String sGivenName,
+                     @Nullable final String sGenderCode,
+                     @Nullable final String sBirthName,
+                     @Nullable final LocalDate aBirthDate,
+                     @Nullable final AddressPojo aAddress)
   {
+    m_sID = sID;
+    m_sIDSchemeID = sIDSchemeID;
     m_sFamilyName = sFamilyName;
     m_sGivenName = sGivenName;
     m_sGenderCode = sGenderCode;
     m_sBirthName = sBirthName;
     m_aBirthDate = aBirthDate;
-    m_sID = sID;
+    m_aAddress = aAddress;
   }
 
   @Nonnull
-  public CvpersonType getAsPerson ()
+  public CorePersonType getAsPerson ()
   {
-    final CvpersonType ret = new CvpersonType ();
+    final CorePersonType ret = new CorePersonType ();
 
+    if (StringHelper.hasText (m_sID))
+    {
+      final PersonIDType aID = new PersonIDType ();
+      aID.setValue (m_sID);
+      aID.setSchemeID (m_sIDSchemeID);
+      ret.addPersonID (aID);
+    }
     if (StringHelper.hasText (m_sFamilyName))
     {
-      final FamilyNameType aFamilyName = new FamilyNameType ();
+      final PersonFamilyNameType aFamilyName = new PersonFamilyNameType ();
       aFamilyName.setValue (m_sFamilyName);
-      ret.addFamilyName (aFamilyName);
+      ret.addPersonFamilyName (aFamilyName);
     }
     if (StringHelper.hasText (m_sGivenName))
     {
-      final GivenNameType aGivenName = new GivenNameType ();
+      final PersonGivenNameType aGivenName = new PersonGivenNameType ();
       aGivenName.setValue (m_sGivenName);
-      ret.addGivenName (aGivenName);
+      ret.addPersonGivenName (aGivenName);
     }
     if (StringHelper.hasText (m_sGenderCode))
     {
-      final GenderCodeType aGC = new GenderCodeType ();
+      final PersonGenderCodeType aGC = new PersonGenderCodeType ();
       aGC.setValue (m_sGenderCode);
-      ret.addGenderCode (aGC);
+      ret.addPersonGenderCode (aGC);
     }
     if (StringHelper.hasText (m_sBirthName))
     {
-      final BirthNameType aBirthName = new BirthNameType ();
+      final PersonBirthNameType aBirthName = new PersonBirthNameType ();
       aBirthName.setValue (m_sBirthName);
-      ret.addBirthName (aBirthName);
+      ret.addPersonBirthName (aBirthName);
     }
     if (m_aBirthDate != null)
     {
-      final BirthDateType aBirthDate = new BirthDateType ();
+      final PersonBirthDateType aBirthDate = new PersonBirthDateType ();
       aBirthDate.setValue (PDTXMLConverter.getXMLCalendarDate (m_aBirthDate));
-      ret.addBirthDate (aBirthDate);
+      ret.addPersonBirthDate (aBirthDate);
     }
-    if (StringHelper.hasText (m_sID))
-    {
-      final CvidentifierType aID = new CvidentifierType ();
-      final IdentifierType aIdentifier = new IdentifierType ();
-      aIdentifier.setValue (m_sID);
-      aID.setIdentifier (aIdentifier);
-      ret.addCvidentifier (aID);
-    }
+    if (m_aAddress != null)
+      ret.addPersonCoreAddress (m_aAddress.getAsAddress ());
 
     return ret;
   }
@@ -113,6 +112,6 @@ public class PersonPojo
   @Nonnull
   public static PersonPojo createMinimum ()
   {
-    return new PersonPojo (null, null, null, null, null, null);
+    return new PersonPojo (null, null, null, null, null, null, null, null);
   }
 }
