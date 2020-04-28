@@ -32,9 +32,10 @@ public final class ReverseDocumentTypeMappingTest
   public void testBasic ()
   {
     for (final EPredefinedDocumentTypeIdentifier e : EPredefinedDocumentTypeIdentifier.values ())
-    {
-      assertNotNull ("Please register " + e + " to ReverseDocumentTypeMapping",
-                     ReverseDocumentTypeMapping.getReverseDocumentType (e));
-    }
+      if (!e.isDeprecated ())
+      {
+        assertNotNull ("Please register " + e + " to ReverseDocumentTypeMapping",
+                       ReverseDocumentTypeMapping.getReverseDocumentType (e));
+      }
   }
 }
