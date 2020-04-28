@@ -85,6 +85,7 @@ public class DataConsumerPojo
     {
       final LocationType aLocation = new LocationType ();
       final AddressType aAddress = new AddressType ();
+      aAddress.setId ("");
       aAddress.setFullAddress (m_sFullAddress);
       aAddress.setThoroughfare (m_sStreetName);
       aAddress.setLocatorDesignator (m_sBuildingNumber);
