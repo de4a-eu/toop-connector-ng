@@ -15,7 +15,7 @@ import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
-import eu.toop.edm.jaxb.cpsv.helper.AgentType;
+import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
 import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
 import eu.toop.edm.regrep.ISlotProvider;

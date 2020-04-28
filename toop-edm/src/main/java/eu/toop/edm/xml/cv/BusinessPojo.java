@@ -24,7 +24,6 @@ import eu.toop.edm.jaxb.w3.cv.ac.CvaddressType;
 import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
 import eu.toop.edm.jaxb.w3.cv.bc.AdminunitFirstlineType;
 import eu.toop.edm.jaxb.w3.cv.bc.FullCvaddressType;
-import eu.toop.edm.jaxb.w3.cv.bc.IdentifierType;
 import eu.toop.edm.jaxb.w3.cv.bc.IdentifierTypeType;
 import eu.toop.edm.jaxb.w3.cv.bc.LegalNameType;
 import eu.toop.edm.jaxb.w3.cv.bc.LocatorDesignatorType;
@@ -35,41 +34,42 @@ import eu.toop.edm.jaxb.w3.cv.business.CvbusinessType;
 
 public class BusinessPojo
 {
-  private final String m_sLegalName;
   private final String m_sLegalID;
-  private final String m_sLegalIDType;
+  private final String m_sLegalIDSchemeID;
   private final String m_sID;
-  private final String m_sIDType;
+  private final String m_sIDSchemeID;
+  private final String m_sLegalName;
+
   private final String m_sFullAddress;
   private final String m_sStreetName;
   private final String m_sBuildingNumber;
   private final String m_sTown;
-  private final String m_sPostalCode;
   private final String m_sCountryCode;
+  private final String m_sPostalCode;
 
   public BusinessPojo (final String sLegalName,
                        final String sLegalID,
                        final String sLegalIDType,
                        final String sID,
                        final String sIDType,
-                       final String sFullAddress,
+                       @Nullable final String sFullAddress,
                        final String sStreetName,
                        final String sBuildingNumber,
                        final String sTown,
                        final String sPostalCode,
                        final String sCountryCode)
   {
-    m_sLegalName = sLegalName;
     m_sLegalID = sLegalID;
     m_sLegalIDType = sLegalIDType;
     m_sID = sID;
     m_sIDType = sIDType;
+    m_sLegalName = sLegalName;
     m_sFullAddress = sFullAddress;
     m_sStreetName = sStreetName;
     m_sBuildingNumber = sBuildingNumber;
     m_sTown = sTown;
-    m_sPostalCode = sPostalCode;
     m_sCountryCode = sCountryCode;
+    m_sPostalCode = sPostalCode;
   }
 
   @Nullable

@@ -19,10 +19,8 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.string.StringHelper;
 
-import eu.toop.edm.jaxb.cpsv.helper.AddressType;
-import eu.toop.edm.jaxb.cpsv.helper.AgentType;
+import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
-import eu.toop.edm.jaxb.w3.cv.bc.IdentifierType;
 import eu.toop.edm.jaxb.w3.cv.bc.IdentifierTypeType;
 
 public class DataConsumerPojo

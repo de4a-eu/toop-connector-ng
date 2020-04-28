@@ -25,39 +25,14 @@
                   typesafeEnumMemberName="generateError"
                   underscoreBinding="asCharInWord">
   </globalBindings>
-  <bindings schemaLocation="../resources/schemas/CoreBusiness-v1.00.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.edm.jaxb.w3.cv.business" />
-    </schemaBindings>
-  </bindings>
-  <bindings schemaLocation="../resources/schemas/CoreLocation-v1.00.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.edm.jaxb.w3.cv.location" />
-    </schemaBindings>
-  </bindings>
-  <bindings schemaLocation="../resources/schemas/CorePerson-v1.00.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.edm.jaxb.w3.cv.person" />
-    </schemaBindings>
-  </bindings>
-  <bindings schemaLocation="../resources/schemas/CoreVocabularyAggregateComponents-v1.00.xsd" node="/xs:schema">
+  <bindings schemaLocation="../resources/schemas/CoreVocabularies-AggregateComponents-1.1.xsd" node="/xs:schema">
     <schemaBindings>
       <package name="eu.toop.edm.jaxb.w3.cv.ac" />
     </schemaBindings>
   </bindings>
-  <bindings schemaLocation="../resources/schemas/CoreVocabularyBasicComponents-v1.00.xsd" node="/xs:schema">
+  <bindings schemaLocation="../resources/schemas/CoreVocabularies-BasicComponents-1.1.xsd" node="/xs:schema">
     <schemaBindings>
       <package name="eu.toop.edm.jaxb.w3.cv.bc" />
-    </schemaBindings>
-  </bindings>
-  <bindings schemaLocation="../resources/schemas/cpsv-ap_xml_schema_v0.01.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.edm.jaxb.cpsv" />
-    </schemaBindings>
-  </bindings>
-  <bindings schemaLocation="../resources/schemas/cpsv-ap_xml_schema_v0.01.helper.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.edm.jaxb.cpsv.helper" />
     </schemaBindings>
   </bindings>
 

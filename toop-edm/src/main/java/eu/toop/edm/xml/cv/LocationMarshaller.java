@@ -18,7 +18,6 @@ package eu.toop.edm.xml.cv;
 import com.helger.jaxb.GenericJAXBMarshaller;
 
 import eu.toop.edm.jaxb.w3.cv.location.CvlocationType;
-import eu.toop.edm.jaxb.w3.cv.location.ObjectFactory;
 
 public class LocationMarshaller extends GenericJAXBMarshaller <CvlocationType>
 {

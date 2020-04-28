@@ -23,22 +23,30 @@ import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CvidentifierType;
-import eu.toop.edm.jaxb.w3.cv.bc.BirthDateType;
 import eu.toop.edm.jaxb.w3.cv.bc.BirthNameType;
-import eu.toop.edm.jaxb.w3.cv.bc.GenderCodeType;
 import eu.toop.edm.jaxb.w3.cv.bc.GivenNameType;
-import eu.toop.edm.jaxb.w3.cv.bc.IdentifierType;
 import eu.toop.edm.jaxb.w3.cv.person.CvpersonType;
-import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_2.FamilyNameType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.BirthDateType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.FamilyNameType;
+import oasis.names.specification.ubl.schema.xsd.commonbasiccomponents_21.GenderCodeType;
 
 public class PersonPojo
 {
+  private final String m_sID;
+  private final String m_sIDSchemeID;
   private final String m_sFamilyName;
   private final String m_sGivenName;
   private final String m_sGenderCode;
   private final String m_sBirthName;
   private final LocalDate m_aBirthDate;
-  private final String m_sID;
+
+  // PersonCoreAddress
+  private final String m_sFullAddress;
+  private final String m_sStreetName;
+  private final String m_sBuildingNumber;
+  private final String m_sTown;
+  private final String m_sCountryCode;
+  private final String m_sPostalCode;
 
   public PersonPojo (final String sFamilyName,
                      final String sGivenName,

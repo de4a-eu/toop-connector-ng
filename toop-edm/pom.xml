@@ -78,7 +78,7 @@
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>
-      <artifactId>ph-ubl20</artifactId>
+      <artifactId>ph-ubl21</artifactId>
     </dependency>
     <dependency>
       <groupId>eu.toop</groupId>
@@ -171,7 +171,7 @@
             </episode>
             <episode>
               <groupId>com.helger</groupId>
-              <artifactId>ph-ubl20</artifactId>
+              <artifactId>ph-ubl21</artifactId>
             </episode>
           </episodes>
         </configuration>
