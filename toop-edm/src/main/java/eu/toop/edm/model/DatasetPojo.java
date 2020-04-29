@@ -5,8 +5,6 @@ import java.time.LocalDateTime;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.xml.bind.JAXBElement;
-import javax.xml.namespace.QName;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -65,29 +63,21 @@ public class DatasetPojo
   {
     final DCatAPDatasetType ret = new DCatAPDatasetType ();
     for (final String sDescription : m_aDescriptions)
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createDescription (sDescription));
+      ret.addDescription (sDescription);
     for (final String sTitle : m_aTitles)
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTitle (sTitle));
+      ret.addTitle (sTitle);
     if (m_aDistribution != null)
-    {
-      if (true)
-        ret.addContent (new JAXBElement <> (new QName ("http://data.europa.eu/r5r/", "distribution"),
-                                            CCCEVDocumentReferenceType.class,
-                                            null,
-                                            m_aDistribution));
-      else
-        ret.addContent (new eu.toop.edm.jaxb.dcatap.ObjectFactory ().createDistribution (m_aDistribution));
-    }
+      ret.addDistribution (m_aDistribution);
     if (m_aCreator != null)
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createCreator (m_aCreator));
+      ret.setCreator (m_aCreator);
     if (StringHelper.hasText (m_sID))
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createIdentifier (m_sID));
+      ret.addIdentifier (m_sID);
     if (m_aIssuedDT != null)
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createIssued (PDTXMLConverter.getXMLCalendar (m_aIssuedDT)));
+      ret.setIssued (PDTXMLConverter.getXMLCalendar (m_aIssuedDT));
     if (StringHelper.hasText (m_sLanguage))
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createLanguage (m_sLanguage));
+      ret.addLanguage (m_sLanguage);
     if (m_aLastModifiedDT != null)
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createModified (PDTXMLConverter.getXMLCalendar (m_aLastModifiedDT)));
+      ret.setModified (PDTXMLConverter.getXMLCalendar (m_aLastModifiedDT));
     if (m_aValidFrom != null || m_aValidTo != null)
     {
       final DCPeriodOfTimeType aPeriodOfType = new DCPeriodOfTimeType ();
@@ -95,7 +85,7 @@ public class DatasetPojo
         aPeriodOfType.addStartDate (PDTXMLConverter.getXMLCalendarDate (m_aValidFrom));
       if (m_aValidTo != null)
         aPeriodOfType.addEndDate (PDTXMLConverter.getXMLCalendarDate (m_aValidTo));
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTemporal (aPeriodOfType));
+      ret.addTemporal (aPeriodOfType);
     }
     return ret;
   }
