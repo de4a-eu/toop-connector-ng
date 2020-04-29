@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2018-2020 toop.eu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package eu.toop.edm.model;
 
 import java.util.List;
@@ -75,6 +90,14 @@ public class DocumentReferencePojo
     }
 
     @Nonnull
+    public Builder addDocumentDescription (@Nullable final String s)
+    {
+      if (StringHelper.hasText (s))
+        m_aDocumentDescriptions.add (s);
+      return this;
+    }
+
+    @Nonnull
     public Builder documentDescription (@Nullable final String s)
     {
       if (StringHelper.hasText (s))
@@ -85,10 +108,16 @@ public class DocumentReferencePojo
     }
 
     @Nonnull
-    public Builder addDocumentDescription (@Nullable final String s)
+    public Builder documentDescriptions (@Nullable final String... a)
     {
-      if (StringHelper.hasText (s))
-        m_aDocumentDescriptions.add (s);
+      m_aDocumentDescriptions.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder documentDescriptions (@Nullable final Iterable <String> a)
+    {
+      m_aDocumentDescriptions.setAll (a);
       return this;
     }
 

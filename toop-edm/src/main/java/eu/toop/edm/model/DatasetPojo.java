@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2018-2020 toop.eu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package eu.toop.edm.model;
 
 import java.time.LocalDate;
@@ -17,6 +32,7 @@ import com.helger.datetime.util.PDTXMLConverter;
 import eu.toop.edm.jaxb.cccev.CCCEVDocumentReferenceType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import eu.toop.edm.jaxb.dcatap.DCatAPRelationshipType;
 import eu.toop.edm.jaxb.dcterms.DCPeriodOfTimeType;
 
 public class DatasetPojo
@@ -25,37 +41,44 @@ public class DatasetPojo
   private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
   private final CCCEVDocumentReferenceType m_aDistribution;
   private final AgentType m_aCreator;
-  private final String m_sID;
+  private final ICommonsList <String> m_aIDs = new CommonsArrayList <> ();
   private final LocalDateTime m_aIssuedDT;
   private final String m_sLanguage;
   private final LocalDateTime m_aLastModifiedDT;
   private final LocalDate m_aValidFrom;
   private final LocalDate m_aValidTo;
+  private final ICommonsList <DCatAPRelationshipType> m_aQualifiedRelations = new CommonsArrayList <> ();
 
   public DatasetPojo (@Nonnull @Nonempty final ICommonsList <String> aDescriptions,
                       @Nonnull @Nonempty final ICommonsList <String> aTitles,
                       @Nullable final CCCEVDocumentReferenceType aDistribution,
                       @Nullable final AgentType aCreator,
-                      @Nullable final String sID,
+                      @Nullable final ICommonsList <String> aIDs,
                       @Nullable final LocalDateTime aIssuedDT,
                       @Nullable final String sLanguage,
                       @Nullable final LocalDateTime aLastModifiedDT,
                       @Nullable final LocalDate aValidFrom,
-                      @Nullable final LocalDate aValidTo)
+                      @Nullable final LocalDate aValidTo,
+                      @Nullable final ICommonsList <DCatAPRelationshipType> aQualifiedRelations)
   {
-    ValueEnforcer.notEmptyNoNullValue (aTitles, "Titles");
     ValueEnforcer.notEmptyNoNullValue (aDescriptions, "Descriptions");
+    ValueEnforcer.notEmptyNoNullValue (aTitles, "Titles");
+    ValueEnforcer.noNullValue (aIDs, "IDs");
+    ValueEnforcer.noNullValue (aQualifiedRelations, "QualifiedRelations");
 
     m_aDescriptions.addAll (aDescriptions);
     m_aTitles.addAll (aTitles);
     m_aDistribution = aDistribution;
     m_aCreator = aCreator;
-    m_sID = sID;
+    if (aIDs != null)
+      m_aIDs.addAll (aIDs);
     m_aIssuedDT = aIssuedDT;
     m_sLanguage = sLanguage;
     m_aLastModifiedDT = aLastModifiedDT;
     m_aValidFrom = aValidFrom;
     m_aValidTo = aValidTo;
+    if (aQualifiedRelations != null)
+      m_aQualifiedRelations.addAll (aQualifiedRelations);
   }
 
   @Nonnull
@@ -70,8 +93,8 @@ public class DatasetPojo
       ret.addDistribution (m_aDistribution);
     if (m_aCreator != null)
       ret.setCreator (m_aCreator);
-    if (StringHelper.hasText (m_sID))
-      ret.addIdentifier (m_sID);
+    for (final String sID : m_aIDs)
+      ret.addIdentifier (sID);
     if (m_aIssuedDT != null)
       ret.setIssued (PDTXMLConverter.getXMLCalendar (m_aIssuedDT));
     if (StringHelper.hasText (m_sLanguage))
@@ -87,6 +110,8 @@ public class DatasetPojo
         aPeriodOfType.addEndDate (PDTXMLConverter.getXMLCalendarDate (m_aValidTo));
       ret.addTemporal (aPeriodOfType);
     }
+    for (final DCatAPRelationshipType aItem : m_aQualifiedRelations)
+      ret.addQualifiedRelation (aItem);
     return ret;
   }
 
@@ -102,12 +127,13 @@ public class DatasetPojo
     private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
     private CCCEVDocumentReferenceType m_aDistribution;
     private AgentType m_aCreator;
-    private String m_sID;
+    private final ICommonsList <String> m_aIDs = new CommonsArrayList <> ();
     private LocalDateTime m_aIssuedDT;
     private String m_sLanguage;
     private LocalDateTime m_aLastModifiedDT;
     private LocalDate m_aValidFrom;
     private LocalDate m_aValidTo;
+    private final ICommonsList <DCatAPRelationshipType> m_aQualifiedRelations = new CommonsArrayList <> ();
 
     public Builder ()
     {}
@@ -131,6 +157,20 @@ public class DatasetPojo
     }
 
     @Nonnull
+    public Builder descriptions (@Nullable final String... a)
+    {
+      m_aDescriptions.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder descriptions (@Nullable final Iterable <String> a)
+    {
+      m_aDescriptions.setAll (a);
+      return this;
+    }
+
+    @Nonnull
     public Builder addTitle (@Nullable final String s)
     {
       if (StringHelper.hasText (s))
@@ -145,6 +185,20 @@ public class DatasetPojo
         m_aTitles.set (s);
       else
         m_aTitles.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder titles (@Nullable final String... a)
+    {
+      m_aTitles.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder titles (@Nullable final Iterable <String> a)
+    {
+      m_aTitles.setAll (a);
       return this;
     }
 
@@ -187,9 +241,34 @@ public class DatasetPojo
     }
 
     @Nonnull
+    public Builder addID (@Nullable final String s)
+    {
+      if (StringHelper.hasText (s))
+        m_aIDs.add (s);
+      return this;
+    }
+
+    @Nonnull
     public Builder id (@Nullable final String s)
     {
-      m_sID = s;
+      if (StringHelper.hasText (s))
+        m_aIDs.set (s);
+      else
+        m_aIDs.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder ids (@Nullable final String... a)
+    {
+      m_aIDs.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder ids (@Nullable final Iterable <String> a)
+    {
+      m_aIDs.setAll (a);
       return this;
     }
 
@@ -241,18 +320,75 @@ public class DatasetPojo
     }
 
     @Nonnull
+    public Builder addQualifiedRelation (@Nullable final QualifiedRelationPojo.Builder a)
+    {
+      return addQualifiedRelation (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder addQualifiedRelation (@Nullable final QualifiedRelationPojo a)
+    {
+      return addQualifiedRelation (a == null ? null : a.getAsRelationship ());
+    }
+
+    @Nonnull
+    public Builder addQualifiedRelation (@Nullable final DCatAPRelationshipType a)
+    {
+      if (a != null)
+        m_aQualifiedRelations.add (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder qualifiedRelation (@Nullable final QualifiedRelationPojo.Builder a)
+    {
+      return qualifiedRelation (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder qualifiedRelation (@Nullable final QualifiedRelationPojo a)
+    {
+      return qualifiedRelation (a == null ? null : a.getAsRelationship ());
+    }
+
+    @Nonnull
+    public Builder qualifiedRelation (@Nullable final DCatAPRelationshipType a)
+    {
+      if (a != null)
+        m_aQualifiedRelations.set (a);
+      else
+        m_aQualifiedRelations.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder qualifiedRelations (@Nullable final DCatAPRelationshipType... a)
+    {
+      m_aQualifiedRelations.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder qualifiedRelations (@Nullable final Iterable <? extends DCatAPRelationshipType> a)
+    {
+      m_aQualifiedRelations.setAll (a);
+      return this;
+    }
+
+    @Nonnull
     public DatasetPojo build ()
     {
       return new DatasetPojo (m_aDescriptions,
                               m_aTitles,
                               m_aDistribution,
                               m_aCreator,
-                              m_sID,
+                              m_aIDs,
                               m_aIssuedDT,
                               m_sLanguage,
                               m_aLastModifiedDT,
                               m_aValidFrom,
-                              m_aValidTo);
+                              m_aValidTo,
+                              m_aQualifiedRelations);
     }
   }
 }

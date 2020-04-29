@@ -49,12 +49,16 @@ public final class DatasetPojoTest
                                      .creator (AgentPojo.builder ()
                                                         .name ("Agent name")
                                                         .address (AddressPojo.builder ().town ("Kewlkidshome")))
-                                     .id ("my ID")
-                                     .language ("en")
+                                     .ids ("RE238918378", "DOC-555")
                                      .issuedNow ()
+                                     .language ("en")
                                      .lastModifiedNow ()
                                      .validFrom (PDTFactory.getCurrentLocalDate ().minusMonths (1))
                                      .validTo (PDTFactory.getCurrentLocalDate ().plusYears (1))
+                                     .qualifiedRelation (QualifiedRelationPojo.builder ()
+                                                                              .description ("LegalResourceDesc")
+                                                                              .title ("Name")
+                                                                              .id ("RE238918378"))
                                      .build ();
     final DCatAPDatasetType aAgent = x.getAsDataset ();
     assertNotNull (aAgent);

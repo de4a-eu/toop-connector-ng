@@ -18,6 +18,7 @@ package eu.toop.edm.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -44,12 +45,13 @@ public class ConceptPojo
   public ConceptPojo (@Nullable final String sID,
                       @Nullable final QName aName,
                       @Nullable final CCCEVValueType aValue,
-                      @Nullable final Iterable <ConceptPojo> aChildren)
+                      @Nullable final List <ConceptPojo> aChildren)
   {
     m_sID = sID;
     m_aName = aName;
     m_aValue = aValue;
-    m_aChildren.addAll (aChildren);
+    if (aChildren != null)
+      m_aChildren.addAll (aChildren);
   }
 
   public void visitRecursive (@Nonnull final Consumer <? super ConceptPojo> aConsumer)
@@ -234,6 +236,30 @@ public class ConceptPojo
     {
       if (a != null)
         m_aChildren.add (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder child (@Nullable final ConceptPojo a)
+    {
+      if (a != null)
+        m_aChildren.set (a);
+      else
+        m_aChildren.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder children (@Nullable final ConceptPojo... a)
+    {
+      m_aChildren.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder children (@Nullable final Iterable <? extends ConceptPojo> a)
+    {
+      m_aChildren.setAll (a);
       return this;
     }
 
