@@ -26,9 +26,14 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
 
+import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
+import eu.toop.edm.model.DatasetPojo;
+import eu.toop.edm.model.DocumentReferencePojo;
+import eu.toop.edm.model.QualifiedRelationPojo;
 import eu.toop.edm.xml.cagv.CCAGV;
+import eu.toop.edm.xml.dcatap.CDCatAP;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryResponse;
@@ -43,7 +48,7 @@ public final class DataResponseCreatorTest
   private static final Logger LOGGER = LoggerFactory.getLogger (DataResponseCreatorTest.class);
 
   @Test
-  public void testBasicRequestCreatorConcept ()
+  public void testBasicResponseCreatorConcept ()
   {
     final String sConceptNS = "http://toop.eu/registered-organization";
     final QueryResponse aResponse = DataResponseCreator.builderConcept ()
@@ -111,6 +116,55 @@ public final class DataResponseCreatorTest
     assertNotNull (aResponse);
 
     final String sXML = RegRep4Writer.queryResponse (CCAGV.XSDS).setFormattedOutput (true).getAsString (aResponse);
+    assertNotNull (sXML);
+
+    LOGGER.info (sXML);
+  }
+
+  @Test
+  public void testBasicResponseCreatorDocument ()
+  {
+    final QueryResponse aResponse = DataResponseCreator.builderDocument ()
+                                                       .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
+                                                       .responseStatus (ERegRepResponseStatus.SUCCESS)
+                                                       .issueDateTime (PDTFactory.createLocalDateTime (2020,
+                                                                                                       Month.FEBRUARY,
+                                                                                                       14,
+                                                                                                       19,
+                                                                                                       20,
+                                                                                                       30))
+                                                       .dataProvider (AgentPojo.builder ()
+                                                                               .id ("12345678")
+                                                                               .idSchemeID ("VAT")
+                                                                               .name ("DPName"))
+                                                       .dataset (DatasetPojo.builder ()
+                                                                            .description ("bla desc")
+                                                                            .title ("bla title")
+                                                                            .distribution (DocumentReferencePojo.builder ()
+                                                                                                                .documentURI ("URI")
+                                                                                                                .documentDescription ("DocumentDescription")
+                                                                                                                .documentType ("docType")
+                                                                                                                .localeCode ("GR"))
+                                                                            .creator (AgentPojo.builder ()
+                                                                                               .name ("Agent name")
+                                                                                               .address (AddressPojo.builder ()
+                                                                                                                    .town ("Kewlkidshome")))
+                                                                            .ids ("RE238918378", "DOC-555")
+                                                                            .issuedNow ()
+                                                                            .language ("en")
+                                                                            .lastModifiedNow ()
+                                                                            .validFrom (PDTFactory.getCurrentLocalDate ()
+                                                                                                  .minusMonths (1))
+                                                                            .validTo (PDTFactory.getCurrentLocalDate ()
+                                                                                                .plusYears (1))
+                                                                            .qualifiedRelation (QualifiedRelationPojo.builder ()
+                                                                                                                     .description ("LegalResourceDesc")
+                                                                                                                     .title ("Name")
+                                                                                                                     .id ("RE238918378")))
+                                                       .build ();
+    assertNotNull (aResponse);
+
+    final String sXML = RegRep4Writer.queryResponse (CDCatAP.XSDS).setFormattedOutput (true).getAsString (aResponse);
     assertNotNull (sXML);
 
     LOGGER.info (sXML);

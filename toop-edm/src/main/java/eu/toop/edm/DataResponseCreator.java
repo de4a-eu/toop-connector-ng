@@ -35,11 +35,14 @@ import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
+import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
+import eu.toop.edm.slot.SlotDocumentMetadata;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRepHelper;
@@ -127,6 +130,7 @@ public class DataResponseCreator
     private LocalDateTime m_aIssueDateTime;
     private AgentType m_aDataProvider;
     private CCCEVConceptType m_aConcept;
+    private DCatAPDatasetType m_aDataset;
 
     public Builder ()
     {}
@@ -203,6 +207,25 @@ public class DataResponseCreator
       return this;
     }
 
+    @Nonnull
+    public Builder dataset (@Nullable final DatasetPojo.Builder a)
+    {
+      return dataset (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder dataset (@Nullable final DatasetPojo a)
+    {
+      return dataset (a == null ? null : a.getAsDataset ());
+    }
+
+    @Nonnull
+    public Builder dataset (@Nullable final DCatAPDatasetType a)
+    {
+      m_aDataset = a;
+      return this;
+    }
+
     public void checkConsistency ()
     {
       if (m_eQueryDefinition == null)
@@ -221,9 +244,14 @@ public class DataResponseCreator
         case CONCEPT:
           if (m_aConcept == null)
             throw new IllegalStateException ("A Query Definition of type 'Concept' must contain a Concept");
+          if (m_aDataset != null)
+            throw new IllegalStateException ("A Query Definition of type 'Concept' must NOT contain a Dataset");
           break;
         case DOCUMENT:
-          // TODO
+          if (m_aConcept != null)
+            throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Concept");
+          if (m_aDataset == null)
+            throw new IllegalStateException ("A Query Definition of type 'Document' must contain a Dataset");
           break;
         default:
           throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
@@ -244,6 +272,10 @@ public class DataResponseCreator
       // ConceptValues
       if (m_aConcept != null)
         x.add (new SlotConceptValues (m_aConcept));
+
+      // ConceptValues
+      if (m_aDataset != null)
+        x.add (new SlotDocumentMetadata (m_aDataset));
 
       return new DataResponseCreator (m_eResponseStatus, m_sRequestID, x).createQueryResponse ();
     }
