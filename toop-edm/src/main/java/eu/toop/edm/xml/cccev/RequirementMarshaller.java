@@ -15,34 +15,14 @@
  */
 package eu.toop.edm.xml.cccev;
 
-import javax.annotation.Nullable;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.jaxb.GenericJAXBMarshaller;
-import com.helger.jaxb.JAXBContextCache;
-
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cccev.ObjectFactory;
 
-public class RequirementMarshaller extends GenericJAXBMarshaller <CCCEVRequirementType>
+public class RequirementMarshaller extends AbstractCCCEVMarshaller <CCCEVRequirementType>
 {
   public RequirementMarshaller ()
   {
-    super (CCCEVRequirementType.class, CCCEV.XSDS, x -> new ObjectFactory ().createRequirement (x));
+    super (CCCEVRequirementType.class, x -> new ObjectFactory ().createRequirement (x));
     setNamespaceContext (CCCEVNamespaceContext.getInstance ());
-  }
-
-  @Override
-  protected JAXBContext getJAXBContext (@Nullable final ClassLoader aClassLoader) throws JAXBException
-  {
-    final Class <?> [] aClasses = new Class <?> [] { eu.toop.edm.jaxb.cccev.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.w3.adms.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.foaf.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class };
-    if (isUseContextCache ())
-      return JAXBContextCache.getInstance ().getFromCache (new CommonsArrayList <> (aClasses));
-    return JAXBContext.newInstance (aClasses);
   }
 }

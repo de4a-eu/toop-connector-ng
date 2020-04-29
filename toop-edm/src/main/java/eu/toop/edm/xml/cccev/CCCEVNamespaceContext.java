@@ -35,7 +35,20 @@ public class CCCEVNamespaceContext extends MapBasedNamespaceContext
 
   protected CCCEVNamespaceContext ()
   {
-    addMapping ("cccev", "https://semic.org/sa/cv/common/cbc-2.0.0#");
+    addMapping ("cccev", "https://semic.org/sa/cv/cccev-2.0.0#");
+    addMapping ("cbc", "https://semic.org/sa/cv/common/cbc-2.0.0#");
+    addMapping ("cac", "https://semic.org/sa/cv/common/cac-2.0.0#");
+    addMapping ("regorg", "http://www.w3.org/ns/regorg#");
+    addMapping ("locn", "http://www.w3.org/ns/locn#");
+    addMapping ("cagv", "https://semic.org/sa/cv/cagv/agent-2.0.0#");
+    addMapping ("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
+    addMapping ("spdx", "spdx:xsd::1.0");
+    addMapping ("odrl", "http://www.w3.org/ns/odrl/2/");
+    addMapping ("r5r", "http://data.europa.eu/r5r/");
+    addMapping ("foaf", "http://xmlns.com/foaf/0.1/");
+    addMapping ("adms", "http://www.w3.org/ns/adms#");
+    addMapping ("skos", "http://www.w3.org/2004/02/skos/core#");
+    addMapping ("dcterms", "http://purl.org/dc/terms/");
   }
 
   @Nonnull
