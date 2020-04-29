@@ -9,7 +9,9 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.string.StringHelper;
+import com.helger.datetime.util.PDTXMLConverter;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 
@@ -53,6 +55,12 @@ public class DatasetPojo
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTitle (sTitle));
     if (StringHelper.hasText (m_sID))
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createIdentifier (m_sID));
+    if (m_aIssuedDT != null)
+      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createIssued (PDTXMLConverter.getXMLCalendar (m_aIssuedDT)));
+    if (StringHelper.hasText (m_sLanguage))
+      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createLanguage (m_sLanguage));
+    if (m_aLastModifiedDT != null)
+      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createModified (PDTXMLConverter.getXMLCalendar (m_aLastModifiedDT)));
     return ret;
   }
 
@@ -119,10 +127,22 @@ public class DatasetPojo
     }
 
     @Nonnull
+    public Builder issuedNow ()
+    {
+      return issued (PDTFactory.getCurrentLocalDateTime ());
+    }
+
+    @Nonnull
     public Builder issued (@Nullable final LocalDateTime a)
     {
       m_aIssuedDT = a;
       return this;
+    }
+
+    @Nonnull
+    public Builder lastModifiedNow ()
+    {
+      return lastModified (PDTFactory.getCurrentLocalDateTime ());
     }
 
     @Nonnull

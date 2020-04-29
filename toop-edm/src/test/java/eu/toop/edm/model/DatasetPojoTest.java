@@ -36,7 +36,13 @@ public final class DatasetPojoTest
   @Test
   public void testBasic ()
   {
-    final DatasetPojo x = DatasetPojo.builder ().title ("bla title").description ("bla desc").build ();
+    final DatasetPojo x = DatasetPojo.builder ()
+                                     .title ("bla title")
+                                     .description ("bla desc")
+                                     .language ("en")
+                                     .issuedNow ()
+                                     .lastModifiedNow ()
+                                     .build ();
     final DCatAPDatasetType aAgent = x.getAsDataset ();
     assertNotNull (aAgent);
 
