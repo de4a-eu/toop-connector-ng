@@ -1,12 +1,28 @@
 This file contains all the changes necessary in the XSDs to make them work in the TOOP context.
 
-## cpsv-ap_xml_schema_v0.01.helper
+## dcterm.xsd
 
-Added
+replaced
 
 ```xml
-<xsd:element name="Agent" type="AgentType" />
+  <xsd:complexType name="MediaType">
+    <xsd:complexContent>
+        <xsd:extension base="xsd:anyType"/>   
+    </xsd:complexContent>
+  </xsd:complexType>
 ```
+
+with
+
+```xml
+  <xsd:complexType name="MediaType">
+    <!-- [ph] to create list of Object: added mixed=true -->
+    <xsd:complexContent mixed="true">
+        <xsd:extension base="xsd:anyType"/>   
+    </xsd:complexContent>
+  </xsd:complexType>
+```
+
 
 ## dcat-ap.xsd
 
