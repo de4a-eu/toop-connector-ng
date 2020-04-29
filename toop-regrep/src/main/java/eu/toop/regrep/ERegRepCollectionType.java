@@ -24,7 +24,7 @@ import com.helger.commons.annotation.Nonempty;
  * 
  * @author Philip Helger
  */
-public enum ECollectionType
+public enum ERegRepCollectionType
 {
   BAG ("urn:oasis:names:tc:ebxml-regrep:CollectionType:Bag"),
   LIST ("urn:oasis:names:tc:ebxml-regrep:CollectionType:List"),
@@ -33,7 +33,7 @@ public enum ECollectionType
 
   private final String m_sValue;
 
-  private ECollectionType (@Nonnull @Nonempty final String sValue)
+  private ERegRepCollectionType (@Nonnull @Nonempty final String sValue)
   {
     m_sValue = sValue;
   }

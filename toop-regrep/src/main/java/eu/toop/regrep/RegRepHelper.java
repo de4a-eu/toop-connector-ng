@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -127,7 +127,7 @@ public final class RegRepHelper
   }
 
   @Nonnull
-  public static AnyValueType createSlotValue (@Nonnull final Node x)
+  public static AnyValueType createSlotValue (@Nonnull final Element x)
   {
     ValueEnforcer.notNull (x, "Value");
     final AnyValueType ret = new AnyValueType ();
@@ -144,19 +144,34 @@ public final class RegRepHelper
   @Nonnull
   public static CollectionValueType createSlotValue (@Nullable final ValueType... x)
   {
-    return createSlotValue ((ECollectionType) null, x);
+    return createSlotValue ((ERegRepCollectionType) null, x);
   }
 
   @Nonnull
-  public static CollectionValueType createSlotValue (@Nullable final ECollectionType eType,
+  public static CollectionValueType createSlotValue (@Nullable final ERegRepCollectionType eType,
                                                      @Nullable final ValueType... x)
   {
     ValueEnforcer.noNullValue (x, "Value");
     final CollectionValueType ret = new CollectionValueType ();
     if (eType != null)
       ret.setCollectionType (eType.getValue ());
-    for (final ValueType aItem : x)
-      ret.addElement (aItem);
+    if (x != null)
+      for (final ValueType aItem : x)
+        ret.addElement (aItem);
+    return ret;
+  }
+
+  @Nonnull
+  public static CollectionValueType createSlotValue (@Nullable final ERegRepCollectionType eType,
+                                                     @Nullable final Iterable <? extends ValueType> x)
+  {
+    ValueEnforcer.noNullValue (x, "Value");
+    final CollectionValueType ret = new CollectionValueType ();
+    if (eType != null)
+      ret.setCollectionType (eType.getValue ());
+    if (x != null)
+      for (final ValueType aItem : x)
+        ret.addElement (aItem);
     return ret;
   }
 
@@ -257,19 +272,21 @@ public final class RegRepHelper
   }
 
   @Nonnull
-  public static QueryResponse createEmptyQueryResponse ()
+  public static QueryResponse createEmptyQueryResponse (@Nonnull final ERegRepResponseStatus eStatus)
   {
+    ValueEnforcer.notNull (eStatus, "Status");
+
     final QueryResponse ret = new QueryResponse ();
-    // Assume success
-    ret.setStatus ("urn:oasis:nammes:tc:ebxml-regrep:ResponseStatusType:Success");
+    ret.setStatus (eStatus.getValue ());
     return ret;
   }
 
   @Nonnull
-  public static QueryResponse createQueryResponse (@Nullable final String sRequestID,
+  public static QueryResponse createQueryResponse (@Nonnull final ERegRepResponseStatus eStatus,
+                                                   @Nullable final String sRequestID,
                                                    @Nonnull @Nonempty final SlotType... aSlots)
   {
-    final QueryResponse ret = createEmptyQueryResponse ();
+    final QueryResponse ret = RegRepHelper.createEmptyQueryResponse (eStatus);
     ret.setRequestId (sRequestID);
     for (final SlotType aSlot : aSlots)
       ret.addSlot (aSlot);
