@@ -25,11 +25,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.mime.CMimeType;
 
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.model.ConceptPojo;
+import eu.toop.edm.model.DistributionPojo;
+import eu.toop.edm.model.EDistributionFormat;
 import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.xml.cagv.CCAGV;
@@ -112,6 +115,74 @@ public final class DataRequestCreatorTest
                                                                                                .id ("ConceptID-3")
                                                                                                .name (sConceptNS,
                                                                                                       "Concept-Name-3")))
+                                                    .build ();
+    assertNotNull (aRequest);
+
+    final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
+    assertNotNull (sXML);
+
+    if (false)
+      LOGGER.info (sXML);
+  }
+
+  @Test
+  public void testBasicRequestCreatorDocument ()
+  {
+    final QueryRequest aRequest = DataRequestCreator.builderDocument ()
+                                                    .issueDateTime (PDTFactory.createLocalDateTime (2020,
+                                                                                                    Month.FEBRUARY,
+                                                                                                    14,
+                                                                                                    19,
+                                                                                                    20,
+                                                                                                    30))
+                                                    .procedure (Locale.UK, "GBM Procedure")
+                                                    .fullfillingRequirement (null)
+                                                    .consentToken ("MTExMDEwMTAxMDEwMTAwMDExMTAxMDE=")
+                                                    .datasetIdentifier ("DATASETIDENTIFIER")
+                                                    .dataConsumer (AgentPojo.builder ()
+                                                                            .id ("DE730757727")
+                                                                            .idSchemeID ("VAT")
+                                                                            .name ("aCompanyName")
+                                                                            .address (AddressPojo.builder ()
+                                                                                                 .fullAddress ("Prince Street 15")
+                                                                                                 .streetName ("Prince Street")
+                                                                                                 .buildingNumber ("15")
+                                                                                                 .town ("Liverpool")
+                                                                                                 .postalCode ("15115")
+                                                                                                 .countryCode ("GB")))
+                                                    .dataSubject (BusinessPojo.builder ()
+                                                                              .legalID ("DE730757727")
+                                                                              .legalIDSchemeID ("VAT")
+                                                                              .id ("DE/GB/02735442Z")
+                                                                              .idSchemeID ("EIDAS")
+                                                                              .legalName ("AnyCompanyName")
+                                                                              .address (AddressPojo.builder ()
+                                                                                                   .fullAddress ("Prince Street 15")
+                                                                                                   .streetName ("Prince Street")
+                                                                                                   .buildingNumber ("15")
+                                                                                                   .town ("Liverpool")
+                                                                                                   .postalCode ("15115")
+                                                                                                   .countryCode ("GB")))
+                                                    .authorizedRepresentative (PersonPojo.builder ()
+                                                                                         .id ("1515")
+                                                                                         .idSchemeID ("VAT")
+                                                                                         .familyName ("Smith")
+                                                                                         .givenName ("Mark")
+                                                                                         .genderCode (EGenderCode.M)
+                                                                                         .birthName ("Mark Smith")
+                                                                                         .birthDate (PDTFactory.createLocalDate (1990,
+                                                                                                                                 Month.JANUARY,
+                                                                                                                                 1))
+                                                                                         .address (AddressPojo.builder ()
+                                                                                                              .fullAddress ("Some other 15")
+                                                                                                              .streetName ("Some other")
+                                                                                                              .buildingNumber ("15")
+                                                                                                              .town ("Liverpool")
+                                                                                                              .postalCode ("15115")
+                                                                                                              .countryCode ("GB")))
+                                                    .distribution (DistributionPojo.builder ()
+                                                                                   .format (EDistributionFormat.UNSTRUCTURED)
+                                                                                   .mediaType (CMimeType.APPLICATION_PDF))
                                                     .build ();
     assertNotNull (aRequest);
 

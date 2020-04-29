@@ -34,11 +34,13 @@ import com.helger.commons.datetime.PDTFactory;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.model.ConceptPojo;
+import eu.toop.edm.model.DistributionPojo;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotAuthorizedRepresentative;
@@ -48,6 +50,7 @@ import eu.toop.edm.slot.SlotDataConsumer;
 import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
 import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
 import eu.toop.edm.slot.SlotDatasetIdentifier;
+import eu.toop.edm.slot.SlotDistributionRequestList;
 import eu.toop.edm.slot.SlotFullfillingRequirement;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.edm.slot.SlotProcedure;
@@ -152,6 +155,7 @@ public class DataRequestCreator
     private CorePersonType m_aDataSubjectNaturalPerson;
     private CorePersonType m_aAuthorizedRepresentative;
     private CCCEVConceptType m_aConcept;
+    private DCatAPDistributionType m_aDistribution;
 
     public Builder ()
     {}
@@ -319,6 +323,25 @@ public class DataRequestCreator
       return this;
     }
 
+    @Nonnull
+    public Builder distribution (@Nullable final DistributionPojo.Builder a)
+    {
+      return distribution (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder distribution (@Nullable final DistributionPojo a)
+    {
+      return distribution (a == null ? null : a.getAsDistribution ());
+    }
+
+    @Nonnull
+    public Builder distribution (@Nullable final DCatAPDistributionType a)
+    {
+      m_aDistribution = a;
+      return this;
+    }
+
     public void checkConsistency ()
     {
       if (m_eQueryDefinition == null)
@@ -337,9 +360,14 @@ public class DataRequestCreator
         case CONCEPT:
           if (m_aConcept == null)
             throw new IllegalStateException ("A Query Definition of type 'Concept' must contain a Concept");
+          if (m_aDistribution != null)
+            throw new IllegalStateException ("A Query Definition of type 'Concept' must NOT contain a Distribution");
           break;
         case DOCUMENT:
-          // TODO
+          if (m_aConcept != null)
+            throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Concept");
+          if (m_aDistribution == null)
+            throw new IllegalStateException ("A Query Definition of type 'Document' must contain a Distribution");
           break;
         default:
           throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
@@ -380,7 +408,8 @@ public class DataRequestCreator
         x.add (new SlotConceptRequestList (m_aConcept));
 
       // Document Query
-      // TODO
+      if (m_aDistribution != null)
+        x.add (new SlotDistributionRequestList (m_aDistribution));
 
       return new DataRequestCreator (m_eQueryDefinition, x).createQueryRequest ();
     }

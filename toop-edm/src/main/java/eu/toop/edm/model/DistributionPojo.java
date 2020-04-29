@@ -3,6 +3,7 @@ package eu.toop.edm.model;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.mime.IMimeType;
 import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
@@ -38,5 +39,46 @@ public class DistributionPojo
       ret.setMediaType (aMediaType);
     }
     return ret;
+  }
+
+  @Nonnull
+  public static Builder builder ()
+  {
+    return new Builder ();
+  }
+
+  public static class Builder
+  {
+    private EDistributionFormat m_eFormat;
+    private String m_sMediaType;
+
+    public Builder ()
+    {}
+
+    @Nonnull
+    public Builder format (@Nullable final EDistributionFormat e)
+    {
+      m_eFormat = e;
+      return this;
+    }
+
+    @Nonnull
+    public Builder mediaType (@Nullable final IMimeType a)
+    {
+      return mediaType (a == null ? null : a.getAsString ());
+    }
+
+    @Nonnull
+    public Builder mediaType (@Nullable final String s)
+    {
+      m_sMediaType = s;
+      return this;
+    }
+
+    @Nonnull
+    public DistributionPojo build ()
+    {
+      return new DistributionPojo (m_eFormat, m_sMediaType);
+    }
   }
 }

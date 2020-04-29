@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.annotation.Singleton;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
 
-import eu.toop.edm.xml.cagv.CAGVNamespaceContext;
+import eu.toop.edm.xml.cccev.CCCEVNamespaceContext;
 
 /**
  * XML Namespace context for DCAT
@@ -37,7 +37,7 @@ public class DCatNamespaceContext extends MapBasedNamespaceContext
 
   protected DCatNamespaceContext ()
   {
-    addMappings (CAGVNamespaceContext.getInstance ());
+    addMappings (CCCEVNamespaceContext.getInstance ());
     addMapping ("dcat", "http://data.europa.eu/r5r/");
     addMapping ("dct", "http://purl.org/dc/terms/");
   }
