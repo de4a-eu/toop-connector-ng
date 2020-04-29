@@ -52,7 +52,6 @@ public final class CRegRep4
 
   public static final String DEFAULT_PREFIX_SPI = "spi";
   public static final String NAMESPACE_URI_SPI = "urn:oasis:names:tc:ebxml-regrep:xsd:spi:4.0";
-  public static ICommonsList <ClassPathResource> allXSDsQueryList = new CommonsArrayList <> ();
 
   @Nonnull
   private static ClassLoader _getCL ()
@@ -138,15 +137,9 @@ public final class CRegRep4
   @ReturnsMutableCopy
   public static ICommonsList <ClassPathResource> getAllXSDsQuery ()
   {
-    // FIXME @muhammet: I added this to enable addition of external XSDS
-    // for slots of AnyValueType where SchemaValidation caused problems
-    // a better refactor is needed for this
-    if (allXSDsQueryList.isEmpty ())
-    {
-      allXSDsQueryList.addAll (getAllXSDIncludes ());
-      allXSDsQueryList.add (getXSDResourceQuery ());
-    }
-    return allXSDsQueryList;
+    final ICommonsList <ClassPathResource> ret = getAllXSDIncludes ();
+    ret.add (getXSDResourceQuery ());
+    return ret;
   }
 
   @Nonnull
