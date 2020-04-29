@@ -38,7 +38,8 @@ public abstract class AbstractDCatMarshaller <T> extends GenericJAXBMarshaller <
   @Override
   protected JAXBContext getJAXBContext (@Nullable final ClassLoader aClassLoader) throws JAXBException
   {
-    final Class <?> [] aClasses = new Class <?> [] { eu.toop.edm.jaxb.cv.agent.ObjectFactory.class,
+    final Class <?> [] aClasses = new Class <?> [] { eu.toop.edm.jaxb.cccev.ObjectFactory.class,
+                                                     eu.toop.edm.jaxb.cv.agent.ObjectFactory.class,
                                                      eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
                                                      eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
                                                      eu.toop.edm.jaxb.dcterms.ObjectFactory.class,

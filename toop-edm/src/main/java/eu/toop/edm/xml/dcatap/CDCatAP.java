@@ -49,6 +49,8 @@ public final class CDCatAP
                                                                                new ClassPathResource ("schemas/rdf.xsd",
                                                                                                       _getCL ()),
                                                                                new ClassPathResource ("schemas/dcat-ap.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/cccev-2.0.0.xsd",
                                                                                                       _getCL ())).getAsUnmodifiable ();
 
   private CDCatAP ()

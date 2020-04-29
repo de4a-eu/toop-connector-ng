@@ -28,7 +28,6 @@ import com.helger.jaxb.JAXBContextCache;
 
 public abstract class AbstractCCCEVMarshaller <T> extends GenericJAXBMarshaller <T>
 {
-
   public AbstractCCCEVMarshaller (@Nonnull final Class <T> aType,
                                   @Nonnull final IFunction <? super T, ? extends JAXBElement <T>> aJAXBElementWrapper)
   {

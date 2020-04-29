@@ -5,6 +5,8 @@ import java.time.LocalDateTime;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.bind.JAXBElement;
+import javax.xml.namespace.QName;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -14,6 +16,7 @@ import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
+import eu.toop.edm.jaxb.cccev.CCCEVDocumentReferenceType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcterms.DCPeriodOfTimeType;
@@ -22,6 +25,7 @@ public class DatasetPojo
 {
   private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
   private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
+  private final CCCEVDocumentReferenceType m_aDistribution;
   private final AgentType m_aCreator;
   private final String m_sID;
   private final LocalDateTime m_aIssuedDT;
@@ -32,6 +36,7 @@ public class DatasetPojo
 
   public DatasetPojo (@Nonnull @Nonempty final ICommonsList <String> aDescriptions,
                       @Nonnull @Nonempty final ICommonsList <String> aTitles,
+                      @Nullable final CCCEVDocumentReferenceType aDistribution,
                       @Nullable final AgentType aCreator,
                       @Nullable final String sID,
                       @Nullable final LocalDateTime aIssuedDT,
@@ -43,8 +48,9 @@ public class DatasetPojo
     ValueEnforcer.notEmptyNoNullValue (aTitles, "Titles");
     ValueEnforcer.notEmptyNoNullValue (aDescriptions, "Descriptions");
 
-    m_aTitles.addAll (aTitles);
     m_aDescriptions.addAll (aDescriptions);
+    m_aTitles.addAll (aTitles);
+    m_aDistribution = aDistribution;
     m_aCreator = aCreator;
     m_sID = sID;
     m_aIssuedDT = aIssuedDT;
@@ -62,6 +68,16 @@ public class DatasetPojo
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createDescription (sDescription));
     for (final String sTitle : m_aTitles)
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTitle (sTitle));
+    if (m_aDistribution != null)
+    {
+      if (true)
+        ret.addContent (new JAXBElement <> (new QName ("http://data.europa.eu/r5r/", "distribution"),
+                                            CCCEVDocumentReferenceType.class,
+                                            null,
+                                            m_aDistribution));
+      else
+        ret.addContent (new eu.toop.edm.jaxb.dcatap.ObjectFactory ().createDistribution (m_aDistribution));
+    }
     if (m_aCreator != null)
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createCreator (m_aCreator));
     if (StringHelper.hasText (m_sID))
@@ -94,6 +110,7 @@ public class DatasetPojo
   {
     private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
     private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
+    private CCCEVDocumentReferenceType m_aDistribution;
     private AgentType m_aCreator;
     private String m_sID;
     private LocalDateTime m_aIssuedDT;
@@ -138,6 +155,25 @@ public class DatasetPojo
         m_aTitles.set (s);
       else
         m_aTitles.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder distribution (@Nullable final DocumentReferencePojo.Builder a)
+    {
+      return distribution (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder distribution (@Nullable final DocumentReferencePojo a)
+    {
+      return distribution (a == null ? null : a.getAsDocumentReference ());
+    }
+
+    @Nonnull
+    public Builder distribution (@Nullable final CCCEVDocumentReferenceType a)
+    {
+      m_aDistribution = a;
       return this;
     }
 
@@ -219,6 +255,7 @@ public class DatasetPojo
     {
       return new DatasetPojo (m_aDescriptions,
                               m_aTitles,
+                              m_aDistribution,
                               m_aCreator,
                               m_sID,
                               m_aIssuedDT,
