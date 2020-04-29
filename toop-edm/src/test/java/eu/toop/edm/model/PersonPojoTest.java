@@ -59,21 +59,23 @@ public final class PersonPojoTest
                                      .postalCode ("PostalCode")
                                      .countryCode ("CountryCode")
                                      .build ();
-    final PersonPojo x = new PersonPojo ("ID",
-                                         "idSchemeID",
-                                         "FamilyName",
-                                         "GivenName",
-                                         "GenderCode",
-                                         "BirthName",
-                                         PDTFactory.getCurrentLocalDate (),
-                                         a);
+    final PersonPojo x = PersonPojo.builder ()
+                                   .id ("ID")
+                                   .idSchemeID ("idSchemeID")
+                                   .familyName ("FamilyName")
+                                   .givenName ("GivenName")
+                                   .genderCode ("GenderCode")
+                                   .birthName ("BirthName")
+                                   .birthDate (PDTFactory.getCurrentLocalDate ())
+                                   .address (a)
+                                   .build ();
     _validate (x);
   }
 
   @Test
   public void testMinimum ()
   {
-    final PersonPojo x = PersonPojo.createMinimum ();
+    final PersonPojo x = PersonPojo.builder ().build ();
     _validate (x);
   }
 }

@@ -110,12 +110,6 @@ public class PersonPojo
   }
 
   @Nonnull
-  public static PersonPojo createMinimum ()
-  {
-    return new PersonPojo (null, null, null, null, null, null, null, null);
-  }
-
-  @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
