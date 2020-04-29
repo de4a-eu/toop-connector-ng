@@ -18,9 +18,9 @@ package eu.toop.edm.xml.dcatap;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcatap.ObjectFactory;
 
-public class DCatAPDatasetMarshaller extends AbstractDCatMarshaller <DCatAPDatasetType>
+public class DatasetMarshaller extends AbstractDCatMarshaller <DCatAPDatasetType>
 {
-  public DCatAPDatasetMarshaller ()
+  public DatasetMarshaller ()
   {
     super (DCatAPDatasetType.class, x -> new ObjectFactory ().createDataset (x));
   }

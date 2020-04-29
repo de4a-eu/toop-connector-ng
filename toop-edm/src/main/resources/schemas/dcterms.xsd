@@ -68,7 +68,8 @@
 	</xsd:simpleType>
 
 	<xsd:complexType name="MediaType">
-		<xsd:complexContent>
+    <!-- [ph] to create list of Object: added mixed=true -->
+		<xsd:complexContent mixed="true">
 				<xsd:extension base="xsd:anyType"/>		
 		</xsd:complexContent>
 	</xsd:complexType>

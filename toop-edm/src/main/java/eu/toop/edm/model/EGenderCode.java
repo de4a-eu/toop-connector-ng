@@ -19,13 +19,14 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
+import com.helger.commons.name.IHasDisplayName;
 
 /**
  * Gender code code list
- * 
+ *
  * @author Philip Helger
  */
-public enum EGenderCode implements IHasID <String>
+public enum EGenderCode implements IHasID <String>, IHasDisplayName
 {
   M ("M", "Male"),
   F ("F", "Female"),
