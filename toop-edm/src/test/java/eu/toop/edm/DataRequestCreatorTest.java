@@ -21,6 +21,8 @@ import java.time.Month;
 import java.util.Locale;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
 
@@ -28,6 +30,7 @@ import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.PersonPojo;
+import eu.toop.edm.xml.cagv.CCAGV;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
 
@@ -38,6 +41,8 @@ import eu.toop.regrep.query.QueryRequest;
  */
 public final class DataRequestCreatorTest
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (DataRequestCreatorTest.class);
+
   @Test
   public void testBasicRequestCreator ()
   {
@@ -71,7 +76,10 @@ public final class DataRequestCreatorTest
                                                                                             .build ())
                                                     .build ();
     assertNotNull (aRequest);
-    final String sXML = RegRep4Writer.queryRequest ().setFormattedOutput (true).getAsString (aRequest);
-    System.out.println (sXML);
+
+    final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
+    assertNotNull (sXML);
+
+    LOGGER.info (sXML);
   }
 }
