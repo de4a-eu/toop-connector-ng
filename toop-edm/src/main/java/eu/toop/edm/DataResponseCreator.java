@@ -16,6 +16,7 @@
 package eu.toop.edm;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -32,9 +33,12 @@ import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.string.StringHelper;
 
+import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.model.AgentPojo;
+import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.slot.ISlotProvider;
+import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.regrep.ERegRepResponseStatus;
@@ -90,6 +94,12 @@ public class DataResponseCreator
       final RegistryObjectListType aROList = new RegistryObjectListType ();
       final RegistryObjectType aRO = new RegistryObjectType ();
       aRO.setId (UUID.randomUUID ().toString ());
+
+      // All slots inside of RegistryObject
+      for (final Map.Entry <String, ISlotProvider> aEntry : m_aProviders.entrySet ())
+        if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
+          aRO.addSlot (aEntry.getValue ().createSlot ());
+
       aROList.addRegistryObject (aRO);
       ret.setRegistryObjectList (aROList);
     }
@@ -98,20 +108,35 @@ public class DataResponseCreator
   }
 
   @Nonnull
-  public static Builder builder ()
+  public static Builder builderConcept ()
   {
-    return new Builder ();
+    return new Builder ().queryDefinition (EQueryDefinitionType.CONCEPT);
+  }
+
+  @Nonnull
+  public static Builder builderDocument ()
+  {
+    return new Builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
   }
 
   public static class Builder
   {
+    private EQueryDefinitionType m_eQueryDefinition;
     private ERegRepResponseStatus m_eResponseStatus;
     private String m_sRequestID;
     private LocalDateTime m_aIssueDateTime;
     private AgentType m_aDataProvider;
+    private CCCEVConceptType m_aConcept;
 
     public Builder ()
     {}
+
+    @Nonnull
+    public Builder queryDefinition (@Nullable final EQueryDefinitionType e)
+    {
+      m_eQueryDefinition = e;
+      return this;
+    }
 
     @Nonnull
     public Builder responseStatus (@Nullable final ERegRepResponseStatus e)
@@ -159,8 +184,29 @@ public class DataResponseCreator
       return this;
     }
 
+    @Nonnull
+    public Builder concept (@Nullable final ConceptPojo.Builder a)
+    {
+      return concept (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder concept (@Nullable final ConceptPojo a)
+    {
+      return concept (a == null ? null : a.getAsCCCEVConcept ());
+    }
+
+    @Nonnull
+    public Builder concept (@Nullable final CCCEVConceptType a)
+    {
+      m_aConcept = a;
+      return this;
+    }
+
     public void checkConsistency ()
     {
+      if (m_eQueryDefinition == null)
+        throw new IllegalStateException ("Query Definition must be present");
       if (m_eResponseStatus == null)
         throw new IllegalStateException ("Response Status must be present");
       if (StringHelper.hasNoText (m_sRequestID))
@@ -169,6 +215,19 @@ public class DataResponseCreator
         throw new IllegalStateException ("Issue Date Time must be present");
       if (m_aDataProvider == null)
         throw new IllegalStateException ("Data Provider must be present");
+
+      switch (m_eQueryDefinition)
+      {
+        case CONCEPT:
+          if (m_aConcept == null)
+            throw new IllegalStateException ("A Query Definition of type 'Concept' must contain a Concept");
+          break;
+        case DOCUMENT:
+          // TODO
+          break;
+        default:
+          throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
+      }
     }
 
     @Nonnull
@@ -181,6 +240,10 @@ public class DataResponseCreator
         x.add (new SlotIssueDateTime (m_aIssueDateTime));
       if (m_aDataProvider != null)
         x.add (new SlotDataProvider (m_aDataProvider));
+
+      // ConceptValues
+      if (m_aConcept != null)
+        x.add (new SlotConceptValues (m_aConcept));
 
       return new DataResponseCreator (m_eResponseStatus, m_sRequestID, x).createQueryResponse ();
     }

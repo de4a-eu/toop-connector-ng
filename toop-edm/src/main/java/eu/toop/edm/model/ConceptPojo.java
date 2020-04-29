@@ -1,6 +1,7 @@
 package eu.toop.edm.model;
 
 import java.util.UUID;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -11,21 +12,35 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
+import eu.toop.edm.jaxb.cccev.CCCEVValueType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
 
 public class ConceptPojo
 {
   private final String m_sID;
   private final QName m_aName;
+  private final CCCEVValueType m_aValue;
   private final ICommonsList <ConceptPojo> m_aChildren = new CommonsArrayList <> ();
 
-  public ConceptPojo (@Nonnull final String sID,
-                      @Nonnull final QName aName,
+  public ConceptPojo (@Nullable final String sID,
+                      @Nullable final QName aName,
+                      @Nullable final CCCEVValueType aValue,
                       @Nullable final Iterable <ConceptPojo> aChildren)
   {
     m_sID = sID;
     m_aName = aName;
+    m_aValue = aValue;
     m_aChildren.addAll (aChildren);
+  }
+
+  public void visitRecursive (@Nonnull final Consumer <? super ConceptPojo> aConsumer)
+  {
+    // Invoke
+    aConsumer.accept (this);
+
+    // For all children
+    for (final ConceptPojo aItem : m_aChildren)
+      aItem.visitRecursive (aConsumer);
   }
 
   @Nonnull
@@ -40,6 +55,8 @@ public class ConceptPojo
     }
     if (m_aName != null)
       ret.addQName (m_aName);
+    if (m_aValue != null)
+      ret.addValue (m_aValue);
     for (final ConceptPojo aChild : m_aChildren)
       ret.addConcept (aChild.getAsCCCEVConcept ());
     return ret;
@@ -55,6 +72,7 @@ public class ConceptPojo
   {
     private String m_sID;
     private QName m_aName;
+    private CCCEVValueType m_aValue;
     private final ICommonsList <ConceptPojo> m_aChildren = new CommonsArrayList <> ();
 
     public Builder ()
@@ -80,9 +98,16 @@ public class ConceptPojo
     }
 
     @Nonnull
-    public Builder name (@Nullable final QName aName)
+    public Builder name (@Nullable final QName a)
     {
-      m_aName = aName;
+      m_aName = a;
+      return this;
+    }
+
+    @Nonnull
+    public Builder value (@Nullable final CCCEVValueType a)
+    {
+      m_aValue = a;
       return this;
     }
 
@@ -103,7 +128,7 @@ public class ConceptPojo
     @Nonnull
     public ConceptPojo build ()
     {
-      return new ConceptPojo (m_sID, m_aName, m_aChildren);
+      return new ConceptPojo (m_sID, m_aName, m_aValue, m_aChildren);
     }
   }
 }
