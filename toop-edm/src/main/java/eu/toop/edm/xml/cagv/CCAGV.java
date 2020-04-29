@@ -24,6 +24,11 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.xsds.ccts.cct.schemamodule.CCCTS;
 
+/**
+ * Core Agent Vocabulary (CAGV) constants
+ *
+ * @author Philip Helger
+ */
 public final class CCAGV
 {
   @Nonnull

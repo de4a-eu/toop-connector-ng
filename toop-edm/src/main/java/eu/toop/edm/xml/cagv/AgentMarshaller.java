@@ -26,6 +26,11 @@ import com.helger.jaxb.JAXBContextCache;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.cv.agent.ObjectFactory;
 
+/**
+ * CAGV Marshaller
+ * 
+ * @author Philip Helger
+ */
 public class AgentMarshaller extends GenericJAXBMarshaller <AgentType>
 {
   public AgentMarshaller ()

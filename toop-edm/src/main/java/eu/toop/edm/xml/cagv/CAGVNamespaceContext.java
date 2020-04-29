@@ -21,7 +21,7 @@ import com.helger.commons.annotation.Singleton;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
 
 /**
- * XML Namespace context for CPSV
+ * XML Namespace context for CAGV
  *
  * @author Philip Helger
  */
