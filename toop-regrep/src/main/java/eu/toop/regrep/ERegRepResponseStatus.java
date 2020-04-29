@@ -19,6 +19,11 @@ import javax.annotation.Nonnull;
 
 import com.helger.commons.annotation.Nonempty;
 
+/**
+ * Query response status enum
+ * 
+ * @author Philip Helger
+ */
 public enum ERegRepResponseStatus
 {
   SUCCESS ("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success"),
@@ -27,7 +32,7 @@ public enum ERegRepResponseStatus
 
   private final String m_sValue;
 
-  private ERegRepResponseStatus (@Nonnull @Nonempty final String sValue)
+  ERegRepResponseStatus (@Nonnull @Nonempty final String sValue)
   {
     m_sValue = sValue;
   }

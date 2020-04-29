@@ -21,7 +21,7 @@ import com.helger.commons.annotation.Nonempty;
 
 /**
  * Enumeration with collection types.
- * 
+ *
  * @author Philip Helger
  */
 public enum ERegRepCollectionType
@@ -33,7 +33,7 @@ public enum ERegRepCollectionType
 
   private final String m_sValue;
 
-  private ERegRepCollectionType (@Nonnull @Nonempty final String sValue)
+  ERegRepCollectionType (@Nonnull @Nonempty final String sValue)
   {
     m_sValue = sValue;
   }
