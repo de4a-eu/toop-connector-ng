@@ -17,6 +17,10 @@ package eu.toop.regrep;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.jaxb.builder.IJAXBDocumentType;
+import com.helger.jaxb.builder.JAXBDocumentType;
 import com.helger.jaxb.builder.JAXBWriterBuilder;
 
 import eu.toop.regrep.lcm.RemoveObjectsRequest;
@@ -49,6 +53,12 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
    *        Document type to be used. May not be <code>null</code>.
    */
   public RegRep4Writer (@Nonnull final ERegRep4XMLDocumentType eDocType)
+  {
+    super (eDocType);
+    setNamespaceContext (RegRep4NamespaceContext.getInstance ());
+  }
+
+  private RegRep4Writer (@Nonnull final IJAXBDocumentType eDocType)
   {
     super (eDocType);
     setNamespaceContext (RegRep4NamespaceContext.getInstance ());
@@ -99,6 +109,21 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
+   * Create a reader builder for {@link QueryRequest}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Writer <QueryRequest> queryRequest (@Nonnull final ClassPathResource... aAdditionalXSDs)
+  {
+    final ICommonsList <ClassPathResource> aXSDs = CRegRep4.getAllXSDsQuery ().getClone ();
+    aXSDs.addAll (aAdditionalXSDs);
+    return new RegRep4Writer <> (new JAXBDocumentType (eu.toop.regrep.query.QueryRequest.class, aXSDs, null));
+  }
+
+  /**
    * Create a reader builder for {@link QueryResponse}.
    *
    * @return The builder and never <code>null</code>
@@ -107,6 +132,21 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   public static RegRep4Writer <QueryResponse> queryResponse ()
   {
     return new RegRep4Writer <> (ERegRep4XMLDocumentType.QUERY_RESPONSE);
+  }
+
+  /**
+   * Create a reader builder for {@link QueryResponse}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Writer <QueryResponse> queryResponse (@Nonnull final ClassPathResource... aAdditionalXSDs)
+  {
+    final ICommonsList <ClassPathResource> aXSDs = CRegRep4.getAllXSDsQuery ().getClone ();
+    aXSDs.addAll (aAdditionalXSDs);
+    return new RegRep4Writer <> (new JAXBDocumentType (eu.toop.regrep.query.QueryResponse.class, aXSDs, null));
   }
 
   /**
