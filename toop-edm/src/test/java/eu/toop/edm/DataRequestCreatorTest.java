@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import eu.toop.edm.model.DataConsumerPojo;
+import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
@@ -27,7 +27,7 @@ public final class DataRequestCreatorTest
                                                     .setFullfillingRequirement (null)
                                                     .setConsentToken ("I consent")
                                                     .setDatasetIdentifier ("dsID")
-                                                    .setDataConsumer (DataConsumerPojo.createMinimum ())
+                                                    .setDataConsumer (AgentPojo.createMinimum ())
                                                     .setDataSubject (PersonPojo.createMinimum ())
                                                     .setAuthorizedRepresentative (PersonPojo.createMinimum ())
                                                     .build ();

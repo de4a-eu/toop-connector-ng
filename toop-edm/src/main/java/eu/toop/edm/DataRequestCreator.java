@@ -21,7 +21,7 @@ import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.model.BusinessPojo;
-import eu.toop.edm.model.DataConsumerPojo;
+import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotAuthorizedRepresentative;
@@ -202,7 +202,7 @@ public class DataRequestCreator
     }
 
     @Nonnull
-    public Builder setDataConsumer (@Nullable final DataConsumerPojo aDC)
+    public Builder setDataConsumer (@Nullable final AgentPojo aDC)
     {
       return setDataConsumer (aDC == null ? null : aDC.getAsAgent ());
     }

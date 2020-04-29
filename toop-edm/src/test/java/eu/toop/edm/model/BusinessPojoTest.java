@@ -24,8 +24,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
-import eu.toop.edm.model.AddressPojo;
-import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.xml.cv.BusinessMarshaller;
 
 /**

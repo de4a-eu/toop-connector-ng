@@ -16,24 +16,32 @@
 package eu.toop.edm.model;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.jaxb.cv.agent.LocationType;
+import eu.toop.edm.jaxb.cv.cac.AddressType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
 import eu.toop.edm.jaxb.cv.cbc.NameType;
 
-public class DataProviderPojo
+public class AgentPojo
 {
   private final String m_sID;
   private final String m_sIDSchemeID;
   private final String m_sName;
+  private final AddressPojo m_aAddress;
 
-  public DataProviderPojo (final String sID, final String sIDSchemeID, final String sName)
+  public AgentPojo (@Nullable final String sID,
+                           @Nullable final String sIDSchemeID,
+                           @Nullable final String sName,
+                           @Nullable final AddressPojo aAddress)
   {
     m_sID = sID;
     m_sIDSchemeID = sIDSchemeID;
     m_sName = sName;
+    m_aAddress = aAddress;
   }
 
   @Nonnull
@@ -53,12 +61,22 @@ public class DataProviderPojo
       aName.setValue (m_sName);
       ret.addName (aName);
     }
+    if (m_aAddress != null)
+    {
+      final AddressType aAddress = m_aAddress.getAsAgentAddress ();
+      if (aAddress != null)
+      {
+        final LocationType aLocation = new LocationType ();
+        aLocation.setAddress (aAddress);
+        ret.addLocation (aLocation);
+      }
+    }
     return ret;
   }
 
   @Nonnull
-  public static DataProviderPojo createMinimum ()
+  public static AgentPojo createMinimum ()
   {
-    return new DataProviderPojo (null, null, null);
+    return new AgentPojo (null, null, null, null);
   }
 }

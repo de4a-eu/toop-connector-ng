@@ -22,22 +22,42 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.model.DataProviderPojo;
 import eu.toop.edm.xml.cagv.AgentMarshaller;
 
 /**
- * Test class for class {@link DataProviderPojo}
+ * Test class for class {@link AgentPojo}
  *
  * @author Philip Helger
  */
-public final class DataProviderPojoTest
+public final class AgentPojoTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (DataProviderPojoTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (AgentPojoTest.class);
 
   @Test
   public void testBasic ()
   {
-    final DataProviderPojo x = new DataProviderPojo ("ID", "IDType", "Name");
+    final AgentPojo x = new AgentPojo ("ID",
+                                       "IDType",
+                                       "Name",
+                                       new AddressPojo ("FullAddress",
+                                                        "StreetName",
+                                                        "BuildingNumber",
+                                                        "Town",
+                                                        "PostalCode",
+                                                        "CountryCode"));
+    final AgentType aAgent = x.getAsAgent ();
+    assertNotNull (aAgent);
+
+    final AgentMarshaller m = new AgentMarshaller ();
+    m.setFormattedOutput (true);
+    assertNotNull (m.getAsDocument (aAgent));
+    LOGGER.info (m.getAsString (aAgent));
+  }
+
+  @Test
+  public void testNoAddress ()
+  {
+    final AgentPojo x = new AgentPojo ("ID", "IDType", "Name", null);
     final AgentType aAgent = x.getAsAgent ();
     assertNotNull (aAgent);
 

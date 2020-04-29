@@ -20,6 +20,7 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.string.StringHelper;
 
+import eu.toop.edm.jaxb.cv.cac.AddressType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreAddressType;
 import eu.toop.edm.jaxb.w3.cv.bc.AddressAdminUnitLocationOneType;
 import eu.toop.edm.jaxb.w3.cv.bc.AddressFullAddressType;
@@ -52,7 +53,7 @@ public class AddressPojo
     m_sPostalCode = sPostalCode;
   }
 
-  @Nonnull
+  @Nullable
   public CoreAddressType getAsCoreAddress ()
   {
     boolean bAny = false;
@@ -97,6 +98,44 @@ public class AddressPojo
       final AddressAdminUnitLocationOneType aAdmin1 = new AddressAdminUnitLocationOneType ();
       aAdmin1.setValue (m_sCountryCode);
       aAddress.addAddressAdminUnitLocationOne (aAdmin1);
+      bAny = true;
+    }
+    return bAny ? aAddress : null;
+  }
+
+  @Nullable
+  public AddressType getAsAgentAddress ()
+  {
+    boolean bAny = false;
+    final AddressType aAddress = new AddressType ();
+    if (StringHelper.hasText (m_sFullAddress))
+    {
+      aAddress.setFullAddress (m_sFullAddress);
+      bAny = true;
+    }
+    if (StringHelper.hasText (m_sStreetName))
+    {
+      aAddress.setThoroughfare (m_sStreetName);
+      bAny = true;
+    }
+    if (StringHelper.hasText (m_sBuildingNumber))
+    {
+      aAddress.setLocatorDesignator (m_sBuildingNumber);
+      bAny = true;
+    }
+    if (StringHelper.hasText (m_sTown))
+    {
+      aAddress.setPostName (m_sTown);
+      bAny = true;
+    }
+    if (StringHelper.hasText (m_sPostalCode))
+    {
+      aAddress.setPostCode (m_sPostalCode);
+      bAny = true;
+    }
+    if (StringHelper.hasText (m_sCountryCode))
+    {
+      aAddress.setAdminUnitLevel1 (m_sCountryCode);
       bAny = true;
     }
     return bAny ? aAddress : null;
