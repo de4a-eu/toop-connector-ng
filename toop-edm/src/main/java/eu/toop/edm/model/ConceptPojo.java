@@ -15,6 +15,9 @@
  */
 package eu.toop.edm.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -29,6 +32,7 @@ import com.helger.commons.string.StringHelper;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVValueType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
+import eu.toop.edm.xml.cccev.CCCEVValueHelper;
 
 public class ConceptPojo
 {
@@ -117,6 +121,99 @@ public class ConceptPojo
     {
       m_aName = a;
       return this;
+    }
+
+    @Nonnull
+    public Builder valueAmount (@Nullable final BigDecimal aValue, @Nullable final String sCurrencyID)
+    {
+      return value (CCCEVValueHelper.createAmount (aValue, sCurrencyID));
+    }
+
+    @Nonnull
+    public Builder valueCode (@Nullable final String s)
+    {
+      return value (CCCEVValueHelper.createCode (s));
+    }
+
+    @Nonnull
+    public Builder valueDate (@Nullable final LocalDate a)
+    {
+      return value (CCCEVValueHelper.createDate (a));
+    }
+
+    @Nonnull
+    public Builder valueID (@Nullable final String s)
+    {
+      return value (CCCEVValueHelper.createID (s));
+    }
+
+    @Nonnull
+    public Builder valueIndicator (final boolean b)
+    {
+      return value (CCCEVValueHelper.createIndicator (b));
+    }
+
+    @Nonnull
+    public Builder valueMeasure (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
+    {
+      return value (CCCEVValueHelper.createMeasure (aValue, sUnitCode));
+    }
+
+    @Nonnull
+    public Builder valueNumeric (@Nonnull final long n)
+    {
+      return value (CCCEVValueHelper.createNumeric (n));
+    }
+
+    @Nonnull
+    public Builder valueNumeric (@Nonnull final double d)
+    {
+      return value (CCCEVValueHelper.createNumeric (d));
+    }
+
+    @Nonnull
+    public Builder valueNumeric (@Nullable final BigDecimal a)
+    {
+      return value (CCCEVValueHelper.createNumeric (a));
+    }
+
+    @Nonnull
+    public Builder valueQuantity (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
+    {
+      return value (CCCEVValueHelper.createQuantity (aValue, sUnitCode));
+    }
+
+    @Nonnull
+    public Builder valueText (@Nonnull final String s)
+    {
+      return value (CCCEVValueHelper.createText (s));
+    }
+
+    @Nonnull
+    public Builder valueTime (@Nullable final LocalTime a)
+    {
+      return value (CCCEVValueHelper.createTime (a));
+    }
+
+    @Nonnull
+    public Builder valueURI (@Nonnull final String s)
+    {
+      return value (CCCEVValueHelper.createURI (s));
+    }
+
+    @Nonnull
+    public Builder valuePeriod (@Nullable final LocalDate aStartDate, @Nullable final LocalDate aEndDate)
+    {
+      return valuePeriod (aStartDate, null, aEndDate, null);
+    }
+
+    @Nonnull
+    public Builder valuePeriod (@Nullable final LocalDate aStartDate,
+                                @Nullable final LocalTime aStartTime,
+                                @Nullable final LocalDate aEndDate,
+                                @Nullable final LocalTime aEndTime)
+    {
+      return value (CCCEVValueHelper.createPeriod (aStartDate, aStartTime, aEndDate, aEndTime));
     }
 
     @Nonnull

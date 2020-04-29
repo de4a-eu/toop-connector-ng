@@ -50,7 +50,7 @@ public final class CCCEVValueHelper
   {}
 
   @Nonnull
-  public static CCCEVValueType createAmount (@Nonnull final BigDecimal aValue, @Nullable final String sCurrencyID)
+  public static CCCEVValueType createAmount (@Nullable final BigDecimal aValue, @Nullable final String sCurrencyID)
   {
     final AmountType a = new AmountType ();
     a.setValue (aValue);
@@ -64,15 +64,6 @@ public final class CCCEVValueHelper
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setAmountValue (a);
     return ret;
-  }
-
-  @Nonnull
-  public static CCCEVValueType createCode (@Nonnull final String sValue, @Nullable final String sName)
-  {
-    final CodeType a = new CodeType ();
-    a.setName (sName);
-    a.setValue (sValue);
-    return create (a);
   }
 
   @Nonnull
@@ -146,7 +137,7 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createMeasure (@Nonnull final BigDecimal aValue, @Nullable final String sUnitCode)
+  public static CCCEVValueType createMeasure (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
   {
     final MeasureType a = new MeasureType ();
     a.setValue (aValue);
@@ -175,7 +166,7 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createNumeric (@Nonnull final BigDecimal a)
+  public static CCCEVValueType createNumeric (@Nullable final BigDecimal a)
   {
     return create (new NumericType (a));
   }
@@ -189,7 +180,7 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createQuantity (@Nonnull final BigDecimal aValue, @Nullable final String sUnitCode)
+  public static CCCEVValueType createQuantity (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
   {
     final QuantityType a = new QuantityType ();
     a.setValue (aValue);

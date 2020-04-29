@@ -29,7 +29,6 @@ import com.helger.commons.datetime.PDTFactory;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.xml.cagv.CCAGV;
-import eu.toop.edm.xml.cccev.CCCEVValueHelper;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryResponse;
@@ -67,47 +66,47 @@ public final class DataResponseCreatorTest
                                                                                                   .id ("ConceptID-2")
                                                                                                   .name (sConceptNS,
                                                                                                          "Concept-Name-2")
-                                                                                                  .value (CCCEVValueHelper.createAmount (BigDecimal.valueOf (1000001),
-                                                                                                                                         "EUR")))
+                                                                                                  .valueAmount (BigDecimal.valueOf (1000001),
+                                                                                                                "EUR"))
                                                                             .addChild (ConceptPojo.builder ()
                                                                                                   .id ("ConceptID-3")
                                                                                                   .name (sConceptNS,
                                                                                                          "Concept-Name-3")
-                                                                                                  .value (CCCEVValueHelper.createText ("ConceptID-3 Value")))
+                                                                                                  .valueText ("ConceptID-3 Value"))
                                                                             .addChild (ConceptPojo.builder ()
                                                                                                   .id ("ConceptID-4")
                                                                                                   .name (sConceptNS,
                                                                                                          "Concept-Name-4")
-                                                                                                  .value (CCCEVValueHelper.createCode ("code")))
+                                                                                                  .valueCode ("code"))
                                                                             .addChild (ConceptPojo.builder ()
                                                                                                   .id ("ConceptID-5")
                                                                                                   .name (sConceptNS,
                                                                                                          "Concept-Name-5")
-                                                                                                  .value (CCCEVValueHelper.createIndicator (true)))
+                                                                                                  .valueIndicator (true))
                                                                             .addChild (ConceptPojo.builder ()
                                                                                                   .id ("ConceptID-6")
                                                                                                   .name (sConceptNS,
                                                                                                          "Concept-Name-6")
-                                                                                                  .value (CCCEVValueHelper.createPeriod (PDTFactory.createLocalDate (2020,
-                                                                                                                                                                     Month.JANUARY,
-                                                                                                                                                                     2),
-                                                                                                                                         null,
-                                                                                                                                         PDTFactory.createLocalDate (2022,
-                                                                                                                                                                     Month.MAY,
-                                                                                                                                                                     5),
-                                                                                                                                         null)))
+                                                                                                  .valuePeriod (PDTFactory.createLocalDate (2020,
+                                                                                                                                            Month.JANUARY,
+                                                                                                                                            2),
+                                                                                                                null,
+                                                                                                                PDTFactory.createLocalDate (2022,
+                                                                                                                                            Month.MAY,
+                                                                                                                                            5),
+                                                                                                                null))
                                                                             .addChild (ConceptPojo.builder ()
                                                                                                   .id ("ConceptID-7")
                                                                                                   .name (sConceptNS,
                                                                                                          "Concept-Name-7")
-                                                                                                  .value (CCCEVValueHelper.createDate (PDTFactory.createLocalDate (2020,
-                                                                                                                                                                   Month.MAY,
-                                                                                                                                                                   5))))
+                                                                                                  .valueDate (PDTFactory.createLocalDate (2020,
+                                                                                                                                          Month.MAY,
+                                                                                                                                          5)))
                                                                             .addChild (ConceptPojo.builder ()
                                                                                                   .id ("ConceptID-8")
                                                                                                   .name (sConceptNS,
                                                                                                          "Concept-Name-8")
-                                                                                                  .value (CCCEVValueHelper.createNumeric (55))))
+                                                                                                  .valueNumeric (55)))
                                                        .build ();
     assertNotNull (aResponse);
 
