@@ -21,6 +21,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.datetime.PDTFactory;
+
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.xml.dcatap.DatasetMarshaller;
 
@@ -39,9 +41,15 @@ public final class DatasetPojoTest
     final DatasetPojo x = DatasetPojo.builder ()
                                      .title ("bla title")
                                      .description ("bla desc")
+                                     .creator (AgentPojo.builder ()
+                                                        .name ("Agent name")
+                                                        .address (AddressPojo.builder ().town ("Kewlkidshome")))
+                                     .id ("my ID")
                                      .language ("en")
                                      .issuedNow ()
                                      .lastModifiedNow ()
+                                     .validFrom (PDTFactory.getCurrentLocalDate ().minusMonths (1))
+                                     .validTo (PDTFactory.getCurrentLocalDate ().plusYears (1))
                                      .build ();
     final DCatAPDatasetType aAgent = x.getAsDataset ();
     assertNotNull (aAgent);

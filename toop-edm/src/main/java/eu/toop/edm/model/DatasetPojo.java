@@ -1,5 +1,6 @@
 package eu.toop.edm.model;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import javax.annotation.Nonnull;
@@ -13,36 +14,44 @@ import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
+import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import eu.toop.edm.jaxb.dcterms.DCPeriodOfTimeType;
 
 public class DatasetPojo
 {
   private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
   private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
+  private final AgentType m_aCreator;
   private final String m_sID;
   private final LocalDateTime m_aIssuedDT;
-  private final LocalDateTime m_aLastModifiedDT;
   private final String m_sLanguage;
-  private final ICommonsList <String> m_aErrorCodes;
+  private final LocalDateTime m_aLastModifiedDT;
+  private final LocalDate m_aValidFrom;
+  private final LocalDate m_aValidTo;
 
   public DatasetPojo (@Nonnull @Nonempty final ICommonsList <String> aDescriptions,
                       @Nonnull @Nonempty final ICommonsList <String> aTitles,
+                      @Nullable final AgentType aCreator,
                       @Nullable final String sID,
                       @Nullable final LocalDateTime aIssuedDT,
-                      @Nullable final LocalDateTime aLastModifiedDT,
                       @Nullable final String sLanguage,
-                      @Nullable final ICommonsList <String> aErrorCodes)
+                      @Nullable final LocalDateTime aLastModifiedDT,
+                      @Nullable final LocalDate aValidFrom,
+                      @Nullable final LocalDate aValidTo)
   {
     ValueEnforcer.notEmptyNoNullValue (aTitles, "Titles");
     ValueEnforcer.notEmptyNoNullValue (aDescriptions, "Descriptions");
 
-    m_sID = sID;
     m_aTitles.addAll (aTitles);
     m_aDescriptions.addAll (aDescriptions);
+    m_aCreator = aCreator;
+    m_sID = sID;
     m_aIssuedDT = aIssuedDT;
-    m_aLastModifiedDT = aLastModifiedDT;
     m_sLanguage = sLanguage;
-    m_aErrorCodes = aErrorCodes;
+    m_aLastModifiedDT = aLastModifiedDT;
+    m_aValidFrom = aValidFrom;
+    m_aValidTo = aValidTo;
   }
 
   @Nonnull
@@ -53,6 +62,8 @@ public class DatasetPojo
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createDescription (sDescription));
     for (final String sTitle : m_aTitles)
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTitle (sTitle));
+    if (m_aCreator != null)
+      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createCreator (m_aCreator));
     if (StringHelper.hasText (m_sID))
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createIdentifier (m_sID));
     if (m_aIssuedDT != null)
@@ -61,6 +72,15 @@ public class DatasetPojo
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createLanguage (m_sLanguage));
     if (m_aLastModifiedDT != null)
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createModified (PDTXMLConverter.getXMLCalendar (m_aLastModifiedDT)));
+    if (m_aValidFrom != null || m_aValidTo != null)
+    {
+      final DCPeriodOfTimeType aPeriodOfType = new DCPeriodOfTimeType ();
+      if (m_aValidFrom != null)
+        aPeriodOfType.addStartDate (PDTXMLConverter.getXMLCalendarDate (m_aValidFrom));
+      if (m_aValidTo != null)
+        aPeriodOfType.addEndDate (PDTXMLConverter.getXMLCalendarDate (m_aValidTo));
+      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTemporal (aPeriodOfType));
+    }
     return ret;
   }
 
@@ -74,11 +94,13 @@ public class DatasetPojo
   {
     private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
     private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
+    private AgentType m_aCreator;
     private String m_sID;
     private LocalDateTime m_aIssuedDT;
-    private LocalDateTime m_aLastModifiedDT;
     private String m_sLanguage;
-    private ICommonsList <String> m_aErrorCodes;
+    private LocalDateTime m_aLastModifiedDT;
+    private LocalDate m_aValidFrom;
+    private LocalDate m_aValidTo;
 
     public Builder ()
     {}
@@ -120,6 +142,25 @@ public class DatasetPojo
     }
 
     @Nonnull
+    public Builder creator (@Nullable final AgentPojo.Builder a)
+    {
+      return creator (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder creator (@Nullable final AgentPojo a)
+    {
+      return creator (a == null ? null : a.getAsAgent ());
+    }
+
+    @Nonnull
+    public Builder creator (@Nullable final AgentType a)
+    {
+      m_aCreator = a;
+      return this;
+    }
+
+    @Nonnull
     public Builder id (@Nullable final String s)
     {
       m_sID = s;
@@ -140,6 +181,13 @@ public class DatasetPojo
     }
 
     @Nonnull
+    public Builder language (@Nullable final String s)
+    {
+      m_sLanguage = s;
+      return this;
+    }
+
+    @Nonnull
     public Builder lastModifiedNow ()
     {
       return lastModified (PDTFactory.getCurrentLocalDateTime ());
@@ -153,27 +201,16 @@ public class DatasetPojo
     }
 
     @Nonnull
-    public Builder language (@Nullable final String s)
+    public Builder validFrom (@Nullable final LocalDate a)
     {
-      m_sLanguage = s;
+      m_aValidFrom = a;
       return this;
     }
 
     @Nonnull
-    public Builder addErrorCode (@Nullable final String s)
+    public Builder validTo (@Nullable final LocalDate a)
     {
-      if (StringHelper.hasText (s))
-        m_aErrorCodes.add (s);
-      return this;
-    }
-
-    @Nonnull
-    public Builder errorCode (@Nullable final String s)
-    {
-      if (StringHelper.hasText (s))
-        m_aErrorCodes.set (s);
-      else
-        m_aErrorCodes.clear ();
+      m_aValidTo = a;
       return this;
     }
 
@@ -182,11 +219,13 @@ public class DatasetPojo
     {
       return new DatasetPojo (m_aDescriptions,
                               m_aTitles,
+                              m_aCreator,
                               m_sID,
                               m_aIssuedDT,
-                              m_aLastModifiedDT,
                               m_sLanguage,
-                              m_aErrorCodes);
+                              m_aLastModifiedDT,
+                              m_aValidFrom,
+                              m_aValidTo);
     }
   }
 }
