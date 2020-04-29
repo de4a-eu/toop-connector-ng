@@ -34,9 +34,9 @@ public class AgentPojo
   private final AddressPojo m_aAddress;
 
   public AgentPojo (@Nullable final String sID,
-                           @Nullable final String sIDSchemeID,
-                           @Nullable final String sName,
-                           @Nullable final AddressPojo aAddress)
+                    @Nullable final String sIDSchemeID,
+                    @Nullable final String sName,
+                    @Nullable final AddressPojo aAddress)
   {
     m_sID = sID;
     m_sIDSchemeID = sIDSchemeID;
@@ -75,8 +75,59 @@ public class AgentPojo
   }
 
   @Nonnull
-  public static AgentPojo createMinimum ()
+  public static Builder builder ()
   {
-    return new AgentPojo (null, null, null, null);
+    return new Builder ();
+  }
+
+  public static class Builder
+  {
+    private String m_sID;
+    private String m_sIDSchemeID;
+    private String m_sName;
+    private AddressPojo m_aAddress;
+
+    public Builder ()
+    {}
+
+    @Nonnull
+    public Builder id (@Nullable final String s)
+    {
+      m_sID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder idSchemeID (@Nullable final String s)
+    {
+      m_sIDSchemeID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder name (@Nullable final String s)
+    {
+      m_sName = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder address (@Nullable final AddressPojo.Builder a)
+    {
+      return address (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder address (@Nullable final AddressPojo a)
+    {
+      m_aAddress = a;
+      return this;
+    }
+
+    @Nonnull
+    public AgentPojo build ()
+    {
+      return new AgentPojo (m_sID, m_sIDSchemeID, m_sName, m_aAddress);
+    }
   }
 }

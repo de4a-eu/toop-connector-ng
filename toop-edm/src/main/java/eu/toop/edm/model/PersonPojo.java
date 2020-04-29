@@ -114,4 +114,100 @@ public class PersonPojo
   {
     return new PersonPojo (null, null, null, null, null, null, null, null);
   }
+
+  @Nonnull
+  public static Builder builder ()
+  {
+    return new Builder ();
+  }
+
+  public static class Builder
+  {
+    private String m_sID;
+    private String m_sIDSchemeID;
+    private String m_sFamilyName;
+    private String m_sGivenName;
+    private String m_sGenderCode;
+    private String m_sBirthName;
+    private LocalDate m_aBirthDate;
+    private AddressPojo m_aAddress;
+
+    public Builder ()
+    {}
+
+    @Nonnull
+    public Builder id (@Nullable final String s)
+    {
+      m_sID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder idSchemeID (@Nullable final String s)
+    {
+      m_sIDSchemeID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder familyName (@Nullable final String s)
+    {
+      m_sFamilyName = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder givenName (@Nullable final String s)
+    {
+      m_sGivenName = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder genderCode (@Nullable final String s)
+    {
+      m_sGenderCode = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder birthName (@Nullable final String s)
+    {
+      m_sBirthName = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder birthDate (@Nullable final LocalDate a)
+    {
+      m_aBirthDate = a;
+      return this;
+    }
+
+    @Nonnull
+    public Builder address (@Nullable final AddressPojo.Builder a)
+    {
+      return address (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder address (@Nullable final AddressPojo a)
+    {
+      m_aAddress = a;
+      return this;
+    }
+
+    @Nonnull
+    public PersonPojo build ()
+    {
+      return new PersonPojo (m_sID,
+                             m_sIDSchemeID,
+                             m_sFamilyName,
+                             m_sGivenName,
+                             m_sGenderCode,
+                             m_sBirthName,
+                             m_aBirthDate,
+                             m_aAddress);
+    }
+  }
 }

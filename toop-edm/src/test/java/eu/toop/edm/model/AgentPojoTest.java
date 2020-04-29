@@ -39,12 +39,29 @@ public final class AgentPojoTest
     final AgentPojo x = new AgentPojo ("ID",
                                        "IDType",
                                        "Name",
-                                       new AddressPojo ("FullAddress",
-                                                        "StreetName",
-                                                        "BuildingNumber",
-                                                        "Town",
-                                                        "PostalCode",
-                                                        "CountryCode"));
+                                       AddressPojo.builder ()
+                                                  .fullAddress ("FullAddress")
+                                                  .streetName ("StreetName")
+                                                  .buildingNumber ("BuildingNumber")
+                                                  .town ("Town")
+                                                  .postalCode ("PostalCode")
+                                                  .countryCode ("CountryCode")
+                                                  .build ());
+    final AgentType aAgent = x.getAsAgent ();
+    assertNotNull (aAgent);
+
+    final AgentMarshaller m = new AgentMarshaller ();
+    m.setFormattedOutput (true);
+    assertNotNull (m.getAsDocument (aAgent));
+    LOGGER.info (m.getAsString (aAgent));
+  }
+
+  @Test
+  public void testMinimum ()
+  {
+    final AgentPojo x = AgentPojo.builder ().build ();
+    assertNotNull (x);
+
     final AgentType aAgent = x.getAsAgent ();
     assertNotNull (aAgent);
 

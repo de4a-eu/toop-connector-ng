@@ -81,8 +81,75 @@ public class BusinessPojo
   }
 
   @Nonnull
-  public static BusinessPojo createMinimum ()
+  public static Builder builder ()
   {
-    return new BusinessPojo (null, null, null, null, null, null);
+    return new Builder ();
+  }
+
+  public static class Builder
+  {
+    private String m_sLegalID;
+    private String m_sLegalIDSchemeID;
+    private String m_sID;
+    private String m_sIDSchemeID;
+    private String m_sLegalName;
+    private AddressPojo m_aAddress;
+
+    public Builder ()
+    {}
+
+    @Nonnull
+    public Builder legalID (@Nullable final String s)
+    {
+      m_sLegalID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder legalIDSchemeID (@Nullable final String s)
+    {
+      m_sLegalIDSchemeID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder id (@Nullable final String s)
+    {
+      m_sID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder idSchemeID (@Nullable final String s)
+    {
+      m_sIDSchemeID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder legalName (@Nullable final String s)
+    {
+      m_sLegalName = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder address (@Nullable final AddressPojo.Builder a)
+    {
+      return address (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder address (@Nullable final AddressPojo a)
+    {
+      m_aAddress = a;
+      return this;
+    }
+
+    @Nonnull
+    public BusinessPojo build ()
+    {
+      return new BusinessPojo (m_sLegalID, m_sLegalIDSchemeID, m_sID, m_sIDSchemeID, m_sLegalName, m_aAddress);
+    }
   }
 }

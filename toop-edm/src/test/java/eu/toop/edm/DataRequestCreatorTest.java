@@ -6,6 +6,7 @@ import java.util.Locale;
 
 import org.junit.Test;
 
+import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.regrep.RegRep4Writer;
@@ -13,7 +14,7 @@ import eu.toop.regrep.query.QueryRequest;
 
 /**
  * Test class for class {@link DataRequestCreator}
- * 
+ *
  * @author Philip Helger
  */
 public final class DataRequestCreatorTest
@@ -27,7 +28,15 @@ public final class DataRequestCreatorTest
                                                     .setFullfillingRequirement (null)
                                                     .setConsentToken ("I consent")
                                                     .setDatasetIdentifier ("dsID")
-                                                    .setDataConsumer (AgentPojo.createMinimum ())
+                                                    .setDataConsumer (new AgentPojo ("DE730757727",
+                                                                                     "VAT",
+                                                                                     "Company Name",
+                                                                                     new AddressPojo ("Prince Street 15",
+                                                                                                      "Prince Street",
+                                                                                                      "15",
+                                                                                                      "Liverpool",
+                                                                                                      "15115",
+                                                                                                      "GB")))
                                                     .setDataSubject (PersonPojo.createMinimum ())
                                                     .setAuthorizedRepresentative (PersonPojo.createMinimum ())
                                                     .build ();

@@ -49,12 +49,14 @@ public final class BusinessPojoTest
   @Test
   public void testBasic ()
   {
-    final AddressPojo a = new AddressPojo ("FullAddress",
-                                           "StreetName",
-                                           "BuildingNumber",
-                                           "Town",
-                                           "PostalCode",
-                                           "CountryCode");
+    final AddressPojo a = AddressPojo.builder ()
+                                     .fullAddress ("FullAddress")
+                                     .streetName ("StreetName")
+                                     .buildingNumber ("BuildingNumber")
+                                     .town ("Town")
+                                     .postalCode ("PostalCode")
+                                     .countryCode ("CountryCode")
+                                     .build ();
     final BusinessPojo x = new BusinessPojo ("LegalID", "LegalIDType", "ID", "IDType", "LegalName", a);
     _validate (x);
   }
@@ -62,7 +64,7 @@ public final class BusinessPojoTest
   @Test
   public void testMinimum ()
   {
-    final BusinessPojo x = BusinessPojo.createMinimum ();
+    final BusinessPojo x = BusinessPojo.builder ().build ();
     _validate (x);
   }
 }

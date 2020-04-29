@@ -35,8 +35,8 @@ public class AddressPojo
   private final String m_sStreetName;
   private final String m_sBuildingNumber;
   private final String m_sTown;
-  private final String m_sCountryCode;
   private final String m_sPostalCode;
+  private final String m_sCountryCode;
 
   public AddressPojo (@Nullable final String sFullAddress,
                       @Nullable final String sStreetName,
@@ -49,8 +49,8 @@ public class AddressPojo
     m_sStreetName = sStreetName;
     m_sBuildingNumber = sBuildingNumber;
     m_sTown = sTown;
-    m_sCountryCode = sCountryCode;
     m_sPostalCode = sPostalCode;
+    m_sCountryCode = sCountryCode;
   }
 
   @Nullable
@@ -142,8 +142,69 @@ public class AddressPojo
   }
 
   @Nonnull
-  public static AddressPojo createMinimum ()
+  public static Builder builder ()
   {
-    return new AddressPojo (null, null, null, null, null, null);
+    return new Builder ();
+  }
+
+  public static class Builder
+  {
+    private String m_sFullAddress;
+    private String m_sStreetName;
+    private String m_sBuildingNumber;
+    private String m_sTown;
+    private String m_sPostalCode;
+    private String m_sCountryCode;
+
+    public Builder ()
+    {}
+
+    @Nonnull
+    public Builder fullAddress (@Nullable final String s)
+    {
+      m_sFullAddress = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder streetName (@Nullable final String s)
+    {
+      m_sStreetName = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder buildingNumber (@Nullable final String s)
+    {
+      m_sBuildingNumber = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder town (@Nullable final String s)
+    {
+      m_sTown = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder postalCode (@Nullable final String s)
+    {
+      m_sPostalCode = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder countryCode (@Nullable final String s)
+    {
+      m_sCountryCode = s;
+      return this;
+    }
+
+    @Nonnull
+    public AddressPojo build ()
+    {
+      return new AddressPojo (m_sFullAddress, m_sStreetName, m_sBuildingNumber, m_sTown, m_sPostalCode, m_sCountryCode);
+    }
   }
 }

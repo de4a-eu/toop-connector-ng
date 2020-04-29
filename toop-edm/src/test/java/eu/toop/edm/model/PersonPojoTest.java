@@ -51,12 +51,14 @@ public final class PersonPojoTest
   @Test
   public void testBasic ()
   {
-    final AddressPojo a = new AddressPojo ("FullAddress",
-                                           "StreetName",
-                                           "BuildingNumber",
-                                           "Town",
-                                           "PostalCode",
-                                           "CountryCode");
+    final AddressPojo a = AddressPojo.builder ()
+                                     .fullAddress ("FullAddress")
+                                     .streetName ("StreetName")
+                                     .buildingNumber ("BuildingNumber")
+                                     .town ("Town")
+                                     .postalCode ("PostalCode")
+                                     .countryCode ("CountryCode")
+                                     .build ();
     final PersonPojo x = new PersonPojo ("ID",
                                          "idSchemeID",
                                          "FamilyName",
