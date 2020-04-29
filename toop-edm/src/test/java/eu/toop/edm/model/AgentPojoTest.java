@@ -36,17 +36,18 @@ public final class AgentPojoTest
   @Test
   public void testBasic ()
   {
-    final AgentPojo x = new AgentPojo ("ID",
-                                       "IDType",
-                                       "Name",
-                                       AddressPojo.builder ()
-                                                  .fullAddress ("FullAddress")
-                                                  .streetName ("StreetName")
-                                                  .buildingNumber ("BuildingNumber")
-                                                  .town ("Town")
-                                                  .postalCode ("PostalCode")
-                                                  .countryCode ("CountryCode")
-                                                  .build ());
+    final AgentPojo x = AgentPojo.builder ()
+                                 .id ("ID")
+                                 .idSchemeID ("IDType")
+                                 .name ("Name")
+                                 .address (AddressPojo.builder ()
+                                                      .fullAddress ("FullAddress")
+                                                      .streetName ("StreetName")
+                                                      .buildingNumber ("BuildingNumber")
+                                                      .town ("Town")
+                                                      .postalCode ("PostalCode")
+                                                      .countryCode ("CountryCode"))
+                                 .build ();
     final AgentType aAgent = x.getAsAgent ();
     assertNotNull (aAgent);
 
@@ -74,7 +75,7 @@ public final class AgentPojoTest
   @Test
   public void testNoAddress ()
   {
-    final AgentPojo x = new AgentPojo ("ID", "IDType", "Name", null);
+    final AgentPojo x = AgentPojo.builder ().id ("ID").idSchemeID ("IDType").name ("Name").build ();
     final AgentType aAgent = x.getAsAgent ();
     assertNotNull (aAgent);
 

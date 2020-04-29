@@ -57,7 +57,14 @@ public final class BusinessPojoTest
                                      .postalCode ("PostalCode")
                                      .countryCode ("CountryCode")
                                      .build ();
-    final BusinessPojo x = new BusinessPojo ("LegalID", "LegalIDType", "ID", "IDType", "LegalName", a);
+    final BusinessPojo x = BusinessPojo.builder ()
+                                       .legalID ("LegalID")
+                                       .legalIDSchemeID ("LegalIDType")
+                                       .id ("ID")
+                                       .idSchemeID ("IDType")
+                                       .legalName ("LegalName")
+                                       .address (a)
+                                       .build ();
     _validate (x);
   }
 
