@@ -25,7 +25,6 @@ import com.helger.jaxb.JAXBContextCache;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcatap.ObjectFactory;
-import eu.toop.edm.xml.cagv.CAGVNamespaceContext;
 
 public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller <DCatAPDatasetType>
 {

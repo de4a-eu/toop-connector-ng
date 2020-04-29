@@ -21,7 +21,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.regrep.SlotBuilder;
-import eu.toop.regrep.rim.InternationalStringValueType;
+import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.SlotType;
 
 /**
@@ -33,9 +33,9 @@ public class SlotProcedure implements ISlotProvider
 {
   public static final String NAME = "Procedure";
 
-  private final InternationalStringValueType m_aProcedure;
+  private final InternationalStringType m_aProcedure;
 
-  public SlotProcedure (@Nonnull final InternationalStringValueType aProcedure)
+  public SlotProcedure (@Nonnull final InternationalStringType aProcedure)
   {
     ValueEnforcer.notNull (aProcedure, "Procedure");
     m_aProcedure = aProcedure;

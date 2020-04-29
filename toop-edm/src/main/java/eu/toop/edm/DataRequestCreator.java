@@ -36,7 +36,6 @@ import eu.toop.edm.xml.cv.PersonPojo;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.InternationalStringType;
-import eu.toop.regrep.rim.InternationalStringValueType;
 import eu.toop.regrep.rim.LocalizedStringType;
 import eu.toop.regrep.rim.QueryType;
 
@@ -124,7 +123,7 @@ public class DataRequestCreator
   {
     private EQueryDefinitionType m_eQueryDefinition;
     private LocalDateTime m_aIssueDateTime;
-    private InternationalStringValueType m_aProcedure;
+    private InternationalStringType m_aProcedure;
     private CCCEVRequirementType m_aFullfillingRequirement;
     private AgentType m_aDataConsumer;
     private String m_sConsentToken;
@@ -169,13 +168,7 @@ public class DataRequestCreator
     }
 
     @Nonnull
-    public Builder setProcedure (@Nullable final InternationalStringType aValue)
-    {
-      return setProcedure (aValue == null ? null : RegRepHelper.createSlotValue (aValue));
-    }
-
-    @Nonnull
-    public Builder setProcedure (@Nullable final InternationalStringValueType aProcedure)
+    public Builder setProcedure (@Nullable final InternationalStringType aProcedure)
     {
       m_aProcedure = aProcedure;
       return this;
