@@ -1,6 +1,7 @@
 package eu.toop.edm;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -19,20 +20,32 @@ import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
-import eu.toop.edm.regrep.ISlotProvider;
-import eu.toop.edm.regrep.SlotConsentToken;
-import eu.toop.edm.regrep.SlotDataConsumer;
-import eu.toop.edm.regrep.SlotDataSubjectLegalPerson;
-import eu.toop.edm.regrep.SlotDataSubjectNaturalPerson;
-import eu.toop.edm.regrep.SlotDatasetIdentifier;
-import eu.toop.edm.regrep.SlotFullfillingRequirement;
-import eu.toop.edm.regrep.SlotIssueDateTime;
-import eu.toop.edm.regrep.SlotProcedure;
+import eu.toop.edm.slot.ISlotProvider;
+import eu.toop.edm.slot.SlotAuthorizedRepresentative;
+import eu.toop.edm.slot.SlotConsentToken;
+import eu.toop.edm.slot.SlotDataConsumer;
+import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
+import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
+import eu.toop.edm.slot.SlotDatasetIdentifier;
+import eu.toop.edm.slot.SlotFullfillingRequirement;
+import eu.toop.edm.slot.SlotIssueDateTime;
+import eu.toop.edm.slot.SlotProcedure;
+import eu.toop.edm.xml.cagv.DataConsumerPojo;
+import eu.toop.edm.xml.cv.BusinessPojo;
+import eu.toop.edm.xml.cv.PersonPojo;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
+import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.InternationalStringValueType;
+import eu.toop.regrep.rim.LocalizedStringType;
 import eu.toop.regrep.rim.QueryType;
 
+/**
+ * A simple builder to create valid TOOP Request for both "concept queries" and
+ * for "document queries".
+ *
+ * @author Philip Helger
+ */
 public class DataRequestCreator
 {
   private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotIssueDateTime.NAME,
@@ -113,11 +126,12 @@ public class DataRequestCreator
     private LocalDateTime m_aIssueDateTime;
     private InternationalStringValueType m_aProcedure;
     private CCCEVRequirementType m_aFullfillingRequirement;
-    private AgentType m_aDCAgent;
+    private AgentType m_aDataConsumer;
     private String m_sConsentToken;
     private String m_sDatasetIdentifier;
-    private CoreBusinessType m_aDSLegalPerson;
-    private CorePersonType m_aDSNaturalPerson;
+    private CoreBusinessType m_aDataSubjectLegalPerson;
+    private CorePersonType m_aDataSubjectNaturalPerson;
+    private CorePersonType m_aAuthorizedRepresentative;
 
     public Builder ()
     {}
@@ -140,6 +154,24 @@ public class DataRequestCreator
     public Builder setIssueDateTimeNow ()
     {
       return setIssueDateTime (PDTFactory.getCurrentLocalDateTime ());
+    }
+
+    @Nonnull
+    public Builder setProcedure (@Nullable final Map <Locale, String> aMap)
+    {
+      return setProcedure (aMap == null ? null : RegRepHelper.createInternationalStringType (aMap));
+    }
+
+    @Nonnull
+    public Builder setProcedure (@Nullable final LocalizedStringType... aArray)
+    {
+      return setProcedure (aArray == null ? null : RegRepHelper.createInternationalStringType (aArray));
+    }
+
+    @Nonnull
+    public Builder setProcedure (@Nullable final InternationalStringType aValue)
+    {
+      return setProcedure (aValue == null ? null : RegRepHelper.createSlotValue (aValue));
     }
 
     @Nonnull
@@ -171,35 +203,81 @@ public class DataRequestCreator
     }
 
     @Nonnull
+    public Builder setDataConsumer (@Nullable final DataConsumerPojo aDC)
+    {
+      return setDataConsumer (aDC == null ? null : aDC.getAsAgent ());
+    }
+
+    @Nonnull
     public Builder setDataConsumer (@Nullable final AgentType aAgent)
     {
-      m_aDCAgent = aAgent;
+      m_aDataConsumer = aAgent;
       return this;
+    }
+
+    @Nonnull
+    public Builder setDataSubject (@Nullable final BusinessPojo aBusiness)
+    {
+      return setDataSubject (aBusiness == null ? null : aBusiness.getAsBusiness ());
     }
 
     @Nonnull
     public Builder setDataSubject (@Nullable final CoreBusinessType aBusiness)
     {
-      m_aDSLegalPerson = aBusiness;
-      m_aDSNaturalPerson = null;
+      m_aDataSubjectLegalPerson = aBusiness;
+      m_aDataSubjectNaturalPerson = null;
       return this;
+    }
+
+    @Nonnull
+    public Builder setDataSubject (@Nullable final PersonPojo aPerson)
+    {
+      return setDataSubject (aPerson == null ? null : aPerson.getAsPerson ());
     }
 
     @Nonnull
     public Builder setDataSubject (@Nullable final CorePersonType aPerson)
     {
-      m_aDSLegalPerson = null;
-      m_aDSNaturalPerson = aPerson;
+      m_aDataSubjectLegalPerson = null;
+      m_aDataSubjectNaturalPerson = aPerson;
       return this;
+    }
+
+    @Nonnull
+    public Builder setAuthorizedRepresentative (@Nullable final PersonPojo aPerson)
+    {
+      return setAuthorizedRepresentative (aPerson == null ? null : aPerson.getAsPerson ());
+    }
+
+    @Nonnull
+    public Builder setAuthorizedRepresentative (@Nullable final CorePersonType aPerson)
+    {
+      m_aAuthorizedRepresentative = aPerson;
+      return this;
+    }
+
+    public void checkConsistency ()
+    {
+      if (m_eQueryDefinition == null)
+        throw new IllegalStateException ("Query Definition must be present");
+      if (m_aIssueDateTime == null)
+        throw new IllegalStateException ("Issue Date Time must be present");
+      if (m_aDataConsumer == null)
+        throw new IllegalStateException ("Cata Consumer must be present");
+      if (m_aDataSubjectLegalPerson == null && m_aDataSubjectNaturalPerson == null)
+        throw new IllegalStateException ("Data Subject must be present");
+      if (m_aDataSubjectLegalPerson != null && m_aDataSubjectNaturalPerson != null)
+        throw new IllegalStateException ("Data Subject MUST be either legal person OR natural person");
     }
 
     @Nonnull
     public QueryRequest build ()
     {
-      if (m_eQueryDefinition == null)
-        throw new IllegalStateException ("Query definition must be present");
+      checkConsistency ();
 
       final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
+
+      // Top-level slots
       if (m_aIssueDateTime != null)
         x.add (new SlotIssueDateTime (m_aIssueDateTime));
       if (m_aProcedure != null)
@@ -210,13 +288,17 @@ public class DataRequestCreator
         x.add (new SlotConsentToken (m_sConsentToken));
       if (m_sDatasetIdentifier != null)
         x.add (new SlotDatasetIdentifier (m_sDatasetIdentifier));
-      if (m_aDCAgent != null)
-        x.add (new SlotDataConsumer (m_aDCAgent));
-      if (m_aDSLegalPerson != null)
-        x.add (new SlotDataSubjectLegalPerson (m_aDSLegalPerson));
-      else
-        if (m_aDSNaturalPerson != null)
-          x.add (new SlotDataSubjectNaturalPerson (m_aDSNaturalPerson));
+      if (m_aDataConsumer != null)
+        x.add (new SlotDataConsumer (m_aDataConsumer));
+
+      // Commons Query slots
+      if (m_aDataSubjectLegalPerson != null)
+        x.add (new SlotDataSubjectLegalPerson (m_aDataSubjectLegalPerson));
+      if (m_aDataSubjectNaturalPerson != null)
+        x.add (new SlotDataSubjectNaturalPerson (m_aDataSubjectNaturalPerson));
+      if (m_aAuthorizedRepresentative != null)
+        x.add (new SlotAuthorizedRepresentative (m_aAuthorizedRepresentative));
+
       return new DataRequestCreator (m_eQueryDefinition, x).createQueryRequest ();
     }
   }

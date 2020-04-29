@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
+
+import java.time.LocalDateTime;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
-import eu.toop.edm.xml.cv.PersonMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * DataSubject "NaturalPerson" slot
+ * "IssueDateTime" slot
  *
  * @author Philip Helger
  */
-public class SlotDataSubjectNaturalPerson implements ISlotProvider
+public class SlotIssueDateTime implements ISlotProvider
 {
-  public static final String NAME = "NaturalPerson";
+  public static final String NAME = "IssueDateTime";
 
-  private final CorePersonType m_aNaturalPerson;
+  private final LocalDateTime m_aLDT;
 
-  public SlotDataSubjectNaturalPerson (@Nonnull final CorePersonType aNaturalPerson)
+  public SlotIssueDateTime (@Nonnull final LocalDateTime aLDT)
   {
-    ValueEnforcer.notNull (aNaturalPerson, "NaturalPerson");
-    m_aNaturalPerson = aNaturalPerson;
+    ValueEnforcer.notNull (aLDT, "LDT");
+    m_aLDT = aLDT;
   }
 
   @Nonnull
@@ -52,8 +52,6 @@ public class SlotDataSubjectNaturalPerson implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME)
-                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson))
-                             .build ();
+    return new SlotBuilder ().setName (NAME).setValue (m_aLDT).build ();
   }
 }

@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
-import eu.toop.edm.xml.cv.PersonMarshaller;
+import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
+import eu.toop.edm.xml.cccev.RequirementMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * DataSubject "AuthorizedRepresentative" slot
+ * "FullfillingRequirement" slot
  *
  * @author Philip Helger
  */
-public class SlotAuthorizedRepresentative implements ISlotProvider
+public class SlotFullfillingRequirement implements ISlotProvider
 {
-  public static final String NAME = "AuthorizedRepresentative";
+  public static final String NAME = "FullfillingRequirement";
 
-  private final CorePersonType m_aNaturalPerson;
+  private final CCCEVRequirementType m_aRequirement;
 
-  public SlotAuthorizedRepresentative (@Nonnull final CorePersonType aNaturalPerson)
+  public SlotFullfillingRequirement (@Nonnull final CCCEVRequirementType aRequirement)
   {
-    ValueEnforcer.notNull (aNaturalPerson, "NaturalPerson");
-    m_aNaturalPerson = aNaturalPerson;
+    ValueEnforcer.notNull (aRequirement, "Requirement");
+    m_aRequirement = aRequirement;
   }
 
   @Nonnull
@@ -53,7 +53,7 @@ public class SlotAuthorizedRepresentative implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson))
+                             .setValue (new RequirementMarshaller ().getAsDocument (m_aRequirement))
                              .build ();
   }
 }

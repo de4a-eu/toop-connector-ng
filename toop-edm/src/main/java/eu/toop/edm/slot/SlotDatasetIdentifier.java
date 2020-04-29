@@ -13,9 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
-
-import java.time.LocalDateTime;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
@@ -26,20 +24,20 @@ import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "IssueDateTime" slot
+ * "DatasetIdentifier" slot
  *
  * @author Philip Helger
  */
-public class SlotIssueDateTime implements ISlotProvider
+public class SlotDatasetIdentifier implements ISlotProvider
 {
-  public static final String NAME = "IssueDateTime";
+  public static final String NAME = "DatasetIdentifier";
 
-  private final LocalDateTime m_aLDT;
+  private final String m_sValue;
 
-  public SlotIssueDateTime (@Nonnull final LocalDateTime aLDT)
+  public SlotDatasetIdentifier (@Nonnull final String sValue)
   {
-    ValueEnforcer.notNull (aLDT, "LDT");
-    m_aLDT = aLDT;
+    ValueEnforcer.notNull (sValue, "Value");
+    m_sValue = sValue;
   }
 
   @Nonnull
@@ -52,6 +50,6 @@ public class SlotIssueDateTime implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (m_aLDT).build ();
+    return new SlotBuilder ().setName (NAME).setValue (m_sValue).build ();
   }
 }

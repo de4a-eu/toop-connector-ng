@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
@@ -24,17 +24,17 @@ import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "DatasetIdentifier" slot
+ * "ConsentToken" slot
  *
  * @author Philip Helger
  */
-public class SlotDatasetIdentifier implements ISlotProvider
+public class SlotConsentToken implements ISlotProvider
 {
-  public static final String NAME = "DatasetIdentifier";
+  public static final String NAME = "ConsentToken";
 
   private final String m_sValue;
 
-  public SlotDatasetIdentifier (@Nonnull final String sValue)
+  public SlotConsentToken (@Nonnull final String sValue)
   {
     ValueEnforcer.notNull (sValue, "Value");
     m_sValue = sValue;

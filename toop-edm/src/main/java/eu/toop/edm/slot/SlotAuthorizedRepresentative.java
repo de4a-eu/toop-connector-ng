@@ -13,32 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
+import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.xml.cv.PersonMarshaller;
 import eu.toop.regrep.SlotBuilder;
-import eu.toop.regrep.rim.InternationalStringValueType;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "Procedure" slot
+ * DataSubject "AuthorizedRepresentative" slot
  *
  * @author Philip Helger
  */
-public class SlotProcedure implements ISlotProvider
+public class SlotAuthorizedRepresentative implements ISlotProvider
 {
-  public static final String NAME = "Procedure";
+  public static final String NAME = "AuthorizedRepresentative";
 
-  private final InternationalStringValueType m_aProcedure;
+  private final CorePersonType m_aNaturalPerson;
 
-  public SlotProcedure (@Nonnull final InternationalStringValueType aProcedure)
+  public SlotAuthorizedRepresentative (@Nonnull final CorePersonType aNaturalPerson)
   {
-    ValueEnforcer.notNull (aProcedure, "Procedure");
-    m_aProcedure = aProcedure;
+    ValueEnforcer.notNull (aNaturalPerson, "NaturalPerson");
+    m_aNaturalPerson = aNaturalPerson;
   }
 
   @Nonnull
@@ -51,6 +52,8 @@ public class SlotProcedure implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (m_aProcedure).build ();
+    return new SlotBuilder ().setName (NAME)
+                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson))
+                             .build ();
   }
 }

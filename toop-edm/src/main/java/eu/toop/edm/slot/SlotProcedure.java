@@ -13,33 +13,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.regrep.SlotBuilder;
+import eu.toop.regrep.rim.InternationalStringValueType;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "DataProvider" slot
+ * "Procedure" slot
  *
  * @author Philip Helger
  */
-public class SlotDataProvider implements ISlotProvider
+public class SlotProcedure implements ISlotProvider
 {
-  public static final String NAME = "DataProvider";
+  public static final String NAME = "Procedure";
 
-  private final AgentType m_aAgent;
+  private final InternationalStringValueType m_aProcedure;
 
-  public SlotDataProvider (@Nonnull final AgentType aAgent)
+  public SlotProcedure (@Nonnull final InternationalStringValueType aProcedure)
   {
-    ValueEnforcer.notNull (aAgent, "Agent");
-    m_aAgent = aAgent;
+    ValueEnforcer.notNull (aProcedure, "Procedure");
+    m_aProcedure = aProcedure;
   }
 
   @Nonnull
@@ -52,6 +51,6 @@ public class SlotDataProvider implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (new AgentMarshaller ().getAsDocument (m_aAgent)).build ();
+    return new SlotBuilder ().setName (NAME).setValue (m_aProcedure).build ();
   }
 }

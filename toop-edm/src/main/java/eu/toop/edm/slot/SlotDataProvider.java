@@ -13,31 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
+import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "ConsentToken" slot
+ * "DataProvider" slot
  *
  * @author Philip Helger
  */
-public class SlotConsentToken implements ISlotProvider
+public class SlotDataProvider implements ISlotProvider
 {
-  public static final String NAME = "ConsentToken";
+  public static final String NAME = "DataProvider";
 
-  private final String m_sValue;
+  private final AgentType m_aAgent;
 
-  public SlotConsentToken (@Nonnull final String sValue)
+  public SlotDataProvider (@Nonnull final AgentType aAgent)
   {
-    ValueEnforcer.notNull (sValue, "Value");
-    m_sValue = sValue;
+    ValueEnforcer.notNull (aAgent, "Agent");
+    m_aAgent = aAgent;
   }
 
   @Nonnull
@@ -50,6 +52,6 @@ public class SlotConsentToken implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (m_sValue).build ();
+    return new SlotBuilder ().setName (NAME).setValue (new AgentMarshaller ().getAsDocument (m_aAgent)).build ();
   }
 }

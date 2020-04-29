@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
-import eu.toop.edm.xml.cccev.RequirementMarshaller;
+import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
+import eu.toop.edm.xml.cv.BusinessMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * "FullfillingRequirement" slot
+ * DataSubject "LegalPerson" slot
  *
  * @author Philip Helger
  */
-public class SlotFullfillingRequirement implements ISlotProvider
+public class SlotDataSubjectLegalPerson implements ISlotProvider
 {
-  public static final String NAME = "FullfillingRequirement";
+  public static final String NAME = "LegalPerson";
 
-  private final CCCEVRequirementType m_aRequirement;
+  private final CoreBusinessType m_aLegalPerson;
 
-  public SlotFullfillingRequirement (@Nonnull final CCCEVRequirementType aRequirement)
+  public SlotDataSubjectLegalPerson (@Nonnull final CoreBusinessType aLegalPerson)
   {
-    ValueEnforcer.notNull (aRequirement, "Requirement");
-    m_aRequirement = aRequirement;
+    ValueEnforcer.notNull (aLegalPerson, "LegalPerson");
+    m_aLegalPerson = aLegalPerson;
   }
 
   @Nonnull
@@ -53,7 +53,7 @@ public class SlotFullfillingRequirement implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new RequirementMarshaller ().getAsDocument (m_aRequirement))
+                             .setValue (new BusinessMarshaller ().getAsDocument (m_aLegalPerson))
                              .build ();
   }
 }

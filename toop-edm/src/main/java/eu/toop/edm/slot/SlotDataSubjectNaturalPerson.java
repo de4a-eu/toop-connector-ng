@@ -13,33 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.edm.slot;
 
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
-import eu.toop.edm.xml.cv.BusinessMarshaller;
+import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.xml.cv.PersonMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * DataSubject "LegalPerson" slot
+ * DataSubject "NaturalPerson" slot
  *
  * @author Philip Helger
  */
-public class SlotDataSubjectLegalPerson implements ISlotProvider
+public class SlotDataSubjectNaturalPerson implements ISlotProvider
 {
-  public static final String NAME = "LegalPerson";
+  public static final String NAME = "NaturalPerson";
 
-  private final CoreBusinessType m_aLegalPerson;
+  private final CorePersonType m_aNaturalPerson;
 
-  public SlotDataSubjectLegalPerson (@Nonnull final CoreBusinessType aLegalPerson)
+  public SlotDataSubjectNaturalPerson (@Nonnull final CorePersonType aNaturalPerson)
   {
-    ValueEnforcer.notNull (aLegalPerson, "LegalPerson");
-    m_aLegalPerson = aLegalPerson;
+    ValueEnforcer.notNull (aNaturalPerson, "NaturalPerson");
+    m_aNaturalPerson = aNaturalPerson;
   }
 
   @Nonnull
@@ -53,7 +53,7 @@ public class SlotDataSubjectLegalPerson implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new BusinessMarshaller ().getAsDocument (m_aLegalPerson))
+                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson))
                              .build ();
   }
 }
