@@ -158,6 +158,12 @@ public class PersonPojo
     }
 
     @Nonnull
+    public Builder genderCode (@Nullable final EGenderCode e)
+    {
+      return genderCode (e == null ? null : e.getID ());
+    }
+
+    @Nonnull
     public Builder genderCode (@Nullable final String s)
     {
       m_sGenderCode = s;

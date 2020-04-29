@@ -64,7 +64,7 @@ public final class PersonPojoTest
                                    .idSchemeID ("idSchemeID")
                                    .familyName ("FamilyName")
                                    .givenName ("GivenName")
-                                   .genderCode ("GenderCode")
+                                   .genderCode (EGenderCode.M)
                                    .birthName ("BirthName")
                                    .birthDate (PDTFactory.getCurrentLocalDate ())
                                    .address (a)

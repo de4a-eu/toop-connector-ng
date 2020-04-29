@@ -26,6 +26,7 @@ import com.helger.commons.datetime.PDTFactory;
 
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
+import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
@@ -60,6 +61,7 @@ public final class DataRequestCreatorTest
                                                                                .build ())
                                                     .setDataSubject (PersonPojo.builder ()
                                                                                .familyName ("DataSubjectFamily")
+                                                                               .genderCode (EGenderCode.F)
                                                                                .birthDate (PDTFactory.createLocalDate (2000,
                                                                                                                        Month.FEBRUARY,
                                                                                                                        28))
