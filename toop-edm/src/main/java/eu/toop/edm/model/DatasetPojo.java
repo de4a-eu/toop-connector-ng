@@ -15,17 +15,17 @@ import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 
 public class DatasetPojo
 {
-  private final String m_sID;
-  private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
   private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
+  private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
+  private final String m_sID;
   private final LocalDateTime m_aIssuedDT;
   private final LocalDateTime m_aLastModifiedDT;
   private final String m_sLanguage;
   private final ICommonsList <String> m_aErrorCodes;
 
-  public DatasetPojo (@Nullable final String sID,
+  public DatasetPojo (@Nonnull @Nonempty final ICommonsList <String> aDescriptions,
                       @Nonnull @Nonempty final ICommonsList <String> aTitles,
-                      @Nonnull @Nonempty final ICommonsList <String> aDescriptions,
+                      @Nullable final String sID,
                       @Nullable final LocalDateTime aIssuedDT,
                       @Nullable final LocalDateTime aLastModifiedDT,
                       @Nullable final String sLanguage,
@@ -47,12 +47,12 @@ public class DatasetPojo
   public DCatAPDatasetType getAsDataset ()
   {
     final DCatAPDatasetType ret = new DCatAPDatasetType ();
-    if (StringHelper.hasText (m_sID))
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createIdentifier (m_sID));
-    for (final String sTitle : m_aTitles)
-      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTitle (sTitle));
     for (final String sDescription : m_aDescriptions)
       ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createDescription (sDescription));
+    for (final String sTitle : m_aTitles)
+      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createTitle (sTitle));
+    if (StringHelper.hasText (m_sID))
+      ret.addContent (new eu.toop.edm.jaxb.dcterms.ObjectFactory ().createIdentifier (m_sID));
     return ret;
   }
 
@@ -64,9 +64,9 @@ public class DatasetPojo
 
   public static class Builder
   {
-    private String m_sID;
-    private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
     private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
+    private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
+    private String m_sID;
     private LocalDateTime m_aIssuedDT;
     private LocalDateTime m_aLastModifiedDT;
     private String m_sLanguage;
@@ -76,9 +76,20 @@ public class DatasetPojo
     {}
 
     @Nonnull
-    public Builder id (@Nullable final String s)
+    public Builder addDescription (@Nullable final String s)
     {
-      m_sID = s;
+      if (StringHelper.hasText (s))
+        m_aDescriptions.add (s);
+      return this;
+    }
+
+    @Nonnull
+    public Builder description (@Nullable final String s)
+    {
+      if (StringHelper.hasText (s))
+        m_aDescriptions.set (s);
+      else
+        m_aDescriptions.clear ();
       return this;
     }
 
@@ -101,20 +112,9 @@ public class DatasetPojo
     }
 
     @Nonnull
-    public Builder addDescription (@Nullable final String s)
+    public Builder id (@Nullable final String s)
     {
-      if (StringHelper.hasText (s))
-        m_aDescriptions.add (s);
-      return this;
-    }
-
-    @Nonnull
-    public Builder description (@Nullable final String s)
-    {
-      if (StringHelper.hasText (s))
-        m_aDescriptions.set (s);
-      else
-        m_aDescriptions.clear ();
+      m_sID = s;
       return this;
     }
 
@@ -160,9 +160,9 @@ public class DatasetPojo
     @Nonnull
     public DatasetPojo build ()
     {
-      return new DatasetPojo (m_sID,
+      return new DatasetPojo (m_aDescriptions,
                               m_aTitles,
-                              m_aDescriptions,
+                              m_sID,
                               m_aIssuedDT,
                               m_aLastModifiedDT,
                               m_sLanguage,

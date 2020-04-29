@@ -24,6 +24,8 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.xsds.ccts.cct.schemamodule.CCCTS;
 
+import eu.toop.regrep.CRegRep4;
+
 /**
  * Core Agent Vocabulary (CAGV) constants
  *
@@ -42,6 +44,8 @@ public final class CCAGV
   {
     final ICommonsList <ClassPathResource> aList = new CommonsArrayList <> ();
     aList.addAll (CCCTS.getXSDResource (),
+                  CRegRep4.getXSDResourceXML (),
+                  CRegRep4.getXSDResourceXLink (),
                   new ClassPathResource ("schemas/skos.xsd", _getCL ()),
                   new ClassPathResource ("schemas/regorg.xsd", _getCL ()),
                   new ClassPathResource ("schemas/org.xsd", _getCL ()),

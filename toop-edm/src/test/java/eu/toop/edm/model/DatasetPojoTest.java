@@ -36,7 +36,7 @@ public final class DatasetPojoTest
   @Test
   public void testBasic ()
   {
-    final DatasetPojo x = DatasetPojo.builder ().build ();
+    final DatasetPojo x = DatasetPojo.builder ().title ("bla title").description ("bla desc").build ();
     final DCatAPDatasetType aAgent = x.getAsDataset ();
     assertNotNull (aAgent);
 
@@ -49,7 +49,7 @@ public final class DatasetPojoTest
   @Test
   public void testMinimum ()
   {
-    final DatasetPojo x = DatasetPojo.builder ().build ();
+    final DatasetPojo x = DatasetPojo.builder ().title ("bla title").description ("bla desc").build ();
     assertNotNull (x);
 
     final DCatAPDatasetType aAgent = x.getAsDataset ();
