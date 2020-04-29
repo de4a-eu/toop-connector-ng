@@ -28,6 +28,7 @@ import com.helger.commons.datetime.PDTFactory;
 
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
+import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.PersonPojo;
@@ -47,16 +48,22 @@ public final class DataRequestCreatorTest
   @Test
   public void testBasicRequestCreatorConcept ()
   {
+    final String sConceptNS = "http://toop.eu/registered-organization";
     final QueryRequest aRequest = DataRequestCreator.builderConcept ()
-                                                    .issueDateTimeNow ()
-                                                    .procedure (Locale.UK, "I am the producer")
+                                                    .issueDateTime (PDTFactory.createLocalDateTime (2020,
+                                                                                                    Month.FEBRUARY,
+                                                                                                    14,
+                                                                                                    19,
+                                                                                                    20,
+                                                                                                    30))
+                                                    .procedure (Locale.UK, "GBM Procedure")
                                                     .fullfillingRequirement (null)
-                                                    .consentToken ("I consent")
-                                                    .datasetIdentifier ("dsID")
+                                                    .consentToken ("MTExMDEwMTAxMDEwMTAwMDExMTAxMDE=")
+                                                    .datasetIdentifier ("DATASETIDENTIFIER")
                                                     .dataConsumer (AgentPojo.builder ()
                                                                             .id ("DE730757727")
                                                                             .idSchemeID ("VAT")
-                                                                            .name ("Company Name")
+                                                                            .name ("aCompanyName")
                                                                             .address (AddressPojo.builder ()
                                                                                                  .fullAddress ("Prince Street 15")
                                                                                                  .streetName ("Prince Street")
@@ -64,18 +71,47 @@ public final class DataRequestCreatorTest
                                                                                                  .town ("Liverpool")
                                                                                                  .postalCode ("15115")
                                                                                                  .countryCode ("GB")))
-                                                    .dataSubject (PersonPojo.builder ()
-                                                                            .familyName ("DataSubjectFamily")
-                                                                            .genderCode (EGenderCode.F)
-                                                                            .birthDate (PDTFactory.createLocalDate (2000,
-                                                                                                                    Month.FEBRUARY,
-                                                                                                                    28)))
+                                                    .dataSubject (BusinessPojo.builder ()
+                                                                              .legalID ("DE730757727")
+                                                                              .legalIDSchemeID ("VAT")
+                                                                              .id ("DE/GB/02735442Z")
+                                                                              .idSchemeID ("EIDAS")
+                                                                              .legalName ("AnyCompanyName")
+                                                                              .address (AddressPojo.builder ()
+                                                                                                   .fullAddress ("Prince Street 15")
+                                                                                                   .streetName ("Prince Street")
+                                                                                                   .buildingNumber ("15")
+                                                                                                   .town ("Liverpool")
+                                                                                                   .postalCode ("15115")
+                                                                                                   .countryCode ("GB")))
                                                     .authorizedRepresentative (PersonPojo.builder ()
-                                                                                         .givenName ("Authhorizer"))
+                                                                                         .id ("1515")
+                                                                                         .idSchemeID ("VAT")
+                                                                                         .familyName ("Smith")
+                                                                                         .givenName ("Mark")
+                                                                                         .genderCode (EGenderCode.M)
+                                                                                         .birthName ("Mark Smith")
+                                                                                         .birthDate (PDTFactory.createLocalDate (1990,
+                                                                                                                                 Month.JANUARY,
+                                                                                                                                 1))
+                                                                                         .address (AddressPojo.builder ()
+                                                                                                              .fullAddress ("Some other 15")
+                                                                                                              .streetName ("Some other")
+                                                                                                              .buildingNumber ("15")
+                                                                                                              .town ("Liverpool")
+                                                                                                              .postalCode ("15115")
+                                                                                                              .countryCode ("GB")))
                                                     .concept (ConceptPojo.builder ()
-                                                                         .randomID ()
-                                                                         .name ("http://toop.eu/registered-organization",
-                                                                                "CompanyName"))
+                                                                         .id ("ConceptID-1")
+                                                                         .name (sConceptNS, "CompanyData")
+                                                                         .addChild (ConceptPojo.builder ()
+                                                                                               .id ("ConceptID-2")
+                                                                                               .name (sConceptNS,
+                                                                                                      "Concept-Name-2"))
+                                                                         .addChild (ConceptPojo.builder ()
+                                                                                               .id ("ConceptID-3")
+                                                                                               .name (sConceptNS,
+                                                                                                      "Concept-Name-3")))
                                                     .build ();
     assertNotNull (aRequest);
 
