@@ -98,7 +98,7 @@ public final class CCCEVValueHelper
   @Nonnull
   public static CCCEVValueType createDate (@Nonnull final XMLGregorianCalendar a)
   {
-    return create (new DateType (a));
+    return create (a == null ? null : new DateType (a));
   }
 
   @Nonnull
@@ -237,7 +237,7 @@ public final class CCCEVValueHelper
   @Nonnull
   public static CCCEVValueType createTime (@Nonnull final XMLGregorianCalendar a)
   {
-    return create (new TimeType (a));
+    return create (a == null ? null : new TimeType (a));
   }
 
   @Nonnull
@@ -287,10 +287,14 @@ public final class CCCEVValueHelper
                                              @Nonnull final XMLGregorianCalendar aEndTime)
   {
     final PeriodType a = new PeriodType ();
-    a.setStartDate (aStartDate);
-    a.setStartTime (aStartTime);
-    a.setEndDate (aEndDate);
-    a.setEndTime (aEndTime);
+    if (aStartDate != null)
+      a.setStartDate (aStartDate);
+    if (aStartTime != null)
+      a.setStartTime (aStartTime);
+    if (aEndDate != null)
+      a.setEndDate (aEndDate);
+    if (aEndTime != null)
+      a.setEndTime (aEndTime);
     return create (a);
   }
 

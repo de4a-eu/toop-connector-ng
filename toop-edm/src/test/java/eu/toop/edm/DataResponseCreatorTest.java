@@ -91,15 +91,11 @@ public final class DataResponseCreatorTest
                                                                                                   .value (CCCEVValueHelper.createPeriod (PDTFactory.createLocalDate (2020,
                                                                                                                                                                      Month.JANUARY,
                                                                                                                                                                      2),
-                                                                                                                                         PDTFactory.createLocalTime (12,
-                                                                                                                                                                     34,
-                                                                                                                                                                     56),
+                                                                                                                                         null,
                                                                                                                                          PDTFactory.createLocalDate (2022,
                                                                                                                                                                      Month.MAY,
                                                                                                                                                                      5),
-                                                                                                                                         PDTFactory.createLocalTime (10,
-                                                                                                                                                                     30,
-                                                                                                                                                                     50))))
+                                                                                                                                         null)))
                                                                             .addChild (ConceptPojo.builder ()
                                                                                                   .id ("ConceptID-7")
                                                                                                   .name (sConceptNS,
