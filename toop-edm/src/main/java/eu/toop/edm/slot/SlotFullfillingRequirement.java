@@ -53,7 +53,8 @@ public class SlotFullfillingRequirement implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new RequirementMarshaller ().getAsDocument (m_aRequirement))
+                             .setValue (new RequirementMarshaller ().getAsDocument (m_aRequirement)
+                                                                    .getDocumentElement ())
                              .build ();
   }
 }

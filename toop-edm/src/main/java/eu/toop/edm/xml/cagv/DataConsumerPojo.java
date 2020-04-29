@@ -96,4 +96,10 @@ public class DataConsumerPojo
     }
     return ret;
   }
+
+  @Nonnull
+  public static DataConsumerPojo createMinimum ()
+  {
+    return new DataConsumerPojo (null, null, null, null, null, null, null, null, null);
+  }
 }

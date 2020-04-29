@@ -52,65 +52,54 @@ public class AddressPojo
     m_sPostalCode = sPostalCode;
   }
 
-  @Nullable
-  public static CoreAddressType createAddress (final String sFullAddress,
-                                               final String sStreetName,
-                                               final String sBuildingNumber,
-                                               final String sTown,
-                                               final String sPostalCode,
-                                               final String sCountryCode)
+  @Nonnull
+  public CoreAddressType getAsAddress ()
   {
     boolean bAny = false;
     final CoreAddressType aAddress = new CoreAddressType ();
-    if (StringHelper.hasText (sFullAddress))
+    if (StringHelper.hasText (m_sFullAddress))
     {
       final AddressFullAddressType aFullAddress = new AddressFullAddressType ();
-      aFullAddress.setValue (sFullAddress);
+      aFullAddress.setValue (m_sFullAddress);
       aAddress.addAddressFullAddress (aFullAddress);
       bAny = true;
     }
-    if (StringHelper.hasText (sStreetName))
+    if (StringHelper.hasText (m_sStreetName))
     {
       final AddressThoroughfareType aThoroughfare = new AddressThoroughfareType ();
-      aThoroughfare.setValue (sStreetName);
+      aThoroughfare.setValue (m_sStreetName);
       aAddress.addAddressThoroughfare (aThoroughfare);
       bAny = true;
     }
-    if (StringHelper.hasText (sBuildingNumber))
+    if (StringHelper.hasText (m_sBuildingNumber))
     {
       final AddressLocatorDesignatorType aLD = new AddressLocatorDesignatorType ();
-      aLD.setValue (sBuildingNumber);
+      aLD.setValue (m_sBuildingNumber);
       aAddress.addAddressLocatorDesignator (aLD);
       bAny = true;
     }
-    if (StringHelper.hasText (sTown))
+    if (StringHelper.hasText (m_sTown))
     {
       final AddressPostNameType aPostName = new AddressPostNameType ();
-      aPostName.setValue (sTown);
+      aPostName.setValue (m_sTown);
       aAddress.addAddressPostName (aPostName);
       bAny = true;
     }
-    if (StringHelper.hasText (sPostalCode))
+    if (StringHelper.hasText (m_sPostalCode))
     {
       final AddressPostCodeType aPostCode = new AddressPostCodeType ();
-      aPostCode.setValue (sPostalCode);
+      aPostCode.setValue (m_sPostalCode);
       aAddress.addAddressPostCode (aPostCode);
       bAny = true;
     }
-    if (StringHelper.hasText (sCountryCode))
+    if (StringHelper.hasText (m_sCountryCode))
     {
       final AddressAdminUnitLocationOneType aAdmin1 = new AddressAdminUnitLocationOneType ();
-      aAdmin1.setValue (sCountryCode);
+      aAdmin1.setValue (m_sCountryCode);
       aAddress.addAddressAdminUnitLocationOne (aAdmin1);
       bAny = true;
     }
     return bAny ? aAddress : null;
-  }
-
-  @Nonnull
-  public CoreAddressType getAsAddress ()
-  {
-    return createAddress (m_sFullAddress, m_sStreetName, m_sBuildingNumber, m_sTown, m_sPostalCode, m_sCountryCode);
   }
 
   @Nonnull

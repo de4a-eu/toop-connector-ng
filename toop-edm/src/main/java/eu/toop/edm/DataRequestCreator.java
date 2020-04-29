@@ -86,7 +86,7 @@ public class DataRequestCreator
   {
     final QueryRequest ret = RegRepHelper.createEmptyQueryRequest ();
 
-    // All slots outside of query
+    // All top-level slots outside of query
     for (final String sTopLevel : TOP_LEVEL_SLOTS)
     {
       final ISlotProvider aSP = m_aProviders.get (sTopLevel);
@@ -153,6 +153,12 @@ public class DataRequestCreator
     public Builder setIssueDateTimeNow ()
     {
       return setIssueDateTime (PDTFactory.getCurrentLocalDateTime ());
+    }
+
+    @Nonnull
+    public Builder setProcedure (@Nonnull final Locale aLocale, @Nonnull final String sText)
+    {
+      return setProcedure (RegRepHelper.createLocalizedString (aLocale, sText));
     }
 
     @Nonnull

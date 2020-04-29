@@ -52,6 +52,8 @@ public class SlotDataConsumer implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
-    return new SlotBuilder ().setName (NAME).setValue (new AgentMarshaller ().getAsDocument (m_aAgent)).build ();
+    return new SlotBuilder ().setName (NAME)
+                             .setValue (new AgentMarshaller ().getAsDocument (m_aAgent).getDocumentElement ())
+                             .build ();
   }
 }

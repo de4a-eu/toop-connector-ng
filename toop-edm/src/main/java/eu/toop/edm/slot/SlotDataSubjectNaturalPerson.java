@@ -53,7 +53,7 @@ public class SlotDataSubjectNaturalPerson implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson))
+                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson).getDocumentElement ())
                              .build ();
   }
 }

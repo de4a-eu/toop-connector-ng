@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import org.w3c.dom.Node;
+import org.w3c.dom.Element;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -69,8 +69,9 @@ public class SlotBuilder
   }
 
   @Nonnull
-  public SlotBuilder setValue (@Nonnull final Node aNode)
+  public SlotBuilder setValue (@Nonnull final Element aNode)
   {
+    // Cannot be a DOM Document
     return setValue (RegRepHelper.createSlotValue (aNode));
   }
 

@@ -55,4 +55,10 @@ public class DataProviderPojo
     }
     return ret;
   }
+
+  @Nonnull
+  public static DataProviderPojo createMinimum ()
+  {
+    return new DataProviderPojo (null, null, null);
+  }
 }
