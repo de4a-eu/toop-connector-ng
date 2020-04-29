@@ -169,6 +169,10 @@
               <groupId>com.helger</groupId>
               <artifactId>ph-ubl21</artifactId>
             </episode>
+            <episode>
+              <groupId>eu.toop</groupId>
+              <artifactId>toop-regrep</artifactId>
+            </episode>
           </episodes>
         </configuration>
         <dependencies>

@@ -133,4 +133,14 @@
       <package name="eu.toop.edm.jaxb.spdx" />
     </schemaBindings>
   </bindings>
+  <bindings schemaLocation="../resources/schemas/vcard.xsd" node="/xs:schema">
+    <schemaBindings>
+      <package name="eu.toop.edm.jaxb.vcard" />
+    </schemaBindings>
+    <bindings node="//xs:complexType[@name='binaryElement']">
+      <bindings node=".//xs:attribute[@name='TYPE']">
+        <property name="VCardTYPE"/>
+      </bindings>
+    </bindings>
+  </bindings>
 </bindings>
