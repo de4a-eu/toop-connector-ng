@@ -112,15 +112,17 @@ public class DataRequestCreator
         ret.addSlot (aSP.createSlot ());
     }
 
-    final QueryType aQuery = new QueryType ();
-    aQuery.setQueryDefinition (m_eQueryDefinition.getAttrValue ());
+    {
+      final QueryType aQuery = new QueryType ();
+      aQuery.setQueryDefinition (m_eQueryDefinition.getAttrValue ());
 
-    // All slots inside of query
-    for (final Map.Entry <String, ISlotProvider> aEntry : m_aProviders.entrySet ())
-      if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
-        aQuery.addSlot (aEntry.getValue ().createSlot ());
+      // All slots inside of query
+      for (final Map.Entry <String, ISlotProvider> aEntry : m_aProviders.entrySet ())
+        if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
+          aQuery.addSlot (aEntry.getValue ().createSlot ());
 
-    ret.setQuery (aQuery);
+      ret.setQuery (aQuery);
+    }
 
     return ret;
   }
@@ -155,9 +157,9 @@ public class DataRequestCreator
     {}
 
     @Nonnull
-    public Builder queryDefinition (@Nullable final EQueryDefinitionType eQueryDefinition)
+    public Builder queryDefinition (@Nullable final EQueryDefinitionType e)
     {
-      m_eQueryDefinition = eQueryDefinition;
+      m_eQueryDefinition = e;
       return this;
     }
 
@@ -376,6 +378,9 @@ public class DataRequestCreator
       // Concept Query
       if (m_aConcept != null)
         x.add (new SlotConceptRequestList (m_aConcept));
+
+      // Document Query
+      // TODO
 
       return new DataRequestCreator (m_eQueryDefinition, x).createQueryRequest ();
     }
