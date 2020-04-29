@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cv;
+package eu.toop.edm.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -53,7 +53,7 @@ public class AddressPojo
   }
 
   @Nonnull
-  public CoreAddressType getAsAddress ()
+  public CoreAddressType getAsCoreAddress ()
   {
     boolean bAny = false;
     final CoreAddressType aAddress = new CoreAddressType ();

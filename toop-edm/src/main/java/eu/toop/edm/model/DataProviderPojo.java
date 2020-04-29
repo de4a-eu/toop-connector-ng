@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cagv;
+package eu.toop.edm.model;
 
 import javax.annotation.Nonnull;
 

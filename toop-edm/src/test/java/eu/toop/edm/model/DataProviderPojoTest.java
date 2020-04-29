@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cagv;
+package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -22,6 +22,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.model.DataProviderPojo;
+import eu.toop.edm.xml.cagv.AgentMarshaller;
 
 /**
  * Test class for class {@link DataProviderPojo}

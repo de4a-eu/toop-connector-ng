@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cv;
+package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -24,6 +24,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
+import eu.toop.edm.model.AddressPojo;
+import eu.toop.edm.model.BusinessPojo;
+import eu.toop.edm.xml.cv.BusinessMarshaller;
 
 /**
  * Test class for class {@link BusinessPojo}.
@@ -36,7 +39,7 @@ public final class BusinessPojoTest
 
   private static void _validate (@Nonnull final BusinessPojo x)
   {
-    final CoreBusinessType aBusiness = x.getAsBusiness ();
+    final CoreBusinessType aBusiness = x.getAsCoreBusiness ();
     assertNotNull (aBusiness);
 
     final BusinessMarshaller m = new BusinessMarshaller ();

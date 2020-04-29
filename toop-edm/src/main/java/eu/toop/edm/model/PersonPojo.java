@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cv;
+package eu.toop.edm.model;
 
 import java.time.LocalDate;
 
@@ -62,7 +62,7 @@ public class PersonPojo
   }
 
   @Nonnull
-  public CorePersonType getAsPerson ()
+  public CorePersonType getAsCorePerson ()
   {
     final CorePersonType ret = new CorePersonType ();
 
@@ -104,7 +104,7 @@ public class PersonPojo
       ret.addPersonBirthDate (aBirthDate);
     }
     if (m_aAddress != null)
-      ret.addPersonCoreAddress (m_aAddress.getAsAddress ());
+      ret.addPersonCoreAddress (m_aAddress.getAsCoreAddress ());
 
     return ret;
   }

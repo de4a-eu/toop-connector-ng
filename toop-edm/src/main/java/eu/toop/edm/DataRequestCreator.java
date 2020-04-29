@@ -20,6 +20,9 @@ import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.model.BusinessPojo;
+import eu.toop.edm.model.DataConsumerPojo;
+import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotAuthorizedRepresentative;
 import eu.toop.edm.slot.SlotConsentToken;
@@ -30,9 +33,6 @@ import eu.toop.edm.slot.SlotDatasetIdentifier;
 import eu.toop.edm.slot.SlotFullfillingRequirement;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.edm.slot.SlotProcedure;
-import eu.toop.edm.xml.cagv.DataConsumerPojo;
-import eu.toop.edm.xml.cv.BusinessPojo;
-import eu.toop.edm.xml.cv.PersonPojo;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.InternationalStringType;
@@ -217,7 +217,7 @@ public class DataRequestCreator
     @Nonnull
     public Builder setDataSubject (@Nullable final BusinessPojo aBusiness)
     {
-      return setDataSubject (aBusiness == null ? null : aBusiness.getAsBusiness ());
+      return setDataSubject (aBusiness == null ? null : aBusiness.getAsCoreBusiness ());
     }
 
     @Nonnull
@@ -231,7 +231,7 @@ public class DataRequestCreator
     @Nonnull
     public Builder setDataSubject (@Nullable final PersonPojo aPerson)
     {
-      return setDataSubject (aPerson == null ? null : aPerson.getAsPerson ());
+      return setDataSubject (aPerson == null ? null : aPerson.getAsCorePerson ());
     }
 
     @Nonnull
@@ -245,7 +245,7 @@ public class DataRequestCreator
     @Nonnull
     public Builder setAuthorizedRepresentative (@Nullable final PersonPojo aPerson)
     {
-      return setAuthorizedRepresentative (aPerson == null ? null : aPerson.getAsPerson ());
+      return setAuthorizedRepresentative (aPerson == null ? null : aPerson.getAsCorePerson ());
     }
 
     @Nonnull

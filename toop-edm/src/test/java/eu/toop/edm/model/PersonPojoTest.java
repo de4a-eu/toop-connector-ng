@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cv;
+package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -26,6 +26,9 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.datetime.PDTFactory;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.model.AddressPojo;
+import eu.toop.edm.model.PersonPojo;
+import eu.toop.edm.xml.cv.PersonMarshaller;
 
 /**
  * Test class for class {@link PersonPojo}.
@@ -38,7 +41,7 @@ public final class PersonPojoTest
 
   private static void _validate (@Nonnull final PersonPojo x)
   {
-    final CorePersonType aPerson = x.getAsPerson ();
+    final CorePersonType aPerson = x.getAsCorePerson ();
     assertNotNull (aPerson);
 
     final PersonMarshaller m = new PersonMarshaller ();

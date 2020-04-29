@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.xml.cv;
+package eu.toop.edm.model;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -50,7 +50,7 @@ public class BusinessPojo
   }
 
   @Nonnull
-  public CoreBusinessType getAsBusiness ()
+  public CoreBusinessType getAsCoreBusiness ()
   {
     final CoreBusinessType ret = new CoreBusinessType ();
 
@@ -75,7 +75,7 @@ public class BusinessPojo
       ret.addLegalEntityLegalName (aLegalName);
     }
     if (m_aAddress != null)
-      ret.setLegalEntityCoreAddress (m_aAddress.getAsAddress ());
+      ret.setLegalEntityCoreAddress (m_aAddress.getAsCoreAddress ());
 
     return ret;
   }

@@ -6,8 +6,8 @@ import java.util.Locale;
 
 import org.junit.Test;
 
-import eu.toop.edm.xml.cagv.DataConsumerPojo;
-import eu.toop.edm.xml.cv.PersonPojo;
+import eu.toop.edm.model.DataConsumerPojo;
+import eu.toop.edm.model.PersonPojo;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
 
