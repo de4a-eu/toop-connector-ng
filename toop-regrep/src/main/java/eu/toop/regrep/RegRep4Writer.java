@@ -17,6 +17,7 @@ package eu.toop.regrep;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.jaxb.builder.IJAXBDocumentType;
@@ -65,7 +66,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link SubmitObjectsRequest}.
+   * Create a writer builder for {@link SubmitObjectsRequest}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -76,7 +77,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link UpdateObjectsRequest}.
+   * Create a writer builder for {@link UpdateObjectsRequest}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -87,7 +88,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link RemoveObjectsRequest}.
+   * Create a writer builder for {@link RemoveObjectsRequest}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -98,7 +99,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link QueryRequest}.
+   * Create a writer builder for {@link QueryRequest}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -109,7 +110,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link QueryRequest}.
+   * Create a writer builder for {@link QueryRequest}.
    *
    * @param aAdditionalXSDs
    *        Additional XSDs
@@ -118,13 +119,26 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   @Nonnull
   public static RegRep4Writer <QueryRequest> queryRequest (@Nonnull final ClassPathResource... aAdditionalXSDs)
   {
+    return queryRequest (new CommonsArrayList <> (aAdditionalXSDs));
+  }
+
+  /**
+   * Create a writer builder for {@link QueryRequest}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Writer <QueryRequest> queryRequest (@Nonnull final Iterable <? extends ClassPathResource> aAdditionalXSDs)
+  {
     final ICommonsList <ClassPathResource> aXSDs = CRegRep4.getAllXSDsQuery ().getClone ();
     aXSDs.addAll (aAdditionalXSDs);
     return new RegRep4Writer <> (new JAXBDocumentType (eu.toop.regrep.query.QueryRequest.class, aXSDs, null));
   }
 
   /**
-   * Create a reader builder for {@link QueryResponse}.
+   * Create a writer builder for {@link QueryResponse}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -135,7 +149,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link QueryResponse}.
+   * Create a writer builder for {@link QueryResponse}.
    *
    * @param aAdditionalXSDs
    *        Additional XSDs
@@ -144,13 +158,26 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   @Nonnull
   public static RegRep4Writer <QueryResponse> queryResponse (@Nonnull final ClassPathResource... aAdditionalXSDs)
   {
+    return queryResponse (new CommonsArrayList <> (aAdditionalXSDs));
+  }
+
+  /**
+   * Create a writer builder for {@link QueryResponse}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Writer <QueryResponse> queryResponse (@Nonnull final Iterable <? extends ClassPathResource> aAdditionalXSDs)
+  {
     final ICommonsList <ClassPathResource> aXSDs = CRegRep4.getAllXSDsQuery ().getClone ();
     aXSDs.addAll (aAdditionalXSDs);
     return new RegRep4Writer <> (new JAXBDocumentType (eu.toop.regrep.query.QueryResponse.class, aXSDs, null));
   }
 
   /**
-   * Create a reader builder for {@link RegistryExceptionType}.
+   * Create a writer builder for {@link RegistryExceptionType}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -161,7 +188,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link ValidateObjectsRequest}.
+   * Create a writer builder for {@link ValidateObjectsRequest}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -172,7 +199,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link ValidateObjectsResponse}.
+   * Create a writer builder for {@link ValidateObjectsResponse}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -183,7 +210,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link CatalogObjectsRequest}.
+   * Create a writer builder for {@link CatalogObjectsRequest}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -194,7 +221,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link CatalogObjectsResponse}.
+   * Create a writer builder for {@link CatalogObjectsResponse}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -205,7 +232,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link FilterObjectsRequest}.
+   * Create a writer builder for {@link FilterObjectsRequest}.
    *
    * @return The builder and never <code>null</code>
    */
@@ -216,7 +243,7 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   }
 
   /**
-   * Create a reader builder for {@link FilterObjectsResponse}.
+   * Create a writer builder for {@link FilterObjectsResponse}.
    *
    * @return The builder and never <code>null</code>
    */
