@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
@@ -39,6 +40,7 @@ import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
 import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
 import eu.toop.edm.slot.SlotDatasetIdentifier;
 import eu.toop.edm.slot.SlotIssueDateTime;
+import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
 
@@ -46,10 +48,17 @@ public class DataResponseCreator
 {
   private static final ICommonsOrderedSet <String> HEADER_SLOTS = new CommonsLinkedHashSet <> (SlotIssueDateTime.NAME,
                                                                                                SlotDataProvider.NAME);
+
+  private final ERegRepResponseStatus m_eResponseStatus;
   private final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
 
-  private DataResponseCreator (@Nonnull final ICommonsList <ISlotProvider> aProviders)
+  private DataResponseCreator (@Nonnull final ERegRepResponseStatus eResponseStatus,
+                               @Nonnull final ICommonsList <ISlotProvider> aProviders)
   {
+    ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
+    ValueEnforcer.noNullValue (aProviders, "Providers");
+
+    m_eResponseStatus = eResponseStatus;
     for (final ISlotProvider aItem : aProviders)
     {
       final String sName = aItem.getName ();
@@ -62,7 +71,7 @@ public class DataResponseCreator
   @Nonnull
   QueryResponse createQueryResponse ()
   {
-    final QueryResponse ret = RegRepHelper.createEmptyQueryResponse ();
+    final QueryResponse ret = RegRepHelper.createEmptyQueryResponse (m_eResponseStatus);
     // All slots outside of query
     for (final String sHeader : HEADER_SLOTS)
     {
@@ -81,6 +90,7 @@ public class DataResponseCreator
     return ret;
   }
 
+  @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
@@ -88,9 +98,10 @@ public class DataResponseCreator
 
   public static class Builder
   {
+    private ERegRepResponseStatus m_eResponseStatus;
     private LocalDateTime m_aIssueDateTime;
-    private AgentType m_aDCAgent;
-    private AgentType m_aDPAgent;
+    private AgentType m_aDataConsumer;
+    private AgentType m_aataProvider;
     private String m_sConsentToken;
     private String m_sDataSetIdentifier;
     private CoreBusinessType m_aDSLegalPerson;
@@ -98,6 +109,13 @@ public class DataResponseCreator
 
     public Builder ()
     {}
+
+    @Nonnull
+    public Builder setResponseStatus (@Nullable final ERegRepResponseStatus ResponseStatus)
+    {
+      m_eResponseStatus = ResponseStatus;
+      return this;
+    }
 
     @Nonnull
     public Builder setIssueDateTime (@Nullable final LocalDateTime aIssueDateTime)
@@ -116,14 +134,14 @@ public class DataResponseCreator
     @Nonnull
     public Builder setDataConsumer (@Nullable final AgentType aAgent)
     {
-      m_aDCAgent = aAgent;
+      m_aDataConsumer = aAgent;
       return this;
     }
 
     @Nonnull
     public Builder setDataProvider (@Nullable final AgentType aAgent)
     {
-      m_aDPAgent = aAgent;
+      m_aataProvider = aAgent;
       return this;
     }
 
@@ -157,26 +175,35 @@ public class DataResponseCreator
       return this;
     }
 
+    public void checkConsistency ()
+    {
+      if (m_eResponseStatus == null)
+        throw new IllegalStateException ("Response Status must be present");
+      if (m_aIssueDateTime == null)
+        throw new IllegalStateException ("Issue Date Time must be present");
+    }
+
     @Nonnull
     public QueryResponse build ()
     {
+      checkConsistency ();
+
       final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
       if (m_aIssueDateTime != null)
         x.add (new SlotIssueDateTime (m_aIssueDateTime));
-      if (m_aDCAgent != null)
-        x.add (new SlotDataConsumer (m_aDCAgent));
-      if (m_aDPAgent != null)
-        x.add (new SlotDataProvider (m_aDPAgent));
+      if (m_aDataConsumer != null)
+        x.add (new SlotDataConsumer (m_aDataConsumer));
+      if (m_aataProvider != null)
+        x.add (new SlotDataProvider (m_aataProvider));
       if (m_sConsentToken != null)
         x.add (new SlotConsentToken (m_sConsentToken));
       if (m_sDataSetIdentifier != null)
         x.add (new SlotDatasetIdentifier (m_sDataSetIdentifier));
       if (m_aDSLegalPerson != null)
         x.add (new SlotDataSubjectLegalPerson (m_aDSLegalPerson));
-      else
-        if (m_aDSNaturalPerson != null)
-          x.add (new SlotDataSubjectNaturalPerson (m_aDSNaturalPerson));
-      return new DataResponseCreator (x).createQueryResponse ();
+      if (m_aDSNaturalPerson != null)
+        x.add (new SlotDataSubjectNaturalPerson (m_aDSNaturalPerson));
+      return new DataResponseCreator (m_eResponseStatus, x).createQueryResponse ();
     }
   }
 }

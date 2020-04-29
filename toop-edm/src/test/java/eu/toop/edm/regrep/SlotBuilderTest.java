@@ -35,6 +35,7 @@ import com.helger.commons.mutable.MutableInt;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.xml.serialize.read.DOMReader;
 
+import eu.toop.regrep.ERegRepCollectionType;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.SlotBuilder;
@@ -70,7 +71,8 @@ public final class SlotBuilderTest
     aQR = RegRepHelper.createQueryRequest ("mock-data-request",
                                            _sb ().setValue (aDoc.getDocumentElement ()).build (),
                                            _sb ().setValue (true).build (),
-                                           _sb ().setValue (RegRepHelper.createSlotValue ("ListItem1"),
+                                           _sb ().setValue (ERegRepCollectionType.LIST,
+                                                            RegRepHelper.createSlotValue ("ListItem1"),
                                                             RegRepHelper.createSlotValue ("ListItem2"))
                                                  .build (),
                                            _sb ().setValue (PDTXMLConverter.getXMLCalendarNow ()).build (),

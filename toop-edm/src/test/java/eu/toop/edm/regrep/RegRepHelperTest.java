@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.xml.serialize.read.DOMReader;
 
+import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.SlotBuilder;
@@ -90,7 +91,8 @@ public final class RegRepHelperTest
   {
     final Document aDoc = DOMReader.readXMLDOM ("<root attr='a' xmlns='urn:anything-weird/bla-foo'><child><child2>value</child2></child></root>");
 
-    final QueryResponse aQR = RegRepHelper.createQueryResponse ("mock-data-Response",
+    final QueryResponse aQR = RegRepHelper.createQueryResponse (ERegRepResponseStatus.SUCCESS,
+                                                                "mock-data-Response",
                                                                 new SlotBuilder ().setName ("IssueDateTime")
                                                                                   .setValue (PDTXMLConverter.getXMLCalendarNow ())
                                                                                   .build (),

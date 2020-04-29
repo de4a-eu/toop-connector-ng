@@ -31,15 +31,18 @@ import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
 
+import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
-import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.model.AgentPojo;
+import eu.toop.edm.model.BusinessPojo;
+import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotAuthorizedRepresentative;
+import eu.toop.edm.slot.SlotConceptRequestList;
 import eu.toop.edm.slot.SlotConsentToken;
 import eu.toop.edm.slot.SlotDataConsumer;
 import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
@@ -84,7 +87,7 @@ public class DataRequestCreator
                               @Nonnull final ICommonsList <ISlotProvider> aProviders)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
-    ValueEnforcer.notEmptyNoNullValue (aProviders, "Providers");
+    ValueEnforcer.noNullValue (aProviders, "Providers");
 
     m_eQueryDefinition = eQueryDefinition;
     for (final ISlotProvider aItem : aProviders)
@@ -123,15 +126,15 @@ public class DataRequestCreator
   }
 
   @Nonnull
-  public static Builder builderCeoncept ()
+  public static Builder builderConcept ()
   {
-    return new Builder ().setQueryDefinition (EQueryDefinitionType.CONCEPT);
+    return new Builder ().queryDefinition (EQueryDefinitionType.CONCEPT);
   }
 
   @Nonnull
   public static Builder builderDocument ()
   {
-    return new Builder ().setQueryDefinition (EQueryDefinitionType.DOCUMENT);
+    return new Builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
   }
 
   public static class Builder
@@ -146,127 +149,171 @@ public class DataRequestCreator
     private CoreBusinessType m_aDataSubjectLegalPerson;
     private CorePersonType m_aDataSubjectNaturalPerson;
     private CorePersonType m_aAuthorizedRepresentative;
+    private CCCEVConceptType m_aConcept;
 
     public Builder ()
     {}
 
     @Nonnull
-    public Builder setQueryDefinition (@Nullable final EQueryDefinitionType eQueryDefinition)
+    public Builder queryDefinition (@Nullable final EQueryDefinitionType eQueryDefinition)
     {
       m_eQueryDefinition = eQueryDefinition;
       return this;
     }
 
     @Nonnull
-    public Builder setIssueDateTime (@Nullable final LocalDateTime aIssueDateTime)
+    public Builder issueDateTimeNow ()
     {
-      m_aIssueDateTime = aIssueDateTime;
+      return issueDateTime (PDTFactory.getCurrentLocalDateTime ());
+    }
+
+    @Nonnull
+    public Builder issueDateTime (@Nullable final LocalDateTime a)
+    {
+      m_aIssueDateTime = a;
       return this;
     }
 
     @Nonnull
-    public Builder setIssueDateTimeNow ()
+    public Builder procedure (@Nonnull final Locale aLocale, @Nonnull final String sText)
     {
-      return setIssueDateTime (PDTFactory.getCurrentLocalDateTime ());
+      return procedure (RegRepHelper.createLocalizedString (aLocale, sText));
     }
 
     @Nonnull
-    public Builder setProcedure (@Nonnull final Locale aLocale, @Nonnull final String sText)
+    public Builder procedure (@Nullable final Map <Locale, String> a)
     {
-      return setProcedure (RegRepHelper.createLocalizedString (aLocale, sText));
+      return procedure (a == null ? null : RegRepHelper.createInternationalStringType (a));
     }
 
     @Nonnull
-    public Builder setProcedure (@Nullable final Map <Locale, String> aMap)
+    public Builder procedure (@Nullable final LocalizedStringType... a)
     {
-      return setProcedure (aMap == null ? null : RegRepHelper.createInternationalStringType (aMap));
+      return procedure (a == null ? null : RegRepHelper.createInternationalStringType (a));
     }
 
     @Nonnull
-    public Builder setProcedure (@Nullable final LocalizedStringType... aArray)
+    public Builder procedure (@Nullable final InternationalStringType a)
     {
-      return setProcedure (aArray == null ? null : RegRepHelper.createInternationalStringType (aArray));
-    }
-
-    @Nonnull
-    public Builder setProcedure (@Nullable final InternationalStringType aProcedure)
-    {
-      m_aProcedure = aProcedure;
+      m_aProcedure = a;
       return this;
     }
 
     @Nonnull
-    public Builder setFullfillingRequirement (@Nullable final CCCEVRequirementType aFullfillingRequirement)
+    public Builder fullfillingRequirement (@Nullable final CCCEVRequirementType a)
     {
-      m_aFullfillingRequirement = aFullfillingRequirement;
+      m_aFullfillingRequirement = a;
       return this;
     }
 
     @Nonnull
-    public Builder setConsentToken (@Nullable final String sConsentToken)
+    public Builder consentToken (@Nullable final String s)
     {
-      m_sConsentToken = sConsentToken;
+      m_sConsentToken = s;
       return this;
     }
 
     @Nonnull
-    public Builder setDatasetIdentifier (@Nullable final String sDataSetIdentifier)
+    public Builder datasetIdentifier (@Nullable final String s)
     {
-      m_sDatasetIdentifier = sDataSetIdentifier;
+      m_sDatasetIdentifier = s;
       return this;
     }
 
     @Nonnull
-    public Builder setDataConsumer (@Nullable final AgentPojo aDC)
+    public Builder dataConsumer (@Nullable final AgentPojo.Builder a)
     {
-      return setDataConsumer (aDC == null ? null : aDC.getAsAgent ());
+      return dataConsumer (a == null ? null : a.build ());
     }
 
     @Nonnull
-    public Builder setDataConsumer (@Nullable final AgentType aAgent)
+    public Builder dataConsumer (@Nullable final AgentPojo a)
     {
-      m_aDataConsumer = aAgent;
+      return dataConsumer (a == null ? null : a.getAsAgent ());
+    }
+
+    @Nonnull
+    public Builder dataConsumer (@Nullable final AgentType a)
+    {
+      m_aDataConsumer = a;
       return this;
     }
 
     @Nonnull
-    public Builder setDataSubject (@Nullable final BusinessPojo aBusiness)
+    public Builder dataSubject (@Nullable final BusinessPojo.Builder a)
     {
-      return setDataSubject (aBusiness == null ? null : aBusiness.getAsCoreBusiness ());
+      return dataSubject (a == null ? null : a.build ());
     }
 
     @Nonnull
-    public Builder setDataSubject (@Nullable final CoreBusinessType aBusiness)
+    public Builder dataSubject (@Nullable final BusinessPojo a)
     {
-      m_aDataSubjectLegalPerson = aBusiness;
+      return dataSubject (a == null ? null : a.getAsCoreBusiness ());
+    }
+
+    @Nonnull
+    public Builder dataSubject (@Nullable final CoreBusinessType a)
+    {
+      m_aDataSubjectLegalPerson = a;
       m_aDataSubjectNaturalPerson = null;
       return this;
     }
 
     @Nonnull
-    public Builder setDataSubject (@Nullable final PersonPojo aPerson)
+    public Builder dataSubject (@Nullable final PersonPojo.Builder a)
     {
-      return setDataSubject (aPerson == null ? null : aPerson.getAsCorePerson ());
+      return dataSubject (a == null ? null : a.build ());
     }
 
     @Nonnull
-    public Builder setDataSubject (@Nullable final CorePersonType aPerson)
+    public Builder dataSubject (@Nullable final PersonPojo a)
+    {
+      return dataSubject (a == null ? null : a.getAsCorePerson ());
+    }
+
+    @Nonnull
+    public Builder dataSubject (@Nullable final CorePersonType a)
     {
       m_aDataSubjectLegalPerson = null;
-      m_aDataSubjectNaturalPerson = aPerson;
+      m_aDataSubjectNaturalPerson = a;
       return this;
     }
 
     @Nonnull
-    public Builder setAuthorizedRepresentative (@Nullable final PersonPojo aPerson)
+    public Builder authorizedRepresentative (@Nullable final PersonPojo.Builder a)
     {
-      return setAuthorizedRepresentative (aPerson == null ? null : aPerson.getAsCorePerson ());
+      return authorizedRepresentative (a == null ? null : a.build ());
     }
 
     @Nonnull
-    public Builder setAuthorizedRepresentative (@Nullable final CorePersonType aPerson)
+    public Builder authorizedRepresentative (@Nullable final PersonPojo a)
     {
-      m_aAuthorizedRepresentative = aPerson;
+      return authorizedRepresentative (a == null ? null : a.getAsCorePerson ());
+    }
+
+    @Nonnull
+    public Builder authorizedRepresentative (@Nullable final CorePersonType a)
+    {
+      m_aAuthorizedRepresentative = a;
+      return this;
+    }
+
+    @Nonnull
+    public Builder concept (@Nullable final ConceptPojo.Builder a)
+    {
+      return concept (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder concept (@Nullable final ConceptPojo a)
+    {
+      return concept (a == null ? null : a.getAsCCCEVConcept ());
+    }
+
+    @Nonnull
+    public Builder concept (@Nullable final CCCEVConceptType a)
+    {
+      m_aConcept = a;
       return this;
     }
 
@@ -282,6 +329,19 @@ public class DataRequestCreator
         throw new IllegalStateException ("Data Subject must be present");
       if (m_aDataSubjectLegalPerson != null && m_aDataSubjectNaturalPerson != null)
         throw new IllegalStateException ("Data Subject MUST be either legal person OR natural person");
+
+      switch (m_eQueryDefinition)
+      {
+        case CONCEPT:
+          if (m_aConcept == null)
+            throw new IllegalStateException ("A Query Definition of type 'Concept' must contain a Concept");
+          break;
+        case DOCUMENT:
+          // TODO
+          break;
+        default:
+          throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
+      }
     }
 
     @Nonnull
@@ -312,6 +372,10 @@ public class DataRequestCreator
         x.add (new SlotDataSubjectNaturalPerson (m_aDataSubjectNaturalPerson));
       if (m_aAuthorizedRepresentative != null)
         x.add (new SlotAuthorizedRepresentative (m_aAuthorizedRepresentative));
+
+      // Concept Query
+      if (m_aConcept != null)
+        x.add (new SlotConceptRequestList (m_aConcept));
 
       return new DataRequestCreator (m_eQueryDefinition, x).createQueryRequest ();
     }
