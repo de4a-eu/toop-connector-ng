@@ -22,7 +22,7 @@ import com.helger.ubl21.UBL21NamespaceContext;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
 
 /**
- * XML Namespace context for CPSV
+ * XML Namespace context for CV
  *
  * @author Philip Helger
  */
