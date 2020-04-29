@@ -30,7 +30,8 @@ import com.helger.commons.io.resource.ClassPathResource;
  * @author Philip Helger
  */
 @Immutable
-public final class CRegRep4 {
+public final class CRegRep4
+{
   public static final String DEFAULT_PREFIX_XLINK = "xlink";
   public static final String NAMESPACE_URI_XLINK = "http://www.w3.org/1999/xlink";
 
@@ -51,101 +52,115 @@ public final class CRegRep4 {
 
   public static final String DEFAULT_PREFIX_SPI = "spi";
   public static final String NAMESPACE_URI_SPI = "urn:oasis:names:tc:ebxml-regrep:xsd:spi:4.0";
-  public static ICommonsList<ClassPathResource> allXSDsQueryList = new CommonsArrayList<>();
+  public static ICommonsList <ClassPathResource> allXSDsQueryList = new CommonsArrayList <> ();
 
   @Nonnull
-  private static ClassLoader _getCL() {
-    return CRegRep4.class.getClassLoader();
+  private static ClassLoader _getCL ()
+  {
+    return CRegRep4.class.getClassLoader ();
   }
 
   // Note: requires rim, rs
   @Nonnull
-  public static ClassPathResource getXSDResourceLCM() {
-    return new ClassPathResource("/schemas/regrep4/lcm.xsd", _getCL());
+  public static ClassPathResource getXSDResourceLCM ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/lcm.xsd", _getCL ());
   }
 
   // Note: requires rim, rs
   @Nonnull
-  public static ClassPathResource getXSDResourceQuery() {
-    return new ClassPathResource("/schemas/regrep4/query.xsd", _getCL());
+  public static ClassPathResource getXSDResourceQuery ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/query.xsd", _getCL ());
   }
 
   // Note: requires xlink, ws-addr
   @Nonnull
-  public static ClassPathResource getXSDResourceRIM() {
-    return new ClassPathResource("/schemas/regrep4/rim.xsd", _getCL());
+  public static ClassPathResource getXSDResourceRIM ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/rim.xsd", _getCL ());
   }
 
   // Note: requires rim
   @Nonnull
-  public static ClassPathResource getXSDResourceRS() {
-    return new ClassPathResource("/schemas/regrep4/rs.xsd", _getCL());
+  public static ClassPathResource getXSDResourceRS ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/rs.xsd", _getCL ());
   }
 
   // Note: requires rim, rs
   @Nonnull
-  public static ClassPathResource getXSDResourceSPI() {
-    return new ClassPathResource("/schemas/regrep4/spi.xsd", _getCL());
+  public static ClassPathResource getXSDResourceSPI ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/spi.xsd", _getCL ());
   }
 
   @Nonnull
-  public static ClassPathResource getXSDResourceWSAddr() {
-    return new ClassPathResource("/schemas/regrep4/ws-addr.xsd", _getCL());
+  public static ClassPathResource getXSDResourceWSAddr ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/ws-addr.xsd", _getCL ());
   }
 
   // Note: requires xml
   @Nonnull
-  public static ClassPathResource getXSDResourceXLink() {
-    return new ClassPathResource("/schemas/regrep4/xlink.xsd", _getCL());
+  public static ClassPathResource getXSDResourceXLink ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/xlink.xsd", _getCL ());
   }
 
   @Nonnull
-  public static ClassPathResource getXSDResourceXML() {
-    return new ClassPathResource("/schemas/regrep4/xml.xsd", _getCL());
-  }
-
-  @Nonnull
-  @ReturnsMutableCopy
-  public static ICommonsList<ClassPathResource> getAllXSDIncludes() {
-    return new CommonsArrayList<>(getXSDResourceXML(),
-        getXSDResourceXLink(),
-        getXSDResourceWSAddr(),
-        getXSDResourceRIM(),
-        getXSDResourceRS());
+  public static ClassPathResource getXSDResourceXML ()
+  {
+    return new ClassPathResource ("/schemas/regrep4/xml.xsd", _getCL ());
   }
 
   @Nonnull
   @ReturnsMutableCopy
-  public static ICommonsList<ClassPathResource> getAllXSDsLCM() {
-    final ICommonsList<ClassPathResource> ret = getAllXSDIncludes();
-    ret.add(getXSDResourceLCM());
+  public static ICommonsList <ClassPathResource> getAllXSDIncludes ()
+  {
+    return new CommonsArrayList <> (getXSDResourceXML (),
+                                    getXSDResourceXLink (),
+                                    getXSDResourceWSAddr (),
+                                    getXSDResourceRIM (),
+                                    getXSDResourceRS ());
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public static ICommonsList <ClassPathResource> getAllXSDsLCM ()
+  {
+    final ICommonsList <ClassPathResource> ret = getAllXSDIncludes ();
+    ret.add (getXSDResourceLCM ());
     return ret;
   }
 
   @Nonnull
   @ReturnsMutableCopy
-  public static ICommonsList<ClassPathResource> getAllXSDsQuery() {
+  public static ICommonsList <ClassPathResource> getAllXSDsQuery ()
+  {
     // FIXME @muhammet: I added this to enable addition of external XSDS
-    //  for slots of AnyValueType where SchemaValidation caused problems
-    //  a better refactor is needed for this
-    if (allXSDsQueryList.isEmpty()) {
-      allXSDsQueryList.addAll(getAllXSDIncludes());
-      allXSDsQueryList.add(getXSDResourceQuery());
+    // for slots of AnyValueType where SchemaValidation caused problems
+    // a better refactor is needed for this
+    if (allXSDsQueryList.isEmpty ())
+    {
+      allXSDsQueryList.addAll (getAllXSDIncludes ());
+      allXSDsQueryList.add (getXSDResourceQuery ());
     }
     return allXSDsQueryList;
   }
 
   @Nonnull
   @ReturnsMutableCopy
-  public static ICommonsList<ClassPathResource> getAllXSDsSPI() {
-    final ICommonsList<ClassPathResource> ret = getAllXSDIncludes();
-    ret.add(getXSDResourceSPI());
+  public static ICommonsList <ClassPathResource> getAllXSDsSPI ()
+  {
+    final ICommonsList <ClassPathResource> ret = getAllXSDIncludes ();
+    ret.add (getXSDResourceSPI ());
     return ret;
   }
 
   @PresentForCodeCoverage
-  private static final CRegRep4 s_aInstance = new CRegRep4();
+  private static final CRegRep4 s_aInstance = new CRegRep4 ();
 
-  private CRegRep4() {
-  }
+  private CRegRep4 ()
+  {}
 }

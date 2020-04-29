@@ -23,22 +23,32 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.xsds.ccts.cct.schemamodule.CCCTS;
 
-public final class CDCatAP {
+public final class CDCatAP
+{
   @Nonnull
-  private static final ClassLoader _getCL() {
-    return CDCatAP.class.getClassLoader();
+  private static final ClassLoader _getCL ()
+  {
+    return CDCatAP.class.getClassLoader ();
   }
 
-  public static final List<ClassPathResource> XSDS = new CommonsArrayList<>(CCCTS.getXSDResource(),
-      new ClassPathResource("schemas/skos.xsd", _getCL()),
-      new ClassPathResource("schemas/xml.xsd", _getCL()),
-      new ClassPathResource("schemas/dcterms.xsd", _getCL()),
-      new ClassPathResource("schemas/locn.xsd", _getCL()),
-      new ClassPathResource("schemas/CV-Agent.xsd", _getCL()),
-      new ClassPathResource("schemas/CV-CommonBasicComponents.xsd", _getCL()),
-      new ClassPathResource("schemas/rdf.xsd", _getCL()),
-      new ClassPathResource("schemas/dcat-ap.xsd", _getCL())).getAsUnmodifiable();
+  public static final List <ClassPathResource> XSDS = new CommonsArrayList <> (CCCTS.getXSDResource (),
+                                                                               new ClassPathResource ("schemas/skos.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/xml.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/dcterms.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/locn.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/CV-Agent.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/CV-CommonBasicComponents.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/rdf.xsd",
+                                                                                                      _getCL ()),
+                                                                               new ClassPathResource ("schemas/dcat-ap.xsd",
+                                                                                                      _getCL ())).getAsUnmodifiable ();
 
-  private CDCatAP() {
-  }
+  private CDCatAP ()
+  {}
 }
