@@ -15,38 +15,13 @@
  */
 package eu.toop.edm.xml.dcatap;
 
-import javax.annotation.Nullable;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.jaxb.GenericJAXBMarshaller;
-import com.helger.jaxb.JAXBContextCache;
-
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcatap.ObjectFactory;
 
-public class DCatAPDatasetMarshaller extends GenericJAXBMarshaller <DCatAPDatasetType>
+public class DCatAPDatasetMarshaller extends AbstractDCatMarshaller <DCatAPDatasetType>
 {
   public DCatAPDatasetMarshaller ()
   {
-    super (DCatAPDatasetType.class, CDCatAP.XSDS, x -> new ObjectFactory ().createDataset (x));
-    setNamespaceContext (DCATNamespaceContext.getInstance ());
-  }
-
-  @Override
-  protected JAXBContext getJAXBContext (@Nullable final ClassLoader aClassLoader) throws JAXBException
-  {
-    final Class <?> [] aClasses = new Class <?> [] { eu.toop.edm.jaxb.cv.agent.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.dcterms.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.foaf.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.w3.adms.ObjectFactory.class,
-                                                     eu.toop.edm.jaxb.w3.locn.ObjectFactory.class };
-
-    if (isUseContextCache ())
-      return JAXBContextCache.getInstance ().getFromCache (new CommonsArrayList <> (aClasses));
-    return JAXBContext.newInstance (aClasses);
+    super (DCatAPDatasetType.class, x -> new ObjectFactory ().createDataset (x));
   }
 }

@@ -23,6 +23,5 @@ public class RequirementMarshaller extends AbstractCCCEVMarshaller <CCCEVRequire
   public RequirementMarshaller ()
   {
     super (CCCEVRequirementType.class, x -> new ObjectFactory ().createRequirement (x));
-    setNamespaceContext (CCCEVNamespaceContext.getInstance ());
   }
 }

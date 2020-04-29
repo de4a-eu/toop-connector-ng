@@ -34,9 +34,11 @@ public class ConceptMarshaller extends AbstractCCCEVMarshaller <CCCEVConceptType
   {
     super (CCCEVConceptType.class, x -> new ObjectFactory ().createConcept (x));
 
-    // Extract all namespaces used in the contexts
-    final MapBasedNamespaceContext aCtx = CCCEVNamespaceContext.getInstance ().getClone ();
-    aCtx.addMappings (aAdditionalNSPrefixes);
-    setNamespaceContext (aCtx);
+    if (aAdditionalNSPrefixes != null)
+    {
+      final MapBasedNamespaceContext aCtx = CCCEVNamespaceContext.getInstance ().getClone ();
+      aCtx.addMappings (aAdditionalNSPrefixes);
+      setNamespaceContext (aCtx);
+    }
   }
 }

@@ -20,40 +20,30 @@ import javax.annotation.Nonnull;
 import com.helger.commons.annotation.Singleton;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
 
+import eu.toop.edm.xml.cagv.CAGVNamespaceContext;
+
 /**
  * XML Namespace context for DCAT
  *
  * @author yerlibilgin
  */
 @Singleton
-public class DCATNamespaceContext extends MapBasedNamespaceContext
+public class DCatNamespaceContext extends MapBasedNamespaceContext
 {
   private static final class SingletonHolder
   {
-    static final DCATNamespaceContext s_aInstance = new DCATNamespaceContext ();
+    static final DCatNamespaceContext s_aInstance = new DCatNamespaceContext ();
   }
 
-  /**
-   * eu.toop.edm.jaxb.dcatap.ObjectFactory.class,
-   * eu.toop.edm.jaxb.foaf.ObjectFactory.class,
-   * eu.toop.edm.jaxb.cv.cbc.ObjectFactory.class,
-   * eu.toop.edm.jaxb.w3.adms.ObjectFactory.class,
-   * eu.toop.edm.jaxb.cv.agent.ObjectFactory.class,
-   * eu.toop.edm.jaxb.w3.locn.ObjectFactory.class
-   */
-  protected DCATNamespaceContext ()
+  protected DCatNamespaceContext ()
   {
+    addMappings (CAGVNamespaceContext.getInstance ());
     addMapping ("dcat", "http://data.europa.eu/r5r/");
     addMapping ("dct", "http://purl.org/dc/terms/");
-    addMapping ("cagv", "https://semic.org/sa/cv/cagv/agent-2.0.0#");
-    addMapping ("cbc", "https://semic.org/sa/cv/common/cbc-2.0.0#");
-    addMapping ("cac", "https://semic.org/sa/cv/common/cac-2.0.0#");
-    addMapping ("locn", "http://www.w3.org/ns/locn#");
-    addMapping ("skos", "http://www.w3.org/2004/02/skos/core#");
   }
 
   @Nonnull
-  public static DCATNamespaceContext getInstance ()
+  public static DCatNamespaceContext getInstance ()
   {
     return SingletonHolder.s_aInstance;
   }
