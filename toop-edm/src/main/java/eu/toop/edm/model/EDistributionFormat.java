@@ -37,5 +37,4 @@ public enum EDistributionFormat
   {
     return m_sValue;
   }
-
 }

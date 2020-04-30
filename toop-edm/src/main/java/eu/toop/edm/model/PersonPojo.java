@@ -23,6 +23,7 @@ import javax.annotation.Nullable;
 import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
+import eu.toop.edm.jaxb.w3.cv.ac.CoreLocationType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.jaxb.w3.cv.bc.PersonBirthDateType;
 import eu.toop.edm.jaxb.w3.cv.bc.PersonBirthNameType;
@@ -40,6 +41,7 @@ public class PersonPojo
   private final String m_sGenderCode;
   private final String m_sBirthName;
   private final LocalDate m_aBirthDate;
+  private final String m_sBirthTown;
   private final AddressPojo m_aAddress;
 
   public PersonPojo (@Nullable final String sID,
@@ -49,6 +51,7 @@ public class PersonPojo
                      @Nullable final String sGenderCode,
                      @Nullable final String sBirthName,
                      @Nullable final LocalDate aBirthDate,
+                     @Nullable final String sBirthTown,
                      @Nullable final AddressPojo aAddress)
   {
     m_sID = sID;
@@ -58,6 +61,7 @@ public class PersonPojo
     m_sGenderCode = sGenderCode;
     m_sBirthName = sBirthName;
     m_aBirthDate = aBirthDate;
+    m_sBirthTown = sBirthTown;
     m_aAddress = aAddress;
   }
 
@@ -103,6 +107,12 @@ public class PersonPojo
       aBirthDate.setValue (PDTXMLConverter.getXMLCalendarDate (m_aBirthDate));
       ret.addPersonBirthDate (aBirthDate);
     }
+    if (StringHelper.hasText (m_sBirthTown))
+    {
+      final CoreLocationType aLocation = new CoreLocationType ();
+      aLocation.addLocationCoreAddress (AddressPojo.builder ().town (m_sBirthTown).build ().getAsCoreAddress ());
+      ret.addPersonPlaceOfBirthCoreLocation (aLocation);
+    }
     if (m_aAddress != null)
       ret.addPersonCoreAddress (m_aAddress.getAsCoreAddress ());
 
@@ -124,6 +134,7 @@ public class PersonPojo
     private String m_sGenderCode;
     private String m_sBirthName;
     private LocalDate m_aBirthDate;
+    private String m_sBirthTown;
     private AddressPojo m_aAddress;
 
     public Builder ()
@@ -185,6 +196,13 @@ public class PersonPojo
     }
 
     @Nonnull
+    public Builder birthTown (@Nullable final String s)
+    {
+      m_sBirthTown = s;
+      return this;
+    }
+
+    @Nonnull
     public Builder address (@Nullable final AddressPojo.Builder a)
     {
       return address (a == null ? null : a.build ());
@@ -207,6 +225,7 @@ public class PersonPojo
                              m_sGenderCode,
                              m_sBirthName,
                              m_aBirthDate,
+                             m_sBirthTown,
                              m_aAddress);
     }
   }
