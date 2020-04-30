@@ -30,19 +30,19 @@ import eu.toop.edm.jaxb.dcatap.DCatAPRelationshipType;
 public class QualifiedRelationPojo
 {
   private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
-  private final String m_sTitle;
+  private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
   private final ICommonsList <String> m_aIDs = new CommonsArrayList <> ();
 
   public QualifiedRelationPojo (@Nonnull @Nonempty final ICommonsList <String> aDescriptions,
-                                @Nonnull final String sTitle,
+                                @Nonnull @Nonempty final ICommonsList <String> aTitles,
                                 @Nullable final ICommonsList <String> aIDs)
   {
     ValueEnforcer.notEmptyNoNullValue (aDescriptions, "Descriptions");
-    ValueEnforcer.notNull (sTitle, "Title");
+    ValueEnforcer.notEmptyNoNullValue (aTitles, "Titles");
+    ValueEnforcer.noNullValue (aIDs, "IDs");
 
-    if (aDescriptions != null)
-      m_aDescriptions.addAll (aDescriptions);
-    m_sTitle = sTitle;
+    m_aDescriptions.addAll (aDescriptions);
+    m_aTitles.addAll (aTitles);
     if (aIDs != null)
       m_aIDs.addAll (aIDs);
   }
@@ -54,8 +54,8 @@ public class QualifiedRelationPojo
     final CCCEVReferenceFrameworkType aRelation = new CCCEVReferenceFrameworkType ();
     for (final String sDescription : m_aDescriptions)
       aRelation.addDescription (sDescription);
-    if (StringHelper.hasText (m_sTitle))
-      aRelation.addTitle (m_sTitle);
+    for (final String sTitle : m_aTitles)
+      aRelation.addTitle (sTitle);
     for (final String sID : m_aIDs)
       aRelation.addIdentifier (sID);
     ret.addRelation (aRelation);
@@ -71,7 +71,7 @@ public class QualifiedRelationPojo
   public static class Builder
   {
     private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
-    private String m_sTitle;
+    private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
     private final ICommonsList <String> m_aIDs = new CommonsArrayList <> ();
 
     public Builder ()
@@ -110,9 +110,34 @@ public class QualifiedRelationPojo
     }
 
     @Nonnull
+    public Builder addTitle (@Nullable final String s)
+    {
+      if (StringHelper.hasText (s))
+        m_aTitles.add (s);
+      return this;
+    }
+
+    @Nonnull
     public Builder title (@Nullable final String s)
     {
-      m_sTitle = s;
+      if (StringHelper.hasText (s))
+        m_aTitles.set (s);
+      else
+        m_aTitles.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder titles (@Nullable final String... a)
+    {
+      m_aTitles.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder titles (@Nullable final Iterable <String> a)
+    {
+      m_aTitles.setAll (a);
       return this;
     }
 
@@ -151,7 +176,7 @@ public class QualifiedRelationPojo
     @Nonnull
     public QualifiedRelationPojo build ()
     {
-      return new QualifiedRelationPojo (m_aDescriptions, m_sTitle, m_aIDs);
+      return new QualifiedRelationPojo (m_aDescriptions, m_aTitles, m_aIDs);
     }
   }
 }

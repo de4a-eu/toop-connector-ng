@@ -39,7 +39,7 @@ public final class QualifiedRelationPojoTest
     final QualifiedRelationPojo x = QualifiedRelationPojo.builder ()
                                                          .addDescription ("desc1")
                                                          .addDescription ("desc2")
-                                                         .title ("Title")
+                                                         .titles ("Title", "Title2")
                                                          .addID ("ID1")
                                                          .addID ("ID2")
                                                          .build ();
