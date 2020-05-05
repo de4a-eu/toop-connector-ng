@@ -44,6 +44,7 @@ import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
 import eu.toop.edm.slot.SlotDocumentMetadata;
 import eu.toop.edm.slot.SlotIssueDateTime;
+import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
@@ -52,7 +53,8 @@ import eu.toop.regrep.rim.RegistryObjectType;
 
 public class DataResponseCreator
 {
-  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotIssueDateTime.NAME,
+  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
+                                                                                                  SlotIssueDateTime.NAME,
                                                                                                   SlotDataProvider.NAME);
 
   private final ERegRepResponseStatus m_eResponseStatus;
@@ -111,15 +113,22 @@ public class DataResponseCreator
   }
 
   @Nonnull
+  public static Builder builder ()
+  {
+    // Use the default specification identifier
+    return new Builder ().specificationIdentifier (CToopEDM.SPECIFICATION_IDENTIFIER_TOOP_EDM_V20);
+  }
+
+  @Nonnull
   public static Builder builderConcept ()
   {
-    return new Builder ().queryDefinition (EQueryDefinitionType.CONCEPT);
+    return builder ().queryDefinition (EQueryDefinitionType.CONCEPT);
   }
 
   @Nonnull
   public static Builder builderDocument ()
   {
-    return new Builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
+    return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
   }
 
   public static class Builder
@@ -127,6 +136,7 @@ public class DataResponseCreator
     private EQueryDefinitionType m_eQueryDefinition;
     private ERegRepResponseStatus m_eResponseStatus;
     private String m_sRequestID;
+    private String m_sSpecificationIdentifier;
     private LocalDateTime m_aIssueDateTime;
     private AgentType m_aDataProvider;
     private CCCEVConceptType m_aConcept;
@@ -153,6 +163,13 @@ public class DataResponseCreator
     public Builder requestID (@Nullable final String s)
     {
       m_sRequestID = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder specificationIdentifier (@Nullable final String s)
+    {
+      m_sSpecificationIdentifier = s;
       return this;
     }
 
@@ -234,6 +251,8 @@ public class DataResponseCreator
         throw new IllegalStateException ("Response Status must be present");
       if (StringHelper.hasNoText (m_sRequestID))
         throw new IllegalStateException ("Request ID must be present");
+      if (StringHelper.hasNoText (m_sSpecificationIdentifier))
+        throw new IllegalStateException ("SpecificationIdentifier must be present");
       if (m_aIssueDateTime == null)
         throw new IllegalStateException ("Issue Date Time must be present");
       if (m_aDataProvider == null)
@@ -264,6 +283,8 @@ public class DataResponseCreator
       checkConsistency ();
 
       final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
+      if (m_sSpecificationIdentifier != null)
+        x.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
       if (m_aIssueDateTime != null)
         x.add (new SlotIssueDateTime (m_aIssueDateTime));
       if (m_aDataProvider != null)

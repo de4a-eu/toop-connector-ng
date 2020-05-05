@@ -30,6 +30,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
@@ -54,6 +55,7 @@ import eu.toop.edm.slot.SlotDistributionRequestList;
 import eu.toop.edm.slot.SlotFullfillingRequirement;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.edm.slot.SlotProcedure;
+import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.InternationalStringType;
@@ -68,7 +70,8 @@ import eu.toop.regrep.rim.QueryType;
  */
 public class DataRequestCreator
 {
-  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotIssueDateTime.NAME,
+  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
+                                                                                                  SlotIssueDateTime.NAME,
                                                                                                   SlotProcedure.NAME,
                                                                                                   SlotFullfillingRequirement.NAME,
                                                                                                   SlotConsentToken.NAME,
@@ -131,20 +134,28 @@ public class DataRequestCreator
   }
 
   @Nonnull
+  public static Builder builder ()
+  {
+    // Use the default specification identifier
+    return new Builder ().specificationIdentifier (CToopEDM.SPECIFICATION_IDENTIFIER_TOOP_EDM_V20);
+  }
+
+  @Nonnull
   public static Builder builderConcept ()
   {
-    return new Builder ().queryDefinition (EQueryDefinitionType.CONCEPT);
+    return builder ().queryDefinition (EQueryDefinitionType.CONCEPT);
   }
 
   @Nonnull
   public static Builder builderDocument ()
   {
-    return new Builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
+    return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
   }
 
   public static class Builder
   {
     private EQueryDefinitionType m_eQueryDefinition;
+    private String m_sSpecificationIdentifier;
     private LocalDateTime m_aIssueDateTime;
     private InternationalStringType m_aProcedure;
     private CCCEVRequirementType m_aFullfillingRequirement;
@@ -164,6 +175,13 @@ public class DataRequestCreator
     public Builder queryDefinition (@Nullable final EQueryDefinitionType e)
     {
       m_eQueryDefinition = e;
+      return this;
+    }
+
+    @Nonnull
+    public Builder specificationIdentifier (@Nullable final String s)
+    {
+      m_sSpecificationIdentifier = s;
       return this;
     }
 
@@ -346,6 +364,8 @@ public class DataRequestCreator
     {
       if (m_eQueryDefinition == null)
         throw new IllegalStateException ("Query Definition must be present");
+      if (StringHelper.hasNoText (m_sSpecificationIdentifier))
+        throw new IllegalStateException ("SpecificationIdentifier must be present");
       if (m_aIssueDateTime == null)
         throw new IllegalStateException ("Issue Date Time must be present");
       if (m_aDataConsumer == null)
@@ -382,6 +402,8 @@ public class DataRequestCreator
       final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
 
       // Top-level slots
+      if (m_sSpecificationIdentifier != null)
+        x.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
       if (m_aIssueDateTime != null)
         x.add (new SlotIssueDateTime (m_aIssueDateTime));
       if (m_aProcedure != null)
