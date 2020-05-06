@@ -20,6 +20,7 @@ import java.time.LocalDate;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
@@ -44,16 +45,22 @@ public class PersonPojo
   private final String m_sBirthTown;
   private final AddressPojo m_aAddress;
 
-  public PersonPojo (@Nullable final String sID,
-                     @Nullable final String sIDSchemeID,
-                     @Nullable final String sFamilyName,
-                     @Nullable final String sGivenName,
+  public PersonPojo (@Nonnull final String sID,
+                     @Nonnull final String sIDSchemeID,
+                     @Nonnull final String sFamilyName,
+                     @Nonnull final String sGivenName,
                      @Nullable final String sGenderCode,
                      @Nullable final String sBirthName,
-                     @Nullable final LocalDate aBirthDate,
+                     @Nonnull final LocalDate aBirthDate,
                      @Nullable final String sBirthTown,
                      @Nullable final AddressPojo aAddress)
   {
+    ValueEnforcer.notNull (sID, "ID");
+    ValueEnforcer.notNull (sIDSchemeID, "IDSchemeID");
+    ValueEnforcer.notNull (sFamilyName, "FamilyName");
+    ValueEnforcer.notNull (sGivenName, "GivenName");
+    ValueEnforcer.notNull (aBirthDate, "BirthDate");
+
     m_sID = sID;
     m_sIDSchemeID = sIDSchemeID;
     m_sFamilyName = sFamilyName;
@@ -215,9 +222,25 @@ public class PersonPojo
       return this;
     }
 
+    public void checkConsistency ()
+    {
+      if (StringHelper.hasNoText (m_sID))
+        throw new IllegalStateException ("ID must be present");
+      if (StringHelper.hasNoText (m_sIDSchemeID))
+        throw new IllegalStateException ("ID SchemeID must be present");
+      if (StringHelper.hasNoText (m_sFamilyName))
+        throw new IllegalStateException ("Family Name must be present");
+      if (StringHelper.hasNoText (m_sGivenName))
+        throw new IllegalStateException ("Given Name must be present");
+      if (m_aBirthDate == null)
+        throw new IllegalStateException ("Birth Date must be present");
+    }
+
     @Nonnull
     public PersonPojo build ()
     {
+      checkConsistency ();
+
       return new PersonPojo (m_sID,
                              m_sIDSchemeID,
                              m_sFamilyName,

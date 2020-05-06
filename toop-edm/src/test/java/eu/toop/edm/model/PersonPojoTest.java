@@ -75,7 +75,14 @@ public final class PersonPojoTest
   @Test
   public void testMinimum ()
   {
-    final PersonPojo x = PersonPojo.builder ().build ();
+    final PersonPojo x = PersonPojo.builder ()
+                                   .id ("ID")
+                                   .idSchemeID ("idSchemeID")
+                                   .familyName ("FamilyName")
+                                   .givenName ("GivenName")
+                                   .birthDate (PDTFactory.getCurrentLocalDate ())
+
+                                   .build ();
     _validate (x);
   }
 }
