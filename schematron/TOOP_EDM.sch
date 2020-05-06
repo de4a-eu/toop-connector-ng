@@ -17,6 +17,7 @@
     <ns prefix="cccev"  uri="https://semic.org/sa/cv/cccev-2.0.0#"/>
     <ns prefix="dcat"   uri="http://data.europa.eu/r5r/"/>
     <ns prefix="dct"    uri="http://purl.org/dc/terms/"/>
+    <ns prefix="xsi"    uri="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0"/>    
     
     <title>TOOP EDM Rules (specs Version 2.0.0)</title>
     
@@ -34,6 +35,8 @@
     <!--******************************-->
     <!--CHECK ROOT SLOTS CARDINALITIES-->
     <!--******************************-->
+    
+    <!--CHECK THE STRUCTURE FOR A QUERY REQUEST-->    
     <pattern>
         <rule context="query:QueryRequest">
             
@@ -74,30 +77,70 @@
 
         </rule>
     </pattern>
-        
+    
+    <!--CHECK THE STRUCTURE FOR A QUERY RESPONSE CONTAINING NO EXCEPTIONS-->    
     <pattern>
         <rule context="query:QueryResponse">
             
+            <let name="IAMERROR" value="exists(rs:Exception)"/> 
+            
             <let name="countIssueDateTime" value="count(rim:Slot[@name = 'IssueDateTime'])"/>      
-            <assert test="($countIssueDateTime=1)" flag='ERROR' id='res_card_IssueDateTime'>
-                The QueryResponse must contain exactly ONE IssueDateTime slot (found: <value-of select="$countIssueDateTime"/>).
+            <assert test="( ($countIssueDateTime=1) or ($IAMERROR=true()) )" flag='ERROR' id='res_card_IssueDateTime'>
+                The QueryResponse must contain exactly ONE IssueDateTime slot (found: <value-of select="$countIssueDateTime"/>).  
             </assert>  
             
             <let name="countDataProvider" value="count(rim:Slot[@name = 'DataProvider'])"/>  
-            <assert test="($countDataProvider=1)" flag='ERROR' id='res_card_DataProvider'>
+            <assert test="($countDataProvider=1) or ($IAMERROR=true())" flag='ERROR' id='res_card_DataProvider'>
                 The QueryResponse must contain exactly ONE DataProvider slot (found: <value-of select="$countDataProvider"/>).
+            </assert>
+            
+            <let name="countRegistryObjectList" value="count(rim:RegistryObjectList)"/>  
+            <assert test="($countRegistryObjectList=1) or ($IAMERROR=true())" flag='ERROR' id='res_card_RegistryObjectList'>
+                The QueryResponse must contain exactly ONE RegistryObjectList (found: <value-of select="$countRegistryObjectList"/>).
             </assert>
             
         </rule>
     </pattern>
     
+    <!--CHECK THE STRUCTURE FOR AN ERROR QUERY RESPONSE CONTAINING SOME EXCEPTIONS-->
+    <pattern>
+        <rule context="query:QueryResponse/rs:Exception">
+            
+            <let name="countExceptionTimeStamp" value="count(rim:Slot[@name = 'Timestamp'])"/>      
+            <assert test="( ($countExceptionTimeStamp=1) )" flag='ERROR' id='exc_card_TimeStamp'>
+                Each Exception must contain exactly ONE TimeStamp slot (found: <value-of select="$countExceptionTimeStamp"/>).  
+            </assert>  
+            
+            <let name="countExceptionPublicOrganizationIdentifier" value="count(rim:Slot[@name = 'PublicOrganizationIdentifier'])"/>      
+            <assert test="( ($countExceptionPublicOrganizationIdentifier=0) or ($countExceptionPublicOrganizationIdentifier=1) )" flag='ERROR' id='exc_card_PublicOrganizationIdentifier'>
+                Each Exception must contain ZERO or ONE PublicOrganizationIdentifier slots (found: <value-of select="$countExceptionPublicOrganizationIdentifier"/>).  
+            </assert>  
+            
+            <let name="countExceptionOrigin" value="count(rim:Slot[@name = 'Origin'])"/>      
+            <assert test="( ($countExceptionOrigin=1) )" flag='ERROR' id='exc_card_Origin'>
+                Each Exception must contain exactly ONE Origin slot (found: <value-of select="$countExceptionOrigin"/>).  
+            </assert>  
+            
+            <let name="countExceptionCategory" value="count(rim:Slot[@name = 'Category'])"/>      
+            <assert test="( ($countExceptionCategory=1) )" flag='ERROR' id='exc_card_Category'>
+                Each Exception must contain exactly ONE Category slot (found: <value-of select="$countExceptionCategory"/>).  
+            </assert>  
+            
+            <let name="countExceptionErrorText" value="count(rim:Slot[@name = 'ErrorText'])"/>      
+            <assert test="( ($countExceptionErrorText &gt; 0) )" flag='ERROR' id='exc_card_ErrorText'>
+                Each Exception must contain at least ONE ErrorText slot (found: <value-of select="$countExceptionErrorText"/>).  
+            </assert>  
+            
+        </rule>
+    </pattern>
+    
+    
+    
     <!--TODO: check the EXCEPTION structure (not final yet)-->
     
     <!--TODO: check the DATATYPES-->
     
-    <!--TODO: how to check the ORDER of slots, if needed?-->
-    
-    <!--TODO: how to check for UNWANTED elements in the XML?-->
+    <!--TODO: check for UNWANTED elements in the XML-->
     
     
     
@@ -439,6 +482,92 @@
             </assert>
             
         </rule>
+    </pattern>
+    
+    
+    
+    
+    <!--****************-->
+    <!--CHECK DATA TYPES-->
+    <!--****************-->
+    <pattern>
+        
+        <!--StringValueType-->
+        <rule context="
+            rim:Slot[@name = 'SpecificationIdentifier']/rim:SlotValue
+            | rim:Slot[@name = 'ConsentToken']/rim:SlotValue 
+            | rim:Slot[@name = 'DatasetIdentifier']/rim:SlotValue
+            ">
+            <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
+            <assert test="matches($datatype,':StringValueType$')" flag='ERROR' id="expecting_StringValueType">
+                Expecting StringValueType for slot: <value-of select="../@name"/> (found:  <value-of select="$datatype"/>)
+            </assert>  
+        </rule>
+        
+        <!--InternationalStringValueType-->
+        <rule context="
+            rim:Slot[@name = 'Procedure']/rim:SlotValue
+            | rim:Slot[@name = 'ErrorText']/rim:SlotValue/rim:Element 
+            ">
+            <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
+            <assert test="matches($datatype,':InternationalStringValueType$')" flag='ERROR' id="expecting_InternationalStringValueType">
+                Expecting InternationalStringValueType for slot: <value-of select="../@name"/><value-of select="../../@name"/> (found:  <value-of select="$datatype"/>)
+            </assert>  
+        </rule>
+        
+        <!--DateTimeValueType-->
+        <rule context="
+            rim:Slot[@name = 'IssueDateTime']/rim:SlotValue
+            | rim:Slot[@name = 'Timestamp']/rim:SlotValue
+            ">
+            <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
+            <assert test="matches($datatype,':DateTimeValueType$')" flag='ERROR' id="expecting_DateTimeValueType">
+                Expecting DateTimeValueType for slot: <value-of select="../@name"/> (found:  <value-of select="$datatype"/>)
+            </assert>  
+        </rule>
+        
+        <!--AnyValueType-->
+        <rule context="
+            rim:Slot[@name = 'DataConsumer']/rim:SlotValue
+            | rim:Slot[@name = 'LegalPerson']/rim:SlotValue
+            | rim:Slot[@name = 'NaturalPerson']/rim:SlotValue
+            | rim:Slot[@name = 'AuthorizedRepresentative']/rim:SlotValue
+            | rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue/rim:Element 
+            | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue/rim:Element 
+            | rim:Slot[@name = 'DataProvider']/rim:SlotValue
+            | rim:Slot[@name = 'ConceptValues']/rim:SlotValue/rim:Element 
+            | rim:Slot[@name = 'FullfillingRequirement']/rim:SlotValue
+            ">
+            <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
+            <assert test="matches($datatype,':AnyValueType$')" flag='ERROR' id="expecting_AnyValueType">
+                Expecting AnyValueType for slot: <value-of select="../@name"/><value-of select="../../@name"/> (found:  <value-of select="$datatype"/>)
+            </assert>  
+        </rule>
+        
+        <!--CollectionValueType-->
+        <rule context="
+            rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue
+            | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue
+            | rim:Slot[@name = 'ErrorText']/rim:SlotValue
+            ">
+            <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
+            <assert test="matches($datatype,':CollectionValueType$')" flag='ERROR' id="expecting_CollectionValueType">
+                Expecting CollectionValueType for slot: <value-of select="../@name"/><value-of select="../../@name"/> (found:  <value-of select="$datatype"/>)
+            </assert>  
+        </rule>
+        
+        <!--VocabularyTermValueType-->
+        <rule context="
+            rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue
+            | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue
+            | rim:Slot[@name = 'ErrorText']/rim:SlotValue
+            ">
+            <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
+            <assert test="matches($datatype,':VocabularyTermValueType$')" flag='ERROR' id="expecting_VocabularyTermValueType">
+                Expecting VocabularyTermValueType for slot: <value-of select="../@name"/><value-of select="../../@name"/> (found:  <value-of select="$datatype"/>)
+            </assert>  
+        </rule>
+        
     </pattern>
 
    
