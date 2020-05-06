@@ -30,6 +30,7 @@ public enum EToopErrorCode implements IToopErrorCode
 {
   /** Uncategorized error */
   GEN ("GEN"),
+
   /** The payload provided from DC/DP to the TOOP Connector is not valid */
   IF_001 ("IF-001"),
   /** Message Validation Failed */

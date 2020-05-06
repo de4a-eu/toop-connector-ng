@@ -175,6 +175,11 @@
         <artifactId>toop-edm</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>toop-commons</artifactId>
+        <version>${project.version}</version>
+      </dependency>
 
       <dependency>
         <groupId>eu.toop</groupId>
@@ -219,6 +224,7 @@
     <module>toop-regrep</module>
     <module>toop-kafka-client</module>
     <module>toop-edm</module>
+    <module>toop-commons</module>
   </modules>
   
   <build>

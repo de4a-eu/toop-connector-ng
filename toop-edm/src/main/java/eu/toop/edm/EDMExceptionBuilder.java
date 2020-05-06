@@ -27,6 +27,7 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.text.IMultilingualText;
 
 import eu.toop.edm.error.EEDMExceptionType;
+import eu.toop.edm.error.EToopErrorCategory;
 import eu.toop.edm.error.EToopErrorOrigin;
 import eu.toop.edm.error.EToopErrorSeverity;
 import eu.toop.edm.error.IToopErrorCode;
@@ -139,6 +140,12 @@ public class EDMExceptionBuilder
   {
     m_sErrorOrigin = x;
     return this;
+  }
+
+  @Nonnull
+  public EDMExceptionBuilder errorCategory (@Nullable final EToopErrorCategory x)
+  {
+    return errorCategory (x == null ? null : x.getID ());
   }
 
   @Nonnull
