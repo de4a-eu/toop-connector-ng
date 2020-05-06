@@ -94,10 +94,11 @@
                 The QueryResponse must contain exactly ONE DataProvider slot (found: <value-of select="$countDataProvider"/>).
             </assert>
             
-            <let name="countRegistryObjectList" value="count(rim:RegistryObjectList)"/>  
+            <!--TODO: disabled for now, needs also to check for an alternative ObjectRefList-->
+<!--            <let name="countRegistryObjectList" value="count(rim:RegistryObjectList)"/>  
             <assert test="($countRegistryObjectList=1) or ($IAMERROR=true())" flag='ERROR' id='res_card_RegistryObjectList'>
                 The QueryResponse must contain exactly ONE RegistryObjectList (found: <value-of select="$countRegistryObjectList"/>).
-            </assert>
+            </assert>-->
             
         </rule>
     </pattern>
@@ -138,17 +139,15 @@
     
     <!--TODO: check the EXCEPTION structure (not final yet)-->
     
-    <!--TODO: check the DATATYPES-->
-    
     <!--TODO: check for UNWANTED elements in the XML-->
     
     
     
-    <!--*************************************-->
-    <!--CHECK REQUEST DATA CONSUMER STRUCTURE-->
+    <!--***********************************-->
+    <!--CHECK DATA CONSUMER STRUCTURE-->
     <!--*************************************-->
     <pattern>
-        <rule context="rim:Slot[@name = 'DataConsumer']">
+        <rule context="query:QueryRequest/rim:Slot[@name = 'DataConsumer']">
             
             <let name="countAgent" value="count(./rim:SlotValue/cagv:Agent)"/>      
             <assert test="($countAgent=1)" flag='ERROR' id='req_dc_card_Agent'>
@@ -157,15 +156,13 @@
             
         </rule>
     </pattern>
-            
-    
     
     
     <!--*****************************-->
     <!--CHECK REQUEST AGENT STRUCTURE-->
     <!--*****************************-->
     <pattern>
-        <rule context="rim:Slot[@name = 'DataConsumer']/rim:SlotValue/cagv:Agent">
+        <rule context="query:QueryRequest/rim:Slot[@name = 'DataConsumer']/rim:SlotValue/cagv:Agent">
             
             <!--TODO: check if we need to add a cardinality test for ALL elements: not hard to do, but probably very time-consuming to check-->
             
@@ -220,14 +217,22 @@
     <!--CHECK REQUEST QUERY STRUCTURE-->
     <!--*****************************-->
     <pattern>
-        <rule context="query:Query">
+        <rule context="query:QueryRequest/query:Query">
             
-            <report test="( (exists(rim:Slot[@name = 'ConceptRequestList'])) and (exists(rim:Slot[@name = 'DistributionRequestList'])) )"  flag='ERROR' id="mandatory_query_concept_or_distribution_request_list">
+            <assert test="( (exists(rim:Slot[@name = 'ConceptRequestList'])) or (exists(rim:Slot[@name = 'DistributionRequestList'])) )"  flag='ERROR' id="mandatory_query_concept_or_distribution_request_list">
                 The Query must contain either a ConceptRequestList or a DistributionRequestList.
+            </assert>
+            
+            <report test="( (exists(rim:Slot[@name = 'ConceptRequestList'])) and (exists(rim:Slot[@name = 'DistributionRequestList'])) )"  flag='ERROR' id="alternative_query_concept_or_distribution_request_list">
+                The Query cannot contain both a ConceptRequestList and a DistributionRequestList.
             </report>
             
-            <report test="( (exists(rim:Slot[@name = 'LegalPerson'])) and (exists(rim:Slot[@name = 'NaturalPerson'])) )"  flag='ERROR' id="mandatory_query_legal_or_natural_person">
+            <assert test="( (exists(rim:Slot[@name = 'LegalPerson'])) or (exists(rim:Slot[@name = 'NaturalPerson'])) )"  flag='ERROR' id="mandatory_query_legal_or_natural_person">
                 The Query must contain either a LegalPerson or a NaturalPerson.
+            </assert>
+            
+            <report test="( (exists(rim:Slot[@name = 'LegalPerson'])) and (exists(rim:Slot[@name = 'NaturalPerson'])) )"  flag='ERROR' id="alternative_query_legal_or_natural_person">
+                The Query cannot contain both a LegalPerson and a NaturalPerson.
             </report>
             
             <let name="countConceptRequestList" value="count(rim:Slot[@name = 'ConceptRequestList'])"/>      
@@ -264,7 +269,7 @@
     <!--CHECK CONCEPT REQUEST LIST STRUCTURE-->
     <!--************************************-->
     <pattern>
-        <rule context="query:Query/rim:Slot[@name = 'ConceptRequestList']">
+        <rule context="query:QueryRequest/query:Query/rim:Slot[@name = 'ConceptRequestList']">
             
             <let name="countElement" value="count(rim:SlotValue/rim:Element)"/>      
             <assert test="($countElement &gt; 0)" flag='ERROR' id='req_crlist_element'>
@@ -285,7 +290,7 @@
     <!--CHECK DISTRIBUTION REQUEST LIST STRUCTURE-->
     <!--*****************************************-->
     <pattern>
-        <rule context="query:Query/rim:Slot[@name = 'DistributionRequestList']">
+        <rule context="query:QueryRequest/query:Query/rim:Slot[@name = 'DistributionRequestList']">
             
             <let name="countElement" value="count(rim:SlotValue/rim:Element)"/>      
             <assert test="($countElement &gt; 0)" flag='ERROR' id='req_distlist_element'>
@@ -351,7 +356,8 @@
     <!--CHECK CONCEPT STRUCTURE-->
     <!--***********************-->
     <pattern>
-        <rule context="query:Query/rim:Slot[@name = 'ConceptRequestList']/cccev:Concept">
+        <rule context="query:QueryRequest/query:Query/rim:Slot[@name = 'ConceptRequestList']/cccev:Concept
+                      |query:QueryResponse/rim:RegistryObjectList/rim:RegistryObject/rim:Slot/rim:SlotValue/rim:Element/cccev:Concept">
             
             <let name="countConceptId" value="count(cbc:id)"/>      
             <assert test="($countConceptId=1)" flag='ERROR' id='req_card_concept_id'>
@@ -366,8 +372,8 @@
             </assert>   
             
             <let name="countconcepts" value="count(cccev:concept)"/>      
-            <assert test="($countconcepts=0) or ($countconcepts=1)" flag='ERROR' id='req_card_Concepts_concepts'>
-                The Concept must contain ZERO or ONE concepts elements (found: <value-of select="$countconcepts"/>).
+            <assert test="($countconcepts &gt; 0)" flag='ERROR' id='req_card_Concepts_concepts'>
+                The Concept must contain at least ONE concepts element (found: <value-of select="$countconcepts"/>).
             </assert>  
             
         </rule>
@@ -378,7 +384,8 @@
     <!--CHECK NESTED concept STRUCTURE-->
     <!--******************************-->
     <pattern>
-        <rule context="query:Query/rim:Slot[@name = 'ConceptRequestList']//cccev:concept">
+        <rule context="query:QueryRequest/query:Query/rim:Slot[@name = 'ConceptRequestList']//cccev:concept
+                      |query:QueryResponse/rim:RegistryObjectList/rim:RegistryObject/rim:Slot/rim:SlotValue/rim:Element//cccev:concept">
             
             <let name="countConceptId" value="count(cbc:id)"/>      
             <assert test="($countConceptId=1)" flag='ERROR' id='req_card_nested_concept_id'>
@@ -386,6 +393,7 @@
             </assert>  
             
             <!--TODO CHECK LegalEntityID-->
+            <!--TODO use message to point to the concept that caused the error-->
             
             <let name="countConceptQName" value="count(cbc:QName)"/>      
             <assert test="($countConceptQName=1)" flag='ERROR' id='req_card_nested_concept_qname'>
@@ -394,6 +402,7 @@
             
         </rule>
     </pattern>
+    
     
     
     <!--****************************-->
@@ -485,6 +494,114 @@
     </pattern>
     
     
+    <!--**************************************-->
+    <!--CHECK RESPONSE DATA PROVIDER STRUCTURE-->
+    <!--**************************************-->
+    <pattern>
+        <rule context="query:QueryResponse/rim:Slot[@name = 'DataProvider']">
+            
+            <let name="countAgent" value="count(./rim:SlotValue/cagv:Agent)"/>      
+            <assert test="($countAgent=1)" flag='ERROR' id='res_dp_card_Agent'>
+                The DataProvider slot must contain exactly ONE Agent (found: <value-of select="$countAgent"/>).
+            </assert>  
+            
+        </rule>
+    </pattern>
+    
+    
+    <!--*********************************************-->
+    <!--CHECK RESPONSE REGISTRY OBJECT LIST STRUCTURE-->
+    <!--*********************************************-->
+    
+    <!--CHECK THE STRUCTURE FOR A QUERY REQUEST-->    
+    <pattern>
+        <rule context="query:QueryResponse/rim:RegistryObjectList/rim:RegistryObject">
+            
+            <let name="countConceptValues" value="count(rim:Slot[@name = 'ConceptValues'])"/>      
+            <assert test="($countConceptValues=0) or ($countConceptValues=1)" flag='ERROR' id='res_card_ConceptValues'>
+                The RegistryObjectList must contain ZERO or ONE ConceptValues elements (found: <value-of select="$countConceptValues"/>).
+            </assert>
+            
+            <let name="countDocumentMetadata" value="count(rim:Slot[@name = 'DocumentMetadata'])"/>      
+            <assert test="($countDocumentMetadata=0) or ($countDocumentMetadata=1)" flag='ERROR' id='res_card_DocumentMetadata'>
+                The RegistryObjectList must contain ZERO or ONE DocumentMetadata elements (found: <value-of select="$countDocumentMetadata"/>).
+            </assert>
+            
+            <let name="countRepositoryItemRef" value="count(rim:RepositoryItemRef)"/>      
+            <assert test="($countRepositoryItemRef=0) or ($countRepositoryItemRef=1)" flag='ERROR' id='res_card_RepositoryItemRef'>
+                The RegistryObjectList must contain ZERO or ONE RepositoryItemRef elements (found: <value-of select="$countRepositoryItemRef"/>).
+            </assert>
+     
+        </rule>
+    </pattern>
+    
+    
+    <!--***********************************-->
+    <!--CHECK CONCEPT VALUES LIST STRUCTURE-->
+    <!--***********************************-->
+    <pattern>
+        <rule context="query:QueryResponse/rim:RegistryObjectList/rim:RegistryObject/rim:Slot[@name = 'ConceptValues']">
+            
+            <let name="countElement" value="count(rim:SlotValue/rim:Element)"/>      
+            <assert test="($countElement &gt; 0)" flag='ERROR' id='res_crvalues_element'>
+                The ConceptValues slot must contain at least ONE Element (found: <value-of select="$countElement"/>).
+            </assert>  
+            
+            <let name="countElementConcept" value="count(rim:SlotValue/rim:Element/cccev:Concept)"/>      
+            <assert test="($countElementConcept = 1)" flag='ERROR' id='res_crvalues_element_concept'>
+                Each ConceptValues/Element must contain exactly ONE Concept (found: <value-of select="$countElementConcept"/>).
+            </assert>   
+            
+        </rule>
+    </pattern>
+    
+    
+    <!--********************************-->
+    <!--CHECK RESPONSE DATASET STRUCTURE-->
+    <!--********************************-->
+    
+    <pattern>
+        <rule context="query:QueryResponse/rim:RegistryObjectList/rim:RegistryObject/rim:Slot/rim:SlotValue/dcat:Dataset">
+            
+            <let name="countTemporal" value="count(dct:temporal)"/>      
+            <assert test="($countTemporal=0) or ($countTemporal=1)" flag='ERROR' id='res_card_dataset_Temporal'>
+                The Dataset must contain ZERO or ONE Temporal elements (found: <value-of select="$countTemporal"/>).
+            </assert>
+            
+            <let name="countcreator" value="count(dct:creator)"/>      
+            <assert test="($countcreator=0) or ($countcreator=1)" flag='ERROR' id='res_card_dataset_creator'>
+                The Dataset must contain ZERO or ONE creator elements (found: <value-of select="$countcreator"/>).
+            </assert>
+            
+            <let name="countdistribution" value="count(dcat:distribution)"/>      
+            <assert test="($countdistribution=0) or ($countdistribution=1)" flag='ERROR' id='res_card_dataset_distribution'>
+                The Dataset must contain ZERO or ONE distribution elements (found: <value-of select="$countdistribution"/>).
+            </assert>
+            
+        </rule>
+    </pattern>
+    
+    
+    <!--******************************-->
+    <!--CHECK RESPONSE VALUE STRUCTURE-->
+    <!--******************************-->
+    <pattern>
+        <rule context="//cccev:value">
+            <let name="countamountValue" value="count(cccev:amountValue)"/>   
+            <let name="countcodeValue" value="count(cccev:codeValue)"/> 
+            <let name="countdateValue" value="count(cccev:dateValue)"/>  
+            <let name="countidentifierValue" value="count(cccev:identifierValue)"/> 
+            <let name="countindicatorValue" value="count(cccev:indicatorValue)"/>  
+            <let name="countnumericValue" value="count(cccev:numericValue)"/>  
+            <let name="counttextValue" value="count(cccev:textValue)"/>   
+            <let name="counturiValue" value="count(cccev:uriValue)"/>   
+            <let name="countperiodValue" value="count(cccev:periodValue)"/>   
+            <let name="counterror" value="count(cccev:error)"/>               
+            <assert test="($countamountValue+$countcodeValue+$countdateValue+$countidentifierValue+$countindicatorValue+$countnumericValue+$counttextValue+$counturiValue+$countperiodValue+$counterror=1)" flag='ERROR' id='res_one_valid_value'>
+                Invalid value in concept response.
+            </assert>  
+        </rule>
+    </pattern>
     
     
     <!--****************-->
