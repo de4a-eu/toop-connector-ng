@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.commons.concept;
+package eu.toop.edm.error;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,24 +23,19 @@ import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
 
 /**
- * Contains the different concept types to be used in the TOOP Request and
- * Response.
+ * Source: ErrorSeverity-CodeList.gc
  *
  * @author Philip Helger
  * @since 0.9.2
  */
-public enum EConceptType implements IHasID <String>
+public enum EToopErrorSeverity implements IHasID <String>
 {
-  /** Data consumer */
-  DC ("DC"),
-  /** TOOP Connector */
-  TC ("TC"),
-  /** Data provider */
-  DP ("DP");
+  WARNING ("WARNING"),
+  FAILURE ("FAILURE");
 
   private final String m_sID;
 
-  EConceptType (@Nonnull @Nonempty final String sID)
+  EToopErrorSeverity (@Nonnull @Nonempty final String sID)
   {
     m_sID = sID;
   }
@@ -53,8 +48,8 @@ public enum EConceptType implements IHasID <String>
   }
 
   @Nullable
-  public static EConceptType getFromIDOrNull (@Nullable final String sID)
+  public static EToopErrorSeverity getFromIDOrNull (@Nullable final String sID)
   {
-    return EnumHelper.getFromIDOrNull (EConceptType.class, sID);
+    return EnumHelper.getFromIDOrNull (EToopErrorSeverity.class, sID);
   }
 }

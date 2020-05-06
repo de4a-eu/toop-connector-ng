@@ -30,6 +30,7 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.string.StringHelper;
 
+import eu.toop.edm.error.IToopErrorCode;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVValueType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
@@ -216,6 +217,18 @@ public class ConceptPojo
                                 @Nullable final LocalTime aEndTime)
     {
       return value (CCCEVValueHelper.createPeriod (aStartDate, aStartTime, aEndDate, aEndTime));
+    }
+
+    @Nonnull
+    public Builder valueErrorCode (@Nullable final IToopErrorCode aErrorCode)
+    {
+      return valueErrorCode (aErrorCode.getID ());
+    }
+
+    @Nonnull
+    public Builder valueErrorCode (@Nullable final String s)
+    {
+      return value (CCCEVValueHelper.createError (s));
     }
 
     @Nonnull

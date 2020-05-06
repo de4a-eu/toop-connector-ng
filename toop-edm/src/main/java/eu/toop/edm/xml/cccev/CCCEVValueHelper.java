@@ -296,4 +296,18 @@ public final class CCCEVValueHelper
     ret.setPeriodValue (a);
     return ret;
   }
+
+  @Nonnull
+  public static CCCEVValueType createError (@Nonnull final String sValue)
+  {
+    return createError (new CodeType (sValue));
+  }
+
+  @Nonnull
+  public static CCCEVValueType createError (@Nonnull final CodeType a)
+  {
+    final CCCEVValueType ret = new CCCEVValueType ();
+    ret.setError (a);
+    return ret;
+  }
 }
