@@ -26,7 +26,6 @@ import com.helger.commons.lang.EnumHelper;
  * Content created by MainCreateJavaCode_DataElementResponseErrorCode_GC
  *
  * @author Philip Helger
- * @since 0.10.0
  */
 public enum EToopDataElementResponseErrorCode implements IToopErrorCode
 {
