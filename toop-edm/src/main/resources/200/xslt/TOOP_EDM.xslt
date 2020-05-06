@@ -610,7 +610,7 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:variable name="countExceptionOrigin" select="count(rim:Slot[@name = 'Origin'])" />
+    <xsl:variable name="countExceptionOrigin" select="count(rim:Slot[@name = 'ErrorOrigin'])" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -623,14 +623,14 @@
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
           <svrl:text>
-                Each Exception must contain exactly ONE Origin slot (found: <xsl:text />
+                Each Exception must contain exactly ONE ErrorOrigin slot (found: <xsl:text />
             <xsl:value-of select="$countExceptionOrigin" />
             <xsl:text />).  
             </svrl:text>
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:variable name="countExceptionCategory" select="count(rim:Slot[@name = 'Category'])" />
+    <xsl:variable name="countExceptionCategory" select="count(rim:Slot[@name = 'ErrorCategory'])" />
 
 		<!--ASSERT -->
 <xsl:choose>
@@ -643,28 +643,8 @@
             <xsl:apply-templates mode="schematron-select-full-path" select="." />
           </xsl:attribute>
           <svrl:text>
-                Each Exception must contain exactly ONE Category slot (found: <xsl:text />
+                Each Exception must contain exactly ONE ErrorCategory slot (found: <xsl:text />
             <xsl:value-of select="$countExceptionCategory" />
-            <xsl:text />).  
-            </svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:variable name="countExceptionErrorText" select="count(rim:Slot[@name = 'ErrorText'])" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="( ($countExceptionErrorText > 0) )" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="( ($countExceptionErrorText > 0) )">
-          <xsl:attribute name="id">exc_card_ErrorText</xsl:attribute>
-          <xsl:attribute name="flag">ERROR</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>
-                Each Exception must contain at least ONE ErrorText slot (found: <xsl:text />
-            <xsl:value-of select="$countExceptionErrorText" />
             <xsl:text />).  
             </svrl:text>
         </svrl:failed-assert>

@@ -24,17 +24,17 @@ import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * Error "Origin" slot
+ * Error "ErrorOrigin" slot
  *
  * @author Philip Helger
  */
-public class SlotOrigin implements ISlotProvider
+public class SlotErrorOrigin implements ISlotProvider
 {
-  public static final String NAME = "Origin";
+  public static final String NAME = "ErrorOrigin";
 
   private final String m_sValue;
 
-  public SlotOrigin (@Nonnull final String sValue)
+  public SlotErrorOrigin (@Nonnull final String sValue)
   {
     ValueEnforcer.notNull (sValue, "Value");
     m_sValue = sValue;

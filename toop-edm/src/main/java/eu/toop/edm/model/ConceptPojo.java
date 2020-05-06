@@ -253,6 +253,12 @@ public class ConceptPojo
     }
 
     @Nonnull
+    public Builder child (@Nullable final ConceptPojo.Builder a)
+    {
+      return child (a == null ? null : a.build ());
+    }
+
+    @Nonnull
     public Builder child (@Nullable final ConceptPojo a)
     {
       if (a != null)

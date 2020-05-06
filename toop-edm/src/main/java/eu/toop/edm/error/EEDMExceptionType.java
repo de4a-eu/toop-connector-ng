@@ -19,7 +19,7 @@ import eu.toop.regrep.rs.UnsupportedCapabilityExceptionType;
 
 /**
  * Contains the different possible exception types.
- * 
+ *
  * @author Philip Helger
  */
 public enum EEDMExceptionType

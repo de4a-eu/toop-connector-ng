@@ -134,21 +134,22 @@
                 Each Exception must contain ZERO or ONE PublicOrganizationIdentifier slots (found: <value-of select="$countExceptionPublicOrganizationIdentifier"/>).  
             </assert>  
             
-            <let name="countExceptionOrigin" value="count(rim:Slot[@name = 'Origin'])"/>      
+            <let name="countExceptionOrigin" value="count(rim:Slot[@name = 'ErrorOrigin'])"/>      
             <assert test="( ($countExceptionOrigin=1) )" flag='ERROR' id='exc_card_Origin'>
-                Each Exception must contain exactly ONE Origin slot (found: <value-of select="$countExceptionOrigin"/>).  
+                Each Exception must contain exactly ONE ErrorOrigin slot (found: <value-of select="$countExceptionOrigin"/>).  
             </assert>  
             
-            <let name="countExceptionCategory" value="count(rim:Slot[@name = 'Category'])"/>      
+            <let name="countExceptionCategory" value="count(rim:Slot[@name = 'ErrorCategory'])"/>      
             <assert test="( ($countExceptionCategory=1) )" flag='ERROR' id='exc_card_Category'>
-                Each Exception must contain exactly ONE Category slot (found: <value-of select="$countExceptionCategory"/>).  
+                Each Exception must contain exactly ONE ErrorCategory slot (found: <value-of select="$countExceptionCategory"/>).  
             </assert>  
             
+            <!-- 
             <let name="countExceptionErrorText" value="count(rim:Slot[@name = 'ErrorText'])"/>      
             <assert test="( ($countExceptionErrorText &gt; 0) )" flag='ERROR' id='exc_card_ErrorText'>
                 Each Exception must contain at least ONE ErrorText slot (found: <value-of select="$countExceptionErrorText"/>).  
             </assert>  
-            
+             -->
         </rule>
     </pattern>
     

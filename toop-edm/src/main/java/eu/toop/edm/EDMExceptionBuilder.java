@@ -16,7 +16,7 @@ import eu.toop.edm.error.EToopErrorOrigin;
 import eu.toop.edm.error.EToopErrorSeverity;
 import eu.toop.edm.slot.SlotErrorCategory;
 import eu.toop.edm.slot.SlotErrorText;
-import eu.toop.edm.slot.SlotOrigin;
+import eu.toop.edm.slot.SlotErrorOrigin;
 import eu.toop.edm.slot.SlotPublicOrganizationIdentifier;
 import eu.toop.edm.slot.SlotTimestamp;
 import eu.toop.regrep.helper.VocabularyTerm;
@@ -36,7 +36,7 @@ public class EDMExceptionBuilder
   private EToopErrorSeverity m_eSeverity;
   private VocabularyTerm m_aPublicOrganizationID;
   private LocalDateTime m_aTimestamp;
-  private String m_sOrigin;
+  private String m_sErrorOrigin;
   private String m_sErrorCategory;
   // TODO not used in beta1
   private final ICommonsList <IMultilingualText> m_aErrorTexts = new CommonsArrayList <> ();
@@ -107,15 +107,15 @@ public class EDMExceptionBuilder
   }
 
   @Nonnull
-  public EDMExceptionBuilder origin (@Nullable final EToopErrorOrigin x)
+  public EDMExceptionBuilder errorOrigin (@Nullable final EToopErrorOrigin x)
   {
-    return origin (x == null ? null : x.getID ());
+    return errorOrigin (x == null ? null : x.getID ());
   }
 
   @Nonnull
-  public EDMExceptionBuilder origin (@Nullable final String x)
+  public EDMExceptionBuilder errorOrigin (@Nullable final String x)
   {
-    m_sOrigin = x;
+    m_sErrorOrigin = x;
     return this;
   }
 
@@ -138,7 +138,7 @@ public class EDMExceptionBuilder
       throw new IllegalStateException ("Error Severity must be provided");
     if (m_aTimestamp == null)
       throw new IllegalStateException ("Timestamp must be provided");
-    if (StringHelper.hasNoText (m_sOrigin))
+    if (StringHelper.hasNoText (m_sErrorOrigin))
       throw new IllegalStateException ("Error Origin must be provided");
     if (StringHelper.hasNoText (m_sErrorCategory))
       throw new IllegalStateException ("Error Category must be provided");
@@ -160,8 +160,8 @@ public class EDMExceptionBuilder
       ret.addSlot (new SlotPublicOrganizationIdentifier (m_aPublicOrganizationID).createSlot ());
     if (m_aTimestamp != null)
       ret.addSlot (new SlotTimestamp (m_aTimestamp).createSlot ());
-    if (StringHelper.hasText (m_sOrigin))
-      ret.addSlot (new SlotOrigin (m_sOrigin).createSlot ());
+    if (StringHelper.hasText (m_sErrorOrigin))
+      ret.addSlot (new SlotErrorOrigin (m_sErrorOrigin).createSlot ());
     if (StringHelper.hasText (m_sErrorCategory))
       ret.addSlot (new SlotErrorCategory (m_sErrorCategory).createSlot ());
     if (m_aErrorTexts.isNotEmpty ())

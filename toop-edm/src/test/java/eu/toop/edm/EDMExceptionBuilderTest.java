@@ -1,20 +1,14 @@
 package eu.toop.edm;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.w3c.dom.Document;
-
-import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.error.EEDMExceptionType;
 import eu.toop.edm.error.EToopErrorOrigin;
 import eu.toop.edm.error.EToopErrorSeverity;
-import eu.toop.edm.schematron.SchematronEDM2Validator;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.rs.RegistryExceptionType;
 
@@ -39,7 +33,7 @@ public final class EDMExceptionBuilderTest
                                                               .severity (EToopErrorSeverity.FAILURE)
                                                               .publicOrganizationID ("voc", "term")
                                                               .timestampNow ()
-                                                              .origin (EToopErrorOrigin.RESPONSE_RECEPTION)
+                                                              .errorOrigin (EToopErrorOrigin.RESPONSE_RECEPTION)
                                                               .errorCategory ("Category");
       final RegistryExceptionType aEx = b.build ();
       assertNotNull (aEx);
@@ -51,15 +45,6 @@ public final class EDMExceptionBuilderTest
 
       if (false)
         LOGGER.info (sXML);
-
-      if (false)
-      {
-        // Schematron validation
-        final Document aDoc = aWriter.getAsDocument (aEx);
-        assertNotNull (aDoc);
-        final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
-        assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
-      }
     }
   }
 
@@ -71,7 +56,7 @@ public final class EDMExceptionBuilderTest
                                                             .errorMessage ("What went wrong: nothing")
                                                             .severity (EToopErrorSeverity.FAILURE)
                                                             .timestampNow ()
-                                                            .origin (EToopErrorOrigin.RESPONSE_RECEPTION)
+                                                            .errorOrigin (EToopErrorOrigin.RESPONSE_RECEPTION)
                                                             .errorCategory ("Category");
     final RegistryExceptionType aEx = b.build ();
     assertNotNull (aEx);
@@ -82,14 +67,5 @@ public final class EDMExceptionBuilderTest
 
     if (true)
       LOGGER.info (sXML);
-
-    if (false)
-    {
-      // Schematron validation
-      final Document aDoc = aWriter.getAsDocument (aEx);
-      assertNotNull (aDoc);
-      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
-      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
-    }
   }
 }

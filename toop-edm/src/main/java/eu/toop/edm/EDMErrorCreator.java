@@ -15,9 +15,6 @@
  */
 package eu.toop.edm;
 
-import java.util.Map;
-import java.util.UUID;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -36,8 +33,7 @@ import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
-import eu.toop.regrep.rim.RegistryObjectListType;
-import eu.toop.regrep.rim.RegistryObjectType;
+import eu.toop.regrep.rs.RegistryExceptionType;
 
 /**
  * A simple builder to create valid TOOP Error responses for both "concept
@@ -74,7 +70,7 @@ public class EDMErrorCreator
   }
 
   @Nonnull
-  QueryResponse createQueryResponse ()
+  QueryResponse createQueryResponse (@Nonnull @Nonempty final ICommonsList <RegistryExceptionType> aExceptions)
   {
     final QueryResponse ret = RegRepHelper.createEmptyQueryResponse (m_eResponseStatus);
     ret.setRequestId (m_sRequestID);
@@ -87,19 +83,7 @@ public class EDMErrorCreator
         ret.addSlot (aSP.createSlot ());
     }
 
-    {
-      final RegistryObjectListType aROList = new RegistryObjectListType ();
-      final RegistryObjectType aRO = new RegistryObjectType ();
-      aRO.setId (UUID.randomUUID ().toString ());
-
-      // All slots inside of RegistryObject
-      for (final Map.Entry <String, ISlotProvider> aEntry : m_aProviders.entrySet ())
-        if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
-          aRO.addSlot (aEntry.getValue ().createSlot ());
-
-      aROList.addRegistryObject (aRO);
-      ret.setRegistryObjectList (aROList);
-    }
+    ret.getException ().addAll (aExceptions);
 
     return ret;
   }
@@ -118,6 +102,7 @@ public class EDMErrorCreator
     private ERegRepResponseStatus m_eResponseStatus;
     private String m_sRequestID;
     private String m_sSpecificationIdentifier;
+    private final ICommonsList <RegistryExceptionType> m_aExceptions = new CommonsArrayList <> ();
 
     public Builder ()
     {}
@@ -143,6 +128,50 @@ public class EDMErrorCreator
       return this;
     }
 
+    @Nonnull
+    public Builder addException (@Nullable final EDMExceptionBuilder a)
+    {
+      return addException (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder addException (@Nullable final RegistryExceptionType a)
+    {
+      if (a != null)
+        m_aExceptions.add (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder exception (@Nullable final EDMExceptionBuilder a)
+    {
+      return exception (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder exception (@Nullable final RegistryExceptionType a)
+    {
+      if (a != null)
+        m_aExceptions.set (a);
+      else
+        m_aExceptions.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder exceptions (@Nullable final RegistryExceptionType... a)
+    {
+      m_aExceptions.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder exceptions (@Nullable final Iterable <? extends RegistryExceptionType> a)
+    {
+      m_aExceptions.setAll (a);
+      return this;
+    }
+
     public void checkConsistency ()
     {
       if (m_eResponseStatus == null)
@@ -151,6 +180,8 @@ public class EDMErrorCreator
         throw new IllegalStateException ("Request ID must be present");
       if (StringHelper.hasNoText (m_sSpecificationIdentifier))
         throw new IllegalStateException ("SpecificationIdentifier must be present");
+      if (m_aExceptions.isEmpty ())
+        throw new IllegalStateException ("At least one Exception must be present");
     }
 
     @Nonnull
@@ -163,8 +194,7 @@ public class EDMErrorCreator
         aSlots.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
 
       // Exceptions
-
-      return new EDMErrorCreator (m_eResponseStatus, m_sRequestID, aSlots).createQueryResponse ();
+      return new EDMErrorCreator (m_eResponseStatus, m_sRequestID, aSlots).createQueryResponse (m_aExceptions);
     }
   }
 }
