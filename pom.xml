@@ -167,22 +167,12 @@
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-commons</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>eu.toop</groupId>
         <artifactId>toop-kafka-client</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>toop-edm</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>eu.toop</groupId>
-        <artifactId>toop-interface</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -227,10 +217,8 @@
   <modules>
     <module>toop-codelist-tools</module>
     <module>toop-regrep</module>
-    <module>toop-commons</module>
     <module>toop-kafka-client</module>
     <module>toop-edm</module>
-    <module>toop-interface</module>
   </modules>
   
   <build>
