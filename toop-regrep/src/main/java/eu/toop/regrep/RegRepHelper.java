@@ -29,6 +29,7 @@ import org.w3c.dom.Element;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.text.IMultilingualText;
 
 import eu.toop.regrep.helper.VocabularyTerm;
 import eu.toop.regrep.query.QueryRequest;
@@ -84,6 +85,16 @@ public final class RegRepHelper
     final InternationalStringType ret = new InternationalStringType ();
     if (aMap != null)
       for (final Map.Entry <Locale, String> aEntry : aMap.entrySet ())
+        ret.addLocalizedString (createLocalizedString (aEntry.getKey (), aEntry.getValue ()));
+    return ret;
+  }
+
+  @Nonnull
+  public static InternationalStringType createInternationalStringType (@Nullable final IMultilingualText aMLT)
+  {
+    final InternationalStringType ret = new InternationalStringType ();
+    if (aMLT != null)
+      for (final Map.Entry <Locale, String> aEntry : aMLT.texts ().entrySet ())
         ret.addLocalizedString (createLocalizedString (aEntry.getKey (), aEntry.getValue ()));
     return ret;
   }
