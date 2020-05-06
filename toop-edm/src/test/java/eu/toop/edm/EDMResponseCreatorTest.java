@@ -51,9 +51,9 @@ import eu.toop.regrep.query.QueryResponse;
  *
  * @author Philip Helger
  */
-public final class DataResponseCreatorTest
+public final class EDMResponseCreatorTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (DataResponseCreatorTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (EDMResponseCreatorTest.class);
 
   @Nonnull
   public static EDMResponseCreator.Builder _dataResponseConcept ()

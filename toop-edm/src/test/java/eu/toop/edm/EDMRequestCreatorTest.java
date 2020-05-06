@@ -52,9 +52,9 @@ import eu.toop.regrep.query.QueryRequest;
  *
  * @author Philip Helger
  */
-public final class DataRequestCreatorTest
+public final class EDMRequestCreatorTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (DataRequestCreatorTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (EDMRequestCreatorTest.class);
 
   @Nonnull
   private static BusinessPojo _dsBusiness ()
