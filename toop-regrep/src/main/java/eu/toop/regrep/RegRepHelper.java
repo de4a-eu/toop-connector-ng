@@ -30,6 +30,7 @@ import org.w3c.dom.Element;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
+import eu.toop.regrep.helper.VocabularyTerm;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.query.QueryResponse;
 import eu.toop.regrep.query.ResponseOptionType;
@@ -113,6 +114,13 @@ public final class RegRepHelper
         ret.addEntry (aRegRepEntry);
       }
     return ret;
+  }
+
+  @Nonnull
+  public static VocabularyTermType createVocabularyTerm (@Nonnull final VocabularyTerm aTerm)
+  {
+    ValueEnforcer.notNull (aTerm, "Term");
+    return createVocabularyTerm (aTerm.getVocabulary (), aTerm.getTerm ());
   }
 
   @Nonnull

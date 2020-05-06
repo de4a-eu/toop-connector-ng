@@ -32,6 +32,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.datetime.util.PDTXMLConverter;
 
+import eu.toop.regrep.helper.VocabularyTerm;
 import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.MapType;
 import eu.toop.regrep.rim.SlotType;
@@ -178,15 +179,21 @@ public class SlotBuilder
   }
 
   @Nonnull
-  public SlotBuilder setValue (@Nonnull final VocabularyTermType x)
-  {
-    return setValue (RegRepHelper.createSlotValue (x));
-  }
-
-  @Nonnull
   public SlotBuilder setVocabularyTermValue (@Nonnull final String sVocabulary, @Nonnull final String sTerm)
   {
     return setValue (RegRepHelper.createVocabularyTerm (sVocabulary, sTerm));
+  }
+
+  @Nonnull
+  public SlotBuilder setValue (@Nonnull final VocabularyTerm x)
+  {
+    return setValue (RegRepHelper.createVocabularyTerm (x));
+  }
+
+  @Nonnull
+  public SlotBuilder setValue (@Nonnull final VocabularyTermType x)
+  {
+    return setValue (RegRepHelper.createSlotValue (x));
   }
 
   /**
