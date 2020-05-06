@@ -7,7 +7,22 @@ The TOOP Connector NG is a Java only solution. Other environments like .NET etc.
 
 ## Status
 
-Work in progress - not functional
+2020-05-06: release of `v2.0.0-beta1`
+    * Libraries for creating the new data model
+    * Consisting of `toop-edm`, `toop-regrep`, `toop-kafka-client` and `toop-commons`
+    * Allows to create Requests, Responses and Errors according to the new EDM (Electronic Data Model)
+    
+## Maven coordinates
+
+```xml
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>toop-edm</artifactId>
+        <version>2.0.0-beta1</version>
+      </dependency>
+```
+
+The rest comes via transitive dependencies.
 
 ## Design considerations
 
@@ -19,10 +34,9 @@ Major changes compared to the old TOOP Connector:
 * The semantic mapping service invocation was removed. The old solution was not satisfying.
 * The "multiple DPs" option was removed. This responsibility was moved to the DC.
 * The TOOP Directory was replaced by the DSD (Data Service Directory)
+* No more usage of ASIC
 
 What is now contained in the TOOP Connector NG:
-* Support for creating ASIC containers (as before in toop-interface)
-* Support for creating XHE envelopes (new)
 * Support for performing dynamic discovery lookups (as before)
 * Support for Schematron validation of the EDM Requests and Responses (as before)
 * Support for querying the DSD (new - was previously the TOOP Directory)
@@ -39,7 +53,7 @@ Requires at least
 
 Do an initial `mvn clean install` on the command line.
 
-Afterwards don't forget to add the following paths to your build path (in the IDE):
+Afterwards don't forget to add the following paths to your build path (in your IDE):
 
 * toop-regrep/target/generated-sources/xjc
 * toop-edm/target/generated-sources/xjc
