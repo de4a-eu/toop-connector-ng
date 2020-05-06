@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
+import eu.toop.edm.pilot.gbm.EToopConcept;
 import eu.toop.edm.xml.cccev.ConceptMarshaller;
 
 /**
@@ -44,6 +45,29 @@ public final class ConceptPojoTest
                                      .name (NS, "CompanyData")
                                      .addChild (ConceptPojo.builder ().id ("ConceptID-2").name (NS, "Concept-Name-2"))
                                      .addChild (ConceptPojo.builder ().id ("ConceptID-3").name (NS, "Concept-Name-3"))
+                                     .build ();
+    final CCCEVConceptType aConcept = x.getAsCCCEVConcept ();
+    assertNotNull (aConcept);
+
+    final ConceptMarshaller m = new ConceptMarshaller (new MapBasedNamespaceContext ().addMapping ("toop", NS));
+    m.setFormattedOutput (true);
+    assertNotNull (m.getAsDocument (aConcept));
+    LOGGER.info (m.getAsString (aConcept));
+  }
+
+  @Test
+  public void testPilotGBM ()
+  {
+    final String NS = "http://toop.eu/registered-organization";
+    final ConceptPojo x = ConceptPojo.builder ()
+                                     .id ("ConceptID-1")
+                                     .name (NS, "CompanyData")
+                                     .addChild (ConceptPojo.builder ()
+                                                           .id ("ConceptID-2")
+                                                           .name (EToopConcept.COMPANY_NAME))
+                                     .addChild (ConceptPojo.builder ()
+                                                           .id ("ConceptID-3")
+                                                           .name (EToopConcept.COMPANY_TYPE))
                                      .build ();
     final CCCEVConceptType aConcept = x.getAsCCCEVConcept ();
     assertNotNull (aConcept);
