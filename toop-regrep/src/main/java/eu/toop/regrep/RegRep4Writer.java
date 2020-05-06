@@ -15,11 +15,18 @@
  */
 package eu.toop.regrep;
 
-import javax.annotation.Nonnull;
+import java.util.function.Consumer;
 
+import javax.annotation.Nonnull;
+import javax.xml.bind.JAXBElement;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.state.ESuccess;
 import com.helger.jaxb.builder.IJAXBDocumentType;
 import com.helger.jaxb.builder.JAXBDocumentType;
 import com.helger.jaxb.builder.JAXBWriterBuilder;
@@ -63,6 +70,36 @@ public class RegRep4Writer <JAXBTYPE> extends JAXBWriterBuilder <JAXBTYPE, RegRe
   {
     super (eDocType);
     setNamespaceContext (RegRep4NamespaceContext.getInstance ());
+  }
+
+  // Hack to disable package name check for QueryException
+  @Override
+  @Nonnull
+  public ESuccess write (@Nonnull final JAXBTYPE aJAXBDocument,
+                         @Nonnull final IJAXBMarshaller <JAXBTYPE> aMarshallerFunc)
+  {
+    ValueEnforcer.notNull (aJAXBDocument, "JAXBDocument");
+    ValueEnforcer.notNull (aMarshallerFunc, "MarshallerFunc");
+
+    try
+    {
+      final Marshaller aMarshaller = createMarshaller ();
+
+      // Customize on demand
+      final Consumer <? super Marshaller> aCustomizer = getMarshallerCustomizer ();
+      if (aCustomizer != null)
+        aCustomizer.accept (aMarshaller);
+
+      // start marshalling
+      final JAXBElement <JAXBTYPE> aJAXBElement = createJAXBElement (aJAXBDocument);
+      aMarshallerFunc.doMarshal (aMarshaller, aJAXBElement);
+      return ESuccess.SUCCESS;
+    }
+    catch (final JAXBException ex)
+    {
+      exceptionCallbacks ().forEach (x -> x.onException (ex));
+    }
+    return ESuccess.FAILURE;
   }
 
   /**
