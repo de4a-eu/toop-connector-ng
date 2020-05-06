@@ -8,10 +8,10 @@ The TOOP Connector NG is a Java only solution. Other environments like .NET etc.
 ## Status
 
 2020-05-06: release of `v2.0.0-beta1`
-    * Libraries for creating the new data model
-    * Consisting of `toop-edm`, `toop-regrep`, `toop-kafka-client` and `toop-commons`
-    * Allows to create Requests, Responses and Errors according to the new EDM (Electronic Data Model)
-    
+* Libraries for creating the new data model
+* Consisting of `toop-edm`, `toop-regrep`, `toop-kafka-client` and `toop-commons`
+* Allows to create Requests, Responses and Errors according to the new EDM (Electronic Data Model)
+
 ## Maven coordinates
 
 ```xml
@@ -35,14 +35,13 @@ Major changes compared to the old TOOP Connector:
 * The "multiple DPs" option was removed. This responsibility was moved to the DC.
 * The TOOP Directory was replaced by the DSD (Data Service Directory)
 * No more usage of ASIC
+* The content previously contained in "toop-commons" is now included in this project. The "toop-interface" project is no longer needed."
 
 What is now contained in the TOOP Connector NG:
 * Support for performing dynamic discovery lookups (as before)
 * Support for Schematron validation of the EDM Requests and Responses (as before)
 * Support for querying the DSD (new - was previously the TOOP Directory)
 * Support for communicating with the AS4 gateway (as before)
-
-Note: the [toop-commons](https://github.com/TOOP4EU/toop-commons) projects are not affected by these refactorings
 
 ## Building
 
@@ -57,3 +56,6 @@ Afterwards don't forget to add the following paths to your build path (in your I
 
 * toop-regrep/target/generated-sources/xjc
 * toop-edm/target/generated-sources/xjc
+
+
+Note: the `toop-codelist-tools` is for internal usage only.
