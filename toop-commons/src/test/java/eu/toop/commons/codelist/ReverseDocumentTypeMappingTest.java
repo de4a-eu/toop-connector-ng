@@ -19,8 +19,6 @@ import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
-import eu.toop.commons.pilot.gbm.ReverseDocumentTypeMapping;
-
 /**
  * Test class for class {@link ReverseDocumentTypeMapping}.
  *
