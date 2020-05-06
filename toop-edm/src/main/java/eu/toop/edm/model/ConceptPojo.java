@@ -120,6 +120,12 @@ public class ConceptPojo
     }
 
     @Nonnull
+    public Builder name (@Nullable final IConceptName aConcept)
+    {
+      return name (aConcept == null ? null : aConcept.getAsQName ());
+    }
+
+    @Nonnull
     public Builder name (@Nullable final QName a)
     {
       m_aName = a;

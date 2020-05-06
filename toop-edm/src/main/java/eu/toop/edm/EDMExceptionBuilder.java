@@ -29,9 +29,10 @@ import com.helger.commons.text.IMultilingualText;
 import eu.toop.edm.error.EEDMExceptionType;
 import eu.toop.edm.error.EToopErrorOrigin;
 import eu.toop.edm.error.EToopErrorSeverity;
+import eu.toop.edm.error.IToopErrorCode;
 import eu.toop.edm.slot.SlotErrorCategory;
-import eu.toop.edm.slot.SlotErrorText;
 import eu.toop.edm.slot.SlotErrorOrigin;
+import eu.toop.edm.slot.SlotErrorText;
 import eu.toop.edm.slot.SlotPublicOrganizationIdentifier;
 import eu.toop.edm.slot.SlotTimestamp;
 import eu.toop.regrep.helper.VocabularyTerm;
@@ -64,6 +65,12 @@ public class EDMExceptionBuilder
   {
     m_eExceptionType = x;
     return this;
+  }
+
+  @Nonnull
+  public EDMExceptionBuilder errorCode (@Nullable final IToopErrorCode x)
+  {
+    return errorCode (x == null ? null : x.getID ());
   }
 
   @Nonnull

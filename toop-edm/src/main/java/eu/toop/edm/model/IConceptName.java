@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.commons.pilot.gbm;
+package eu.toop.edm.model;
 
 import javax.annotation.Nonnull;
+import javax.xml.namespace.QName;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
@@ -24,11 +25,16 @@ import com.helger.commons.id.IHasID;
  * Abstract interface for a predefined TOOP concept.
  *
  * @author Philip Helger
- * @since 0.10.8
  */
-public interface IToopConcept extends IHasID <String>
+public interface IConceptName extends IHasID <String>
 {
   @Nonnull
   @Nonempty
   String getConceptNamespaceURI ();
+
+  @Nonnull
+  default QName getAsQName ()
+  {
+    return new QName (getConceptNamespaceURI (), getID ());
+  }
 }
