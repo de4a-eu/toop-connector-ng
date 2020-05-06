@@ -314,7 +314,7 @@
                 The DistributionRequestList slot must contain at least ONE Element (found: <value-of select="$countElement"/>).
             </assert>  
             
-            <let name="countElementDistribution" value="count(rim:SlotValue/rim:Element/dcat:Distribution)"/>      
+            <let name="countElementDistribution" value="count(rim:SlotValue/rim:Element/dcat:distribution)"/>      
             <assert test="($countElementDistribution = 1)" flag='ERROR' id='req_crlist_element_distribution'>
                 Each DistributionRequestList/Element must contain exactly ONE Distribution (found: <value-of select="$countElementDistribution"/>).
             </assert>  

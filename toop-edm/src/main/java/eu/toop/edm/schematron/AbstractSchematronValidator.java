@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.commons.schematron;
+package eu.toop.edm.schematron;
 
 import javax.annotation.Nonnull;
 
@@ -34,11 +34,10 @@ import com.helger.xml.serialize.read.DOMReader;
  * other resources using the predefined TOOP Schematron rules.
  *
  * @author Philip Helger
- * @since 0.10.0
  */
-public abstract class AbstractTOOPSchematronValidator
+public abstract class AbstractSchematronValidator
 {
-  protected AbstractTOOPSchematronValidator ()
+  protected AbstractSchematronValidator ()
   {}
 
   /**
@@ -48,13 +47,14 @@ public abstract class AbstractTOOPSchematronValidator
   protected abstract IReadableResource getSchematronXSLTResource ();
 
   /**
-   * Create a new {@link ISchematronResource} that is configured correctly so that
-   * it can be used to validate TOOP messages. This method is only used internally
-   * and is extracted to allow potential modifications in derived classes.
+   * Create a new {@link ISchematronResource} that is configured correctly so
+   * that it can be used to validate TOOP messages. This method is only used
+   * internally and is extracted to allow potential modifications in derived
+   * classes.
    *
    * @return A new instance every time.
-   * @see #validateTOOPMessage(Document)
-   * @see #validateTOOPMessage(IReadableResource)
+   * @see #validateDocument(Document)
+   * @see #validateResource(IReadableResource)
    */
   @Nonnull
   public final ISchematronResource createSchematronResource ()
@@ -68,14 +68,14 @@ public abstract class AbstractTOOPSchematronValidator
 
   @Nonnull
   @ReturnsMutableCopy
-  public final ICommonsList <AbstractSVRLMessage> validateTOOPMessage (@Nonnull final IReadableResource aXML)
+  public final ICommonsList <AbstractSVRLMessage> validateResource (@Nonnull final IReadableResource aXML)
   {
     // Parse XML to DOM
     final Document aXMLDoc = DOMReader.readXMLDOM (aXML);
     if (aXMLDoc == null)
       throw new IllegalStateException ("Failed to read the provided XML");
 
-    return validateTOOPMessage (aXMLDoc);
+    return validateDocument (aXMLDoc);
   }
 
   /**
@@ -87,7 +87,7 @@ public abstract class AbstractTOOPSchematronValidator
    */
   @Nonnull
   @ReturnsMutableCopy
-  public final ICommonsList <AbstractSVRLMessage> validateTOOPMessage (@Nonnull final Document aXMLDoc)
+  public final ICommonsList <AbstractSVRLMessage> validateDocument (@Nonnull final Document aXMLDoc)
   {
     try
     {

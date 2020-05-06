@@ -16,6 +16,7 @@
 package eu.toop.edm;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
@@ -26,9 +27,12 @@ import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.mime.CMimeType;
+import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
@@ -38,6 +42,7 @@ import eu.toop.edm.model.DistributionPojo;
 import eu.toop.edm.model.EDistributionFormat;
 import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.PersonPojo;
+import eu.toop.edm.schematron.SchematronEDM2Validator;
 import eu.toop.edm.xml.cagv.CCAGV;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
@@ -158,11 +163,20 @@ public final class DataRequestCreatorTest
     final QueryRequest aRequest = _builderConcept ().dataSubject (_dsBusiness ()).build ();
     assertNotNull (aRequest);
 
-    final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
+    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
+    final String sXML = aWriter.getAsString (aRequest);
     assertNotNull (sXML);
 
     if (false)
       LOGGER.info (sXML);
+
+    {
+      // Schematron validation
+      final Document aDoc = aWriter.getAsDocument (aRequest);
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
   }
 
   @Test
@@ -171,10 +185,20 @@ public final class DataRequestCreatorTest
     final QueryRequest aRequest = _builderConcept ().dataSubject (_dsPerson ()).build ();
     assertNotNull (aRequest);
 
-    final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
+    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
+    final String sXML = aWriter.getAsString (aRequest);
     assertNotNull (sXML);
 
-    LOGGER.info (sXML);
+    if (false)
+      LOGGER.info (sXML);
+
+    {
+      // Schematron validation
+      final Document aDoc = aWriter.getAsDocument (aRequest);
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
   }
 
   @Nonnull
@@ -225,11 +249,20 @@ public final class DataRequestCreatorTest
     final QueryRequest aRequest = _builderDocument ().dataSubject (_dsBusiness ()).build ();
     assertNotNull (aRequest);
 
-    final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
+    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
+    final String sXML = aWriter.getAsString (aRequest);
     assertNotNull (sXML);
 
     if (false)
       LOGGER.info (sXML);
+
+    {
+      // Schematron validation
+      final Document aDoc = aWriter.getAsDocument (aRequest);
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
   }
 
   @Test
@@ -238,11 +271,20 @@ public final class DataRequestCreatorTest
     final QueryRequest aRequest = _builderDocument ().dataSubject (_dsPerson ()).build ();
     assertNotNull (aRequest);
 
-    final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
+    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
+    final String sXML = aWriter.getAsString (aRequest);
     assertNotNull (sXML);
 
     if (false)
       LOGGER.info (sXML);
+
+    {
+      // Schematron validation
+      final Document aDoc = aWriter.getAsDocument (aRequest);
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
   }
 
   @Test

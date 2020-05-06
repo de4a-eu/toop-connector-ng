@@ -13,30 +13,30 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.commons.schematron;
+package eu.toop.edm.schematron;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.schematron.svrl.ISVRLLocationBeautifierSPI;
 
-/**
- * Beautify Schematron SVRL output.
- *
- * @author Philip Helger
- */
+import eu.toop.edm.xml.cccev.CCCEVNamespaceContext;
+import eu.toop.regrep.RegRep4NamespaceContext;
+
 @IsSPIImplementation
-@Immutable
 public final class TOOPSVRLLocationBeautifier implements ISVRLLocationBeautifierSPI
 {
   @Nullable
   public String getReplacementText (@Nonnull final String sNamespaceURI, @Nonnull final String sLocalName)
   {
-    final String sPrefix = null;
+    String sPrefix = CCCEVNamespaceContext.getInstance ().getCustomPrefix (sNamespaceURI);
+    if (sPrefix == null)
+      sPrefix = RegRep4NamespaceContext.getInstance ().getCustomPrefix (sNamespaceURI);
+
     if (sPrefix != null)
-      return sPrefix + ":" + sLocalName;
+      return sPrefix + ':' + sLocalName;
+
     return null;
   }
 }

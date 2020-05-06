@@ -16,6 +16,7 @@
 package eu.toop.edm;
 
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.math.BigDecimal;
 import java.time.Month;
@@ -25,8 +26,11 @@ import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
 
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.error.EToopDataElementResponseErrorCode;
 import eu.toop.edm.model.AddressPojo;
@@ -35,6 +39,7 @@ import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.model.DocumentReferencePojo;
 import eu.toop.edm.model.QualifiedRelationPojo;
+import eu.toop.edm.schematron.SchematronEDM2Validator;
 import eu.toop.edm.xml.cagv.CCAGV;
 import eu.toop.edm.xml.dcatap.CDCatAP;
 import eu.toop.regrep.ERegRepResponseStatus;
@@ -130,10 +135,19 @@ public final class DataResponseCreatorTest
                                                            .build ();
     assertNotNull (aResponse);
 
-    final String sXML = RegRep4Writer.queryResponse (CCAGV.XSDS).setFormattedOutput (true).getAsString (aResponse);
+    final RegRep4Writer <QueryResponse> aWriter = RegRep4Writer.queryResponse (CCAGV.XSDS).setFormattedOutput (true);
+    final String sXML = aWriter.getAsString (aResponse);
     assertNotNull (sXML);
 
     LOGGER.info (sXML);
+
+    {
+      // Schematron validation
+      final Document aDoc = aWriter.getAsDocument (aResponse);
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
   }
 
   @Test
@@ -166,10 +180,19 @@ public final class DataResponseCreatorTest
                                                             .build ();
     assertNotNull (aResponse);
 
-    final String sXML = RegRep4Writer.queryResponse (CDCatAP.XSDS).setFormattedOutput (true).getAsString (aResponse);
+    final RegRep4Writer <QueryResponse> aWriter = RegRep4Writer.queryResponse (CDCatAP.XSDS).setFormattedOutput (true);
+    final String sXML = aWriter.getAsString (aResponse);
     assertNotNull (sXML);
 
     if (false)
       LOGGER.info (sXML);
+
+    {
+      // Schematron validation
+      final Document aDoc = aWriter.getAsDocument (aResponse);
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
   }
 }
