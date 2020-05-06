@@ -138,7 +138,18 @@ public final class DataRequestCreatorTest
                                                                         .name (sConceptNS, "Concept-Name-2"))
                                                   .addChild (ConceptPojo.builder ()
                                                                         .id ("ConceptID-3")
-                                                                        .name (sConceptNS, "Concept-Name-3")));
+                                                                        .name (sConceptNS, "Concept-Name-3")
+                                                                        .addChild (ConceptPojo.builder ()
+                                                                                              .id ("ConceptID-31")
+                                                                                              .name (sConceptNS,
+                                                                                                     "Concept-Name-31"))
+                                                                        .addChild (ConceptPojo.builder ()
+                                                                                              .id ("ConceptID-32")
+                                                                                              .name (sConceptNS,
+                                                                                                     "Concept-Name-32")))
+                                                  .addChild (ConceptPojo.builder ()
+                                                                        .id ("ConceptID-4")
+                                                                        .name (sConceptNS, "Concept-Name-4")));
   }
 
   @Test
@@ -217,7 +228,8 @@ public final class DataRequestCreatorTest
     final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
     assertNotNull (sXML);
 
-    LOGGER.info (sXML);
+    if (false)
+      LOGGER.info (sXML);
   }
 
   @Test
@@ -229,7 +241,8 @@ public final class DataRequestCreatorTest
     final String sXML = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true).getAsString (aRequest);
     assertNotNull (sXML);
 
-    LOGGER.info (sXML);
+    if (false)
+      LOGGER.info (sXML);
   }
 
   @Test
