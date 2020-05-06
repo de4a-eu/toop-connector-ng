@@ -48,7 +48,7 @@ import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
 
 /**
- * Test class for class {@link DataRequestCreator}
+ * Test class for class {@link EDMRequestCreator}
  *
  * @author Philip Helger
  */
@@ -98,10 +98,10 @@ public final class DataRequestCreatorTest
   }
 
   @Nonnull
-  private static DataRequestCreator.Builder _builderConcept ()
+  private static EDMRequestCreator.Builder _builderConcept ()
   {
     final String sConceptNS = "http://toop.eu/registered-organization";
-    return DataRequestCreator.builderConcept ()
+    return EDMRequestCreator.builderConcept ()
                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
                              .procedure (Locale.UK, "GBM Procedure")
                              .fullfillingRequirement (null)
@@ -202,9 +202,9 @@ public final class DataRequestCreatorTest
   }
 
   @Nonnull
-  private static DataRequestCreator.Builder _builderDocument ()
+  private static EDMRequestCreator.Builder _builderDocument ()
   {
-    return DataRequestCreator.builderDocument ()
+    return EDMRequestCreator.builderDocument ()
                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
                              .procedure (Locale.UK, "GBM Procedure")
                              .fullfillingRequirement (null)

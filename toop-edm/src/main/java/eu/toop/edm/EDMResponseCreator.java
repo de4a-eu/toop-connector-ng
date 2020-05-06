@@ -51,7 +51,14 @@ import eu.toop.regrep.query.QueryResponse;
 import eu.toop.regrep.rim.RegistryObjectListType;
 import eu.toop.regrep.rim.RegistryObjectType;
 
-public class DataResponseCreator
+/**
+ * A simple builder to create valid TOOP Responses for both "concept queries"
+ * and for "document queries". See {@link #builderConcept()} and
+ * {@link #builderDocument()}.
+ *
+ * @author Philip Helger
+ */
+public class EDMResponseCreator
 {
   private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
                                                                                                   SlotIssueDateTime.NAME,
@@ -61,9 +68,9 @@ public class DataResponseCreator
   private final String m_sRequestID;
   private final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
 
-  private DataResponseCreator (@Nonnull final ERegRepResponseStatus eResponseStatus,
-                               @Nonnull @Nonempty final String sRequestID,
-                               @Nonnull final ICommonsList <ISlotProvider> aProviders)
+  private EDMResponseCreator (@Nonnull final ERegRepResponseStatus eResponseStatus,
+                              @Nonnull @Nonempty final String sRequestID,
+                              @Nonnull final ICommonsList <ISlotProvider> aProviders)
   {
     ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
@@ -282,23 +289,23 @@ public class DataResponseCreator
     {
       checkConsistency ();
 
-      final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
+      final ICommonsList <ISlotProvider> aSlots = new CommonsArrayList <> ();
       if (m_sSpecificationIdentifier != null)
-        x.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
+        aSlots.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
       if (m_aIssueDateTime != null)
-        x.add (new SlotIssueDateTime (m_aIssueDateTime));
+        aSlots.add (new SlotIssueDateTime (m_aIssueDateTime));
       if (m_aDataProvider != null)
-        x.add (new SlotDataProvider (m_aDataProvider));
+        aSlots.add (new SlotDataProvider (m_aDataProvider));
 
       // ConceptValues
       if (m_aConcept != null)
-        x.add (new SlotConceptValues (m_aConcept));
+        aSlots.add (new SlotConceptValues (m_aConcept));
 
-      // ConceptValues
+      // DocumentMetadata
       if (m_aDataset != null)
-        x.add (new SlotDocumentMetadata (m_aDataset));
+        aSlots.add (new SlotDocumentMetadata (m_aDataset));
 
-      return new DataResponseCreator (m_eResponseStatus, m_sRequestID, x).createQueryResponse ();
+      return new EDMResponseCreator (m_eResponseStatus, m_sRequestID, aSlots).createQueryResponse ();
     }
   }
 }

@@ -64,11 +64,12 @@ import eu.toop.regrep.rim.QueryType;
 
 /**
  * A simple builder to create valid TOOP Request for both "concept queries" and
- * for "document queries".
+ * for "document queries". See {@link #builderConcept()} and
+ * {@link #builderDocument()}.
  *
  * @author Philip Helger
  */
-public class DataRequestCreator
+public class EDMRequestCreator
 {
   private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
                                                                                                   SlotIssueDateTime.NAME,
@@ -89,8 +90,8 @@ public class DataRequestCreator
    * @param aProviders
    *        All slot providers to be added. May not be <code>null</code>.
    */
-  private DataRequestCreator (@Nonnull final EQueryDefinitionType eQueryDefinition,
-                              @Nonnull final ICommonsList <ISlotProvider> aProviders)
+  private EDMRequestCreator (@Nonnull final EQueryDefinitionType eQueryDefinition,
+                             @Nonnull final ICommonsList <ISlotProvider> aProviders)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
     ValueEnforcer.noNullValue (aProviders, "Providers");
@@ -399,41 +400,41 @@ public class DataRequestCreator
     {
       checkConsistency ();
 
-      final ICommonsList <ISlotProvider> x = new CommonsArrayList <> ();
+      final ICommonsList <ISlotProvider> aSlots = new CommonsArrayList <> ();
 
       // Top-level slots
       if (m_sSpecificationIdentifier != null)
-        x.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
+        aSlots.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
       if (m_aIssueDateTime != null)
-        x.add (new SlotIssueDateTime (m_aIssueDateTime));
+        aSlots.add (new SlotIssueDateTime (m_aIssueDateTime));
       if (m_aProcedure != null)
-        x.add (new SlotProcedure (m_aProcedure));
+        aSlots.add (new SlotProcedure (m_aProcedure));
       if (m_aFullfillingRequirement != null)
-        x.add (new SlotFullfillingRequirement (m_aFullfillingRequirement));
+        aSlots.add (new SlotFullfillingRequirement (m_aFullfillingRequirement));
       if (m_sConsentToken != null)
-        x.add (new SlotConsentToken (m_sConsentToken));
+        aSlots.add (new SlotConsentToken (m_sConsentToken));
       if (m_sDatasetIdentifier != null)
-        x.add (new SlotDatasetIdentifier (m_sDatasetIdentifier));
+        aSlots.add (new SlotDatasetIdentifier (m_sDatasetIdentifier));
       if (m_aDataConsumer != null)
-        x.add (new SlotDataConsumer (m_aDataConsumer));
+        aSlots.add (new SlotDataConsumer (m_aDataConsumer));
 
       // Commons Query slots
       if (m_aDataSubjectLegalPerson != null)
-        x.add (new SlotDataSubjectLegalPerson (m_aDataSubjectLegalPerson));
+        aSlots.add (new SlotDataSubjectLegalPerson (m_aDataSubjectLegalPerson));
       if (m_aDataSubjectNaturalPerson != null)
-        x.add (new SlotDataSubjectNaturalPerson (m_aDataSubjectNaturalPerson));
+        aSlots.add (new SlotDataSubjectNaturalPerson (m_aDataSubjectNaturalPerson));
       if (m_aAuthorizedRepresentative != null)
-        x.add (new SlotAuthorizedRepresentative (m_aAuthorizedRepresentative));
+        aSlots.add (new SlotAuthorizedRepresentative (m_aAuthorizedRepresentative));
 
       // Concept Query
       if (m_aConcept != null)
-        x.add (new SlotConceptRequestList (m_aConcept));
+        aSlots.add (new SlotConceptRequestList (m_aConcept));
 
       // Document Query
       if (m_aDistribution != null)
-        x.add (new SlotDistributionRequestList (m_aDistribution));
+        aSlots.add (new SlotDistributionRequestList (m_aDistribution));
 
-      return new DataRequestCreator (m_eQueryDefinition, x).createQueryRequest ();
+      return new EDMRequestCreator (m_eQueryDefinition, aSlots).createQueryRequest ();
     }
   }
 }

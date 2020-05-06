@@ -47,7 +47,7 @@ import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryResponse;
 
 /**
- * Test class for class {@link DataResponseCreator}
+ * Test class for class {@link EDMResponseCreator}
  *
  * @author Philip Helger
  */
@@ -56,9 +56,9 @@ public final class DataResponseCreatorTest
   private static final Logger LOGGER = LoggerFactory.getLogger (DataResponseCreatorTest.class);
 
   @Nonnull
-  public static DataResponseCreator.Builder _dataResponseConcept ()
+  public static EDMResponseCreator.Builder _dataResponseConcept ()
   {
-    return DataResponseCreator.builderConcept ()
+    return EDMResponseCreator.builderConcept ()
                               .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
                               .responseStatus (ERegRepResponseStatus.SUCCESS)
                               .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
@@ -66,9 +66,9 @@ public final class DataResponseCreatorTest
   }
 
   @Nonnull
-  public static DataResponseCreator.Builder _dataResponseDocument ()
+  public static EDMResponseCreator.Builder _dataResponseDocument ()
   {
-    return DataResponseCreator.builderDocument ()
+    return EDMResponseCreator.builderDocument ()
                               .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
                               .responseStatus (ERegRepResponseStatus.SUCCESS)
                               .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
