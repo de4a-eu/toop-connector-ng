@@ -22,7 +22,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 
-import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
+import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.xml.cccev.ConceptMarshaller;
 import eu.toop.regrep.ERegRepCollectionType;
 import eu.toop.regrep.RegRepHelper;
@@ -38,15 +38,15 @@ public class SlotConceptValues implements ISlotProvider
 {
   public static final String NAME = "ConceptValues";
 
-  private final ICommonsList <CCCEVConceptType> m_aConcepts = new CommonsArrayList <> ();
+  private final ICommonsList <ConceptPojo> m_aConcepts = new CommonsArrayList <> ();
 
-  public SlotConceptValues (@Nonnull final CCCEVConceptType... aConcepts)
+  public SlotConceptValues (@Nonnull final ConceptPojo... aConcepts)
   {
     ValueEnforcer.noNullValue (aConcepts, "Concepts");
     m_aConcepts.addAll (aConcepts);
   }
 
-  public SlotConceptValues (@Nonnull final Iterable <CCCEVConceptType> aConcepts)
+  public SlotConceptValues (@Nonnull final Iterable <ConceptPojo> aConcepts)
   {
     ValueEnforcer.noNullValue (aConcepts, "Concepts");
     m_aConcepts.addAll (aConcepts);
@@ -65,7 +65,7 @@ public class SlotConceptValues implements ISlotProvider
     final ConceptMarshaller m = new ConceptMarshaller ();
     return new SlotBuilder ().setName (NAME)
                              .setValue (ERegRepCollectionType.SET,
-                                        m_aConcepts.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x)
+                                        m_aConcepts.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x.getAsCCCEVConcept ())
                                                                                                       .getDocumentElement ())))
                              .build ();
   }

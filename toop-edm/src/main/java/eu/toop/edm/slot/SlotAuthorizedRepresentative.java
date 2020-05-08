@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.xml.cv.PersonMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
@@ -34,9 +34,9 @@ public class SlotAuthorizedRepresentative implements ISlotProvider
 {
   public static final String NAME = "AuthorizedRepresentative";
 
-  private final CorePersonType m_aNaturalPerson;
+  private final PersonPojo m_aNaturalPerson;
 
-  public SlotAuthorizedRepresentative (@Nonnull final CorePersonType aNaturalPerson)
+  public SlotAuthorizedRepresentative (@Nonnull final PersonPojo aNaturalPerson)
   {
     ValueEnforcer.notNull (aNaturalPerson, "NaturalPerson");
     m_aNaturalPerson = aNaturalPerson;
@@ -53,7 +53,8 @@ public class SlotAuthorizedRepresentative implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson).getDocumentElement ())
+                             .setValue (new PersonMarshaller ().getAsDocument (m_aNaturalPerson.getAsCorePerson ())
+                                                               .getDocumentElement ())
                              .build ();
   }
 }

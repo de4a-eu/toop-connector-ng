@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
+import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.xml.cv.BusinessMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
@@ -34,9 +34,9 @@ public class SlotDataSubjectLegalPerson implements ISlotProvider
 {
   public static final String NAME = "LegalPerson";
 
-  private final CoreBusinessType m_aLegalPerson;
+  private final BusinessPojo m_aLegalPerson;
 
-  public SlotDataSubjectLegalPerson (@Nonnull final CoreBusinessType aLegalPerson)
+  public SlotDataSubjectLegalPerson (@Nonnull final BusinessPojo aLegalPerson)
   {
     ValueEnforcer.notNull (aLegalPerson, "LegalPerson");
     m_aLegalPerson = aLegalPerson;
@@ -53,7 +53,8 @@ public class SlotDataSubjectLegalPerson implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new BusinessMarshaller ().getAsDocument (m_aLegalPerson).getDocumentElement ())
+                             .setValue (new BusinessMarshaller ().getAsDocument (m_aLegalPerson.getAsCoreBusiness ())
+                                                                 .getDocumentElement ())
                              .build ();
   }
 }

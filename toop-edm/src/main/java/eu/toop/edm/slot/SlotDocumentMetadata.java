@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.xml.dcatap.DatasetMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
@@ -34,9 +34,9 @@ public class SlotDocumentMetadata implements ISlotProvider
 {
   public static final String NAME = "DocumentMetadata";
 
-  private final DCatAPDatasetType m_aDataset;
+  private final DatasetPojo m_aDataset;
 
-  public SlotDocumentMetadata (@Nonnull final DCatAPDatasetType aDataset)
+  public SlotDocumentMetadata (@Nonnull final DatasetPojo aDataset)
   {
     ValueEnforcer.notNull (aDataset, "Dataset");
     m_aDataset = aDataset;
@@ -53,7 +53,8 @@ public class SlotDocumentMetadata implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new DatasetMarshaller ().getAsDocument (m_aDataset).getDocumentElement ())
+                             .setValue (new DatasetMarshaller ().getAsDocument (m_aDataset.getAsDataset ())
+                                                                .getDocumentElement ())
                              .build ();
   }
 }

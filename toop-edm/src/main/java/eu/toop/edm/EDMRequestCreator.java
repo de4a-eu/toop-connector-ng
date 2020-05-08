@@ -160,14 +160,14 @@ public class EDMRequestCreator
     private LocalDateTime m_aIssueDateTime;
     private InternationalStringType m_aProcedure;
     private CCCEVRequirementType m_aFullfillingRequirement;
-    private AgentType m_aDataConsumer;
+    private AgentPojo m_aDataConsumer;
     private String m_sConsentToken;
     private String m_sDatasetIdentifier;
-    private CoreBusinessType m_aDataSubjectLegalPerson;
-    private CorePersonType m_aDataSubjectNaturalPerson;
-    private CorePersonType m_aAuthorizedRepresentative;
-    private CCCEVConceptType m_aConcept;
-    private DCatAPDistributionType m_aDistribution;
+    private BusinessPojo m_aDataSubjectLegalPerson;
+    private PersonPojo m_aDataSubjectNaturalPerson;
+    private PersonPojo m_aAuthorizedRepresentative;
+    private ConceptPojo m_aConcept;
+    private DistributionPojo m_aDistribution;
 
     public Builder ()
     {}
@@ -254,14 +254,14 @@ public class EDMRequestCreator
     @Nonnull
     public Builder dataConsumer (@Nullable final AgentPojo a)
     {
-      return dataConsumer (a == null ? null : a.getAsAgent ());
+      m_aDataConsumer = a;
+      return this;
     }
 
     @Nonnull
     public Builder dataConsumer (@Nullable final AgentType a)
     {
-      m_aDataConsumer = a;
-      return this;
+      return dataConsumer (a == null ? null : AgentPojo.builder (a));
     }
 
     @Nonnull
@@ -273,15 +273,15 @@ public class EDMRequestCreator
     @Nonnull
     public Builder dataSubject (@Nullable final BusinessPojo a)
     {
-      return dataSubject (a == null ? null : a.getAsCoreBusiness ());
+      m_aDataSubjectLegalPerson = a;
+      m_aDataSubjectNaturalPerson = null;
+      return this;
     }
 
     @Nonnull
     public Builder dataSubject (@Nullable final CoreBusinessType a)
     {
-      m_aDataSubjectLegalPerson = a;
-      m_aDataSubjectNaturalPerson = null;
-      return this;
+      return dataSubject (a == null ? null : BusinessPojo.builder (a));
     }
 
     @Nonnull
@@ -293,15 +293,15 @@ public class EDMRequestCreator
     @Nonnull
     public Builder dataSubject (@Nullable final PersonPojo a)
     {
-      return dataSubject (a == null ? null : a.getAsCorePerson ());
+      m_aDataSubjectLegalPerson = null;
+      m_aDataSubjectNaturalPerson = a;
+      return this;
     }
 
     @Nonnull
     public Builder dataSubject (@Nullable final CorePersonType a)
     {
-      m_aDataSubjectLegalPerson = null;
-      m_aDataSubjectNaturalPerson = a;
-      return this;
+      return dataSubject (a == null ? null : PersonPojo.builder (a));
     }
 
     @Nonnull
@@ -313,14 +313,14 @@ public class EDMRequestCreator
     @Nonnull
     public Builder authorizedRepresentative (@Nullable final PersonPojo a)
     {
-      return authorizedRepresentative (a == null ? null : a.getAsCorePerson ());
+      m_aAuthorizedRepresentative = a;
+      return this;
     }
 
     @Nonnull
     public Builder authorizedRepresentative (@Nullable final CorePersonType a)
     {
-      m_aAuthorizedRepresentative = a;
-      return this;
+      return authorizedRepresentative (a == null ? null : PersonPojo.builder (a));
     }
 
     @Nonnull
@@ -332,14 +332,14 @@ public class EDMRequestCreator
     @Nonnull
     public Builder concept (@Nullable final ConceptPojo a)
     {
-      return concept (a == null ? null : a.getAsCCCEVConcept ());
+      m_aConcept = a;
+      return this;
     }
 
     @Nonnull
     public Builder concept (@Nullable final CCCEVConceptType a)
     {
-      m_aConcept = a;
-      return this;
+      return concept (a == null ? null : ConceptPojo.builder (a));
     }
 
     @Nonnull
@@ -351,14 +351,14 @@ public class EDMRequestCreator
     @Nonnull
     public Builder distribution (@Nullable final DistributionPojo a)
     {
-      return distribution (a == null ? null : a.getAsDistribution ());
+      m_aDistribution = a;
+      return this;
     }
 
     @Nonnull
     public Builder distribution (@Nullable final DCatAPDistributionType a)
     {
-      m_aDistribution = a;
-      return this;
+      return distribution (a == null ? null : DistributionPojo.builder (a));
     }
 
     public void checkConsistency ()

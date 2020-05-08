@@ -145,9 +145,9 @@ public class EDMResponseCreator
     private String m_sRequestID;
     private String m_sSpecificationIdentifier;
     private LocalDateTime m_aIssueDateTime;
-    private AgentType m_aDataProvider;
-    private CCCEVConceptType m_aConcept;
-    private DCatAPDatasetType m_aDataset;
+    private AgentPojo m_aDataProvider;
+    private ConceptPojo m_aConcept;
+    private DatasetPojo m_aDataset;
 
     public Builder ()
     {}
@@ -202,14 +202,14 @@ public class EDMResponseCreator
     @Nonnull
     public Builder dataProvider (@Nullable final AgentPojo a)
     {
-      return dataProvider (a == null ? null : a.getAsAgent ());
+      m_aDataProvider = a;
+      return this;
     }
 
     @Nonnull
     public Builder dataProvider (@Nullable final AgentType a)
     {
-      m_aDataProvider = a;
-      return this;
+      return dataProvider (a == null ? null : AgentPojo.builder (a));
     }
 
     @Nonnull
@@ -221,14 +221,14 @@ public class EDMResponseCreator
     @Nonnull
     public Builder concept (@Nullable final ConceptPojo a)
     {
-      return concept (a == null ? null : a.getAsCCCEVConcept ());
+      m_aConcept = a;
+      return this;
     }
 
     @Nonnull
     public Builder concept (@Nullable final CCCEVConceptType a)
     {
-      m_aConcept = a;
-      return this;
+      return concept (a == null ? null : ConceptPojo.builder (a));
     }
 
     @Nonnull
@@ -240,14 +240,14 @@ public class EDMResponseCreator
     @Nonnull
     public Builder dataset (@Nullable final DatasetPojo a)
     {
-      return dataset (a == null ? null : a.getAsDataset ());
+      m_aDataset = a;
+      return this;
     }
 
     @Nonnull
     public Builder dataset (@Nullable final DCatAPDatasetType a)
     {
-      m_aDataset = a;
-      return this;
+      return dataset (a == null ? null : DatasetPojo.builder (a));
     }
 
     public void checkConsistency ()

@@ -22,7 +22,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 
-import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
+import eu.toop.edm.model.DistributionPojo;
 import eu.toop.edm.xml.dcatap.DistributionMarshaller;
 import eu.toop.regrep.ERegRepCollectionType;
 import eu.toop.regrep.RegRepHelper;
@@ -38,15 +38,15 @@ public class SlotDistributionRequestList implements ISlotProvider
 {
   public static final String NAME = "DistributionRequestList";
 
-  private final ICommonsList <DCatAPDistributionType> m_aDistributions = new CommonsArrayList <> ();
+  private final ICommonsList <DistributionPojo> m_aDistributions = new CommonsArrayList <> ();
 
-  public SlotDistributionRequestList (@Nonnull final DCatAPDistributionType... aDistributions)
+  public SlotDistributionRequestList (@Nonnull final DistributionPojo... aDistributions)
   {
     ValueEnforcer.noNullValue (aDistributions, "Distributions");
     m_aDistributions.addAll (aDistributions);
   }
 
-  public SlotDistributionRequestList (@Nonnull final Iterable <DCatAPDistributionType> aDistributions)
+  public SlotDistributionRequestList (@Nonnull final Iterable <DistributionPojo> aDistributions)
   {
     ValueEnforcer.noNullValue (aDistributions, "Distributions");
     m_aDistributions.addAll (aDistributions);
@@ -65,7 +65,7 @@ public class SlotDistributionRequestList implements ISlotProvider
     final DistributionMarshaller m = new DistributionMarshaller ();
     return new SlotBuilder ().setName (NAME)
                              .setValue (ERegRepCollectionType.SORTED_SET,
-                                        m_aDistributions.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x)
+                                        m_aDistributions.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x.getAsDistribution ())
                                                                                                            .getDocumentElement ())))
                              .build ();
   }

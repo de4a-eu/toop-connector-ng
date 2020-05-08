@@ -20,7 +20,7 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
@@ -34,9 +34,9 @@ public class SlotDataConsumer implements ISlotProvider
 {
   public static final String NAME = "DataConsumer";
 
-  private final AgentType m_aAgent;
+  private final AgentPojo m_aAgent;
 
-  public SlotDataConsumer (@Nonnull final AgentType aAgent)
+  public SlotDataConsumer (@Nonnull final AgentPojo aAgent)
   {
     ValueEnforcer.notNull (aAgent, "Agent");
     m_aAgent = aAgent;
@@ -53,7 +53,8 @@ public class SlotDataConsumer implements ISlotProvider
   public SlotType createSlot ()
   {
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new AgentMarshaller ().getAsDocument (m_aAgent).getDocumentElement ())
+                             .setValue (new AgentMarshaller ().getAsDocument (m_aAgent.getAsAgent ())
+                                                              .getDocumentElement ())
                              .build ();
   }
 }
