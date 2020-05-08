@@ -44,6 +44,30 @@ public class AgentPojo
     m_aAddress = aAddress;
   }
 
+  @Nullable
+  public String getID ()
+  {
+    return m_sID;
+  }
+
+  @Nullable
+  public String getIDSchemeID ()
+  {
+    return m_sIDSchemeID;
+  }
+
+  @Nullable
+  public String getName ()
+  {
+    return m_sName;
+  }
+
+  @Nullable
+  public AddressPojo getAddress ()
+  {
+    return m_aAddress;
+  }
+
   @Nonnull
   public AgentType getAsAgent ()
   {

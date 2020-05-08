@@ -58,36 +58,55 @@ public class AddressPojo
     m_sCountryCode = sCountryCode;
   }
 
+  /**
+   * @return The full address line. May be <code>null</code>.
+   */
   @Nullable
   public String getFullAddress ()
   {
     return m_sFullAddress;
   }
 
+  /**
+   * @return The street name of the address. May be <code>null</code>.
+   */
   @Nullable
   public String getStreetName ()
   {
     return m_sStreetName;
   }
 
+  /**
+   * @return The building number of the address. May be <code>null</code>.
+   */
   @Nullable
   public String getBuildingNumber ()
   {
     return m_sBuildingNumber;
   }
 
+  /**
+   * @return The town or city name of the address. May be <code>null</code>.
+   */
   @Nullable
   public String getTown ()
   {
     return m_sTown;
   }
 
+  /**
+   * @return The postal code of the address. May be <code>null</code>.
+   */
   @Nullable
   public String getPostalCode ()
   {
     return m_sPostalCode;
   }
 
+  /**
+   * @return The country code of the address. May be <code>null</code>. Note:
+   *         that is not checked against any rules.
+   */
   @Nullable
   public String getCountryCode ()
   {
