@@ -21,6 +21,8 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.mock.CommonsTestHelper;
+
 import eu.toop.edm.jaxb.dcatap.DCatAPRelationshipType;
 import eu.toop.edm.xml.dcatap.RelationshipMarshaller;
 
@@ -50,6 +52,9 @@ public final class QualifiedRelationPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aQualifiedRelation));
     LOGGER.info (m.getAsString (aQualifiedRelation));
+
+    final QualifiedRelationPojo y = QualifiedRelationPojo.builder (aQualifiedRelation).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -65,5 +70,8 @@ public final class QualifiedRelationPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aQualifiedRelation));
     LOGGER.info (m.getAsString (aQualifiedRelation));
+
+    final QualifiedRelationPojo y = QualifiedRelationPojo.builder (aQualifiedRelation).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 }

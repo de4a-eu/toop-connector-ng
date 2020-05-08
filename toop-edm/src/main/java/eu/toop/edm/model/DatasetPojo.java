@@ -47,7 +47,7 @@ public class DatasetPojo
   private final LocalDateTime m_aLastModifiedDT;
   private final LocalDate m_aValidFrom;
   private final LocalDate m_aValidTo;
-  private final ICommonsList <DCatAPRelationshipType> m_aQualifiedRelations = new CommonsArrayList <> ();
+  private final ICommonsList <QualifiedRelationPojo> m_aQualifiedRelations = new CommonsArrayList <> ();
 
   public DatasetPojo (@Nonnull @Nonempty final ICommonsList <String> aDescriptions,
                       @Nonnull @Nonempty final ICommonsList <String> aTitles,
@@ -59,7 +59,7 @@ public class DatasetPojo
                       @Nullable final LocalDateTime aLastModifiedDT,
                       @Nullable final LocalDate aValidFrom,
                       @Nullable final LocalDate aValidTo,
-                      @Nullable final ICommonsList <DCatAPRelationshipType> aQualifiedRelations)
+                      @Nullable final ICommonsList <QualifiedRelationPojo> aQualifiedRelations)
   {
     ValueEnforcer.notEmptyNoNullValue (aDescriptions, "Descriptions");
     ValueEnforcer.notEmptyNoNullValue (aTitles, "Titles");
@@ -110,8 +110,8 @@ public class DatasetPojo
         aPeriodOfType.addEndDate (PDTXMLConverter.getXMLCalendarDate (m_aValidTo));
       ret.addTemporal (aPeriodOfType);
     }
-    for (final DCatAPRelationshipType aItem : m_aQualifiedRelations)
-      ret.addQualifiedRelation (aItem);
+    for (final QualifiedRelationPojo aItem : m_aQualifiedRelations)
+      ret.addQualifiedRelation (aItem.getAsRelationship ());
     return ret;
   }
 
@@ -133,7 +133,7 @@ public class DatasetPojo
     private LocalDateTime m_aLastModifiedDT;
     private LocalDate m_aValidFrom;
     private LocalDate m_aValidTo;
-    private final ICommonsList <DCatAPRelationshipType> m_aQualifiedRelations = new CommonsArrayList <> ();
+    private final ICommonsList <QualifiedRelationPojo> m_aQualifiedRelations = new CommonsArrayList <> ();
 
     public Builder ()
     {}
@@ -328,15 +328,15 @@ public class DatasetPojo
     @Nonnull
     public Builder addQualifiedRelation (@Nullable final QualifiedRelationPojo a)
     {
-      return addQualifiedRelation (a == null ? null : a.getAsRelationship ());
+      if (a != null)
+        m_aQualifiedRelations.add (a);
+      return this;
     }
 
     @Nonnull
     public Builder addQualifiedRelation (@Nullable final DCatAPRelationshipType a)
     {
-      if (a != null)
-        m_aQualifiedRelations.add (a);
-      return this;
+      return addQualifiedRelation (a == null ? null : QualifiedRelationPojo.builder (a));
     }
 
     @Nonnull
@@ -348,12 +348,6 @@ public class DatasetPojo
     @Nonnull
     public Builder qualifiedRelation (@Nullable final QualifiedRelationPojo a)
     {
-      return qualifiedRelation (a == null ? null : a.getAsRelationship ());
-    }
-
-    @Nonnull
-    public Builder qualifiedRelation (@Nullable final DCatAPRelationshipType a)
-    {
       if (a != null)
         m_aQualifiedRelations.set (a);
       else
@@ -362,14 +356,20 @@ public class DatasetPojo
     }
 
     @Nonnull
-    public Builder qualifiedRelations (@Nullable final DCatAPRelationshipType... a)
+    public Builder qualifiedRelation (@Nullable final DCatAPRelationshipType a)
+    {
+      return qualifiedRelation (a == null ? null : QualifiedRelationPojo.builder (a));
+    }
+
+    @Nonnull
+    public Builder qualifiedRelations (@Nullable final QualifiedRelationPojo... a)
     {
       m_aQualifiedRelations.setAll (a);
       return this;
     }
 
     @Nonnull
-    public Builder qualifiedRelations (@Nullable final Iterable <? extends DCatAPRelationshipType> a)
+    public Builder qualifiedRelations (@Nullable final Iterable <? extends QualifiedRelationPojo> a)
     {
       m_aQualifiedRelations.setAll (a);
       return this;

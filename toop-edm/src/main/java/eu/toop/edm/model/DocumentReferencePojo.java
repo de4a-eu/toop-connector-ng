@@ -25,12 +25,20 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.jaxb.cccev.CCCEVDocumentReferenceType;
 import eu.toop.edm.jaxb.cv.cbc.DescriptionType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
 
+/**
+ * Represents a "Reference to a Document"
+ *
+ * @author Philip Helger
+ */
 public class DocumentReferencePojo
 {
   private final String m_sDocumentURI;
@@ -98,6 +106,40 @@ public class DocumentReferencePojo
     if (StringHelper.hasText (m_sLocaleCode))
       ret.setLocaleCode (m_sLocaleCode);
     return ret;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final DocumentReferencePojo rhs = (DocumentReferencePojo) o;
+    return EqualsHelper.equals (m_sDocumentURI, rhs.m_sDocumentURI) &&
+           EqualsHelper.equals (m_aDocumentDescriptions, rhs.m_aDocumentDescriptions) &&
+           EqualsHelper.equals (m_sDocumentType, rhs.m_sDocumentType) &&
+           EqualsHelper.equals (m_sLocaleCode, rhs.m_sLocaleCode);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_sDocumentURI)
+                                       .append (m_aDocumentDescriptions)
+                                       .append (m_sDocumentType)
+                                       .append (m_sLocaleCode)
+                                       .getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("DocumentURI", m_sDocumentURI)
+                                       .append ("DocumentDescriptions", m_aDocumentDescriptions)
+                                       .append ("DocumentType", m_sDocumentType)
+                                       .append ("LocaleCode", m_sLocaleCode)
+                                       .getToString ();
   }
 
   @Nonnull

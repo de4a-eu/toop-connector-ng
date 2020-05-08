@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.mock.CommonsTestHelper;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.xml.cv.PersonMarshaller;
@@ -46,6 +47,9 @@ public final class PersonPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aPerson));
     LOGGER.info (m.getAsString (aPerson));
+
+    final PersonPojo y = PersonPojo.builder (aPerson).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test

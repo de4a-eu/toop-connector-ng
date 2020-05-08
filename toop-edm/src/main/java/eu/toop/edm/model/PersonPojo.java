@@ -19,9 +19,13 @@ import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.datetime.util.PDTXMLConverter;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CoreLocationType;
@@ -33,6 +37,11 @@ import eu.toop.edm.jaxb.w3.cv.bc.PersonGenderCodeType;
 import eu.toop.edm.jaxb.w3.cv.bc.PersonGivenNameType;
 import eu.toop.edm.jaxb.w3.cv.bc.PersonIDType;
 
+/**
+ * Representation of a "Person"
+ *
+ * @author Philip Helger
+ */
 public class PersonPojo
 {
   private final String m_sID;
@@ -70,6 +79,60 @@ public class PersonPojo
     m_aBirthDate = aBirthDate;
     m_sBirthTown = sBirthTown;
     m_aAddress = aAddress;
+  }
+
+  @Nonnull
+  public final String getID ()
+  {
+    return m_sID;
+  }
+
+  @Nonnull
+  public final String getIDSchemeID ()
+  {
+    return m_sIDSchemeID;
+  }
+
+  @Nonnull
+  public final String getFamilyName ()
+  {
+    return m_sFamilyName;
+  }
+
+  @Nonnull
+  public final String getGivenName ()
+  {
+    return m_sGivenName;
+  }
+
+  @Nullable
+  public final String getGenderCode ()
+  {
+    return m_sGenderCode;
+  }
+
+  @Nullable
+  public final String getBirthName ()
+  {
+    return m_sBirthName;
+  }
+
+  @Nonnull
+  public final LocalDate getBirthDate ()
+  {
+    return m_aBirthDate;
+  }
+
+  @Nullable
+  public final String getBirthTown ()
+  {
+    return m_sBirthTown;
+  }
+
+  @Nullable
+  public final AddressPojo getAddress ()
+  {
+    return m_aAddress;
   }
 
   @Nonnull
@@ -126,10 +189,89 @@ public class PersonPojo
     return ret;
   }
 
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final PersonPojo rhs = (PersonPojo) o;
+    return EqualsHelper.equals (m_sID, rhs.m_sID) &&
+           EqualsHelper.equals (m_sIDSchemeID, rhs.m_sIDSchemeID) &&
+           EqualsHelper.equals (m_sFamilyName, rhs.m_sFamilyName) &&
+           EqualsHelper.equals (m_sGivenName, rhs.m_sGivenName) &&
+           EqualsHelper.equals (m_sGenderCode, rhs.m_sGenderCode) &&
+           EqualsHelper.equals (m_sBirthName, rhs.m_sBirthName) &&
+           EqualsHelper.equals (m_aBirthDate, rhs.m_aBirthDate) &&
+           EqualsHelper.equals (m_sBirthTown, rhs.m_sBirthTown) &&
+           EqualsHelper.equals (m_aAddress, rhs.m_aAddress);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_sID)
+                                       .append (m_sIDSchemeID)
+                                       .append (m_sFamilyName)
+                                       .append (m_sGivenName)
+                                       .append (m_sGenderCode)
+                                       .append (m_sBirthName)
+                                       .append (m_aBirthDate)
+                                       .append (m_sBirthTown)
+                                       .append (m_aAddress)
+                                       .getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("ID", m_sID)
+                                       .append ("IDSchemeID", m_sIDSchemeID)
+                                       .append ("FamilyName", m_sFamilyName)
+                                       .append ("GivenName", m_sGivenName)
+                                       .append ("GenderCode", m_sGenderCode)
+                                       .append ("BirthName", m_sBirthName)
+                                       .append ("BirthDate", m_aBirthDate)
+                                       .append ("BirthTown", m_sBirthTown)
+                                       .append ("Address", m_aAddress)
+                                       .getToString ();
+  }
+
   @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
+  }
+
+  @Nonnull
+  public static Builder builder (@Nullable final CorePersonType a)
+  {
+    final Builder ret = new Builder ();
+    if (a != null)
+    {
+      if (a.hasPersonIDEntries ())
+        ret.id (a.getPersonIDAtIndex (0).getValue ()).idSchemeID (a.getPersonIDAtIndex (0).getSchemeID ());
+      if (a.hasPersonFamilyNameEntries ())
+        ret.familyName (a.getPersonFamilyNameAtIndex (0).getValue ());
+      if (a.hasPersonGivenNameEntries ())
+        ret.givenName (a.getPersonGivenNameAtIndex (0).getValue ());
+      if (a.hasPersonGenderCodeEntries ())
+        ret.genderCode (a.getPersonGenderCodeAtIndex (0).getValue ());
+      if (a.hasPersonBirthNameEntries ())
+        ret.birthName (a.getPersonBirthNameAtIndex (0).getValue ());
+      if (a.hasPersonBirthDateEntries ())
+        ret.birthDate (a.getPersonBirthDateAtIndex (0).getValue ());
+      if (a.hasPersonPlaceOfBirthCoreLocationEntries ())
+      {
+        final CoreLocationType aLoc = a.getPersonPlaceOfBirthCoreLocationAtIndex (0);
+        if (aLoc.hasLocationCoreAddressEntries ())
+          ret.birthTown (AddressPojo.builder (aLoc.getLocationCoreAddressAtIndex (0)).build ().getTown ());
+      }
+      if (a.hasPersonCoreAddressEntries ())
+        ret.address (AddressPojo.builder (a.getPersonCoreAddressAtIndex (0)));
+    }
+    return ret;
   }
 
   public static class Builder
@@ -193,6 +335,12 @@ public class PersonPojo
     {
       m_sBirthName = s;
       return this;
+    }
+
+    @Nonnull
+    public Builder birthDate (@Nullable final XMLGregorianCalendar a)
+    {
+      return birthDate (PDTXMLConverter.getLocalDate (a));
     }
 
     @Nonnull

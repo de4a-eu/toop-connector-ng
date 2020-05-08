@@ -16,10 +16,18 @@
 package eu.toop.edm.model;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
 
-public enum EDistributionFormat
+/**
+ * Defines the underlying distribution format.
+ *
+ * @author Philip Helger
+ */
+public enum EDistributionFormat implements IHasID <String>
 {
   STRUCTURED ("STRUCTURED"),
   UNSTRUCTURED ("UNSTRUCTURED");
@@ -33,8 +41,14 @@ public enum EDistributionFormat
 
   @Nonnull
   @Nonempty
-  public String getValue ()
+  public String getID ()
   {
     return m_sValue;
+  }
+
+  @Nullable
+  public static EDistributionFormat getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EDistributionFormat.class, sID);
   }
 }

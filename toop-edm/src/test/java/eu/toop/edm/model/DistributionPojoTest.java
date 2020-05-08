@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.mime.CMimeType;
+import com.helger.commons.mock.CommonsTestHelper;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 import eu.toop.edm.xml.dcatap.DistributionMarshaller;
@@ -42,13 +43,16 @@ public final class DistributionPojoTest
                                                .format (EDistributionFormat.STRUCTURED)
                                                .mediaType (CMimeType.TEXT_PLAIN)
                                                .build ();
-    final DCatAPDistributionType aAgent = x.getAsDistribution ();
-    assertNotNull (aAgent);
+    final DCatAPDistributionType aDist = x.getAsDistribution ();
+    assertNotNull (aDist);
 
     final DistributionMarshaller m = new DistributionMarshaller ();
     m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aAgent));
-    LOGGER.info (m.getAsString (aAgent));
+    assertNotNull (m.getAsDocument (aDist));
+    LOGGER.info (m.getAsString (aDist));
+
+    final DistributionPojo y = DistributionPojo.builder (aDist).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -57,12 +61,15 @@ public final class DistributionPojoTest
     final DistributionPojo x = DistributionPojo.builder ().build ();
     assertNotNull (x);
 
-    final DCatAPDistributionType aAgent = x.getAsDistribution ();
-    assertNotNull (aAgent);
+    final DCatAPDistributionType aDist = x.getAsDistribution ();
+    assertNotNull (aDist);
 
     final DistributionMarshaller m = new DistributionMarshaller ();
     m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aAgent));
-    LOGGER.info (m.getAsString (aAgent));
+    assertNotNull (m.getAsDocument (aDist));
+    LOGGER.info (m.getAsString (aDist));
+
+    final DistributionPojo y = DistributionPojo.builder (aDist).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 }

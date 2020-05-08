@@ -44,13 +44,13 @@ public class QuantityPojo
   }
 
   @Nullable
-  public BigDecimal getValue ()
+  public final BigDecimal getValue ()
   {
     return m_aValue;
   }
 
   @Nullable
-  public String getUnitCode ()
+  public final String getUnitCode ()
   {
     return m_sUnitCode;
   }

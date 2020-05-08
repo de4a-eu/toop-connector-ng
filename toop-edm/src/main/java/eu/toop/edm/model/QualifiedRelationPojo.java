@@ -15,18 +15,31 @@
  */
 package eu.toop.edm.model;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.jaxb.cccev.CCCEVReferenceFrameworkType;
+import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcatap.DCatAPRelationshipType;
 
+/**
+ * Represents a qualified relation.
+ *
+ * @author Philip Helger
+ */
 public class QualifiedRelationPojo
 {
   private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
@@ -48,6 +61,48 @@ public class QualifiedRelationPojo
   }
 
   @Nonnull
+  @ReturnsMutableObject
+  public final List <String> descriptions ()
+  {
+    return m_aDescriptions;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public final List <String> getAllDescriptions ()
+  {
+    return m_aDescriptions.getClone ();
+  }
+
+  @Nonnull
+  @ReturnsMutableObject
+  public final List <String> titles ()
+  {
+    return m_aTitles;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public final List <String> getAllTitles ()
+  {
+    return m_aTitles.getClone ();
+  }
+
+  @Nonnull
+  @ReturnsMutableObject
+  public final List <String> ids ()
+  {
+    return m_aIDs;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public final List <String> getAllIDs ()
+  {
+    return m_aIDs.getClone ();
+  }
+
+  @Nonnull
   public DCatAPRelationshipType getAsRelationship ()
   {
     final DCatAPRelationshipType ret = new DCatAPRelationshipType ();
@@ -62,10 +117,54 @@ public class QualifiedRelationPojo
     return ret;
   }
 
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final QualifiedRelationPojo rhs = (QualifiedRelationPojo) o;
+    return EqualsHelper.equals (m_aDescriptions, rhs.m_aDescriptions) &&
+           EqualsHelper.equals (m_aTitles, rhs.m_aTitles) &&
+           EqualsHelper.equals (m_aIDs, rhs.m_aIDs);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aDescriptions).append (m_aTitles).append (m_aIDs).getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("Descriptions", m_aDescriptions)
+                                       .append ("Titles", m_aTitles)
+                                       .append ("IDs", m_aIDs)
+                                       .getToString ();
+  }
+
   @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
+  }
+
+  @Nonnull
+  public static Builder builder (@Nullable final DCatAPRelationshipType a)
+  {
+    final Builder ret = new Builder ();
+    if (a != null && a.hasRelationEntries ())
+    {
+      final Object r = a.getRelationAtIndex (0);
+      if (r instanceof DCatAPDatasetType)
+      {
+        final DCatAPDatasetType rf = (DCatAPDatasetType) r;
+        ret.descriptions (rf.getDescription ()).titles (rf.getTitle ()).ids (rf.getIdentifier ());
+      }
+    }
+    return ret;
   }
 
   public static class Builder
