@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.namespace.QName;
 
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.string.StringHelper;
@@ -53,6 +55,20 @@ public class ConceptPojo
     m_aValue = aValue;
     if (aChildren != null)
       m_aChildren.addAll (aChildren);
+  }
+
+  @Nonnull
+  @ReturnsMutableObject
+  public final ICommonsList <ConceptPojo> children ()
+  {
+    return m_aChildren;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public final ICommonsList <ConceptPojo> getAllChildren ()
+  {
+    return m_aChildren.getClone ();
   }
 
   public void visitRecursive (@Nonnull final Consumer <? super ConceptPojo> aConsumer)
