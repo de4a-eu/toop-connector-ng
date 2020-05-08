@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 import java.util.List;
 
@@ -429,7 +430,7 @@ public class ConceptValuePojo
     @Nonnull
     public Builder time (@Nullable final LocalTime a)
     {
-      m_aTime = a;
+      m_aTime = a == null ? null : a.truncatedTo (ChronoUnit.MILLIS);
       return this;
     }
 

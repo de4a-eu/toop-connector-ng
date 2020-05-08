@@ -17,6 +17,7 @@ package eu.toop.edm.model;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -486,7 +487,7 @@ public class DatasetPojo
     @Nonnull
     public Builder issued (@Nullable final LocalDateTime a)
     {
-      m_aIssuedDT = a;
+      m_aIssuedDT = a == null ? null : a.truncatedTo (ChronoUnit.MILLIS);
       return this;
     }
 
@@ -512,7 +513,7 @@ public class DatasetPojo
     @Nonnull
     public Builder lastModified (@Nullable final LocalDateTime a)
     {
-      m_aLastModifiedDT = a;
+      m_aLastModifiedDT = a == null ? null : a.truncatedTo (ChronoUnit.MILLIS);
       return this;
     }
 
