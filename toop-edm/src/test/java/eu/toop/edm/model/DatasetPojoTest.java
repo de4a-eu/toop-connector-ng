@@ -70,6 +70,7 @@ public final class DatasetPojoTest
     LOGGER.info (m.getAsString (aDataset));
 
     final DatasetPojo y = DatasetPojo.builder (aDataset).build ();
+    LOGGER.info ("\n" + x.toString () + "\n" + y.toString ());
     CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
