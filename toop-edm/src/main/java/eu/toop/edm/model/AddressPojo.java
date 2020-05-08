@@ -217,9 +217,9 @@ public class AddressPojo
     if (a != null)
     {
       ret.fullAddress (a.getFullAddress ())
-         .streetName (a.getStreetNameValue ())
-         .buildingNumber (a.getBuildingNumberValue ())
-         .town (a.getCityNameValue ())
+         .streetName (a.getThoroughfare ())
+         .buildingNumber (a.getLocatorDesignator ())
+         .town (a.getPostName ())
          .postalCode (a.getPostCode ())
          .countryCode (a.getAdminUnitLevel1 ());
     }
