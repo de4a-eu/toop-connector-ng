@@ -245,6 +245,21 @@ public class AddressPojo
     return ret;
   }
 
+  @Nonnull
+  public static Builder builder(@Nullable final eu.toop.edm.jaxb.w3.locn.AddressType a){
+    final Builder ret = new Builder ();
+    if (a != null)
+    {
+      ret.fullAddress (a.getFullAddress ())
+              .streetName (a.getThoroughfare ())
+              .buildingNumber (a.getLocatorDesignator ())
+              .town (a.getPostName ())
+              .postalCode (a.getPostCode ())
+              .countryCode (a.getAdminUnitLevel1 ());
+    }
+    return ret;
+  }
+
   public static class Builder
   {
     private String m_sFullAddress;
