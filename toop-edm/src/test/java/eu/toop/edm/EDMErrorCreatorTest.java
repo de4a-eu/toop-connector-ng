@@ -52,8 +52,7 @@ public final class EDMErrorCreatorTest
                                      .errorMessage ("What went wrong: " + eType.name ())
                                      .severity (EToopErrorSeverity.FAILURE)
                                      .timestampNow ()
-                                     .errorOrigin (EToopErrorOrigin.RESPONSE_RECEPTION)
-                                     .errorCategory ("Category");
+                                     .errorOrigin (EToopErrorOrigin.RESPONSE_RECEPTION);
   }
 
   @Nonnull

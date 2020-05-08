@@ -1,21 +1,4 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<!--
-
-    Copyright (C) 2018-2020 toop.eu
-
-    Licensed under the Apache License, Version 2.0 (the "License");
-    you may not use this file except in compliance with the License.
-    You may obtain a copy of the License at
-
-            http://www.apache.org/licenses/LICENSE-2.0
-
-    Unless required by applicable law or agreed to in writing, software
-    distributed under the License is distributed on an "AS IS" BASIS,
-    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    See the License for the specific language governing permissions and
-    limitations under the License.
-
--->
 <xsl:stylesheet xmlns:svrl="http://purl.oclc.org/dsdl/svrl" xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#" xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#" xmlns:cbd="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2" xmlns:cccev="https://semic.org/sa/cv/cccev-2.0.0#" xmlns:cpov="http://www.w3.org/ns/corevocabulary/po" xmlns:cva="http://www.w3.org/ns/corevocabulary/AggregateComponents" xmlns:cvb="http://www.w3.org/ns/corevocabulary/BasicComponents" xmlns:dcat="http://data.europa.eu/r5r/" xmlns:dct="http://purl.org/dc/terms/" xmlns:iso="http://purl.oclc.org/dsdl/schematron" xmlns:locn="http://www.w3.org/ns/locn#" xmlns:query="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0" xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:4.0" xmlns:saxon="http://saxon.sf.net/" xmlns:schold="http://www.ascc.net/xml/schematron" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="2.0">
 <!--Implementers: please note that overriding process-prolog or process-root is 
     the preferred method for meta-stylesheets to use where possible. -->
@@ -642,26 +625,6 @@
           <svrl:text>
                 Each Exception must contain exactly ONE ErrorOrigin slot (found: <xsl:text />
             <xsl:value-of select="$countExceptionOrigin" />
-            <xsl:text />).  
-            </svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
-    <xsl:variable name="countExceptionCategory" select="count(rim:Slot[@name = 'ErrorCategory'])" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="( ($countExceptionCategory=1) )" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="( ($countExceptionCategory=1) )">
-          <xsl:attribute name="id">exc_card_Category</xsl:attribute>
-          <xsl:attribute name="flag">ERROR</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>
-                Each Exception must contain exactly ONE ErrorCategory slot (found: <xsl:text />
-            <xsl:value-of select="$countExceptionCategory" />
             <xsl:text />).  
             </svrl:text>
         </svrl:failed-assert>

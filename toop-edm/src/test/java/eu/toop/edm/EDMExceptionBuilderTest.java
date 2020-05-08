@@ -46,10 +46,8 @@ public final class EDMExceptionBuilderTest
                                                               .errorDetail ("Stacktrace")
                                                               .errorMessage ("What went wrong: nothing")
                                                               .severity (EToopErrorSeverity.FAILURE)
-                                                              .publicOrganizationID ("voc", "term")
                                                               .timestampNow ()
-                                                              .errorOrigin (EToopErrorOrigin.RESPONSE_RECEPTION)
-                                                              .errorCategory ("Category");
+                                                              .errorOrigin (EToopErrorOrigin.RESPONSE_RECEPTION);
       final RegistryExceptionType aEx = b.build ();
       assertNotNull (aEx);
 
@@ -67,12 +65,9 @@ public final class EDMExceptionBuilderTest
   public void testMinimum ()
   {
     final EDMExceptionBuilder b = new EDMExceptionBuilder ().exceptionType (EEDMExceptionType.OBJECT_NOT_FOUND)
-                                                            .errorCode ("ec1")
+                                                            .severityFailure ()
                                                             .errorMessage ("What went wrong: nothing")
-                                                            .severity (EToopErrorSeverity.FAILURE)
-                                                            .timestampNow ()
-                                                            .errorOrigin (EToopErrorOrigin.RESPONSE_RECEPTION)
-                                                            .errorCategory ("Category");
+                                                            .timestampNow ();
     final RegistryExceptionType aEx = b.build ();
     assertNotNull (aEx);
 

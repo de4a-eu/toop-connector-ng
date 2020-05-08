@@ -28,7 +28,10 @@ import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.string.StringHelper;
 
+import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.slot.ISlotProvider;
+import eu.toop.edm.slot.SlotErrorProvider;
 import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRepHelper;
@@ -43,7 +46,8 @@ import eu.toop.regrep.rs.RegistryExceptionType;
  */
 public class EDMErrorCreator
 {
-  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME);
+  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
+                                                                                                  SlotErrorProvider.NAME);
 
   private final ERegRepResponseStatus m_eResponseStatus;
   private final String m_sRequestID;
@@ -102,6 +106,7 @@ public class EDMErrorCreator
     private ERegRepResponseStatus m_eResponseStatus;
     private String m_sRequestID;
     private String m_sSpecificationIdentifier;
+    private AgentType m_aErrorProvider;
     private final ICommonsList <RegistryExceptionType> m_aExceptions = new CommonsArrayList <> ();
 
     public Builder ()
@@ -125,6 +130,25 @@ public class EDMErrorCreator
     public Builder specificationIdentifier (@Nullable final String s)
     {
       m_sSpecificationIdentifier = s;
+      return this;
+    }
+
+    @Nonnull
+    public Builder errorProvider (@Nullable final AgentPojo.Builder a)
+    {
+      return errorProvider (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder errorProvider (@Nullable final AgentPojo a)
+    {
+      return errorProvider (a == null ? null : a.getAsAgent ());
+    }
+
+    @Nonnull
+    public Builder errorProvider (@Nullable final AgentType a)
+    {
+      m_aErrorProvider = a;
       return this;
     }
 
@@ -192,6 +216,8 @@ public class EDMErrorCreator
       final ICommonsList <ISlotProvider> aSlots = new CommonsArrayList <> ();
       if (m_sSpecificationIdentifier != null)
         aSlots.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
+      if (m_aErrorProvider != null)
+        aSlots.add (new SlotErrorProvider (m_aErrorProvider));
 
       // Exceptions
       return new EDMErrorCreator (m_eResponseStatus, m_sRequestID, aSlots).createQueryResponse (m_aExceptions);
