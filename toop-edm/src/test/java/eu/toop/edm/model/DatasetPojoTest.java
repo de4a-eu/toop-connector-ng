@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.mock.CommonsTestHelper;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.xml.dcatap.DatasetMarshaller;
@@ -60,13 +61,16 @@ public final class DatasetPojoTest
                                                                               .title ("Name")
                                                                               .id ("RE238918378"))
                                      .build ();
-    final DCatAPDatasetType aAgent = x.getAsDataset ();
-    assertNotNull (aAgent);
+    final DCatAPDatasetType aDataset = x.getAsDataset ();
+    assertNotNull (aDataset);
 
     final DatasetMarshaller m = new DatasetMarshaller ();
     m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aAgent));
-    LOGGER.info (m.getAsString (aAgent));
+    assertNotNull (m.getAsDocument (aDataset));
+    LOGGER.info (m.getAsString (aDataset));
+
+    final DatasetPojo y = DatasetPojo.builder (aDataset).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -75,12 +79,15 @@ public final class DatasetPojoTest
     final DatasetPojo x = DatasetPojo.builder ().title ("bla title").description ("bla desc").build ();
     assertNotNull (x);
 
-    final DCatAPDatasetType aAgent = x.getAsDataset ();
-    assertNotNull (aAgent);
+    final DCatAPDatasetType aDataset = x.getAsDataset ();
+    assertNotNull (aDataset);
 
     final DatasetMarshaller m = new DatasetMarshaller ();
     m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aAgent));
-    LOGGER.info (m.getAsString (aAgent));
+    assertNotNull (m.getAsDocument (aDataset));
+    LOGGER.info (m.getAsString (aDataset));
+
+    final DatasetPojo y = DatasetPojo.builder (aDataset).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 }

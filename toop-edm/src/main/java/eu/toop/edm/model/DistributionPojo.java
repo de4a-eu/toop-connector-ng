@@ -28,6 +28,11 @@ import com.helger.commons.typeconvert.TypeConverter;
 import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 import eu.toop.edm.jaxb.dcterms.DCMediaType;
 
+/**
+ * Represents "distribution format"
+ *
+ * @author Philip Helger
+ */
 public class DistributionPojo
 {
   private final EDistributionFormat m_eFormat;
