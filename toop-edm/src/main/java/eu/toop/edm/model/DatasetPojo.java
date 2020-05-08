@@ -39,8 +39,8 @@ public class DatasetPojo
 {
   private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
   private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
-  private final CCCEVDocumentReferenceType m_aDistribution;
-  private final AgentType m_aCreator;
+  private final DocumentReferencePojo m_aDistribution;
+  private final AgentPojo m_aCreator;
   private final ICommonsList <String> m_aIDs = new CommonsArrayList <> ();
   private final LocalDateTime m_aIssuedDT;
   private final String m_sLanguage;
@@ -51,8 +51,8 @@ public class DatasetPojo
 
   public DatasetPojo (@Nonnull @Nonempty final ICommonsList <String> aDescriptions,
                       @Nonnull @Nonempty final ICommonsList <String> aTitles,
-                      @Nullable final CCCEVDocumentReferenceType aDistribution,
-                      @Nullable final AgentType aCreator,
+                      @Nullable final DocumentReferencePojo aDistribution,
+                      @Nullable final AgentPojo aCreator,
                       @Nullable final ICommonsList <String> aIDs,
                       @Nullable final LocalDateTime aIssuedDT,
                       @Nullable final String sLanguage,
@@ -90,9 +90,9 @@ public class DatasetPojo
     for (final String sTitle : m_aTitles)
       ret.addTitle (sTitle);
     if (m_aDistribution != null)
-      ret.addDistribution (m_aDistribution);
+      ret.addDistribution (m_aDistribution.getAsDocumentReference ());
     if (m_aCreator != null)
-      ret.setCreator (m_aCreator);
+      ret.setCreator (m_aCreator.getAsAgent ());
     for (final String sID : m_aIDs)
       ret.addIdentifier (sID);
     if (m_aIssuedDT != null)
@@ -125,8 +125,8 @@ public class DatasetPojo
   {
     private final ICommonsList <String> m_aDescriptions = new CommonsArrayList <> ();
     private final ICommonsList <String> m_aTitles = new CommonsArrayList <> ();
-    private CCCEVDocumentReferenceType m_aDistribution;
-    private AgentType m_aCreator;
+    private DocumentReferencePojo m_aDistribution;
+    private AgentPojo m_aCreator;
     private final ICommonsList <String> m_aIDs = new CommonsArrayList <> ();
     private LocalDateTime m_aIssuedDT;
     private String m_sLanguage;
@@ -211,14 +211,14 @@ public class DatasetPojo
     @Nonnull
     public Builder distribution (@Nullable final DocumentReferencePojo a)
     {
-      return distribution (a == null ? null : a.getAsDocumentReference ());
+      m_aDistribution = a;
+      return this;
     }
 
     @Nonnull
     public Builder distribution (@Nullable final CCCEVDocumentReferenceType a)
     {
-      m_aDistribution = a;
-      return this;
+      return distribution (a == null ? null : DocumentReferencePojo.builder (a));
     }
 
     @Nonnull
@@ -230,14 +230,14 @@ public class DatasetPojo
     @Nonnull
     public Builder creator (@Nullable final AgentPojo a)
     {
-      return creator (a == null ? null : a.getAsAgent ());
+      m_aCreator = a;
+      return this;
     }
 
     @Nonnull
     public Builder creator (@Nullable final AgentType a)
     {
-      m_aCreator = a;
-      return this;
+      return creator (a == null ? null : AgentPojo.builder (a));
     }
 
     @Nonnull

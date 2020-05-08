@@ -34,20 +34,18 @@ import com.helger.commons.string.StringHelper;
 
 import eu.toop.edm.error.IToopErrorCode;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
-import eu.toop.edm.jaxb.cccev.CCCEVValueType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
-import eu.toop.edm.xml.cccev.CCCEVValueHelper;
 
 public class ConceptPojo
 {
   private final String m_sID;
   private final QName m_aName;
-  private final CCCEVValueType m_aValue;
+  private final ConceptValuePojo m_aValue;
   private final ICommonsList <ConceptPojo> m_aChildren = new CommonsArrayList <> ();
 
   public ConceptPojo (@Nullable final String sID,
                       @Nullable final QName aName,
-                      @Nullable final CCCEVValueType aValue,
+                      @Nullable final ConceptValuePojo aValue,
                       @Nullable final List <ConceptPojo> aChildren)
   {
     m_sID = sID;
@@ -55,6 +53,24 @@ public class ConceptPojo
     m_aValue = aValue;
     if (aChildren != null)
       m_aChildren.addAll (aChildren);
+  }
+
+  @Nullable
+  public final String getID ()
+  {
+    return m_sID;
+  }
+
+  @Nullable
+  public final QName getName ()
+  {
+    return m_aName;
+  }
+
+  @Nullable
+  public final ConceptValuePojo getValue ()
+  {
+    return m_aValue;
   }
 
   @Nonnull
@@ -94,7 +110,7 @@ public class ConceptPojo
     if (m_aName != null)
       ret.addQName (m_aName);
     if (m_aValue != null)
-      ret.addValue (m_aValue);
+      ret.addValue (m_aValue.getAsCCCEVValueType ());
     for (final ConceptPojo aChild : m_aChildren)
       ret.addConcept (aChild.getAsCCCEVConcept ());
     return ret;
@@ -110,7 +126,7 @@ public class ConceptPojo
   {
     private String m_sID;
     private QName m_aName;
-    private CCCEVValueType m_aValue;
+    private ConceptValuePojo m_aValue;
     private final ICommonsList <ConceptPojo> m_aChildren = new CommonsArrayList <> ();
 
     public Builder ()
@@ -149,112 +165,139 @@ public class ConceptPojo
     }
 
     @Nonnull
+    public Builder valueID (@Nullable final String s)
+    {
+      return value (ConceptValuePojo.builder ().identifier (s));
+    }
+
+    @Nonnull
+    public Builder valueCode (@Nullable final AmountPojo.Builder a)
+    {
+      return value (ConceptValuePojo.builder ().amount (a));
+    }
+
+    @Nonnull
+    public Builder valueCode (@Nullable final AmountPojo a)
+    {
+      return value (ConceptValuePojo.builder ().amount (a));
+    }
+
+    @Nonnull
     public Builder valueAmount (@Nullable final BigDecimal aValue, @Nullable final String sCurrencyID)
     {
-      return value (CCCEVValueHelper.createAmount (aValue, sCurrencyID));
+      return value (ConceptValuePojo.builder ().amount (aValue, sCurrencyID));
     }
 
     @Nonnull
     public Builder valueCode (@Nullable final String s)
     {
-      return value (CCCEVValueHelper.createCode (s));
+      return value (ConceptValuePojo.builder ().code (s));
     }
 
     @Nonnull
     public Builder valueDate (@Nullable final LocalDate a)
     {
-      return value (CCCEVValueHelper.createDate (a));
-    }
-
-    @Nonnull
-    public Builder valueID (@Nullable final String s)
-    {
-      return value (CCCEVValueHelper.createID (s));
+      return value (ConceptValuePojo.builder ().date (a));
     }
 
     @Nonnull
     public Builder valueIndicator (final boolean b)
     {
-      return value (CCCEVValueHelper.createIndicator (b));
+      return value (ConceptValuePojo.builder ().indicator (b));
+    }
+
+    @Nonnull
+    public Builder valueMeasure (@Nullable final MeasurePojo.Builder a)
+    {
+      return value (ConceptValuePojo.builder ().measure (a));
+    }
+
+    @Nonnull
+    public Builder valueMeasure (@Nullable final MeasurePojo a)
+    {
+      return value (ConceptValuePojo.builder ().measure (a));
     }
 
     @Nonnull
     public Builder valueMeasure (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
     {
-      return value (CCCEVValueHelper.createMeasure (aValue, sUnitCode));
+      return value (ConceptValuePojo.builder ().measure (aValue, sUnitCode));
     }
 
     @Nonnull
     public Builder valueNumeric (@Nonnull final long n)
     {
-      return value (CCCEVValueHelper.createNumeric (n));
+      return value (ConceptValuePojo.builder ().numeric (n));
     }
 
     @Nonnull
     public Builder valueNumeric (@Nonnull final double d)
     {
-      return value (CCCEVValueHelper.createNumeric (d));
+      return value (ConceptValuePojo.builder ().numeric (d));
     }
 
     @Nonnull
     public Builder valueNumeric (@Nullable final BigDecimal a)
     {
-      return value (CCCEVValueHelper.createNumeric (a));
+      return value (ConceptValuePojo.builder ().numeric (a));
+    }
+
+    @Nonnull
+    public Builder valueQuantity (@Nullable final QuantityPojo.Builder a)
+    {
+      return value (ConceptValuePojo.builder ().quantity (a));
+    }
+
+    @Nonnull
+    public Builder valueQuantity (@Nullable final QuantityPojo a)
+    {
+      return value (ConceptValuePojo.builder ().quantity (a));
     }
 
     @Nonnull
     public Builder valueQuantity (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
     {
-      return value (CCCEVValueHelper.createQuantity (aValue, sUnitCode));
+      return value (ConceptValuePojo.builder ().quantity (aValue, sUnitCode));
     }
 
     @Nonnull
     public Builder valueText (@Nonnull final String s)
     {
-      return value (CCCEVValueHelper.createText (s));
+      return value (ConceptValuePojo.builder ().text (s));
     }
 
     @Nonnull
     public Builder valueTime (@Nullable final LocalTime a)
     {
-      return value (CCCEVValueHelper.createTime (a));
+      return value (ConceptValuePojo.builder ().time (a));
     }
 
     @Nonnull
     public Builder valueURI (@Nonnull final String s)
     {
-      return value (CCCEVValueHelper.createURI (s));
+      return value (ConceptValuePojo.builder ().uri (s));
     }
 
     @Nonnull
-    public Builder valuePeriod (@Nullable final LocalDate aStartDate, @Nullable final LocalDate aEndDate)
+    public Builder valueErrorCode (@Nullable final IToopErrorCode a)
     {
-      return valuePeriod (aStartDate, null, aEndDate, null);
-    }
-
-    @Nonnull
-    public Builder valuePeriod (@Nullable final LocalDate aStartDate,
-                                @Nullable final LocalTime aStartTime,
-                                @Nullable final LocalDate aEndDate,
-                                @Nullable final LocalTime aEndTime)
-    {
-      return value (CCCEVValueHelper.createPeriod (aStartDate, aStartTime, aEndDate, aEndTime));
-    }
-
-    @Nonnull
-    public Builder valueErrorCode (@Nullable final IToopErrorCode aErrorCode)
-    {
-      return valueErrorCode (aErrorCode.getID ());
+      return value (ConceptValuePojo.builder ().errorCode (a));
     }
 
     @Nonnull
     public Builder valueErrorCode (@Nullable final String s)
     {
-      return value (CCCEVValueHelper.createError (s));
+      return value (ConceptValuePojo.builder ().errorCode (s));
     }
 
     @Nonnull
-    public Builder value (@Nullable final CCCEVValueType a)
+    public Builder value (@Nullable final ConceptValuePojo.Builder a)
+    {
+      return value (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder value (@Nullable final ConceptValuePojo a)
     {
       m_aValue = a;
       return this;

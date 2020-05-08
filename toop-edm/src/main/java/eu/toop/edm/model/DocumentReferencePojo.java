@@ -21,6 +21,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.string.StringHelper;
@@ -49,6 +51,38 @@ public class DocumentReferencePojo
     m_sLocaleCode = sLocaleCode;
   }
 
+  @Nullable
+  public final String getDocumentURI ()
+  {
+    return m_sDocumentURI;
+  }
+
+  @Nonnull
+  @ReturnsMutableObject
+  public final List <String> documentDescriptions ()
+  {
+    return m_aDocumentDescriptions;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public final List <String> getAllDocumentDescriptions ()
+  {
+    return m_aDocumentDescriptions.getClone ();
+  }
+
+  @Nullable
+  public final String getDocumentType ()
+  {
+    return m_sDocumentType;
+  }
+
+  @Nullable
+  public final String getLocaleCode ()
+  {
+    return m_sLocaleCode;
+  }
+
   @Nonnull
   public CCCEVDocumentReferenceType getAsDocumentReference ()
   {
@@ -70,6 +104,21 @@ public class DocumentReferencePojo
   public static Builder builder ()
   {
     return new Builder ();
+  }
+
+  @Nonnull
+  public static Builder builder (@Nullable final CCCEVDocumentReferenceType a)
+  {
+    final Builder ret = new Builder ();
+    if (a != null)
+    {
+      if (a.hasDocumentURIEntries ())
+        ret.documentURI (a.getDocumentURIAtIndex (0).getValue ());
+      ret.documentDescriptions (new CommonsArrayList <> (a.getDocumentDescription (), DescriptionType::getValue))
+         .documentType (a.getDocumentTypeValue ())
+         .localeCode (a.getLocaleCodeValue ());
+    }
+    return ret;
   }
 
   public static class Builder

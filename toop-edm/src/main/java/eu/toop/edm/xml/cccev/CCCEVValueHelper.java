@@ -26,6 +26,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.math.MathHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 
@@ -50,57 +51,6 @@ public final class CCCEVValueHelper
   {}
 
   @Nonnull
-  public static CCCEVValueType createAmount (@Nullable final BigDecimal aValue, @Nullable final String sCurrencyID)
-  {
-    final AmountType a = new AmountType ();
-    a.setValue (aValue);
-    a.setCurrencyID (sCurrencyID);
-    return create (a);
-  }
-
-  @Nonnull
-  public static CCCEVValueType create (@Nonnull final AmountType a)
-  {
-    final CCCEVValueType ret = new CCCEVValueType ();
-    ret.setAmountValue (a);
-    return ret;
-  }
-
-  @Nonnull
-  public static CCCEVValueType createCode (@Nonnull final String sValue)
-  {
-    return create (new CodeType (sValue));
-  }
-
-  @Nonnull
-  public static CCCEVValueType create (@Nonnull final CodeType a)
-  {
-    final CCCEVValueType ret = new CCCEVValueType ();
-    ret.setCodeValue (a);
-    return ret;
-  }
-
-  @Nonnull
-  public static CCCEVValueType createDate (@Nonnull final LocalDate a)
-  {
-    return createDate (PDTXMLConverter.getXMLCalendarDate (a));
-  }
-
-  @Nonnull
-  public static CCCEVValueType createDate (@Nonnull final XMLGregorianCalendar a)
-  {
-    return create (a == null ? null : new DateType (a));
-  }
-
-  @Nonnull
-  public static CCCEVValueType create (@Nonnull final DateType a)
-  {
-    final CCCEVValueType ret = new CCCEVValueType ();
-    ret.setDateValue (a);
-    return ret;
-  }
-
-  @Nonnull
   public static CCCEVValueType createID (@Nonnull final String s)
   {
     return create (new IDType (s));
@@ -115,13 +65,70 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createIndicator (final boolean b)
+  public static CCCEVValueType createAmount (@Nullable final BigDecimal aValue, @Nullable final String sCurrencyID)
+  {
+    final AmountType a = new AmountType ();
+    a.setValue (aValue);
+    a.setCurrencyID (sCurrencyID);
+    return create (a);
+  }
+
+  @Nonnull
+  public static CCCEVValueType create (@Nullable final AmountType a)
+  {
+    final CCCEVValueType ret = new CCCEVValueType ();
+    ret.setAmountValue (a);
+    return ret;
+  }
+
+  @Nonnull
+  public static CCCEVValueType createCode (@Nullable final String sValue)
+  {
+    return create (new CodeType (sValue));
+  }
+
+  @Nonnull
+  public static CCCEVValueType create (@Nullable final CodeType a)
+  {
+    final CCCEVValueType ret = new CCCEVValueType ();
+    ret.setCodeValue (a);
+    return ret;
+  }
+
+  @Nonnull
+  public static CCCEVValueType create (@Nullable final LocalDate a)
+  {
+    return createDate (PDTXMLConverter.getXMLCalendarDate (a));
+  }
+
+  @Nonnull
+  public static CCCEVValueType createDate (@Nullable final XMLGregorianCalendar a)
+  {
+    return create (a == null ? null : new DateType (a));
+  }
+
+  @Nonnull
+  public static CCCEVValueType create (@Nullable final DateType a)
+  {
+    final CCCEVValueType ret = new CCCEVValueType ();
+    ret.setDateValue (a);
+    return ret;
+  }
+
+  @Nonnull
+  public static CCCEVValueType create (@Nullable final Boolean a)
+  {
+    return createIndicator (a == null ? null : a.toString ());
+  }
+
+  @Nonnull
+  public static CCCEVValueType create (final boolean b)
   {
     return createIndicator (Boolean.toString (b));
   }
 
   @Nonnull
-  public static CCCEVValueType createIndicator (@Nonnull final String s)
+  public static CCCEVValueType createIndicator (@Nullable final String s)
   {
     final IndicatorType x = new IndicatorType ();
     x.setValue (s);
@@ -129,7 +136,7 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final IndicatorType a)
+  public static CCCEVValueType create (@Nullable final IndicatorType a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setIndicatorValue (a);
@@ -146,7 +153,7 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final MeasureType a)
+  public static CCCEVValueType create (@Nullable final MeasureType a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setMeasureValue (a);
@@ -154,19 +161,19 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createNumeric (@Nonnull final long n)
+  public static CCCEVValueType create (final long n)
   {
-    return createNumeric (MathHelper.toBigDecimal (n));
+    return create (MathHelper.toBigDecimal (n));
   }
 
   @Nonnull
-  public static CCCEVValueType createNumeric (@Nonnull final double d)
+  public static CCCEVValueType create (final double d)
   {
-    return createNumeric (MathHelper.toBigDecimal (d));
+    return create (MathHelper.toBigDecimal (d));
   }
 
   @Nonnull
-  public static CCCEVValueType createNumeric (@Nullable final BigDecimal a)
+  public static CCCEVValueType create (@Nullable final BigDecimal a)
   {
     return create (new NumericType (a));
   }
@@ -189,7 +196,7 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final QuantityType a)
+  public static CCCEVValueType create (@Nullable final QuantityType a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setQuantityValue (a);
@@ -197,42 +204,50 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createText (@Nonnull final String s)
+  public static CCCEVValueType createText (@Nullable final String... a)
   {
-    return create (new TextType (s));
+    return create (new CommonsArrayList <> (a, TextType::new));
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final TextType... a)
+  public static CCCEVValueType createText (@Nullable final Collection <String> a)
+  {
+    return create (new CommonsArrayList <> (a, TextType::new));
+  }
+
+  @Nonnull
+  public static CCCEVValueType create (@Nullable final TextType... a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
-    for (final TextType aItem : a)
-      ret.getTextValue ().add (aItem);
+    if (a != null)
+      for (final TextType aItem : a)
+        ret.addTextValue (aItem);
     return ret;
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final Collection <TextType> a)
+  public static CCCEVValueType create (@Nullable final Collection <TextType> a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
-    ret.getTextValue ().addAll (a);
+    if (a != null)
+      ret.getTextValue ().addAll (a);
     return ret;
   }
 
   @Nonnull
-  public static CCCEVValueType createTime (@Nonnull final LocalTime a)
+  public static CCCEVValueType create (@Nullable final LocalTime a)
   {
     return createTime (PDTXMLConverter.getXMLCalendarTime (a));
   }
 
   @Nonnull
-  public static CCCEVValueType createTime (@Nonnull final XMLGregorianCalendar a)
+  public static CCCEVValueType createTime (@Nullable final XMLGregorianCalendar a)
   {
     return create (a == null ? null : new TimeType (a));
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final TimeType a)
+  public static CCCEVValueType create (@Nullable final TimeType a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setTimeValue (a);
@@ -240,13 +255,13 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createURI (@Nonnull final String s)
+  public static CCCEVValueType createURI (@Nullable final String s)
   {
     return create (new URIType (s));
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final URIType a)
+  public static CCCEVValueType create (@Nullable final URIType a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setUriValue (a);
@@ -290,7 +305,7 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType create (@Nonnull final PeriodType a)
+  public static CCCEVValueType create (@Nullable final PeriodType a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setPeriodValue (a);
@@ -298,13 +313,13 @@ public final class CCCEVValueHelper
   }
 
   @Nonnull
-  public static CCCEVValueType createError (@Nonnull final String sValue)
+  public static CCCEVValueType createError (@Nullable final String sValue)
   {
     return createError (new CodeType (sValue));
   }
 
   @Nonnull
-  public static CCCEVValueType createError (@Nonnull final CodeType a)
+  public static CCCEVValueType createError (@Nullable final CodeType a)
   {
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setError (a);

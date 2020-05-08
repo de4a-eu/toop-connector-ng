@@ -59,20 +59,20 @@ public final class EDMResponseCreatorTest
   public static EDMResponseCreator.Builder _dataResponseConcept ()
   {
     return EDMResponseCreator.builderConcept ()
-                              .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
-                              .responseStatus (ERegRepResponseStatus.SUCCESS)
-                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
-                              .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
+                             .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
+                             .responseStatus (ERegRepResponseStatus.SUCCESS)
+                             .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
+                             .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
   }
 
   @Nonnull
   public static EDMResponseCreator.Builder _dataResponseDocument ()
   {
     return EDMResponseCreator.builderDocument ()
-                              .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
-                              .responseStatus (ERegRepResponseStatus.SUCCESS)
-                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
-                              .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
+                             .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
+                             .responseStatus (ERegRepResponseStatus.SUCCESS)
+                             .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
+                             .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
   }
 
   @Test
@@ -107,14 +107,7 @@ public final class EDMResponseCreatorTest
                                                                                                       .id ("ConceptID-6")
                                                                                                       .name (sConceptNS,
                                                                                                              "Concept-Name-6")
-                                                                                                      .valuePeriod (PDTFactory.createLocalDate (2020,
-                                                                                                                                                Month.JANUARY,
-                                                                                                                                                2),
-                                                                                                                    null,
-                                                                                                                    PDTFactory.createLocalDate (2022,
-                                                                                                                                                Month.MAY,
-                                                                                                                                                5),
-                                                                                                                    null))
+                                                                                                      .valueNumeric (23456.34))
                                                                                 .addChild (ConceptPojo.builder ()
                                                                                                       .id ("ConceptID-7")
                                                                                                       .name (sConceptNS,

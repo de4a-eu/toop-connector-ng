@@ -15,6 +15,7 @@
  */
 package eu.toop.edm.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import javax.annotation.Nonnull;
@@ -44,6 +45,9 @@ public final class BusinessPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aBusiness));
     LOGGER.info (m.getAsString (aBusiness));
+
+    final BusinessPojo y = BusinessPojo.builder (aBusiness).build ();
+    assertEquals (x, y);
   }
 
   @Test

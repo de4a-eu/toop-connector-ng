@@ -18,7 +18,10 @@ package eu.toop.edm.model;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.bc.LegalEntityIDType;
@@ -47,6 +50,42 @@ public class BusinessPojo
     m_sIDSchemeID = sIDType;
     m_sLegalName = sLegalName;
     m_aAddress = aAddress;
+  }
+
+  @Nullable
+  public final String getLegalID ()
+  {
+    return m_sLegalID;
+  }
+
+  @Nullable
+  public final String getLegalIDSchemeID ()
+  {
+    return m_sLegalIDSchemeID;
+  }
+
+  @Nullable
+  public final String getID ()
+  {
+    return m_sID;
+  }
+
+  @Nullable
+  public final String getIDSchemeID ()
+  {
+    return m_sIDSchemeID;
+  }
+
+  @Nullable
+  public final String getLegalName ()
+  {
+    return m_sLegalName;
+  }
+
+  @Nullable
+  public final AddressPojo getAddress ()
+  {
+    return m_aAddress;
   }
 
   @Nonnull
@@ -80,10 +119,69 @@ public class BusinessPojo
     return ret;
   }
 
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return false;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final BusinessPojo rhs = (BusinessPojo) o;
+    return EqualsHelper.equals (m_sLegalID, rhs.m_sLegalID) &&
+           EqualsHelper.equals (m_sLegalIDSchemeID, rhs.m_sLegalIDSchemeID) &&
+           EqualsHelper.equals (m_sID, rhs.m_sID) &&
+           EqualsHelper.equals (m_sIDSchemeID, rhs.m_sIDSchemeID) &&
+           EqualsHelper.equals (m_sLegalName, rhs.m_sLegalName) &&
+           EqualsHelper.equals (m_aAddress, rhs.m_aAddress);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_sLegalID)
+                                       .append (m_sLegalIDSchemeID)
+                                       .append (m_sID)
+                                       .append (m_sIDSchemeID)
+                                       .append (m_sLegalName)
+                                       .append (m_aAddress)
+                                       .getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("LegalID", m_sLegalID)
+                                       .append ("LegalIDSchemeID", m_sLegalIDSchemeID)
+                                       .append ("sID", m_sID)
+                                       .append ("IDSchemeID", m_sIDSchemeID)
+                                       .append ("LegalName", m_sLegalName)
+                                       .append ("Address", m_aAddress)
+                                       .getToString ();
+  }
+
   @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
+  }
+
+  @Nonnull
+  public static Builder builder (@Nullable final CoreBusinessType a)
+  {
+    final Builder ret = new Builder ();
+    if (a != null)
+    {
+      if (a.hasLegalEntityLegalIDEntries ())
+        ret.legalID (a.getLegalEntityLegalIDAtIndex (0).getValue ())
+           .legalIDSchemeID (a.getLegalEntityLegalIDAtIndex (0).getSchemeID ());
+      if (a.hasLegalEntityIDEntries ())
+        ret.id (a.getLegalEntityIDAtIndex (0).getValue ()).idSchemeID (a.getLegalEntityIDAtIndex (0).getSchemeID ());
+      if (a.hasLegalEntityLegalNameEntries ())
+        ret.legalName (a.getLegalEntityLegalNameAtIndex (0).getValue ());
+      if (a.getLegalEntityCoreAddress () != null)
+        ret.address (AddressPojo.builder (a.getLegalEntityCoreAddress ()));
+    }
+    return ret;
   }
 
   public static class Builder

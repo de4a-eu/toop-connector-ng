@@ -18,9 +18,11 @@ package eu.toop.edm.model;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 
-import eu.toop.edm.jaxb.cv.cac.AddressType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreAddressType;
 import eu.toop.edm.jaxb.w3.cv.bc.AddressAdminUnitLocationOneType;
 import eu.toop.edm.jaxb.w3.cv.bc.AddressFullAddressType;
@@ -62,7 +64,7 @@ public class AddressPojo
    * @return The full address line. May be <code>null</code>.
    */
   @Nullable
-  public String getFullAddress ()
+  public final String getFullAddress ()
   {
     return m_sFullAddress;
   }
@@ -71,7 +73,7 @@ public class AddressPojo
    * @return The street name of the address. May be <code>null</code>.
    */
   @Nullable
-  public String getStreetName ()
+  public final String getStreetName ()
   {
     return m_sStreetName;
   }
@@ -80,7 +82,7 @@ public class AddressPojo
    * @return The building number of the address. May be <code>null</code>.
    */
   @Nullable
-  public String getBuildingNumber ()
+  public final String getBuildingNumber ()
   {
     return m_sBuildingNumber;
   }
@@ -89,7 +91,7 @@ public class AddressPojo
    * @return The town or city name of the address. May be <code>null</code>.
    */
   @Nullable
-  public String getTown ()
+  public final String getTown ()
   {
     return m_sTown;
   }
@@ -98,7 +100,7 @@ public class AddressPojo
    * @return The postal code of the address. May be <code>null</code>.
    */
   @Nullable
-  public String getPostalCode ()
+  public final String getPostalCode ()
   {
     return m_sPostalCode;
   }
@@ -108,7 +110,7 @@ public class AddressPojo
    *         that is not checked against any rules.
    */
   @Nullable
-  public String getCountryCode ()
+  public final String getCountryCode ()
   {
     return m_sCountryCode;
   }
@@ -164,10 +166,10 @@ public class AddressPojo
   }
 
   @Nullable
-  public AddressType getAsAgentAddress ()
+  public eu.toop.edm.jaxb.cv.cac.AddressType getAsAgentAddress ()
   {
     boolean bAny = false;
-    final AddressType aAddress = new AddressType ();
+    final eu.toop.edm.jaxb.cv.cac.AddressType aAddress = new eu.toop.edm.jaxb.cv.cac.AddressType ();
     if (StringHelper.hasText (m_sFullAddress))
     {
       aAddress.setFullAddress (m_sFullAddress);
@@ -201,6 +203,46 @@ public class AddressPojo
     return bAny ? aAddress : null;
   }
 
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return false;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final AddressPojo rhs = (AddressPojo) o;
+    return EqualsHelper.equals (m_sFullAddress, rhs.m_sFullAddress) &&
+           EqualsHelper.equals (m_sStreetName, rhs.m_sStreetName) &&
+           EqualsHelper.equals (m_sBuildingNumber, rhs.m_sBuildingNumber) &&
+           EqualsHelper.equals (m_sTown, rhs.m_sTown) &&
+           EqualsHelper.equals (m_sPostalCode, rhs.m_sPostalCode) &&
+           EqualsHelper.equals (m_sCountryCode, rhs.m_sCountryCode);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_sFullAddress)
+                                       .append (m_sStreetName)
+                                       .append (m_sBuildingNumber)
+                                       .append (m_sTown)
+                                       .append (m_sPostalCode)
+                                       .append (m_sCountryCode)
+                                       .getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("FullAddress", m_sFullAddress)
+                                       .append ("StreetName", m_sStreetName)
+                                       .append ("BuildingNumber", m_sBuildingNumber)
+                                       .append ("Town", m_sTown)
+                                       .append ("PostalCode", m_sPostalCode)
+                                       .append ("CountryCode", m_sCountryCode)
+                                       .getToString ();
+  }
+
   @Nonnull
   public static Builder builder ()
   {
@@ -230,7 +272,7 @@ public class AddressPojo
   }
 
   @Nonnull
-  public static Builder builder (@Nullable final AddressType a)
+  public static Builder builder (@Nullable final eu.toop.edm.jaxb.w3.locn.AddressType a)
   {
     final Builder ret = new Builder ();
     if (a != null)
@@ -241,21 +283,6 @@ public class AddressPojo
          .town (a.getPostName ())
          .postalCode (a.getPostCode ())
          .countryCode (a.getAdminUnitLevel1 ());
-    }
-    return ret;
-  }
-
-  @Nonnull
-  public static Builder builder(@Nullable final eu.toop.edm.jaxb.w3.locn.AddressType a){
-    final Builder ret = new Builder ();
-    if (a != null)
-    {
-      ret.fullAddress (a.getFullAddress ())
-              .streetName (a.getThoroughfare ())
-              .buildingNumber (a.getLocatorDesignator ())
-              .town (a.getPostName ())
-              .postalCode (a.getPostCode ())
-              .countryCode (a.getAdminUnitLevel1 ());
     }
     return ret;
   }

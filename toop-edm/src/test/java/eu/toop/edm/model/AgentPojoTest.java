@@ -15,6 +15,7 @@
  */
 package eu.toop.edm.model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
@@ -55,6 +56,9 @@ public final class AgentPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aAgent));
     LOGGER.info (m.getAsString (aAgent));
+
+    final AgentPojo y = AgentPojo.builder (aAgent).build ();
+    assertEquals (x, y);
   }
 
   @Test
