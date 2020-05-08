@@ -29,6 +29,11 @@ import eu.toop.edm.jaxb.w3.cv.bc.AddressPostCodeType;
 import eu.toop.edm.jaxb.w3.cv.bc.AddressPostNameType;
 import eu.toop.edm.jaxb.w3.cv.bc.AddressThoroughfareType;
 
+/**
+ * Represents the needed extract of an Address.
+ *
+ * @author Philip Helger
+ */
 public class AddressPojo
 {
   private final String m_sFullAddress;
@@ -51,6 +56,42 @@ public class AddressPojo
     m_sTown = sTown;
     m_sPostalCode = sPostalCode;
     m_sCountryCode = sCountryCode;
+  }
+
+  @Nullable
+  public String getFullAddress ()
+  {
+    return m_sFullAddress;
+  }
+
+  @Nullable
+  public String getStreetName ()
+  {
+    return m_sStreetName;
+  }
+
+  @Nullable
+  public String getBuildingNumber ()
+  {
+    return m_sBuildingNumber;
+  }
+
+  @Nullable
+  public String getTown ()
+  {
+    return m_sTown;
+  }
+
+  @Nullable
+  public String getPostalCode ()
+  {
+    return m_sPostalCode;
+  }
+
+  @Nullable
+  public String getCountryCode ()
+  {
+    return m_sCountryCode;
   }
 
   @Nullable
@@ -145,6 +186,44 @@ public class AddressPojo
   public static Builder builder ()
   {
     return new Builder ();
+  }
+
+  @Nonnull
+  public static Builder builder (@Nullable final CoreAddressType a)
+  {
+    final Builder ret = new Builder ();
+    if (a != null)
+    {
+      if (a.hasAddressFullAddressEntries ())
+        ret.fullAddress (a.getAddressFullAddressAtIndex (0).getValue ());
+      if (a.hasAddressThoroughfareEntries ())
+        ret.streetName (a.getAddressThoroughfareAtIndex (0).getValue ());
+      if (a.hasAddressLocatorDesignatorEntries ())
+        ret.buildingNumber (a.getAddressLocatorDesignatorAtIndex (0).getValue ());
+      if (a.hasAddressPostNameEntries ())
+        ret.town (a.getAddressPostNameAtIndex (0).getValue ());
+      if (a.hasAddressPostCodeEntries ())
+        ret.postalCode (a.getAddressPostCodeAtIndex (0).getValue ());
+      if (a.hasAddressAdminUnitLocationOneEntries ())
+        ret.countryCode (a.getAddressAdminUnitLocationOneAtIndex (0).getValue ());
+    }
+    return ret;
+  }
+
+  @Nonnull
+  public static Builder builder (@Nullable final AddressType a)
+  {
+    final Builder ret = new Builder ();
+    if (a != null)
+    {
+      ret.fullAddress (a.getFullAddress ())
+         .streetName (a.getStreetNameValue ())
+         .buildingNumber (a.getBuildingNumberValue ())
+         .town (a.getCityNameValue ())
+         .postalCode (a.getPostCode ())
+         .countryCode (a.getAdminUnitLevel1 ());
+    }
+    return ret;
   }
 
   public static class Builder
