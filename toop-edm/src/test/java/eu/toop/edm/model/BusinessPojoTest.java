@@ -15,7 +15,6 @@
  */
 package eu.toop.edm.model;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import javax.annotation.Nonnull;
@@ -23,6 +22,8 @@ import javax.annotation.Nonnull;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.helger.commons.mock.CommonsTestHelper;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.xml.cv.BusinessMarshaller;
@@ -47,7 +48,7 @@ public final class BusinessPojoTest
     LOGGER.info (m.getAsString (aBusiness));
 
     final BusinessPojo y = BusinessPojo.builder (aBusiness).build ();
-    assertEquals (x, y);
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test

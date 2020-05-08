@@ -15,8 +15,11 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.math.MathHelper;
 import com.helger.commons.string.StringParser;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.datetime.util.PDTXMLConverter;
 
 import eu.toop.edm.error.IToopErrorCode;
@@ -24,6 +27,11 @@ import eu.toop.edm.jaxb.cccev.CCCEVValueType;
 import eu.toop.edm.jaxb.cv.cbc.TextType;
 import eu.toop.edm.xml.cccev.CCCEVValueHelper;
 
+/**
+ * Represents a single "Value" in a concept. Usually only used in responses.
+ *
+ * @author Philip Helger
+ */
 public class ConceptValuePojo
 {
   private final String m_sIdentifier;
@@ -68,81 +76,81 @@ public class ConceptValuePojo
   }
 
   @Nullable
-  public String getIdentifier ()
+  public final String getIdentifier ()
   {
     return m_sIdentifier;
   }
 
   @Nullable
-  public AmountPojo getAmount ()
+  public final AmountPojo getAmount ()
   {
     return m_aAmount;
   }
 
   @Nullable
-  public String getCode ()
+  public final String getCode ()
   {
     return m_sCode;
   }
 
   @Nullable
-  public LocalDate getDate ()
+  public final LocalDate getDate ()
   {
     return m_aDate;
   }
 
   @Nullable
-  public Boolean getBoolean ()
+  public final Boolean getBoolean ()
   {
     return m_aIndicator;
   }
 
   @Nullable
-  public MeasurePojo getMeasure ()
+  public final MeasurePojo getMeasure ()
   {
     return m_aMeasure;
   }
 
   @Nullable
-  public BigDecimal getNumeric ()
+  public final BigDecimal getNumeric ()
   {
     return m_aNumeric;
   }
 
   @Nullable
-  public QuantityPojo getQuantity ()
+  public final QuantityPojo getQuantity ()
   {
     return m_aQuantity;
   }
 
   @Nonnull
   @ReturnsMutableCopy
-  public List <String> text ()
+  public final List <String> text ()
   {
     return m_aText;
   }
 
   @Nonnull
   @ReturnsMutableCopy
-  public List <String> getAllTexts ()
+  public final List <String> getAllTexts ()
   {
     return m_aText.getClone ();
   }
 
   @Nullable
-  public LocalTime getTime ()
+  public final LocalTime getTime ()
   {
     return m_aTime;
   }
 
   @Nullable
-  public String getURI ()
+  public final String getURI ()
   {
     return m_sURI;
   }
 
   @Nullable
-  public String getErrorCode ()
+  public final String getErrorCode ()
   {
     return m_sErrorCode;
   }
@@ -175,6 +183,64 @@ public class ConceptValuePojo
     if (m_sErrorCode != null)
       return CCCEVValueHelper.createError (m_sErrorCode);
     return null;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final ConceptValuePojo rhs = (ConceptValuePojo) o;
+    return EqualsHelper.equals (m_sIdentifier, rhs.m_sIdentifier) &&
+           EqualsHelper.equals (m_aAmount, rhs.m_aAmount) &&
+           EqualsHelper.equals (m_sCode, rhs.m_sCode) &&
+           EqualsHelper.equals (m_aDate, rhs.m_aDate) &&
+           EqualsHelper.equals (m_aIndicator, rhs.m_aIndicator) &&
+           EqualsHelper.equals (m_aMeasure, rhs.m_aMeasure) &&
+           EqualsHelper.equals (m_aNumeric, rhs.m_aNumeric) &&
+           EqualsHelper.equals (m_aQuantity, rhs.m_aQuantity) &&
+           EqualsHelper.equals (m_aText, rhs.m_aText) &&
+           EqualsHelper.equals (m_aTime, rhs.m_aTime) &&
+           EqualsHelper.equals (m_sURI, rhs.m_sURI) &&
+           EqualsHelper.equals (m_sErrorCode, rhs.m_sErrorCode);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_sIdentifier)
+                                       .append (m_aAmount)
+                                       .append (m_sCode)
+                                       .append (m_aDate)
+                                       .append (m_aIndicator)
+                                       .append (m_aMeasure)
+                                       .append (m_aNumeric)
+                                       .append (m_aQuantity)
+                                       .append (m_aText)
+                                       .append (m_aTime)
+                                       .append (m_sURI)
+                                       .append (m_sErrorCode)
+                                       .getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("Identifier", m_sIdentifier)
+                                       .append ("Amount", m_aAmount)
+                                       .append ("Code", m_sCode)
+                                       .append ("Date", m_aDate)
+                                       .append ("Indicator", m_aIndicator)
+                                       .append ("Measure", m_aMeasure)
+                                       .append ("Numeric", m_aNumeric)
+                                       .append ("Quantity", m_aQuantity)
+                                       .append ("Text", m_aText)
+                                       .append ("Time", m_aTime)
+                                       .append ("URI", m_sURI)
+                                       .append ("ErrorCode", m_sErrorCode)
+                                       .getToString ();
   }
 
   @Nonnull

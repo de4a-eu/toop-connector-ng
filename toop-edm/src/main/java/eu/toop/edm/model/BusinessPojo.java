@@ -28,6 +28,11 @@ import eu.toop.edm.jaxb.w3.cv.bc.LegalEntityIDType;
 import eu.toop.edm.jaxb.w3.cv.bc.LegalEntityLegalIDType;
 import eu.toop.edm.jaxb.w3.cv.bc.LegalEntityLegalNameType;
 
+/**
+ * Represents a "Business"
+ *
+ * @author Philip Helger
+ */
 public class BusinessPojo
 {
   private final String m_sLegalID;
@@ -123,7 +128,7 @@ public class BusinessPojo
   public boolean equals (final Object o)
   {
     if (o == this)
-      return false;
+      return true;
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final BusinessPojo rhs = (BusinessPojo) o;

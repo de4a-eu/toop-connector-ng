@@ -15,12 +15,13 @@
  */
 package eu.toop.edm.model;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.helger.commons.mock.CommonsTestHelper;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.xml.cagv.AgentMarshaller;
@@ -58,7 +59,7 @@ public final class AgentPojoTest
     LOGGER.info (m.getAsString (aAgent));
 
     final AgentPojo y = AgentPojo.builder (aAgent).build ();
-    assertEquals (x, y);
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -74,6 +75,9 @@ public final class AgentPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aAgent));
     LOGGER.info (m.getAsString (aAgent));
+
+    final AgentPojo y = AgentPojo.builder (aAgent).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -87,5 +91,8 @@ public final class AgentPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aAgent));
     LOGGER.info (m.getAsString (aAgent));
+
+    final AgentPojo y = AgentPojo.builder (aAgent).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 }

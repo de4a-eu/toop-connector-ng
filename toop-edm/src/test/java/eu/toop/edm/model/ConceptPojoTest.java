@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.mock.CommonsTestHelper;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
@@ -53,6 +54,9 @@ public final class ConceptPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aConcept));
     LOGGER.info (m.getAsString (aConcept));
+
+    final ConceptPojo y = ConceptPojo.builder (aConcept).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -76,6 +80,9 @@ public final class ConceptPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aConcept));
     LOGGER.info (m.getAsString (aConcept));
+
+    final ConceptPojo y = ConceptPojo.builder (aConcept).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -91,5 +98,8 @@ public final class ConceptPojoTest
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aConcept));
     LOGGER.info (m.getAsString (aConcept));
+
+    final ConceptPojo y = ConceptPojo.builder (aConcept).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
   }
 }

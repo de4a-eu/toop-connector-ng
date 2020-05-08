@@ -30,12 +30,21 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.error.IToopErrorCode;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
 
+/**
+ * Represents a "Concept" that can be nested. Only response concepts can have
+ * values.
+ *
+ * @author Philip Helger
+ */
 public class ConceptPojo
 {
   private final String m_sID;
@@ -116,10 +125,64 @@ public class ConceptPojo
     return ret;
   }
 
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+    final ConceptPojo rhs = (ConceptPojo) o;
+    return EqualsHelper.equals (m_sID, rhs.m_sID) &&
+           EqualsHelper.equals (m_aName, rhs.m_aName) &&
+           EqualsHelper.equals (m_aValue, rhs.m_aValue) &&
+           EqualsHelper.equals (m_aChildren, rhs.m_aChildren);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_sID)
+                                       .append (m_aName)
+                                       .append (m_aValue)
+                                       .append (m_aChildren)
+                                       .getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("ID", m_sID)
+                                       .append ("Name", m_aName)
+                                       .append ("Value", m_aValue)
+                                       .append ("Children", m_aChildren)
+                                       .getToString ();
+  }
+
   @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
+  }
+
+  @Nonnull
+  public static Builder builder (@Nullable final CCCEVConceptType a)
+  {
+    final Builder ret = new Builder ();
+    if (a != null)
+    {
+      if (a.hasIdEntries ())
+        ret.id (a.getIdAtIndex (0).getValue ());
+      if (a.hasQNameEntries ())
+        ret.name (a.getQNameAtIndex (0));
+      if (a.hasValueEntries ())
+        ret.value (ConceptValuePojo.builder (a.getValueAtIndex (0)));
+
+      // Recursive call
+      for (final CCCEVConceptType aChild : a.getConcept ())
+        ret.addChild (builder (aChild));
+    }
+    return ret;
   }
 
   public static class Builder

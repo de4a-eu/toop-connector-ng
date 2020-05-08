@@ -29,6 +29,11 @@ import eu.toop.edm.jaxb.cv.cac.AddressType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
 import eu.toop.edm.jaxb.cv.cbc.NameType;
 
+/**
+ * Represents an "Agent"
+ *
+ * @author Philip Helger
+ */
 public class AgentPojo
 {
   private final String m_sID;
@@ -105,7 +110,7 @@ public class AgentPojo
   public boolean equals (final Object o)
   {
     if (o == this)
-      return false;
+      return true;
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final AgentPojo rhs = (AgentPojo) o;

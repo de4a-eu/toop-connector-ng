@@ -68,7 +68,7 @@ public class QuantityPojo
   public boolean equals (final Object o)
   {
     if (o == this)
-      return false;
+      return true;
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final QuantityPojo rhs = (QuantityPojo) o;

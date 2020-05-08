@@ -207,7 +207,7 @@ public class AddressPojo
   public boolean equals (final Object o)
   {
     if (o == this)
-      return false;
+      return true;
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
     final AddressPojo rhs = (AddressPojo) o;
