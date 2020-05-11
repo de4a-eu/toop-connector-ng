@@ -24,7 +24,7 @@ final class EDMResponseExtractor {
         EDMResponse.Builder theResponseBuilder = new EDMResponse.Builder();
 
         theResponseBuilder.requestID(xmlResponse.getRequestId());
-        theResponseBuilder.responseStatus(responseStatusExtractor(xmlResponse.getStatus()));
+        theResponseBuilder.responseStatus(ERegRepResponseStatus.getFromIDOrNull(xmlResponse.getStatus()));
 
         if (xmlResponse.hasSlotEntries()) {
             for (SlotType s : xmlResponse.getSlot()) {
@@ -38,16 +38,6 @@ final class EDMResponseExtractor {
         }
 
         return theResponseBuilder.build();
-    }
-
-    private static ERegRepResponseStatus responseStatusExtractor(String responseStatus) {
-        if (responseStatus.equals(ERegRepResponseStatus.SUCCESS.getValue()))
-            return ERegRepResponseStatus.SUCCESS;
-        if (responseStatus.equals(ERegRepResponseStatus.PARTIAL_SUCCESS.getValue()))
-            return ERegRepResponseStatus.PARTIAL_SUCCESS;
-        if (responseStatus.equals(ERegRepResponseStatus.FAILURE.getValue()))
-            return ERegRepResponseStatus.FAILURE;
-        throw new IllegalStateException("Response status not valid: "+responseStatus);
     }
 
     private static void applySlots(SlotType slotType, EDMResponse.Builder theResponse) throws JAXBException {
