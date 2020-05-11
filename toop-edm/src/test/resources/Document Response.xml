@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<query:QueryResponse xmlns:lcm="urn:oasis:names:tc:ebxml-regrep:xsd:lcm:4.0" xmlns:query="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0" xmlns:spi="urn:oasis:names:tc:ebxml-regrep:xsd:spi:4.0" xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:4.0" xmlns:wsa="http://www.w3.org/2005/08/addressing" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0" status="urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success" requestId="c4369c4d-740e-4b64-80f0-7b209a66d629">
+    <rim:Slot name="SpecificationIdentifier">
+        <rim:SlotValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="rim:StringValueType">
+            <rim:Value>toop-edm:v2.0</rim:Value>
+        </rim:SlotValue>
+    </rim:Slot>
+    <rim:Slot name="IssueDateTime">
+        <rim:SlotValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="rim:DateTimeValueType">
+            <rim:Value>2020-02-14T19:20:30.000</rim:Value>
+        </rim:SlotValue>
+    </rim:Slot>
+    <rim:Slot name="DataProvider">
+        <rim:SlotValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="rim:AnyValueType">
+            <cagv:Agent xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:regorg="http://www.w3.org/ns/regorg#" xmlns:locn="http://www.w3.org/ns/locn#" xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#" xmlns:cac="https://semic.org/sa/cv/common/cac-2.0.0#" xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#">
+                <cbc:id schemeID="VAT">12345678</cbc:id>
+                <cbc:name>DPName</cbc:name>
+            </cagv:Agent>
+        </rim:SlotValue>
+    </rim:Slot>
+    <rim:RegistryObjectList>
+        <rim:RegistryObject id="01ec5b03-df4e-44e1-bfcb-6b1c1b825bfd">
+            <rim:Slot name="DocumentMetadata">
+                <rim:SlotValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="rim:AnyValueType">
+                    <dcat:Dataset xmlns:spdx="spdx:xsd::1.0" xmlns:skos="http://www.w3.org/2004/02/skos/core#" xmlns:regorg="http://www.w3.org/ns/regorg#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:odrl="http://www.w3.org/ns/odrl/2/" xmlns:locn="http://www.w3.org/ns/locn#" xmlns:foaf="http://xmlns.com/foaf/0.1/" xmlns:dct="http://purl.org/dc/terms/" xmlns:cccev="https://semic.org/sa/cv/cccev-2.0.0#" xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#" xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#" xmlns:cac="https://semic.org/sa/cv/common/cac-2.0.0#" xmlns:adms="http://www.w3.org/ns/adms#" xmlns:dcat="http://data.europa.eu/r5r/">
+                        <dct:description>bla desc</dct:description>
+                        <dct:title>bla title</dct:title>
+                        <dcat:distribution xsi:type="cccev:DocumentReferenceType">
+                            <dcat:accessURL />
+                            <cccev:documentURI>URI</cccev:documentURI>
+                            <cccev:documentDescription>DocumentDescription</cccev:documentDescription>
+                            <cccev:documentType>docType</cccev:documentType>
+                            <cccev:localeCode>GR</cccev:localeCode>
+                        </dcat:distribution>
+                        <dct:creator xsi:type="cagv:AgentType">
+                            <cbc:name>Agent name</cbc:name>
+                            <cagv:location>
+                                <locn:address xsi:type="cac:AddressType">
+                                    <locn:postName>Kewlkidshome</locn:postName>
+                                </locn:address>
+                            </cagv:location>
+                        </dct:creator>
+                        <dct:identifier>RE238918378</dct:identifier>
+                        <dct:identifier>DOC-555</dct:identifier>
+                        <dct:issued>2020-05-10T14:10:14.562</dct:issued>
+                        <dct:language>en</dct:language>
+                        <dct:modified>2020-05-10T14:10:14.563</dct:modified>
+                        <dct:temporal>
+                            <dct:startDate>2020-04-10</dct:startDate>
+                            <dct:endDate>2021-05-10</dct:endDate>
+                        </dct:temporal>
+                        <dcat:qualifiedRelation>
+                            <dct:relation xsi:type="cccev:ReferenceFrameworkType">
+                                <dct:description>LegalResourceDesc</dct:description>
+                                <dct:title>Name</dct:title>
+                                <dct:identifier>RE238918378</dct:identifier>
+                            </dct:relation>
+                        </dcat:qualifiedRelation>
+                    </dcat:Dataset>
+                </rim:SlotValue>
+            </rim:Slot>
+        </rim:RegistryObject>
+    </rim:RegistryObjectList>
+</query:QueryResponse>
