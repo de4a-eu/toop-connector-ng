@@ -17,6 +17,7 @@ package eu.toop.edm.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
@@ -285,6 +286,24 @@ public class ConceptPojo
     public Builder valueMeasure (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
     {
       return value (ConceptValuePojo.builder ().measure (aValue, sUnitCode));
+    }
+
+    @Nonnull
+    public Builder valuePeriod (@Nullable final PeriodPojo.Builder a)
+    {
+      return value (ConceptValuePojo.builder ().period (a));
+    }
+
+    @Nonnull
+    public Builder valuePeriod (@Nullable final PeriodPojo a)
+    {
+      return value (ConceptValuePojo.builder ().period (a));
+    }
+
+    @Nonnull
+    public Builder valuePeriod (@Nullable final LocalDateTime aStartDate, @Nullable final LocalDateTime aEndDate)
+    {
+      return value (ConceptValuePojo.builder ().period (aStartDate, aEndDate));
     }
 
     @Nonnull
