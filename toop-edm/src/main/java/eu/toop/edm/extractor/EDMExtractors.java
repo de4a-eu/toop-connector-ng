@@ -3,48 +3,63 @@ package eu.toop.edm.extractor;
 import eu.toop.edm.model.EDMRequest;
 import eu.toop.edm.model.EDMResponse;
 import eu.toop.edm.xml.cagv.CCAGV;
+import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.query.QueryResponse;
 
 import javax.xml.bind.JAXBException;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
+import javax.xml.stream.XMLEventReader;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import java.io.*;
 import java.nio.file.Path;
-import java.util.NoSuchElementException;
 
 public final class EDMExtractors {
 
+    private EDMExtractors() {
+        // Prevent utility class instantiation
+    }
+
     // For request
-    public static EDMRequest importEDMRequest(File f) throws JAXBException, EDMException {
-        if (isQueryRequest(f))
-            return importEDMRequest(RegRep4Reader.queryRequest().read(f));
-        throw new EDMException("Are you trying to import a Request using the Response method?");
+    public static EDMRequest importEDMRequest(File f) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+        return importEDMRequest(new FileInputStream(f));
     }
 
-    public static EDMRequest importEDMRequest(InputStream is) throws JAXBException, EDMException {
-        if (isQueryRequest(is))
-            return importEDMRequest(RegRep4Reader.queryRequest().read(is));
-        throw new EDMException("Are you trying to import a Response using the Request method?");
+    public static EDMRequest importEDMRequest(Path p) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+        return importEDMRequest(p.toFile());
     }
 
-    public static EDMRequest importEDMRequest(Path p) throws JAXBException, EDMException {
-        if (isQueryRequest(p))
-            return importEDMRequest(RegRep4Reader.queryRequest().read(p));
-        throw new EDMException("Are you trying to import a Response using the Request method?");
-    }
-
-    public static EDMRequest importEDMRequest(String s) throws JAXBException {
-        QueryRequest queryRequest = RegRep4Reader.queryRequest().read(s);
-        return importEDMRequest(queryRequest);
+    public static EDMRequest importEDMRequest(String s) throws JAXBException, EDMException, XMLStreamException {
+        return importEDMRequest(new ByteArrayInputStream(s.getBytes()));
     }
 
     public static EDMRequest importEDMRequest(QueryRequest qr) throws JAXBException {
         return EDMRequestExtractor.extract(qr);
+    }
+
+    public static EDMRequest importEDMRequest(InputStream is) throws JAXBException, EDMException, XMLStreamException {
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLEventReader eventReader = factory.createXMLEventReader(is);
+
+        // Move cursor to the start of the document
+        while (!eventReader.peek().isStartElement()) {
+            eventReader.nextEvent();
+        }
+
+        // Peek first element to check if it is a QueryRequest
+        if ((eventReader
+                .peek()
+                .asStartElement()
+                .getName()
+                .getLocalPart()
+                .equals("QueryRequest")))
+            return importEDMRequest(RegRep4Reader
+                    .queryRequest()
+                    .read(eventReader));
+
+        throw new EDMException("Are you trying to import a Response using the Request method!?");
     }
 
     public static String exportEDMRequestAsString(EDMRequest edmRequest) {
@@ -65,30 +80,40 @@ public final class EDMExtractors {
         return EDMRequestExtractor.extract(edmRequest);
     }
 
-
     // For response
-    public static EDMResponse importEDMResponse(File f) throws JAXBException, EDMException {
-        if (!isQueryRequest(f))
-            return importEDMResponse(RegRep4Reader.queryResponse().read(f));
-        throw new EDMException("Are you trying to import a Request using the Response method?");
+    public static EDMResponse importEDMResponse(File f) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+        return (importEDMResponse(new FileInputStream(f)));
     }
 
-    public static EDMResponse importEDMResponse(InputStream is) throws JAXBException, EDMException {
-        if (!isQueryRequest(is))
-            return importEDMResponse(RegRep4Reader.queryResponse().read(is));
-        throw new EDMException("Are you trying to import a Request using the Response method?");
+    public static EDMResponse importEDMResponse(Path p) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+        return importEDMResponse(p.toFile());
     }
 
-    public static EDMResponse importEDMResponse(Path p) throws JAXBException, EDMException {
-        if (!isQueryRequest(p))
-            return importEDMResponse(RegRep4Reader.queryResponse().read(p));
-        throw new EDMException("Are you trying to import a Request using the Response method?");
+    public static EDMResponse importEDMResponse(String s) throws JAXBException, EDMException, XMLStreamException {
+        return importEDMResponse(new ByteArrayInputStream(s.getBytes()));
     }
 
-    public static EDMResponse importEDMResponse(String s) throws JAXBException, EDMException {
-        if (!isQueryRequest(s))
-            return importEDMResponse(RegRep4Reader.queryResponse().read(s));
-        throw new EDMException("Are you trying to import a Request using the Response method?");
+    public static EDMResponse importEDMResponse(InputStream is) throws JAXBException, EDMException, XMLStreamException {
+        XMLInputFactory factory = XMLInputFactory.newInstance();
+        XMLEventReader eventReader = factory.createXMLEventReader(is);
+
+        // Move cursor to the start of the document
+        while (!eventReader.peek().isStartElement()) {
+            eventReader.nextEvent();
+        }
+
+        // Peek first element to check if it is a QueryResponse
+        if ((eventReader
+                .peek()
+                .asStartElement()
+                .getName()
+                .getLocalPart()
+                .equals("QueryResponse")))
+            return importEDMResponse(RegRep4Reader
+                    .queryResponse(CCCEV.XSDS)
+                    .read(eventReader));
+
+        throw new EDMException("Are you trying to import a Request using the Response method!?");
     }
 
     public static EDMResponse importEDMResponse(QueryResponse queryResponse) throws JAXBException {
@@ -111,41 +136,5 @@ public final class EDMExtractors {
 
     public static QueryResponse exportEDMResponseAsQueryResponse(EDMResponse queryResponse) {
         return EDMResponseExtractor.extract(queryResponse);
-    }
-
-
-    // Check if a supplied document is a queryRequest
-    public static boolean isQueryRequest(String s) {
-        return s.contains("QueryRequest");
-    }
-
-    public static boolean isQueryRequest(InputStream is) throws EDMException {
-        is.mark(1024);
-        try {
-            byte[] contents = is.readNBytes(1024);
-            is.reset();
-            return isQueryRequest(new String(contents, StandardCharsets.UTF_8));
-        } catch (IOException e) {
-            throw new EDMException("Could not determine if the document was a QueryRequest or a QueryResponse");
-        }
-    }
-
-    public static boolean isQueryRequest(File f) throws EDMException {
-        return isQueryRequest(f.toPath());
-    }
-
-    public static boolean isQueryRequest(Path p) throws EDMException {
-        try {
-            return isQueryRequest(Files
-                    .lines(p)
-                    .findFirst()
-                    .orElseThrow());
-        } catch (IOException | NoSuchElementException e) {
-            throw new EDMException("Could not determine if the document was a QueryRequest or a QueryResponse");
-        }
-    }
-
-    private EDMExtractors() {
-        // Prevent utility class instantiation
     }
 }

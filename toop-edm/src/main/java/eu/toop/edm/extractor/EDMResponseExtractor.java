@@ -2,7 +2,7 @@ package eu.toop.edm.extractor;
 
 import com.helger.datetime.util.PDTXMLConverter;
 import eu.toop.edm.EDMResponseCreator;
-import eu.toop.edm.extractor.slotunmarshaller.Unmarshallers;
+import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DatasetPojo;
