@@ -50,7 +50,7 @@ public final class EDMExtractors {
             eventReader.nextEvent();
         }
 
-        // Peek first element to check if it is a QueryRequest
+        // Peek at first element to check if it is a QueryRequest
         if ((eventReader
                 .peek()
                 .asStartElement()
@@ -86,7 +86,7 @@ public final class EDMExtractors {
             eventReader.nextEvent();
         }
 
-        // Peek first element to check if it is a QueryResponse
+        // Peek at first element to check if it is a QueryResponse
         if ((eventReader
                 .peek()
                 .asStartElement()

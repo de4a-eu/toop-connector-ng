@@ -9,6 +9,9 @@ import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 
 public class Unmarshallers {
+    private Unmarshallers(){
+        //Prevent utility class instantiation
+    }
 
     public static SlotUnmarshaller<AgentType> getAgentUnmarshaller(){
         return new AgentUnmarshaller();
@@ -36,8 +39,5 @@ public class Unmarshallers {
 
     public static SlotUnmarshaller<CCCEVRequirementType> getCCCEVRequirementUnmarshaller(){
         return new FulFillingRequirementUnmarshaller();
-    }
-    private Unmarshallers(){
-        //Prevent utility class instantiation
     }
 }

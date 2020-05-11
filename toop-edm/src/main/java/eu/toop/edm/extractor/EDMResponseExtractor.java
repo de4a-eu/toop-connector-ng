@@ -15,19 +15,23 @@ import eu.toop.regrep.rim.*;
 import javax.xml.bind.JAXBException;
 
 final class EDMResponseExtractor {
+    private EDMResponseExtractor() {
+
+    }
 
     static EDMResponse extract(QueryResponse xmlResponse) throws JAXBException {
+
         EDMResponse.Builder theResponseBuilder = new EDMResponse.Builder();
 
         theResponseBuilder.requestID(xmlResponse.getRequestId());
         theResponseBuilder.responseStatus(responseStatusExtractor(xmlResponse.getStatus()));
 
-        if(xmlResponse.hasSlotEntries()){
+        if (xmlResponse.hasSlotEntries()) {
             for (SlotType s : xmlResponse.getSlot()) {
                 applySlots(s, theResponseBuilder);
             }
         }
-        if(xmlResponse.getRegistryObjectList().hasRegistryObjectEntries()){
+        if (xmlResponse.getRegistryObjectList().hasRegistryObjectEntries()) {
             for (SlotType slotType : xmlResponse.getRegistryObjectList().getRegistryObjectAtIndex(0).getSlot()) {
                 applySlots(slotType, theResponseBuilder);
             }
@@ -36,18 +40,18 @@ final class EDMResponseExtractor {
         return theResponseBuilder.build();
     }
 
-    private static ERegRepResponseStatus responseStatusExtractor(String responseStatus){
-        if(responseStatus.contains("Success"))
+    private static ERegRepResponseStatus responseStatusExtractor(String responseStatus) {
+        if (responseStatus.equals(ERegRepResponseStatus.SUCCESS.getValue()))
             return ERegRepResponseStatus.SUCCESS;
-        if(responseStatus.contains("PartialSuccess"))
+        if (responseStatus.equals(ERegRepResponseStatus.PARTIAL_SUCCESS.getValue()))
             return ERegRepResponseStatus.PARTIAL_SUCCESS;
-        if(responseStatus.contains("Failure"))
+        if (responseStatus.equals(ERegRepResponseStatus.FAILURE.getValue()))
             return ERegRepResponseStatus.FAILURE;
-        return null;
+        throw new IllegalStateException("Response status not valid: "+responseStatus);
     }
 
     private static void applySlots(SlotType slotType, EDMResponse.Builder theResponse) throws JAXBException {
-        if ((slotType!=null) && (slotType.getName()!=null)) {
+        if ((slotType != null) && (slotType.getName() != null) && (slotType.getSlotValue() != null))
             switch (slotType.getName()) {
                 case SlotSpecificationIdentifier.NAME:
                     theResponse.specificationIdentifier(((StringValueType) slotType.getSlotValue()).
@@ -81,7 +85,10 @@ final class EDMResponseExtractor {
                                             .getAny())).build());
                     theResponse.queryDefinition(EQueryDefinitionType.DOCUMENT);
                     break;
+                default:
+                    throw new IllegalStateException("Slot is not defined: " + slotType.getName());
             }
-        }
     }
 }
+
+

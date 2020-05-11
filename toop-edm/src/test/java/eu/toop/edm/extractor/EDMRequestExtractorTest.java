@@ -1,6 +1,9 @@
 package eu.toop.edm.extractor;
 
+import com.helger.commons.io.resource.ClassPathResource;
 import eu.toop.edm.model.EDMRequest;
+import eu.toop.edm.xml.cagv.CCAGV;
+import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.query.QueryRequest;
 import org.junit.Before;
@@ -10,33 +13,29 @@ import javax.xml.bind.JAXBException;
 
 import static org.junit.Assert.assertNotNull;
 
-public class EDMRequestExtractorTest {
+public final class EDMRequestExtractorTest {
 
-    QueryRequest queryRequestLP, queryRequestNP, documentRequestNP, documentRequestLP;
-
-    @Before
-    public void setUp() {
-        queryRequestLP = RegRep4Reader.queryRequest ()
-                .read(this.getClass().getClassLoader().getResourceAsStream("Concept Request_LP.xml"));
-        queryRequestNP = RegRep4Reader.queryRequest ()
-                .read(this.getClass().getClassLoader().getResourceAsStream("Concept Request_NP.xml"));
-        documentRequestLP = RegRep4Reader.queryRequest ()
-                .read(this.getClass().getClassLoader().getResourceAsStream("Document Request_LP.xml"));
-        documentRequestNP = RegRep4Reader.queryRequest ()
-                .read(this.getClass().getClassLoader().getResourceAsStream("Document Request_NP.xml"));
-
+    @Test
+    public void testConceptRequestLPExtractor() throws JAXBException {
+        assertNotNull(EDMRequestExtractor.extract(RegRep4Reader.queryRequest(CCAGV.XSDS)
+                .read(ClassPathResource.getInputStream("Concept Request_LP.xml"))));
     }
 
     @Test
-    public void extract() throws JAXBException {
-        EDMRequest w = EDMRequestExtractor.extract(queryRequestLP);
-        EDMRequest x = EDMRequestExtractor.extract(queryRequestNP);
-        EDMRequest y = EDMRequestExtractor.extract(documentRequestLP);
-        EDMRequest z = EDMRequestExtractor.extract(documentRequestNP);
+    public void testConceptResponseNPExtractor() throws JAXBException {
+        assertNotNull(EDMRequestExtractor.extract(RegRep4Reader.queryRequest(CCAGV.XSDS)
+                .read(ClassPathResource.getInputStream("Concept Request_NP.xml"))));
+    }
 
-        assertNotNull(w);
-        assertNotNull(x);
-        assertNotNull(y);
-        assertNotNull(z);
+    @Test
+    public void testDocumentRequestLPExtractor() throws JAXBException {
+        assertNotNull(EDMRequestExtractor.extract(RegRep4Reader.queryRequest(CCAGV.XSDS)
+                .read(ClassPathResource.getInputStream("Document Request_LP.xml"))));
+    }
+
+    @Test
+    public void testDocumentRequestNPExtractor() throws JAXBException {
+        assertNotNull(EDMRequestExtractor.extract(RegRep4Reader.queryRequest(CCAGV.XSDS)
+                .read(ClassPathResource.getInputStream("Document Request_NP.xml"))));
     }
 }
