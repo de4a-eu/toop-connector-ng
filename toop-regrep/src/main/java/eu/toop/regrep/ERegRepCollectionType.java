@@ -16,32 +16,41 @@
 package eu.toop.regrep;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
 
 /**
  * Enumeration with collection types.
  *
  * @author Philip Helger
  */
-public enum ERegRepCollectionType
+public enum ERegRepCollectionType implements IHasID <String>
 {
   BAG ("urn:oasis:names:tc:ebxml-regrep:CollectionType:Bag"),
   LIST ("urn:oasis:names:tc:ebxml-regrep:CollectionType:List"),
   SET ("urn:oasis:names:tc:ebxml-regrep:CollectionType:Set"),
   SORTED_SET ("urn:oasis:names:tc:ebxml-regrep:CollectionType:Set:SortedSet");
 
-  private final String m_sValue;
+  private final String m_sID;
 
   ERegRepCollectionType (@Nonnull @Nonempty final String sValue)
   {
-    m_sValue = sValue;
+    m_sID = sValue;
   }
 
   @Nonnull
   @Nonempty
-  public String getValue ()
+  public String getID ()
   {
-    return m_sValue;
+    return m_sID;
+  }
+
+  @Nullable
+  public static ERegRepCollectionType getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (ERegRepCollectionType.class, sID);
   }
 }

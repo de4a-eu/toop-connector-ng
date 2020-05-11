@@ -16,31 +16,40 @@
 package eu.toop.regrep;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
 
 /**
  * Query response status enum
- * 
+ *
  * @author Philip Helger
  */
-public enum ERegRepResponseStatus
+public enum ERegRepResponseStatus implements IHasID <String>
 {
   SUCCESS ("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success"),
   PARTIAL_SUCCESS ("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:PartialSuccess"),
   FAILURE ("urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Failure");
 
-  private final String m_sValue;
+  private final String m_sID;
 
-  ERegRepResponseStatus (@Nonnull @Nonempty final String sValue)
+  ERegRepResponseStatus (@Nonnull @Nonempty final String sID)
   {
-    m_sValue = sValue;
+    m_sID = sID;
   }
 
   @Nonnull
   @Nonempty
-  public String getValue ()
+  public String getID ()
   {
-    return m_sValue;
+    return m_sID;
+  }
+
+  @Nullable
+  public static ERegRepResponseStatus getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (ERegRepResponseStatus.class, sID);
   }
 }

@@ -173,7 +173,7 @@ public final class RegRepHelper
     ValueEnforcer.noNullValue (x, "Value");
     final CollectionValueType ret = new CollectionValueType ();
     if (eType != null)
-      ret.setCollectionType (eType.getValue ());
+      ret.setCollectionType (eType.getID ());
     if (x != null)
       for (final ValueType aItem : x)
         ret.addElement (aItem);
@@ -187,7 +187,7 @@ public final class RegRepHelper
     ValueEnforcer.noNullValue (x, "Value");
     final CollectionValueType ret = new CollectionValueType ();
     if (eType != null)
-      ret.setCollectionType (eType.getValue ());
+      ret.setCollectionType (eType.getID ());
     if (x != null)
       for (final ValueType aItem : x)
         ret.addElement (aItem);
@@ -296,7 +296,7 @@ public final class RegRepHelper
     ValueEnforcer.notNull (eStatus, "Status");
 
     final QueryResponse ret = new QueryResponse ();
-    ret.setStatus (eStatus.getValue ());
+    ret.setStatus (eStatus.getID ());
     return ret;
   }
 
