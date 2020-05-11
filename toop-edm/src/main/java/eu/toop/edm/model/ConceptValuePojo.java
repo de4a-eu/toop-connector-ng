@@ -42,8 +42,8 @@ public class ConceptValuePojo
   private final LocalDate m_aDate;
   private final Boolean m_aIndicator;
   private final MeasurePojo m_aMeasure;
-  private final PeriodPojo m_aPeriod;
   private final BigDecimal m_aNumeric;
+  private final PeriodPojo m_aPeriod;
   private final QuantityPojo m_aQuantity;
   private final ICommonsList <String> m_aText = new CommonsArrayList <> ();
   private final LocalTime m_aTime;
@@ -56,8 +56,8 @@ public class ConceptValuePojo
                            @Nullable final LocalDate aDate,
                            @Nullable final Boolean aIndicator,
                            @Nullable final MeasurePojo aMeasure,
-                           @Nullable final PeriodPojo aPeriod,
                            @Nullable final BigDecimal aNumeric,
+                           @Nullable final PeriodPojo aPeriod,
                            @Nullable final QuantityPojo aQuantity,
                            @Nullable final List <String> aText,
                            @Nullable final LocalTime aTime,
@@ -71,13 +71,13 @@ public class ConceptValuePojo
     m_aIndicator = aIndicator;
     m_aMeasure = aMeasure;
     m_aNumeric = aNumeric;
+    m_aPeriod = aPeriod;
     m_aQuantity = aQuantity;
     if (aText != null)
       m_aText.addAll (aText);
     m_aTime = aTime;
     m_sURI = sURI;
     m_sErrorCode = sErrorCode;
-    m_aPeriod = aPeriod;
   }
 
   @Nullable
@@ -117,12 +117,15 @@ public class ConceptValuePojo
   }
 
   @Nullable
-  public final PeriodPojo getPeriod (){ return m_aPeriod; }
-
-  @Nullable
   public final BigDecimal getNumeric ()
   {
     return m_aNumeric;
+  }
+
+  @Nullable
+  public final PeriodPojo getPeriod ()
+  {
+    return m_aPeriod;
   }
 
   @Nullable
@@ -178,10 +181,10 @@ public class ConceptValuePojo
       return CCCEVValueHelper.create (m_aIndicator);
     if (m_aMeasure != null)
       return CCCEVValueHelper.create (m_aMeasure.getAsMeasure ());
-    if (m_aPeriod != null)
-      return CCCEVValueHelper.create(m_aPeriod.getAsPeriod ());
     if (m_aNumeric != null)
       return CCCEVValueHelper.create (m_aNumeric);
+    if (m_aPeriod != null)
+      return CCCEVValueHelper.create (m_aPeriod.getAsPeriod ());
     if (m_aQuantity != null)
       return CCCEVValueHelper.create (m_aQuantity.getAsQuantity ());
     if (m_aText.isNotEmpty ())
@@ -210,11 +213,11 @@ public class ConceptValuePojo
            EqualsHelper.equals (m_aIndicator, rhs.m_aIndicator) &&
            EqualsHelper.equals (m_aMeasure, rhs.m_aMeasure) &&
            EqualsHelper.equals (m_aNumeric, rhs.m_aNumeric) &&
+           EqualsHelper.equals (m_aPeriod, rhs.m_aPeriod) &&
            EqualsHelper.equals (m_aQuantity, rhs.m_aQuantity) &&
            EqualsHelper.equals (m_aText, rhs.m_aText) &&
            EqualsHelper.equals (m_aTime, rhs.m_aTime) &&
            EqualsHelper.equals (m_sURI, rhs.m_sURI) &&
-           EqualsHelper.equals(m_aPeriod, rhs.m_aPeriod) &&
            EqualsHelper.equals (m_sErrorCode, rhs.m_sErrorCode);
   }
 
@@ -228,12 +231,12 @@ public class ConceptValuePojo
                                        .append (m_aIndicator)
                                        .append (m_aMeasure)
                                        .append (m_aNumeric)
+                                       .append (m_aPeriod)
                                        .append (m_aQuantity)
                                        .append (m_aText)
                                        .append (m_aTime)
                                        .append (m_sURI)
                                        .append (m_sErrorCode)
-                                       .append(m_aPeriod)
                                        .getHashCode ();
   }
 
@@ -247,6 +250,7 @@ public class ConceptValuePojo
                                        .append ("Indicator", m_aIndicator)
                                        .append ("Measure", m_aMeasure)
                                        .append ("Numeric", m_aNumeric)
+                                       .append ("Period", m_aPeriod)
                                        .append ("Quantity", m_aQuantity)
                                        .append ("Text", m_aText)
                                        .append ("Time", m_aTime)
@@ -268,19 +272,15 @@ public class ConceptValuePojo
     if (a != null)
     {
       ret.identifier (a.getIdentifierValueValue ())
-         .amount (a.getAmountValue () == null ? null
-                 : AmountPojo.builder (a.getAmountValue ()))
+         .amount (a.getAmountValue () == null ? null : AmountPojo.builder (a.getAmountValue ()))
          .code (a.getCodeValueValue ())
          .date (a.getDateValueValue ())
          .indicator (a.getIndicatorValue () == null ? null
                                                     : StringParser.parseBoolObj (a.getIndicatorValue ().getValue ()))
-         .measure (a.getMeasureValue () == null ? null
-                 :MeasurePojo.builder (a.getMeasureValue ()))
+         .measure (a.getMeasureValue () == null ? null : MeasurePojo.builder (a.getMeasureValue ()))
          .numeric (a.getNumericValueValue ())
-         .period(a.getPeriodValue () == null ? null
-                 :PeriodPojo.builder(a.getPeriodValue ()).build())
-         .quantity (a.getQuantityValue () == null ? null
-                 :QuantityPojo.builder (a.getQuantityValue ()))
+         .period (a.getPeriodValue () == null ? null : PeriodPojo.builder (a.getPeriodValue ()).build ())
+         .quantity (a.getQuantityValue () == null ? null : QuantityPojo.builder (a.getQuantityValue ()))
          .text (new CommonsArrayList <> (a.getTextValue (), TextType::getValue))
          .time (a.getTimeValueValue ())
          .uri (a.getUriValueValue ())
@@ -297,8 +297,8 @@ public class ConceptValuePojo
     private LocalDate m_aDate;
     private Boolean m_aIndicator;
     private MeasurePojo m_aMeasure;
-    private PeriodPojo m_aPeriod;
     private BigDecimal m_aNumeric;
+    private PeriodPojo m_aPeriod;
     private QuantityPojo m_aQuantity;
     private final ICommonsList <String> m_aText = new CommonsArrayList <> ();
     private LocalTime m_aTime;
@@ -406,6 +406,25 @@ public class ConceptValuePojo
     }
 
     @Nonnull
+    public Builder period (@Nullable final LocalDateTime aStartDate, @Nullable final LocalDateTime aEndDate)
+    {
+      return period (PeriodPojo.builder ().startDateTime (aStartDate).endDateTime (aEndDate));
+    }
+
+    @Nonnull
+    public Builder period (@Nullable final PeriodPojo.Builder a)
+    {
+      return period (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder period (@Nullable final PeriodPojo a)
+    {
+      m_aPeriod = a;
+      return this;
+    }
+
+    @Nonnull
     public Builder quantity (@Nullable final BigDecimal aValue, @Nullable final String sUnitCode)
     {
       return quantity (new QuantityPojo (aValue, sUnitCode));
@@ -423,26 +442,6 @@ public class ConceptValuePojo
       m_aQuantity = a;
       return this;
     }
-
-    @Nonnull
-    public Builder period (@Nullable final LocalDateTime aStartDate, @Nullable final LocalDateTime aEndDate)
-    {
-      return period (new PeriodPojo (aStartDate, aEndDate));
-    }
-
-    @Nonnull
-    public Builder period (@Nullable final PeriodPojo.Builder a)
-    {
-      return period (a == null ? null : a.build ());
-    }
-
-    @Nonnull
-    public Builder period (@Nullable final PeriodPojo a)
-    {
-      m_aPeriod = a;
-      return this;
-    }
-
 
     @Nonnull
     public Builder text (@Nullable final String... a)
@@ -520,6 +519,8 @@ public class ConceptValuePojo
         nCount++;
       if (m_aNumeric != null)
         nCount++;
+      if (m_aPeriod != null)
+        nCount++;
       if (m_aQuantity != null)
         nCount++;
       if (m_aText.isNotEmpty ())
@@ -529,8 +530,6 @@ public class ConceptValuePojo
       if (m_sURI != null)
         nCount++;
       if (m_sErrorCode != null)
-        nCount++;
-      if (m_aPeriod != null)
         nCount++;
       if (nCount == 0)
         throw new IllegalStateException ("No value was provided to the Concept Value");
@@ -549,8 +548,8 @@ public class ConceptValuePojo
                                    m_aDate,
                                    m_aIndicator,
                                    m_aMeasure,
-                                   m_aPeriod,
                                    m_aNumeric,
+                                   m_aPeriod,
                                    m_aQuantity,
                                    m_aText,
                                    m_aTime,
