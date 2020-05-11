@@ -1,7 +1,7 @@
-package eu.toop.edm.extractor.slotunmarshaller;
+package eu.toop.edm.extractor.unmarshaller;
 
 import javax.xml.bind.JAXBException;
 
-public interface BaseUnmarshaller<M> {
+public interface SlotUnmarshaller<M> {
     M unmarshal(Object object) throws JAXBException;
 }

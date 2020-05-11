@@ -1,4 +1,4 @@
-package eu.toop.edm.extractor.slotunmarshaller;
+package eu.toop.edm.extractor.unmarshaller;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
@@ -9,27 +9,27 @@ import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 
 public class Unmarshallers {
 
-    public static BaseUnmarshaller<AgentType> getAgentUnmarshaller(){
+    public static SlotUnmarshaller<AgentType> getAgentUnmarshaller(){
         return new AgentUnmarshaller();
     }
 
-    public static BaseUnmarshaller<CorePersonType> getPersonUnmarshaller(){
+    public static SlotUnmarshaller<CorePersonType> getPersonUnmarshaller(){
         return new PersonUnmarshaller();
     }
 
-    public static BaseUnmarshaller<CoreBusinessType> getBusinessUnmarshaller(){
+    public static SlotUnmarshaller<CoreBusinessType> getBusinessUnmarshaller(){
         return new BusinessUnmarshaller();
     }
 
-    public static BaseUnmarshaller<CCCEVConceptType> getConceptUnmarshaller(){
+    public static SlotUnmarshaller<CCCEVConceptType> getConceptUnmarshaller(){
         return new ConceptUnmarshaller();
     }
 
-    public static BaseUnmarshaller<DCatAPDistributionType> getDistributionUnmarshaller(){
+    public static SlotUnmarshaller<DCatAPDistributionType> getDistributionUnmarshaller(){
         return new DistributionUnmarshaller();
     }
 
-    public static BaseUnmarshaller<DCatAPDatasetType> getDatasetUnmarshaller(){
+    public static SlotUnmarshaller<DCatAPDatasetType> getDatasetUnmarshaller(){
         return new DatasetUnmarshaller();
     }
 

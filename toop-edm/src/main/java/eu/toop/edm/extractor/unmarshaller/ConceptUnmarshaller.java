@@ -1,4 +1,4 @@
-package eu.toop.edm.extractor.slotunmarshaller;
+package eu.toop.edm.extractor.unmarshaller;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import org.w3c.dom.Node;
@@ -8,7 +8,7 @@ import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-class ConceptUnmarshaller implements BaseUnmarshaller<CCCEVConceptType> {
+class ConceptUnmarshaller implements SlotUnmarshaller<CCCEVConceptType> {
     public CCCEVConceptType unmarshal(Object object) throws JAXBException {
         JAXBContext context = JAXBContext.newInstance(CCCEVConceptType.class);
         Unmarshaller um = context.createUnmarshaller();

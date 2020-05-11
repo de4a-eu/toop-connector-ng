@@ -2,7 +2,7 @@ package eu.toop.edm.extractor;
 
 import com.helger.datetime.util.PDTXMLConverter;
 import eu.toop.edm.EDMRequestCreator;
-import eu.toop.edm.extractor.slotunmarshaller.Unmarshallers;
+import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.model.*;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.*;
