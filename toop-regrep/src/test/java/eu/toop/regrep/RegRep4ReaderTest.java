@@ -60,15 +60,6 @@ public final class RegRep4ReaderTest
   }
 
   @Test
-  public void testDocumentResponse ()
-  {
-    final QueryResponse qr = RegRep4Reader.queryResponse ()
-                                          .read (new File ("src/test/resources/examples/Document Response.xml"));
-    assertNotNull (qr);
-    assertNotNull (RegRep4Writer.queryResponse ().getAsBytes (qr));
-  }
-
-  @Test
   public void testRegistryException ()
   {
     final RegistryExceptionType re = RegRep4Reader.registryException ()
