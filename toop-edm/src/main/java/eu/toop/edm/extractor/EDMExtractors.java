@@ -1,5 +1,6 @@
 package eu.toop.edm.extractor;
 
+import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import eu.toop.edm.model.EDMRequest;
 import eu.toop.edm.model.EDMResponse;
 import eu.toop.edm.xml.cagv.CCAGV;
@@ -14,6 +15,7 @@ import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 
 public final class EDMExtractors {
@@ -32,7 +34,7 @@ public final class EDMExtractors {
     }
 
     public static EDMRequest importEDMRequest(String s) throws JAXBException, XMLStreamException {
-        return importEDMRequest(new ByteArrayInputStream(s.getBytes()));
+        return importEDMRequest(new NonBlockingByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
     }
 
     public static EDMRequest importEDMRequest(QueryRequest qr) throws JAXBException {
@@ -72,7 +74,7 @@ public final class EDMExtractors {
     }
 
     public static EDMResponse importEDMResponse(String s) throws JAXBException, XMLStreamException {
-        return importEDMResponse(new ByteArrayInputStream(s.getBytes()));
+        return importEDMResponse(new NonBlockingByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)));
     }
 
     public static EDMResponse importEDMResponse(InputStream is) throws JAXBException, XMLStreamException {

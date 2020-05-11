@@ -1,5 +1,6 @@
 package eu.toop.edm.extractor;
 
+import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
@@ -22,11 +23,6 @@ final class EDMRequestExtractor {
         EDMRequest.Builder theRequestBuilder = new EDMRequest.Builder();
 
         theRequestBuilder.id(xmlRequest.getId());
-        theRequestBuilder.queryDefinition(EQueryDefinitionType.valueOf(
-                xmlRequest.getQuery()
-                        .getQueryDefinition()
-                        .toUpperCase()
-                        .replaceAll("QUERY","")));
 
         if (xmlRequest.hasSlotEntries()) {
             for (SlotType slot : xmlRequest.getSlot()) {
@@ -92,6 +88,7 @@ final class EDMRequestExtractor {
                                     .unmarshal(((AnyValueType) ((CollectionValueType) slotType.getSlotValue())
                                             .getElementAtIndex(0))
                                             .getAny())).build());
+                    theRequestBuilder.queryDefinition(EQueryDefinitionType.CONCEPT);
                     break;
                 case SlotDistributionRequestList.NAME:
                     theRequestBuilder.distribution(DistributionPojo.builder(
@@ -100,6 +97,7 @@ final class EDMRequestExtractor {
                                     .unmarshal(((AnyValueType) ((CollectionValueType) slotType.getSlotValue())
                                             .getElementAtIndex(0))
                                             .getAny())).build());
+                    theRequestBuilder.queryDefinition(EQueryDefinitionType.DOCUMENT);
                     break;
                 case SlotDatasetIdentifier.NAME:
                     theRequestBuilder.datasetIdentifier(((StringValueType) slotType.getSlotValue())
