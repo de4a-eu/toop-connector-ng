@@ -3,7 +3,9 @@ package eu.toop.edm.model;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 import eu.toop.edm.CToopEDM;
 import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.creator.EDMResponseCreator;
@@ -11,11 +13,15 @@ import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.slot.*;
+import eu.toop.edm.xml.cagv.CCAGV;
+import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.ERegRepResponseStatus;
+import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.query.QueryResponse;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
@@ -288,19 +294,33 @@ public class EDMResponse {
         return new EDMResponseCreator (m_eResponseStatus, m_aRequestID.toString(), aSlots).createQueryResponse ();
     }
 
+    public String getAsXMLString(){
+        return RegRep4Writer
+                .queryResponse(CCCEV.XSDS)
+                .setFormattedOutput(true)
+                .getAsString(getAsQueryResponse());
+    }
+
+    public InputStream getAsXMLInputStream(){
+        return RegRep4Writer
+                .queryResponse(CCCEV.XSDS)
+                .setFormattedOutput(true)
+                .getAsInputStream(getAsQueryResponse());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EDMResponse that = (EDMResponse) o;
-        return m_eQueryDefinition == that.m_eQueryDefinition &&
-                m_eResponseStatus == that.m_eResponseStatus &&
-                Objects.equals(m_aRequestID, that.m_aRequestID) &&
-                Objects.equals(m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
-                Objects.equals(m_aIssueDateTime, that.m_aIssueDateTime) &&
-                Objects.equals(m_aDataProvider, that.m_aDataProvider) &&
-                Objects.equals(m_aConcept, that.m_aConcept) &&
-                Objects.equals(m_aDataset, that.m_aDataset);
+        return EqualsHelper.equals(m_eQueryDefinition,that.m_eQueryDefinition) &&
+                EqualsHelper.equals(m_eResponseStatus , that.m_eResponseStatus) &&
+                EqualsHelper.equals(m_aRequestID, that.m_aRequestID) &&
+                EqualsHelper.equals(m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
+                EqualsHelper.equals(m_aIssueDateTime, that.m_aIssueDateTime) &&
+                EqualsHelper.equals(m_aDataProvider, that.m_aDataProvider) &&
+                EqualsHelper.equals(m_aConcept, that.m_aConcept) &&
+                EqualsHelper.equals(m_aDataset, that.m_aDataset);
     }
 
     @Override
@@ -313,5 +333,19 @@ public class EDMResponse {
                 m_aDataProvider,
                 m_aConcept,
                 m_aDataset);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringGenerator(this)
+                .append("QueryDefinition", m_eQueryDefinition)
+                .append("RequestID", m_aRequestID)
+                .append("ResponseStatus", m_eResponseStatus)
+                .append("SpecificationIdentifier",m_sSpecificationIdentifier)
+                .append("IssueDateTime", m_aIssueDateTime)
+                .append("DataProvider", m_aDataProvider)
+                .append("Concept", m_aConcept)
+                .append("Dataset", m_aDataset)
+                .getToString();
     }
 }

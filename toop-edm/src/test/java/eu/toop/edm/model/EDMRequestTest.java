@@ -1,15 +1,26 @@
 package eu.toop.edm.model;
 
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.mime.CMimeType;
 import eu.toop.edm.EQueryDefinitionType;
+import eu.toop.edm.extractor.EDMExtractors;
 import eu.toop.edm.pilot.gbm.EToopConcept;
+import org.junit.Before;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.time.Month;
 import java.util.Locale;
 
-public class EDMRequestTest {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+public final class EDMRequestTest {
 
     @Test
     public void createEDMDocumentRequestNP() {
@@ -130,26 +141,20 @@ public class EDMRequestTest {
                 .specificationIdentifier("SpecID")
                 .consentToken("AAABBB")
                 .concept(ConceptPojo.builder()
-                        .randomID()
-                        .name(EToopConcept.NAMESPACE_URI, EToopConcept.REGISTERED_ORGANIZATION.getID())
+                        .name(EToopConcept.COMPANY_TYPE)
                         .addChild(ConceptPojo.builder()
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.COMPANY_NAME.getID())
-                                .randomID()
-                                .build())
+                                .name(EToopConcept.COMPANY_NAME))
                         .addChild(ConceptPojo.builder()
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.COMPANY_CODE.getID())
-                                .randomID()
-                                .build())
+                                .name(EToopConcept.COMPANY_CODE))
                         .addChild(ConceptPojo.builder()
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.COMPANY_TYPE.getID())
-                                .randomID()
-                                .build())
+                                .name(EToopConcept.COMPANY_TYPE))
                         .build())
                 .build();
     }
 
+    // This attempts to create an EDMRequest with both concept and distribution which is not permitted and fails
     @Test(expected = IllegalStateException.class)
-    public void createEDMDocumentConceptRequestNP() {
+    public void createInvalidEDMRequest() {
         EDMRequest request = new EDMRequest.Builder()
                 .queryDefinition(EQueryDefinitionType.CONCEPT)
                 .issueDateTimeNow()
@@ -208,21 +213,56 @@ public class EDMRequestTest {
                         .format(EDistributionFormat.STRUCTURED)
                         .mediaType(CMimeType.APPLICATION_PDF).build())
                 .concept(ConceptPojo.builder()
-                        .randomID()
-                        .name(EToopConcept.NAMESPACE_URI, EToopConcept.REGISTERED_ORGANIZATION.getID())
+                        .name(EToopConcept.COMPANY_TYPE)
                         .addChild(ConceptPojo.builder()
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.COMPANY_NAME.getID())
-                                .randomID()
-                                .build())
+                                .name(EToopConcept.COMPANY_NAME))
                         .addChild(ConceptPojo.builder()
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.COMPANY_CODE.getID())
-                                .randomID()
-                                .build())
+                                .name(EToopConcept.COMPANY_CODE))
                         .addChild(ConceptPojo.builder()
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.COMPANY_TYPE.getID())
-                                .randomID()
-                                .build())
+                                .name(EToopConcept.COMPANY_TYPE))
                         .build())
                 .build();
+    }
+
+
+    @Test
+    public void testInputStreamExport() throws JAXBException, XMLStreamException {
+        assertNotNull(EDMExtractors
+                .extractEDMRequest(ClassPathResource.getInputStream("Concept Request_LP.xml"))
+                .getAsXMLString());
+    }
+
+    @Test
+    public void testEDMConceptRequestExport() throws JAXBException, XMLStreamException, FileNotFoundException {
+        assertNotNull(EDMExtractors
+                .extractEDMRequest(ClassPathResource.getAsFile("Concept Request_LP.xml"))
+                .getAsXMLString());
+    }
+
+    @Test
+    public void testEDMDocumentRequestExport() throws JAXBException, XMLStreamException, FileNotFoundException {
+        assertNotNull(EDMExtractors
+                .extractEDMRequest(ClassPathResource.getAsFile("Document Request_NP.xml"))
+                .getAsXMLString());
+    }
+
+    @Test
+    public void checkConsistencyConceptRequest() throws JAXBException, XMLStreamException, FileNotFoundException {
+        String XMLRequest = EDMExtractors
+                .extractEDMRequest(ClassPathResource.getAsFile("Concept Request_NP.xml"))
+                .getAsXMLString();
+
+        assertNotNull(XMLRequest);
+        assertEquals(XMLRequest, EDMExtractors.extractEDMRequest(XMLRequest).getAsXMLString());
+    }
+
+    @Test
+    public void checkConsistencyDocumentRequest() throws JAXBException, XMLStreamException, FileNotFoundException {
+        String XMLRequest = EDMExtractors
+                .extractEDMRequest(ClassPathResource.getAsFile("Document Request_LP.xml"))
+                .getAsXMLString();
+
+        assertNotNull(XMLRequest);
+        assertEquals(XMLRequest, EDMExtractors.extractEDMRequest(XMLRequest).getAsXMLString());
     }
 }

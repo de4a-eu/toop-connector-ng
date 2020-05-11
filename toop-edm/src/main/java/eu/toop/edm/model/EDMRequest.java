@@ -3,7 +3,9 @@ package eu.toop.edm.model;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 import eu.toop.edm.CToopEDM;
 import eu.toop.edm.creator.EDMRequestCreator;
 import eu.toop.edm.EQueryDefinitionType;
@@ -14,6 +16,9 @@ import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 import eu.toop.edm.slot.*;
+import eu.toop.edm.xml.cagv.CCAGV;
+import eu.toop.edm.xml.cccev.CCCEV;
+import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.InternationalStringType;
@@ -22,6 +27,7 @@ import eu.toop.regrep.rim.QueryType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -376,45 +382,6 @@ public class EDMRequest {
         }
     }
 
-    public QueryRequest getAsQueryRequest(){
-
-        final ICommonsList<ISlotProvider> aSlots = new CommonsArrayList<>();
-
-        // Top-level slots
-        if (m_sSpecificationIdentifier != null)
-            aSlots.add (new SlotSpecificationIdentifier(m_sSpecificationIdentifier));
-        if (m_aIssueDateTime != null)
-            aSlots.add (new SlotIssueDateTime(m_aIssueDateTime));
-        if (m_aProcedure != null)
-            aSlots.add (new SlotProcedure(m_aProcedure));
-        if (m_aFullfillingRequirement != null)
-            aSlots.add (new SlotFullfillingRequirement(m_aFullfillingRequirement));
-        if (m_sConsentToken != null)
-            aSlots.add (new SlotConsentToken (m_sConsentToken));
-        if (m_sDatasetIdentifier != null)
-            aSlots.add (new SlotDatasetIdentifier (m_sDatasetIdentifier));
-        if (m_aDataConsumer != null)
-            aSlots.add (new SlotDataConsumer (m_aDataConsumer));
-
-        // Commons Query slots
-        if (m_aDataSubjectLegalPerson != null)
-            aSlots.add (new SlotDataSubjectLegalPerson (m_aDataSubjectLegalPerson));
-        if (m_aDataSubjectNaturalPerson != null)
-            aSlots.add (new SlotDataSubjectNaturalPerson (m_aDataSubjectNaturalPerson));
-        if (m_aAuthorizedRepresentative != null)
-            aSlots.add (new SlotAuthorizedRepresentative (m_aAuthorizedRepresentative));
-
-        // Concept Query
-        if (m_aConcept != null)
-            aSlots.add (new SlotConceptRequestList (m_aConcept));
-
-        // Document Query
-        if (m_aDistribution != null)
-            aSlots.add (new SlotDistributionRequestList (m_aDistribution));
-
-        return new EDMRequestCreator(m_eQueryDefinition, m_aId.toString(), aSlots).createQueryRequest ();
-    }
-
     public UUID getId() {
         return m_aId;
     }
@@ -471,25 +438,78 @@ public class EDMRequest {
         return m_aDistribution;
     }
 
+    public QueryRequest getAsQueryRequest(){
+
+        final ICommonsList<ISlotProvider> aSlots = new CommonsArrayList<>();
+
+        // Top-level slots
+        if (m_sSpecificationIdentifier != null)
+            aSlots.add (new SlotSpecificationIdentifier(m_sSpecificationIdentifier));
+        if (m_aIssueDateTime != null)
+            aSlots.add (new SlotIssueDateTime(m_aIssueDateTime));
+        if (m_aProcedure != null)
+            aSlots.add (new SlotProcedure(m_aProcedure));
+        if (m_aFullfillingRequirement != null)
+            aSlots.add (new SlotFullfillingRequirement(m_aFullfillingRequirement));
+        if (m_sConsentToken != null)
+            aSlots.add (new SlotConsentToken (m_sConsentToken));
+        if (m_sDatasetIdentifier != null)
+            aSlots.add (new SlotDatasetIdentifier (m_sDatasetIdentifier));
+        if (m_aDataConsumer != null)
+            aSlots.add (new SlotDataConsumer (m_aDataConsumer));
+
+        // Commons Query slots
+        if (m_aDataSubjectLegalPerson != null)
+            aSlots.add (new SlotDataSubjectLegalPerson (m_aDataSubjectLegalPerson));
+        if (m_aDataSubjectNaturalPerson != null)
+            aSlots.add (new SlotDataSubjectNaturalPerson (m_aDataSubjectNaturalPerson));
+        if (m_aAuthorizedRepresentative != null)
+            aSlots.add (new SlotAuthorizedRepresentative (m_aAuthorizedRepresentative));
+
+        // Concept Query
+        if (m_aConcept != null)
+            aSlots.add (new SlotConceptRequestList (m_aConcept));
+
+        // Document Query
+        if (m_aDistribution != null)
+            aSlots.add (new SlotDistributionRequestList (m_aDistribution));
+
+        return new EDMRequestCreator(m_eQueryDefinition, m_aId.toString(), aSlots).createQueryRequest ();
+    }
+
+    public String getAsXMLString(){
+        return RegRep4Writer
+                .queryRequest(CCAGV.XSDS)
+                .setFormattedOutput(true)
+                .getAsString(getAsQueryRequest());
+    }
+
+    public InputStream getAsXMLInputStream(){
+        return RegRep4Writer
+                .queryRequest(CCAGV.XSDS)
+                .setFormattedOutput(true)
+                .getAsInputStream(getAsQueryRequest());
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         EDMRequest that = (EDMRequest) o;
-        return Objects.equals(m_aId, that.m_aId) &&
-                m_eQueryDefinition == that.m_eQueryDefinition &&
-                Objects.equals(m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
-                Objects.equals(m_aIssueDateTime, that.m_aIssueDateTime) &&
-                Objects.equals(m_aProcedure, that.m_aProcedure) &&
-                Objects.equals(m_aFullfillingRequirement, that.m_aFullfillingRequirement) &&
-                Objects.equals(m_aDataConsumer, that.m_aDataConsumer) &&
-                Objects.equals(m_sConsentToken, that.m_sConsentToken) &&
-                Objects.equals(m_sDatasetIdentifier, that.m_sDatasetIdentifier) &&
-                Objects.equals(m_aDataSubjectLegalPerson, that.m_aDataSubjectLegalPerson) &&
-                Objects.equals(m_aDataSubjectNaturalPerson, that.m_aDataSubjectNaturalPerson) &&
-                Objects.equals(m_aAuthorizedRepresentative, that.m_aAuthorizedRepresentative) &&
-                Objects.equals(m_aConcept, that.m_aConcept) &&
-                Objects.equals(m_aDistribution, that.m_aDistribution);
+        return EqualsHelper.equals(m_aId, that.m_aId) &&
+                EqualsHelper.equals(m_eQueryDefinition , that.m_eQueryDefinition ) &&
+                EqualsHelper.equals(m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
+                EqualsHelper.equals(m_aIssueDateTime, that.m_aIssueDateTime) &&
+                EqualsHelper.equals(m_aProcedure, that.m_aProcedure) &&
+                EqualsHelper.equals(m_aFullfillingRequirement, that.m_aFullfillingRequirement) &&
+                EqualsHelper.equals(m_aDataConsumer, that.m_aDataConsumer) &&
+                EqualsHelper.equals(m_sConsentToken, that.m_sConsentToken) &&
+                EqualsHelper.equals(m_sDatasetIdentifier, that.m_sDatasetIdentifier) &&
+                EqualsHelper.equals(m_aDataSubjectLegalPerson, that.m_aDataSubjectLegalPerson) &&
+                EqualsHelper.equals(m_aDataSubjectNaturalPerson, that.m_aDataSubjectNaturalPerson) &&
+                EqualsHelper.equals(m_aAuthorizedRepresentative, that.m_aAuthorizedRepresentative) &&
+                EqualsHelper.equals(m_aConcept, that.m_aConcept) &&
+                EqualsHelper.equals(m_aDistribution, that.m_aDistribution);
     }
 
     @Override
@@ -508,5 +528,25 @@ public class EDMRequest {
                 m_aAuthorizedRepresentative,
                 m_aConcept,
                 m_aDistribution);
+    }
+
+    @Override
+    public String toString() {
+        return new ToStringGenerator(this)
+                .append("ID", m_aId)
+                .append("QueryDefinition", m_eQueryDefinition)
+                .append("SpecificationIdentifier", m_sSpecificationIdentifier)
+                .append("IssueDateTime", m_aIssueDateTime)
+                .append("Procedure", m_aProcedure)
+                .append("FullfillingRequirement", m_aFullfillingRequirement)
+                .append("DataConsumer", m_aDataConsumer)
+                .append("ConsentToken", m_sConsentToken)
+                .append("DatasetIdentifier", m_sDatasetIdentifier)
+                .append("DataSubjectLegalPerson", m_aDataSubjectLegalPerson)
+                .append("DataSubjectNaturalPerson", m_aDataSubjectNaturalPerson)
+                .append("AuthorizedRepresentative", m_aAuthorizedRepresentative)
+                .append("Concept", m_aConcept)
+                .append("Distribution", m_aDistribution)
+                .getToString();
     }
 }

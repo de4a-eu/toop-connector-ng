@@ -4,14 +4,9 @@
     xmlns:rs="urn:oasis:names:tc:ebxml-regrep:xsd:rs:4.0"
     xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0"
     xmlns:query="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0"
-    xsi:schemaLocation="
-    urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0                        ../../../../xsd/regrep/query.xsd
-    urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0                          ../../../../xsd/regrep/rim.xsd
-    urn:oasis:names:tc:ebxml-regrep:xsd:rs:4.0                           ../../../../xsd/regrep/rs.xsd
-    https://semic.org/sa/cv/cagv/agent-2.0.0# ../../../../xsd/cagv/2.0.0/xml/xsd/CV-Agent.xsd" 
 
     requestId="c4369c4d-740e-4b64-80f0-7b209a66d629"
-    status="urn:oasis:nammes:tc:ebxml-regrep:ResponseStatusType:Success">
+    status="urn:oasis:names:tc:ebxml-regrep:ResponseStatusType:Success">
    
     <!-- SPECIFICATION IDENTIFIER -->
     <rim:Slot name="SpecificationIdentifier">
@@ -48,8 +43,7 @@
                     <rim:Element xsi:type="rim:AnyValueType">
                         <cccev:concept xmlns:cccev = "https://semic.org/sa/cv/cccev-2.0.0#"
                             xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#"
-                            xmlns:toop="http://toop.eu/registered-organization"
-                            xsi:schemaLocation="https://semic.org/sa/cv/cccev-2.0.0# ../../../../xsd/cccev/2.0.0/xml/xsd/cccev-2.0.0.xsd">  
+                            xmlns:toop="http://toop.eu/registered-organization">
                             <cbc:id>ConceptID-1</cbc:id>
                             <cbc:QName>toop:CompanyData</cbc:QName>
                             <cccev:concept>

@@ -1,15 +1,23 @@
 package eu.toop.edm.model;
 
 import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.io.resource.ClassPathResource;
 import eu.toop.edm.EQueryDefinitionType;
+import eu.toop.edm.extractor.EDMExtractors;
 import eu.toop.edm.pilot.gbm.EToopConcept;
 import eu.toop.regrep.ERegRepResponseStatus;
 import org.junit.Test;
 
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.time.Month;
 import java.util.UUID;
 
-public class EDMResponseTest {
+import static org.junit.Assert.assertNotNull;
+
+public final class EDMResponseTest {
 
     @Test
     public void createConceptResponse() {
@@ -19,20 +27,15 @@ public class EDMResponseTest {
                 .issueDateTimeNow()
                 .concept(ConceptPojo.builder()
                         .id("ConceptID-1")
-                        .name(EToopConcept.NAMESPACE_URI, EToopConcept.REGISTERED_ORGANIZATION.getID())
+                        .name(EToopConcept.REGISTERED_ORGANIZATION)
                         .addChild(ConceptPojo.builder()
-                                .id("ConceptID-2")
-                                .name(EToopConcept.NAMESPACE_URI,
-                                        EToopConcept.COMPANY_NAME.getID())
+                                .name(EToopConcept.COMPANY_NAME)
                                 .valueText("Helger Enterprises"))
                         .addChild(ConceptPojo.builder()
-                                .id("ConceptID-3")
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.FAX_NUMBER.getID())
+                                .name(EToopConcept.FAX_NUMBER)
                                 .valueText("342342424"))
                         .addChild(ConceptPojo.builder()
-                                .id("ConceptID-9")
-                                .name(EToopConcept.NAMESPACE_URI,
-                                        EToopConcept.FOUNDATION_DATE.getID())
+                                .name(EToopConcept.FOUNDATION_DATE)
                                 .valueDate(PDTFactory.createLocalDate(1960, Month.AUGUST, 12)))
                         .build())
                 .dataProvider(AgentPojo.builder()
@@ -100,6 +103,8 @@ public class EDMResponseTest {
                 .build();
     }
 
+    // This attempts to create an EDMResponse with a dataset element but with ConceptQuery set as the QueryDefinition
+    // which is not permitted and fails
     @Test(expected = IllegalStateException.class)
     public void createDocumentResponseWithConceptType() {
         EDMResponse res = new EDMResponse.Builder()
@@ -147,4 +152,27 @@ public class EDMResponseTest {
                 .specificationIdentifier("Niar")
                 .build();
     }
+
+    @Test
+    public void testInputStreamEDMConceptResponseExport() throws JAXBException, XMLStreamException {
+        assertNotNull(EDMExtractors
+                .extractEDMResponse(ClassPathResource.getInputStream("Concept Response.xml"))
+                .getAsXMLString());
+    }
+
+
+    @Test
+    public void testEDMConceptResponseExport() throws JAXBException, XMLStreamException, FileNotFoundException {
+        assertNotNull(EDMExtractors
+                .extractEDMResponse(ClassPathResource.getAsFile("Concept Response.xml"))
+                .getAsXMLString());
+    }
+
+    @Test
+    public void testEDMDocumentResponseExport() throws JAXBException, XMLStreamException, FileNotFoundException {
+        assertNotNull(EDMExtractors
+                .extractEDMResponse(ClassPathResource.getAsFile("Document Response.xml"))
+                .getAsXMLString());
+    }
+
 }

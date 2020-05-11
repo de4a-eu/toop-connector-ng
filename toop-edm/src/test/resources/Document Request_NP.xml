@@ -16,13 +16,7 @@
     xmlns:rim="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0"
     xmlns:query="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0"
     xmlns:xlink="http://www.w3.org/1999/xlink" 
-    id="c4369c4d-740e-4b64-80f0-7b209a66d629"
-    xmlns:toop="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0:toop"
-    xsi:schemaLocation="urn:oasis:names:tc:ebxml-regrep:xsd:query:4.0                        ../../../../xsd/regrep/query.xsd 
-    urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0                          ../../../../xsd/regrep/rim.xsd
-    urn:oasis:names:tc:ebxml-regrep:xsd:rs:4.0                           ../../../../xsd/regrep/rs.xsd 
-    http://www.w3.org/ns/corevocabulary/AggregateComponents              ../../../../xsd/cv/CoreVocabularies-AggregateComponents-1.1.xsd
-    https://semic.org/sa/cv/cagv/agent-2.0.0# ../../../../xsd/cagv/2.0.0/xml/xsd/CV-Agent.xsd">
+    id="c4369c4d-740e-4b64-80f0-7b209a66d629">
     
     
     <!-- SPECIFICATION IDENTIFIER -->
@@ -155,8 +149,7 @@
                 collectionType="urn:oasis:names:tc:ebxml-regrep:CollectionType:Set">
                 <rim:Element xsi:type="rim:AnyValueType">
                     <dcat:distribution xmlns:dcat ="http://data.europa.eu/r5r/"
-                        xmlns:dct="http://purl.org/dc/terms/"
-                        xsi:schemaLocation="http://data.europa.eu/r5r/ ../../../../xsd/dcat-ap/2.0.0/xml/dcat-ap.xsd">
+                        xmlns:dct="http://purl.org/dc/terms/">
                         <!--  accessURL mandatory element in the dcat xsd but not needed in EDM -->
                         <dcat:accessURL></dcat:accessURL>
                         <dct:format>UNSTRUCTURED</dct:format>

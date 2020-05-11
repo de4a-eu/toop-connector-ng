@@ -1,6 +1,5 @@
 package eu.toop.edm.extractor;
 
-import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTXMLConverter;
 import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
@@ -12,12 +11,13 @@ import eu.toop.regrep.rim.*;
 
 import javax.xml.bind.JAXBException;
 import java.util.Locale;
-import java.util.logging.LogManager;
-import java.util.logging.Logger;
-import java.util.stream.Collectors;
+
 
 final class EDMRequestExtractor {
-    private static final Logger LOGGER = LogManager.getLogManager().getLogger(EDMRequestExtractor.class.getName());
+
+    private EDMRequestExtractor(){
+
+    }
 
     static EDMRequest extract(QueryRequest xmlRequest) throws JAXBException {
         EDMRequest.Builder theRequestBuilder = new EDMRequest.Builder();
@@ -110,7 +110,10 @@ final class EDMRequestExtractor {
                                     .unmarshal(((AnyValueType) slotType.getSlotValue())
                                             .getAny()));
                     break;
+                default:
+                    throw new IllegalStateException("Slot is not defined: "+slotType.getName());
             }
         }
     }
+
 }
