@@ -14,7 +14,13 @@ import java.io.InputStream;
 import static org.junit.Assert.*;
 
 public class EDMExtractorsTest {
-    InputStream isConceptRequestLP, isConceptRequestNP, isDocumentRequestNP, isDocumentRequestLP, isConceptResponse, isDocumentResponse;
+    InputStream isConceptRequestLP,
+            isConceptRequestNP,
+            isDocumentRequestNP,
+            isDocumentRequestLP,
+            isConceptResponse,
+            isDocumentResponse,
+            isBogus;
 
     @Before
     public void setUp() {
@@ -24,14 +30,15 @@ public class EDMExtractorsTest {
         isDocumentRequestNP = this.getClass().getClassLoader().getResourceAsStream("Document Request_NP.xml");
         isConceptResponse = this.getClass().getClassLoader().getResourceAsStream("Concept Response.xml");
         isDocumentResponse = this.getClass().getClassLoader().getResourceAsStream("Document Response.xml");
+        isBogus = this.getClass().getClassLoader().getResourceAsStream("Bogus.xml");
     }
 
     @Test
-    public void testEDMRequestImport() throws JAXBException,  XMLStreamException {
-        EDMRequest conceptRequestLP = EDMExtractors.importEDMRequest(isConceptRequestLP);
-        EDMRequest conceptRequestNP = EDMExtractors.importEDMRequest(isConceptRequestNP);
-        EDMRequest documentRequestLP = EDMExtractors.importEDMRequest(isDocumentRequestLP);
-        EDMRequest documentRequestNP = EDMExtractors.importEDMRequest(isDocumentRequestNP);
+    public void testEDMRequestExtract() throws JAXBException,  XMLStreamException {
+        EDMRequest conceptRequestLP = EDMExtractors.extractEDMRequest(isConceptRequestLP);
+        EDMRequest conceptRequestNP = EDMExtractors.extractEDMRequest(isConceptRequestNP);
+        EDMRequest documentRequestLP = EDMExtractors.extractEDMRequest(isDocumentRequestLP);
+        EDMRequest documentRequestNP = EDMExtractors.extractEDMRequest(isDocumentRequestNP);
 
         assertNotNull(conceptRequestLP);
         assertNotNull(conceptRequestNP);
@@ -40,64 +47,34 @@ public class EDMExtractorsTest {
     }
 
     @Test
-    public void testEDMResponseImport() throws JAXBException,  XMLStreamException {
-        EDMResponse conceptResponse = EDMExtractors.importEDMResponse(isConceptResponse);
-        EDMResponse documentResponse = EDMExtractors.importEDMResponse(isDocumentResponse);
+    public void testEDMResponseExtract() throws JAXBException,  XMLStreamException {
+        EDMResponse conceptResponse = EDMExtractors.extractEDMResponse(isConceptResponse);
+        EDMResponse documentResponse = EDMExtractors.extractEDMResponse(isDocumentResponse);
 
         assertNotNull(conceptResponse);
         assertNotNull(documentResponse);
     }
 
-    @Test
-    public void testEDMRequestExport() throws JAXBException,  XMLStreamException {
-        EDMRequest conceptRequestLP = EDMExtractors.importEDMRequest(isConceptRequestLP);
-
-        String XMLRequest = EDMCreators.createAsString(conceptRequestLP);
-        assertNotNull(XMLRequest);
-    }
-
-    @Test
-    public void testEDMResponseExport() throws JAXBException, XMLStreamException {
-        EDMResponse conceptResponse = EDMExtractors.importEDMResponse(isConceptResponse);
-
-        String XMLResponse = EDMCreators.createAsString(conceptResponse);
-        assertNotNull(XMLResponse);
+    @Test(expected = IllegalArgumentException.class)
+    public void testRequestExtractionWithResponseExtractor() throws JAXBException, XMLStreamException {
+        EDMExtractors.extractEDMResponse(isConceptRequestLP);
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void testRequestImportWithResponseImport() throws JAXBException, XMLStreamException {
-        EDMExtractors.importEDMResponse(isConceptRequestLP);
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testResponseImportWithRequestImport() throws JAXBException, XMLStreamException {
-        EDMExtractors.importEDMRequest(isConceptResponse);
+    public void testResponseExtractionWithRequestExtractor() throws JAXBException, XMLStreamException {
+        EDMExtractors.extractEDMRequest(isConceptResponse);
         fail();
     }
 
-    @Test
-    public void checkConsistencyRequest() throws JAXBException,  XMLStreamException {
-        EDMRequest conceptRequestLP = EDMExtractors.importEDMRequest(isConceptRequestLP);
-
-        String XMLRequest = EDMCreators.createAsString(conceptRequestLP);
-        assertNotNull(XMLRequest);
-
-        assertEquals(XMLRequest,
-                EDMCreators.createAsString(
-                        EDMExtractors.importEDMRequest(XMLRequest)));
-
+    @Test(expected = XMLStreamException.class)
+    public void testBogusExtractionWithRequestExtractor() throws JAXBException, XMLStreamException {
+        EDMExtractors.extractEDMRequest(isBogus);
+        fail();
     }
 
-    @Test
-    @Ignore
-    public void checkConsistencyResponse() throws JAXBException,  XMLStreamException {
-        EDMResponse conceptResponse = EDMExtractors.importEDMResponse(isConceptResponse);
-
-        String XMLResponse = EDMCreators.createAsString(conceptResponse);
-        assertNotNull(XMLResponse);
-
-        assertEquals(XMLResponse,
-                EDMCreators.createAsString(
-                        EDMExtractors.importEDMResponse(XMLResponse)));
+    @Test(expected = XMLStreamException.class)
+    public void testBogusExtractionWithResponseExtractor() throws JAXBException, XMLStreamException {
+        EDMExtractors.extractEDMResponse(isBogus);
     }
+
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm;
+package eu.toop.edm.creator;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -24,7 +24,6 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 
-import eu.toop.edm.creator.EDMRequestCreator;
 import eu.toop.edm.model.*;
 import org.junit.Test;
 import org.slf4j.Logger;
