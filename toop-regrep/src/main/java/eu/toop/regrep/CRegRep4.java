@@ -23,6 +23,8 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.xsds.xlink.CXLink;
+import com.helger.xsds.xmlenc.CXML;
 
 /**
  * Contains all the constants for RegRep XSD handling.
@@ -32,9 +34,6 @@ import com.helger.commons.io.resource.ClassPathResource;
 @Immutable
 public final class CRegRep4
 {
-  public static final String DEFAULT_PREFIX_XLINK = "xlink";
-  public static final String NAMESPACE_URI_XLINK = "http://www.w3.org/1999/xlink";
-
   public static final String DEFAULT_PREFIX_WS_ADDRESSING = "wsa";
   public static final String NAMESPACE_URI_WS_ADDRESSING = "http://www.w3.org/2005/08/addressing";
 
@@ -100,25 +99,12 @@ public final class CRegRep4
     return new ClassPathResource ("/schemas/regrep4/ws-addr.xsd", _getCL ());
   }
 
-  // Note: requires xml
-  @Nonnull
-  public static ClassPathResource getXSDResourceXLink ()
-  {
-    return new ClassPathResource ("/schemas/regrep4/xlink.xsd", _getCL ());
-  }
-
-  @Nonnull
-  public static ClassPathResource getXSDResourceXML ()
-  {
-    return new ClassPathResource ("/schemas/regrep4/xml.xsd", _getCL ());
-  }
-
   @Nonnull
   @ReturnsMutableCopy
   public static ICommonsList <ClassPathResource> getAllXSDIncludes ()
   {
-    return new CommonsArrayList <> (getXSDResourceXML (),
-                                    getXSDResourceXLink (),
+    return new CommonsArrayList <> (CXML.getXSDResource (),
+                                    CXLink.getXSDResource (),
                                     getXSDResourceWSAddr (),
                                     getXSDResourceRIM (),
                                     getXSDResourceRS ());

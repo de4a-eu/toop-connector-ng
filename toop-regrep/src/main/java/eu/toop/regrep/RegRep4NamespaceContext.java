@@ -21,6 +21,7 @@ import javax.xml.XMLConstants;
 import com.helger.commons.annotation.Singleton;
 import com.helger.xml.CXML;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
+import com.helger.xsds.xlink.CXLink;
 
 /**
  * The namespace context to be used as the namespace prefix mapper.
@@ -38,7 +39,7 @@ public class RegRep4NamespaceContext extends MapBasedNamespaceContext
   protected RegRep4NamespaceContext ()
   {
     addMapping (CXML.XML_NS_PREFIX_XSI, XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
-    addMapping (CRegRep4.DEFAULT_PREFIX_XLINK, CRegRep4.NAMESPACE_URI_XLINK);
+    addMapping (CXLink.DEFAULT_PREFIX, CXLink.NAMESPACE_URI);
     addMapping (CRegRep4.DEFAULT_PREFIX_WS_ADDRESSING, CRegRep4.NAMESPACE_URI_WS_ADDRESSING);
     addMapping (CRegRep4.DEFAULT_PREFIX_RIM, CRegRep4.NAMESPACE_URI_RIM);
     addMapping (CRegRep4.DEFAULT_PREFIX_RS, CRegRep4.NAMESPACE_URI_RS);

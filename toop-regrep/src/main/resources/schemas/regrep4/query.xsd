@@ -37,7 +37,7 @@
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://www.w3.org/2001/XMLSchema  http://www.w3.org/2001/XMLSchema.xsd"
   >
-  <import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd"/>
+  <import namespace="http://www.w3.org/XML/1998/namespace" />
   <import namespace="urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0" schemaLocation="rim.xsd"/>
   <import namespace="urn:oasis:names:tc:ebxml-regrep:xsd:rs:4.0" schemaLocation="rs.xsd"/>
   <complexType name="ResponseOptionType">

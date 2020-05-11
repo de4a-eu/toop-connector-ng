@@ -56,15 +56,4 @@
       </nameXmlTransform>
     </schemaBindings>
   </bindings>
-  <bindings schemaLocation="../resources/schemas/regrep4/xlink.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.regrep.xlink" />
-      <nameXmlTransform>
-        <typeName prefix="XLink"/>
-      </nameXmlTransform>
-    </schemaBindings>
-    <bindings node="//xs:element[@name='title']">
-      <property name="TitleElement"/>
-    </bindings>
-  </bindings>
 </bindings>
