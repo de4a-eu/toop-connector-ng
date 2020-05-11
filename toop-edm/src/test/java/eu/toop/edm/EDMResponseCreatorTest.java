@@ -23,6 +23,8 @@ import java.time.Month;
 
 import javax.annotation.Nonnull;
 
+import eu.toop.edm.creator.EDMResponseCreator;
+import eu.toop.edm.model.*;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,12 +35,6 @@ import com.helger.commons.datetime.PDTFactory;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.error.EToopDataElementResponseErrorCode;
-import eu.toop.edm.model.AddressPojo;
-import eu.toop.edm.model.AgentPojo;
-import eu.toop.edm.model.ConceptPojo;
-import eu.toop.edm.model.DatasetPojo;
-import eu.toop.edm.model.DocumentReferencePojo;
-import eu.toop.edm.model.QualifiedRelationPojo;
 import eu.toop.edm.schematron.SchematronEDM2Validator;
 import eu.toop.edm.xml.cagv.CCAGV;
 import eu.toop.edm.xml.dcatap.CDCatAP;
@@ -56,9 +52,9 @@ public final class EDMResponseCreatorTest
   private static final Logger LOGGER = LoggerFactory.getLogger (EDMResponseCreatorTest.class);
 
   @Nonnull
-  public static EDMResponseCreator.Builder _dataResponseConcept ()
+  public static EDMResponse.Builder _dataResponseConcept ()
   {
-    return EDMResponseCreator.builderConcept ()
+    return EDMResponse.builderConcept ()
                              .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
                              .responseStatus (ERegRepResponseStatus.SUCCESS)
                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
@@ -66,9 +62,9 @@ public final class EDMResponseCreatorTest
   }
 
   @Nonnull
-  public static EDMResponseCreator.Builder _dataResponseDocument ()
+  public static EDMResponse.Builder _dataResponseDocument ()
   {
-    return EDMResponseCreator.builderDocument ()
+    return EDMResponse.builderDocument ()
                              .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
                              .responseStatus (ERegRepResponseStatus.SUCCESS)
                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
@@ -125,7 +121,7 @@ public final class EDMResponseCreatorTest
                                                                                                       .name (sConceptNS,
                                                                                                              "Concept-Name-9")
                                                                                                       .valueErrorCode (EToopDataElementResponseErrorCode.DP_ELE_001)))
-                                                           .build ();
+                                                           .build ().getAsQueryResponse();
     assertNotNull (aResponse);
 
     final RegRep4Writer <QueryResponse> aWriter = RegRep4Writer.queryResponse (CCAGV.XSDS).setFormattedOutput (true);
@@ -170,7 +166,7 @@ public final class EDMResponseCreatorTest
                                                                                                                           .description ("LegalResourceDesc")
                                                                                                                           .title ("Name")
                                                                                                                           .id ("RE238918378")))
-                                                            .build ();
+                                                            .build ().getAsQueryResponse();
     assertNotNull (aResponse);
 
     final RegRep4Writer <QueryResponse> aWriter = RegRep4Writer.queryResponse (CDCatAP.XSDS).setFormattedOutput (true);

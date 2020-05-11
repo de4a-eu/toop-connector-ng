@@ -1,9 +1,10 @@
 package eu.toop.edm.extractor;
 
 import com.helger.datetime.util.PDTXMLConverter;
-import eu.toop.edm.EDMRequestCreator;
+import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.model.*;
+import eu.toop.edm.slot.*;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.*;
 
@@ -20,8 +21,12 @@ final class EDMRequestExtractor {
     static EDMRequest extract(QueryRequest xmlRequest) throws JAXBException {
         EDMRequest.Builder theRequestBuilder = new EDMRequest.Builder();
 
-        theRequestBuilder.withID(xmlRequest.getId());
-        theRequestBuilder.withResponseOption(xmlRequest.getResponseOption().getReturnType());
+        theRequestBuilder.id(xmlRequest.getId());
+        theRequestBuilder.queryDefinition(EQueryDefinitionType.valueOf(
+                xmlRequest.getQuery()
+                        .getQueryDefinition()
+                        .toUpperCase()
+                        .replaceAll("QUERY","")));
 
         if (xmlRequest.hasSlotEntries()) {
             for (SlotType slot : xmlRequest.getSlot()) {
@@ -37,120 +42,75 @@ final class EDMRequestExtractor {
         return theRequestBuilder.build();
     }
 
-    static QueryRequest extract(EDMRequest edmRequest) {
-        sanityCheck(edmRequest);
-        EDMRequestCreator.Builder builder;
-        switch (edmRequest.getQueryDefinition()){
-            case CONCEPT:
-                return EDMRequestCreator.builderConcept()
-                        .specificationIdentifier(edmRequest.getSpecificationIdentifier())
-                        .issueDateTime(edmRequest.getIssueDateTime())
-                        .procedure(edmRequest.getProcedure())
-                        .fullfillingRequirement(null)
-                        .consentToken(edmRequest.getConsentToken())
-                        .datasetIdentifier(edmRequest.getDatasetIdentifier())
-                        .dataConsumer(edmRequest.getDataConsumer())
-                        .authorizedRepresentative(edmRequest.getAuthorizedRepresentative())
-                        .dataSubject(edmRequest.getNaturalPerson())
-                        .dataSubject(edmRequest.getLegalPerson())
-                        .queryDefinition(edmRequest.getQueryDefinition())
-                        .concept(edmRequest.getConcepts())
-                        .build();
-            case DOCUMENT:
-                return EDMRequestCreator.builderDocument()
-                        .specificationIdentifier(edmRequest.getSpecificationIdentifier())
-                        .issueDateTime(edmRequest.getIssueDateTime())
-                        .procedure(edmRequest.getProcedure())
-                        .fullfillingRequirement(null)
-                        .consentToken(edmRequest.getConsentToken())
-                        .datasetIdentifier(edmRequest.getDatasetIdentifier())
-                        .dataConsumer(edmRequest.getDataConsumer())
-                        .authorizedRepresentative(edmRequest.getAuthorizedRepresentative())
-                        .dataSubject(edmRequest.getNaturalPerson())
-                        .dataSubject(edmRequest.getLegalPerson())
-                        .queryDefinition(edmRequest.getQueryDefinition())
-                        .distribution(edmRequest.getDistribution())
-                        .build();
-            default:
-                throw new IllegalStateException("QueryDefinition must be specified as either CONCEPT or QUERY.");
-        }
-    }
-
-    private static void sanityCheck(EDMRequest edmRequest){
-        if ((edmRequest.getLegalPerson() != null) && (edmRequest.getNaturalPerson() != null))
-            throw new IllegalStateException("A request can either contain a Legal or a Natural person but not both.");
-        if((edmRequest.getDistribution() != null) && (edmRequest.getConcepts() != null))
-            throw new IllegalStateException("A request may either contain Concepts or Distribution but not both.");
-    }
-
     private static void applySlots(SlotType slotType, EDMRequest.Builder theRequestBuilder) throws JAXBException {
         if ((slotType != null) && (slotType.getName() != null) && (slotType.getSlotValue() != null)) {
             switch (slotType.getName()) {
-                case "SpecificationIdentifier":
-                    theRequestBuilder.withSpecificationIdentifier(((StringValueType) slotType.getSlotValue()).
-                            getValue());
+                case SlotSpecificationIdentifier.NAME:
+                    theRequestBuilder.specificationIdentifier(((StringValueType) slotType.getSlotValue())
+                            .getValue());
                     break;
-                case "IssueDateTime":
-                    theRequestBuilder.issuedAtDateTime(PDTXMLConverter.getLocalDateTime(((DateTimeValueType) slotType.getSlotValue())
+                case SlotIssueDateTime.NAME:
+                    theRequestBuilder.issueDateTime(PDTXMLConverter.getLocalDateTime(((DateTimeValueType) slotType.getSlotValue())
                             .getValue()));
                     break;
-                case "Procedure":
-                    theRequestBuilder.withProcedure(((InternationalStringValueType) slotType.getSlotValue())
-                            .getValue()
-                            .getLocalizedString()
-                            .stream()
-                            .collect(
-                                    Collectors.toMap(
-                                            lst -> Locale.forLanguageTag(lst.getLang()),
-                                            LocalizedStringType::getValue)));
+                case SlotProcedure.NAME:
+                    theRequestBuilder.procedure(((InternationalStringValueType) slotType.getSlotValue())
+                            .getValue());
                     break;
-                case "DataConsumer":
-                    theRequestBuilder.withDataConsumer(
+                case SlotDataConsumer.NAME:
+                    theRequestBuilder.dataConsumer(
                             AgentPojo.builder(Unmarshallers
                                     .getAgentUnmarshaller()
                                     .unmarshal(((AnyValueType) slotType.getSlotValue()).getAny())).build());
                     break;
-                case "ConsentToken":
-                    theRequestBuilder.withConsentToken(((StringValueType) slotType.getSlotValue())
+                case SlotConsentToken.NAME:
+                    theRequestBuilder.consentToken(((StringValueType) slotType.getSlotValue())
                             .getValue());
                     break;
-                case "LegalPerson":
-                    theRequestBuilder.withDataSubject(
+                case SlotDataSubjectLegalPerson.NAME:
+                    theRequestBuilder.dataSubject(
                             BusinessPojo.builder(Unmarshallers
                                     .getBusinessUnmarshaller()
                                     .unmarshal(((AnyValueType) slotType.getSlotValue()).getAny())).build());
                     break;
-                case "AuthorizedRepresentative":
-                    theRequestBuilder.withAuthorizedRepresentative(
+                case SlotAuthorizedRepresentative.NAME:
+                    theRequestBuilder.authorizedRepresentative(
                             PersonPojo.builder(Unmarshallers
                                     .getPersonUnmarshaller()
                                     .unmarshal(((AnyValueType) slotType.getSlotValue()).getAny())).build());
                     break;
-                case "NaturalPerson":
-                    theRequestBuilder.withDataSubject(
+                case SlotDataSubjectNaturalPerson.NAME:
+                    theRequestBuilder.dataSubject(
                             PersonPojo.builder(Unmarshallers
                                     .getPersonUnmarshaller()
                                     .unmarshal(((AnyValueType) slotType.getSlotValue()).getAny())).build());
                     break;
-                case "ConceptRequestList":
-                    theRequestBuilder.withConcept(
+                case SlotConceptRequestList.NAME:
+                    theRequestBuilder.concept(
                             ConceptPojo.builder(Unmarshallers
                                     .getConceptUnmarshaller()
                                     .unmarshal(((AnyValueType) ((CollectionValueType) slotType.getSlotValue())
                                             .getElementAtIndex(0))
                                             .getAny())).build());
                     break;
-                case "DistributionRequestList":
-                    theRequestBuilder.withDistribution(DistributionPojo.builder(
+                case SlotDistributionRequestList.NAME:
+                    theRequestBuilder.distribution(DistributionPojo.builder(
                             Unmarshallers
                                     .getDistributionUnmarshaller()
                                     .unmarshal(((AnyValueType) ((CollectionValueType) slotType.getSlotValue())
                                             .getElementAtIndex(0))
                                             .getAny())).build());
                     break;
-                case "DatasetIdentifier":
-                    theRequestBuilder.withDatasetIdentifier(((StringValueType) slotType.getSlotValue())
+                case SlotDatasetIdentifier.NAME:
+                    theRequestBuilder.datasetIdentifier(((StringValueType) slotType.getSlotValue())
                             .getValue());
+                    break;
+                case SlotFullfillingRequirement.NAME:
+                    theRequestBuilder.fullfillingRequirement(
+                            Unmarshallers
+                                    .getCCCEVRequirementUnmarshaller()
+                                    .unmarshal(((AnyValueType) slotType.getSlotValue())
+                                            .getAny()));
                     break;
             }
         }

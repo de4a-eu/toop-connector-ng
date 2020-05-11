@@ -1,6 +1,7 @@
 package eu.toop.edm.model;
 
 import com.helger.commons.datetime.PDTFactory;
+import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.pilot.gbm.EToopConcept;
 import eu.toop.regrep.ERegRepResponseStatus;
 import org.junit.Test;
@@ -12,9 +13,11 @@ public class EDMResponseTest {
 
     @Test
     public void createConceptResponse() {
-        EDMResponse res = new EDMResponse.Builder(UUID.randomUUID())
-                .issuedNow()
-                .withConceptResponse(ConceptPojo.builder()
+        EDMResponse res = new EDMResponse.Builder()
+                .queryDefinition(EQueryDefinitionType.CONCEPT)
+                .requestID(UUID.randomUUID())
+                .issueDateTimeNow()
+                .concept(ConceptPojo.builder()
                         .id("ConceptID-1")
                         .name(EToopConcept.NAMESPACE_URI, EToopConcept.REGISTERED_ORGANIZATION.getID())
                         .addChild(ConceptPojo.builder()
@@ -32,7 +35,7 @@ public class EDMResponseTest {
                                         EToopConcept.FOUNDATION_DATE.getID())
                                 .valueDate(PDTFactory.createLocalDate(1960, Month.AUGUST, 12)))
                         .build())
-                .withDataProvider(AgentPojo.builder()
+                .dataProvider(AgentPojo.builder()
                         .address(AddressPojo.builder()
                                 .town("MyTown")
                                 .streetName("MyStreet")
@@ -44,16 +47,18 @@ public class EDMResponseTest {
                         .id("1234")
                         .idSchemeID("VAT")
                         .build())
-                .withResponseStatus(ERegRepResponseStatus.SUCCESS)
-                .withSpecificationIdentifier("Niar")
+                .responseStatus(ERegRepResponseStatus.SUCCESS)
+                .specificationIdentifier("Niar")
                 .build();
     }
 
     @Test
     public void createDocumentResponse() {
-        EDMResponse res = new EDMResponse.Builder(UUID.randomUUID())
-                .issuedNow()
-                .withDatasetResponse((DatasetPojo.builder()
+        EDMResponse res = new EDMResponse.Builder()
+                .queryDefinition(EQueryDefinitionType.DOCUMENT)
+                .requestID(UUID.randomUUID())
+                .issueDateTimeNow()
+                .dataset((DatasetPojo.builder()
                         .description("bla desc")
                         .title("bla title")
                         .distribution(DocumentReferencePojo.builder()
@@ -78,7 +83,7 @@ public class EDMResponseTest {
                                 .title("Name")
                                 .id("RE238918378")))
                         .build())
-                .withDataProvider(AgentPojo.builder()
+                .dataProvider(AgentPojo.builder()
                         .address(AddressPojo.builder()
                                 .town("MyTown")
                                 .streetName("MyStreet")
@@ -90,46 +95,18 @@ public class EDMResponseTest {
                         .id("1234")
                         .idSchemeID("VAT")
                         .build())
-                .withResponseStatus(ERegRepResponseStatus.SUCCESS)
-                .withSpecificationIdentifier("Niar")
+                .responseStatus(ERegRepResponseStatus.SUCCESS)
+                .specificationIdentifier("Niar")
                 .build();
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void crateDocumentConceptResponse() {
-        EDMResponse res = new EDMResponse.Builder(UUID.randomUUID())
-                .issuedNow()
-                .withConceptResponse(ConceptPojo.builder()
-                        .id("ConceptID-1")
-                        .name(EToopConcept.NAMESPACE_URI, EToopConcept.REGISTERED_ORGANIZATION.getID())
-                        .addChild(ConceptPojo.builder()
-                                .id("ConceptID-2")
-                                .name(EToopConcept.NAMESPACE_URI,
-                                        EToopConcept.COMPANY_NAME.getID())
-                                .valueText("Helger Enterprises"))
-                        .addChild(ConceptPojo.builder()
-                                .id("ConceptID-3")
-                                .name(EToopConcept.NAMESPACE_URI, EToopConcept.FAX_NUMBER.getID())
-                                .valueText("342342424"))
-                        .addChild(ConceptPojo.builder()
-                                .id("ConceptID-9")
-                                .name(EToopConcept.NAMESPACE_URI,
-                                        EToopConcept.FOUNDATION_DATE.getID())
-                                .valueDate(PDTFactory.createLocalDate(1960, Month.AUGUST, 12)))
-                        .build())
-                .withDataProvider(AgentPojo.builder()
-                        .address(AddressPojo.builder()
-                                .town("MyTown")
-                                .streetName("MyStreet")
-                                .buildingNumber("22")
-                                .countryCode("GR")
-                                .fullAddress("MyStreet 22, 11134, MyTown, GR")
-                                .postalCode("11134").build())
-                        .name("DP NAME")
-                        .id("1234")
-                        .idSchemeID("VAT")
-                        .build())
-                .withDatasetResponse((DatasetPojo.builder()
+    @Test(expected = IllegalStateException.class)
+    public void createDocumentResponseWithConceptType() {
+        EDMResponse res = new EDMResponse.Builder()
+                .queryDefinition(EQueryDefinitionType.CONCEPT)
+                .requestID(UUID.randomUUID())
+                .issueDateTimeNow()
+                .dataset((DatasetPojo.builder()
                         .description("bla desc")
                         .title("bla title")
                         .distribution(DocumentReferencePojo.builder()
@@ -154,9 +131,20 @@ public class EDMResponseTest {
                                 .title("Name")
                                 .id("RE238918378")))
                         .build())
-                .withDatasetResponse(DatasetPojo.builder().build())
-                .withResponseStatus(ERegRepResponseStatus.SUCCESS)
-                .withSpecificationIdentifier("Niar")
+                .dataProvider(AgentPojo.builder()
+                        .address(AddressPojo.builder()
+                                .town("MyTown")
+                                .streetName("MyStreet")
+                                .buildingNumber("22")
+                                .countryCode("GR")
+                                .fullAddress("MyStreet 22, 11134, MyTown, GR")
+                                .postalCode("11134").build())
+                        .name("DP NAME")
+                        .id("1234")
+                        .idSchemeID("VAT")
+                        .build())
+                .responseStatus(ERegRepResponseStatus.SUCCESS)
+                .specificationIdentifier("Niar")
                 .build();
     }
 }
