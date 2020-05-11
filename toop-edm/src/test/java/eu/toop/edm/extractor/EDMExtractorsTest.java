@@ -1,5 +1,6 @@
 package eu.toop.edm.extractor;
 
+import eu.toop.edm.creator.EDMCreators;
 import eu.toop.edm.model.EDMRequest;
 import eu.toop.edm.model.EDMResponse;
 import org.junit.Before;
@@ -26,7 +27,7 @@ public class EDMExtractorsTest {
     }
 
     @Test
-    public void testEDMRequestImport() throws JAXBException, EDMException, XMLStreamException {
+    public void testEDMRequestImport() throws JAXBException,  XMLStreamException {
         EDMRequest conceptRequestLP = EDMExtractors.importEDMRequest(isConceptRequestLP);
         EDMRequest conceptRequestNP = EDMExtractors.importEDMRequest(isConceptRequestNP);
         EDMRequest documentRequestLP = EDMExtractors.importEDMRequest(isDocumentRequestLP);
@@ -39,7 +40,7 @@ public class EDMExtractorsTest {
     }
 
     @Test
-    public void testEDMResponseImport() throws JAXBException, EDMException, XMLStreamException {
+    public void testEDMResponseImport() throws JAXBException,  XMLStreamException {
         EDMResponse conceptResponse = EDMExtractors.importEDMResponse(isConceptResponse);
         EDMResponse documentResponse = EDMExtractors.importEDMResponse(isDocumentResponse);
 
@@ -48,57 +49,55 @@ public class EDMExtractorsTest {
     }
 
     @Test
-    public void testEDMRequestExport() throws JAXBException, EDMException, XMLStreamException {
+    public void testEDMRequestExport() throws JAXBException,  XMLStreamException {
         EDMRequest conceptRequestLP = EDMExtractors.importEDMRequest(isConceptRequestLP);
 
-        String XMLRequest = EDMExtractors.exportEDMRequestAsString(conceptRequestLP);
+        String XMLRequest = EDMCreators.createAsString(conceptRequestLP);
         assertNotNull(XMLRequest);
     }
 
     @Test
-    public void testEDMResponseExport() throws JAXBException, EDMException, XMLStreamException {
+    public void testEDMResponseExport() throws JAXBException, XMLStreamException {
         EDMResponse conceptResponse = EDMExtractors.importEDMResponse(isConceptResponse);
 
-        String XMLResponse = EDMExtractors.exportEDMResponseAsString(conceptResponse);
+        String XMLResponse = EDMCreators.createAsString(conceptResponse);
         assertNotNull(XMLResponse);
     }
 
-    @Test(expected = EDMException.class)
-    public void testRequestImportWithResponseImport() throws JAXBException, EDMException, XMLStreamException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testRequestImportWithResponseImport() throws JAXBException, XMLStreamException {
         EDMExtractors.importEDMResponse(isConceptRequestLP);
-        fail();
     }
 
-    @Test(expected = EDMException.class)
-    public void testResponseImportWithRequestImport() throws JAXBException, EDMException, XMLStreamException {
+    @Test(expected = IllegalArgumentException.class)
+    public void testResponseImportWithRequestImport() throws JAXBException, XMLStreamException {
         EDMExtractors.importEDMRequest(isConceptResponse);
         fail();
     }
 
     @Test
-    @Ignore
-    public void checkConsistencyRequest() throws JAXBException, EDMException, XMLStreamException {
+    public void checkConsistencyRequest() throws JAXBException,  XMLStreamException {
         EDMRequest conceptRequestLP = EDMExtractors.importEDMRequest(isConceptRequestLP);
 
-        String XMLRequest = EDMExtractors.exportEDMRequestAsString(conceptRequestLP);
+        String XMLRequest = EDMCreators.createAsString(conceptRequestLP);
         assertNotNull(XMLRequest);
 
         assertEquals(XMLRequest,
-                EDMExtractors.exportEDMRequestAsString(
+                EDMCreators.createAsString(
                         EDMExtractors.importEDMRequest(XMLRequest)));
 
     }
 
     @Test
     @Ignore
-    public void checkConsistencyResponse() throws JAXBException, EDMException, XMLStreamException {
+    public void checkConsistencyResponse() throws JAXBException,  XMLStreamException {
         EDMResponse conceptResponse = EDMExtractors.importEDMResponse(isConceptResponse);
 
-        String XMLResponse = EDMExtractors.exportEDMResponseAsString(conceptResponse);
+        String XMLResponse = EDMCreators.createAsString(conceptResponse);
         assertNotNull(XMLResponse);
 
         assertEquals(XMLResponse,
-                EDMExtractors.exportEDMResponseAsString(
+                EDMCreators.createAsString(
                         EDMExtractors.importEDMResponse(XMLResponse)));
     }
 }

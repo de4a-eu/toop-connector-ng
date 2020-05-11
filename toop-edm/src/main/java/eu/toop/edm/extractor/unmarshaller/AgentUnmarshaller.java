@@ -7,9 +7,12 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.util.Objects;
 
 class AgentUnmarshaller implements SlotUnmarshaller<AgentType> {
     public AgentType unmarshal(Object object) throws JAXBException {
+        if (Objects.isNull(object))
+            return null;
         JAXBContext context = JAXBContext.newInstance(AgentType.class);
         Unmarshaller um = context.createUnmarshaller();
         JAXBElement<AgentType> root = um.unmarshal((Node)object, AgentType.class);

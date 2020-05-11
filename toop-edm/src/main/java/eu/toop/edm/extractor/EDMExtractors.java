@@ -23,15 +23,15 @@ public final class EDMExtractors {
     }
 
     // For request
-    public static EDMRequest importEDMRequest(File f) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+    public static EDMRequest importEDMRequest(File f) throws JAXBException, FileNotFoundException, XMLStreamException {
         return importEDMRequest(new FileInputStream(f));
     }
 
-    public static EDMRequest importEDMRequest(Path p) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+    public static EDMRequest importEDMRequest(Path p) throws JAXBException, FileNotFoundException, XMLStreamException {
         return importEDMRequest(p.toFile());
     }
 
-    public static EDMRequest importEDMRequest(String s) throws JAXBException, EDMException, XMLStreamException {
+    public static EDMRequest importEDMRequest(String s) throws JAXBException, XMLStreamException {
         return importEDMRequest(new ByteArrayInputStream(s.getBytes()));
     }
 
@@ -39,7 +39,7 @@ public final class EDMExtractors {
         return EDMRequestExtractor.extract(qr);
     }
 
-    public static EDMRequest importEDMRequest(InputStream is) throws JAXBException, EDMException, XMLStreamException {
+    public static EDMRequest importEDMRequest(InputStream is) throws JAXBException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = factory.createXMLEventReader(is);
 
@@ -56,44 +56,26 @@ public final class EDMExtractors {
                 .getLocalPart()
                 .equals("QueryRequest")))
             return importEDMRequest(RegRep4Reader
-                    .queryRequest()
+                    .queryRequest(CCCEV.XSDS)
                     .read(eventReader));
 
-        throw new EDMException("Are you trying to import a Response using the Request method!?");
-    }
-
-    public static String exportEDMRequestAsString(EDMRequest edmRequest) {
-        return RegRep4Writer
-                .queryRequest(CCAGV.XSDS)
-                .setFormattedOutput(true)
-                .getAsString(exportEDMRequestAsQueryRequest(edmRequest));
-    }
-
-    public static InputStream exportEDMRequestAsInputStream(EDMRequest edmRequest) {
-        return RegRep4Writer
-                .queryRequest(CCAGV.XSDS)
-                .setFormattedOutput(true)
-                .getAsInputStream(exportEDMRequestAsQueryRequest(edmRequest));
-    }
-
-    public static QueryRequest exportEDMRequestAsQueryRequest(EDMRequest edmRequest) {
-        return EDMRequestExtractor.extract(edmRequest);
+        throw new IllegalArgumentException("This document does not contain a QueryRequest.");
     }
 
     // For response
-    public static EDMResponse importEDMResponse(File f) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+    public static EDMResponse importEDMResponse(File f) throws JAXBException, FileNotFoundException, XMLStreamException {
         return (importEDMResponse(new FileInputStream(f)));
     }
 
-    public static EDMResponse importEDMResponse(Path p) throws JAXBException, EDMException, FileNotFoundException, XMLStreamException {
+    public static EDMResponse importEDMResponse(Path p) throws JAXBException, FileNotFoundException, XMLStreamException {
         return importEDMResponse(p.toFile());
     }
 
-    public static EDMResponse importEDMResponse(String s) throws JAXBException, EDMException, XMLStreamException {
+    public static EDMResponse importEDMResponse(String s) throws JAXBException, XMLStreamException {
         return importEDMResponse(new ByteArrayInputStream(s.getBytes()));
     }
 
-    public static EDMResponse importEDMResponse(InputStream is) throws JAXBException, EDMException, XMLStreamException {
+    public static EDMResponse importEDMResponse(InputStream is) throws JAXBException, XMLStreamException {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLEventReader eventReader = factory.createXMLEventReader(is);
 
@@ -113,28 +95,11 @@ public final class EDMExtractors {
                     .queryResponse(CCCEV.XSDS)
                     .read(eventReader));
 
-        throw new EDMException("Are you trying to import a Request using the Response method!?");
+        throw new IllegalArgumentException("This document does not contain a QueryResponse.");
     }
 
     public static EDMResponse importEDMResponse(QueryResponse queryResponse) throws JAXBException {
         return EDMResponseExtractor.extract(queryResponse);
     }
 
-    public static String exportEDMResponseAsString(EDMResponse edmResponse) {
-        return RegRep4Writer
-                .queryResponse(CCAGV.XSDS)
-                .setFormattedOutput(true)
-                .getAsString(exportEDMResponseAsQueryResponse(edmResponse));
-    }
-
-    public static InputStream exportEDMResponseAsInputStream(EDMResponse edmResponse) {
-        return RegRep4Writer
-                .queryResponse(CCAGV.XSDS)
-                .setFormattedOutput(true)
-                .getAsInputStream(exportEDMResponseAsQueryResponse(edmResponse));
-    }
-
-    public static QueryResponse exportEDMResponseAsQueryResponse(EDMResponse queryResponse) {
-        return EDMResponseExtractor.extract(queryResponse);
-    }
 }

@@ -7,10 +7,13 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
+import java.util.Objects;
 
 class DistributionUnmarshaller implements SlotUnmarshaller<DCatAPDistributionType> {
     @Override
     public DCatAPDistributionType unmarshal(Object object) throws JAXBException {
+        if (Objects.isNull(object))
+            return null;
         JAXBContext context = JAXBContext.newInstance(DCatAPDistributionType.class);
         Unmarshaller um = context.createUnmarshaller();
         JAXBElement<DCatAPDistributionType> root = um.unmarshal((Node)object, DCatAPDistributionType.class);

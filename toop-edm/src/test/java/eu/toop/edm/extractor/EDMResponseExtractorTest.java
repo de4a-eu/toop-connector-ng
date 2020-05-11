@@ -1,6 +1,7 @@
 package eu.toop.edm.extractor;
 
 import eu.toop.edm.model.EDMResponse;
+import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.query.QueryResponse;
 import org.junit.Before;
@@ -17,9 +18,9 @@ public class EDMResponseExtractorTest {
     @Before
     public void setUp() {
 
-        queryResponse = RegRep4Reader.queryResponse ()
+        queryResponse = RegRep4Reader.queryResponse (CCCEV.XSDS)
                 .read(this.getClass().getClassLoader().getResourceAsStream("Concept Response.xml"));
-        documentResponse = RegRep4Reader.queryResponse ()
+        documentResponse = RegRep4Reader.queryResponse (CCCEV.XSDS)
                 .read(this.getClass().getClassLoader().getResourceAsStream("Document Response.xml"));
     }
 

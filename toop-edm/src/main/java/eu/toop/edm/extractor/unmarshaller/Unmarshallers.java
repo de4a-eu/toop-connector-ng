@@ -1,6 +1,7 @@
 package eu.toop.edm.extractor.unmarshaller;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
+import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
@@ -33,6 +34,9 @@ public class Unmarshallers {
         return new DatasetUnmarshaller();
     }
 
+    public static SlotUnmarshaller<CCCEVRequirementType> getCCCEVRequirementUnmarshaller(){
+        return new FulFillingRequirementUnmarshaller();
+    }
     private Unmarshallers(){
         //Prevent utility class instantiation
     }
