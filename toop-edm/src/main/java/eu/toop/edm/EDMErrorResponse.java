@@ -31,7 +31,10 @@ import com.helger.commons.collection.impl.CommonsLinkedHashSet;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.error.EDMExceptionBuilder;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
@@ -182,6 +185,43 @@ public class EDMErrorResponse
   public static IJAXBVersatileReader <EDMErrorResponse> getReader ()
   {
     return new JAXBVersatileReader <> (RegRep4Reader.queryResponse (), EDMErrorResponse::create);
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || getClass () != o.getClass ())
+      return false;
+    final EDMErrorResponse that = (EDMErrorResponse) o;
+    return EqualsHelper.equals (m_eResponseStatus, that.m_eResponseStatus) &&
+           EqualsHelper.equals (m_sRequestID, that.m_sRequestID) &&
+           EqualsHelper.equals (m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
+           EqualsHelper.equals (m_aErrorProvider, that.m_aErrorProvider) &&
+           EqualsHelper.equals (m_aExceptions, that.m_aExceptions);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_eResponseStatus)
+                                       .append (m_sRequestID)
+                                       .append (m_sSpecificationIdentifier)
+                                       .append (m_aErrorProvider)
+                                       .append (m_aExceptions)
+                                       .getHashCode ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("RequestID", m_sRequestID)
+                                       .append ("ResponseStatus", m_eResponseStatus)
+                                       .append ("SpecificationIdentifier", m_sSpecificationIdentifier)
+                                       .append ("ErrorProvider", m_aErrorProvider)
+                                       .append ("Exceptions", m_aExceptions)
+                                       .getToString ();
   }
 
   @Nonnull

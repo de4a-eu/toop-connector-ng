@@ -126,10 +126,11 @@ public final class EDMRequestTest
   {
     return _req ().queryDefinition (EQueryDefinitionType.CONCEPT)
                   .concept (ConceptPojo.builder ()
+                                       .randomID ()
                                        .name (EToopConcept.COMPANY_TYPE)
-                                       .addChild (EToopConcept.COMPANY_NAME)
-                                       .addChild (EToopConcept.COMPANY_CODE)
-                                       .addChild (EToopConcept.COMPANY_TYPE));
+                                       .addChild (ConceptPojo.builder ().randomID ().name (EToopConcept.COMPANY_NAME))
+                                       .addChild (ConceptPojo.builder ().randomID ().name (EToopConcept.COMPANY_CODE))
+                                       .addChild (ConceptPojo.builder ().randomID ().name (EToopConcept.COMPANY_TYPE)));
   }
 
   @Nonnull

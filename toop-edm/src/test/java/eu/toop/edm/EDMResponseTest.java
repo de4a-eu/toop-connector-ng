@@ -106,12 +106,15 @@ public final class EDMResponseTest
                                         .id ("ConceptID-1")
                                         .name (EToopConcept.REGISTERED_ORGANIZATION)
                                         .addChild (ConceptPojo.builder ()
+                                                              .randomID ()
                                                               .name (EToopConcept.COMPANY_NAME)
                                                               .valueText ("Helger Enterprises"))
                                         .addChild (ConceptPojo.builder ()
+                                                              .randomID ()
                                                               .name (EToopConcept.FAX_NUMBER)
                                                               .valueText ("342342424"))
                                         .addChild (ConceptPojo.builder ()
+                                                              .randomID ()
                                                               .name (EToopConcept.FOUNDATION_DATE)
                                                               .valueDate (PDTFactory.createLocalDate (1960,
                                                                                                       Month.AUGUST,
