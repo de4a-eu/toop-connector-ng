@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm;
+package eu.toop.edm.creator;
 
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -24,6 +24,7 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 
+import eu.toop.edm.model.*;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,14 +35,6 @@ import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.mime.CMimeType;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
-import eu.toop.edm.model.AddressPojo;
-import eu.toop.edm.model.AgentPojo;
-import eu.toop.edm.model.BusinessPojo;
-import eu.toop.edm.model.ConceptPojo;
-import eu.toop.edm.model.DistributionPojo;
-import eu.toop.edm.model.EDistributionFormat;
-import eu.toop.edm.model.EGenderCode;
-import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.schematron.SchematronEDM2Validator;
 import eu.toop.edm.xml.cagv.CCAGV;
 import eu.toop.regrep.RegRep4Writer;
@@ -98,10 +91,11 @@ public final class EDMRequestCreatorTest
   }
 
   @Nonnull
-  private static EDMRequestCreator.Builder _builderConcept ()
+  private static EDMRequest.Builder _builderConcept ()
   {
     final String sConceptNS = "http://toop.eu/registered-organization";
-    return EDMRequestCreator.builderConcept ()
+    return EDMRequest.builderConcept ()
+                             .randomID()
                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
                              .procedure (Locale.UK, "GBM Procedure")
                              .fullfillingRequirement (null)
@@ -160,7 +154,7 @@ public final class EDMRequestCreatorTest
   @Test
   public void testRequestConceptLegalPerson ()
   {
-    final QueryRequest aRequest = _builderConcept ().dataSubject (_dsBusiness ()).build ();
+    final QueryRequest aRequest = _builderConcept ().dataSubject (_dsBusiness ()).build ().getAsQueryRequest();
     assertNotNull (aRequest);
 
     final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
@@ -182,7 +176,7 @@ public final class EDMRequestCreatorTest
   @Test
   public void testRequestConceptNaturalPerson ()
   {
-    final QueryRequest aRequest = _builderConcept ().dataSubject (_dsPerson ()).build ();
+    final QueryRequest aRequest = _builderConcept ().dataSubject (_dsPerson ()).build ().getAsQueryRequest();
     assertNotNull (aRequest);
 
     final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
@@ -202,9 +196,10 @@ public final class EDMRequestCreatorTest
   }
 
   @Nonnull
-  private static EDMRequestCreator.Builder _builderDocument ()
+  private static EDMRequest.Builder _builderDocument ()
   {
-    return EDMRequestCreator.builderDocument ()
+    return EDMRequest.builderDocument ()
+                             .randomID()
                              .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
                              .procedure (Locale.UK, "GBM Procedure")
                              .fullfillingRequirement (null)
@@ -246,7 +241,7 @@ public final class EDMRequestCreatorTest
   @Test
   public void testRequestDocumentLegalPerson ()
   {
-    final QueryRequest aRequest = _builderDocument ().dataSubject (_dsBusiness ()).build ();
+    final QueryRequest aRequest = _builderDocument ().dataSubject (_dsBusiness ()).build ().getAsQueryRequest();
     assertNotNull (aRequest);
 
     final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
@@ -268,7 +263,7 @@ public final class EDMRequestCreatorTest
   @Test
   public void testRequestDocumentNaturalPerson ()
   {
-    final QueryRequest aRequest = _builderDocument ().dataSubject (_dsPerson ()).build ();
+    final QueryRequest aRequest = _builderDocument ().dataSubject (_dsPerson ()).build ().getAsQueryRequest();
     assertNotNull (aRequest);
 
     final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);

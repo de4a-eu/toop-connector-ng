@@ -17,6 +17,11 @@ package eu.toop.regrep;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.jaxb.builder.IJAXBDocumentType;
+import com.helger.jaxb.builder.JAXBDocumentType;
 import com.helger.jaxb.builder.JAXBReaderBuilder;
 
 import eu.toop.regrep.lcm.RemoveObjectsRequest;
@@ -53,6 +58,11 @@ public class RegRep4Reader <JAXBTYPE> extends JAXBReaderBuilder <JAXBTYPE, RegRe
   public RegRep4Reader (@Nonnull final ERegRep4XMLDocumentType eDocType, @Nonnull final Class <JAXBTYPE> aImplClass)
   {
     super (eDocType, aImplClass);
+  }
+
+  private RegRep4Reader (@Nonnull final IJAXBDocumentType eDocType)
+  {
+    super (eDocType);
   }
 
   /**
@@ -99,6 +109,35 @@ public class RegRep4Reader <JAXBTYPE> extends JAXBReaderBuilder <JAXBTYPE, RegRe
     return new RegRep4Reader <> (ERegRep4XMLDocumentType.QUERY_REQUEST, QueryRequest.class);
   }
 
+
+  /**
+   * Create a reader builder for {@link QueryRequest}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Reader <QueryRequest> queryRequest (@Nonnull final ClassPathResource... aAdditionalXSDs)
+  {
+    return queryRequest (new CommonsArrayList <> (aAdditionalXSDs));
+  }
+
+  /**
+   * Create a reader builder for {@link QueryRequest}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Reader <QueryRequest> queryRequest (@Nonnull final Iterable <? extends ClassPathResource> aAdditionalXSDs)
+  {
+    final ICommonsList <ClassPathResource> aXSDs = CRegRep4.getAllXSDsQuery ().getClone ();
+    aXSDs.addAll (aAdditionalXSDs);
+    return new RegRep4Reader <> (new JAXBDocumentType (eu.toop.regrep.query.QueryRequest.class, aXSDs, null));
+  }
+
   /**
    * Create a reader builder for {@link QueryResponse}.
    *
@@ -108,6 +147,33 @@ public class RegRep4Reader <JAXBTYPE> extends JAXBReaderBuilder <JAXBTYPE, RegRe
   public static RegRep4Reader <QueryResponse> queryResponse ()
   {
     return new RegRep4Reader <> (ERegRep4XMLDocumentType.QUERY_RESPONSE, QueryResponse.class);
+  }
+  /**
+   * Create a reader builder for {@link QueryResponse}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Reader <QueryResponse> queryResponse (@Nonnull final ClassPathResource... aAdditionalXSDs)
+  {
+    return queryResponse (new CommonsArrayList<>(aAdditionalXSDs));
+  }
+
+  /**
+   * Create a reader builder for {@link QueryResponse}.
+   *
+   * @param aAdditionalXSDs
+   *        Additional XSDs
+   * @return The builder and never <code>null</code>
+   */
+  @Nonnull
+  public static RegRep4Reader <QueryResponse> queryResponse (@Nonnull final Iterable <? extends ClassPathResource> aAdditionalXSDs)
+  {
+    final ICommonsList<ClassPathResource> aXSDs = CRegRep4.getAllXSDsQuery ().getClone ();
+    aXSDs.addAll (aAdditionalXSDs);
+    return new RegRep4Reader <> (new JAXBDocumentType(eu.toop.regrep.query.QueryResponse.class, aXSDs, null));
   }
 
   /**
