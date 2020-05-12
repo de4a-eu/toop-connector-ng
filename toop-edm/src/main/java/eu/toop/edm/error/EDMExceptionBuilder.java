@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm;
+package eu.toop.edm.error;
 
 import java.time.LocalDateTime;
 
@@ -23,10 +23,6 @@ import javax.annotation.Nullable;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.string.StringHelper;
 
-import eu.toop.edm.error.EEDMExceptionType;
-import eu.toop.edm.error.EToopErrorOrigin;
-import eu.toop.edm.error.EToopErrorSeverity;
-import eu.toop.edm.error.IToopErrorCode;
 import eu.toop.edm.slot.SlotErrorOrigin;
 import eu.toop.edm.slot.SlotTimestamp;
 import eu.toop.regrep.rs.RegistryExceptionType;

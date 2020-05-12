@@ -47,6 +47,7 @@ import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DistributionPojo;
+import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotAuthorizedRepresentative;
@@ -88,7 +89,7 @@ import eu.toop.regrep.rim.QueryType;
  * <li>If it is a "DocumentQuery" the request distribution must be
  * provided.</li>
  * </ul>
- * It is recommended to use the {@link #builder()} method to create the EDM
+ * It is recommended to use the {@link #builder()} methods to create the EDM
  * request using the builder pattern with a fluent API.
  *
  * @author Philip Helger
@@ -265,13 +266,13 @@ public class EDMRequest
     ValueEnforcer.notEmpty (m_sRequestID, "RequestID");
     ValueEnforcer.noNullValue (aProviders, "Providers");
 
-    final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
+    final ICommonsOrderedMap <String, ISlotProvider> aProviderMap = new CommonsLinkedHashMap <> ();
     for (final ISlotProvider aItem : aProviders)
     {
       final String sName = aItem.getName ();
-      if (m_aProviders.containsKey (sName))
+      if (aProviderMap.containsKey (sName))
         throw new IllegalArgumentException ("A slot provider for name '" + sName + "' is already present");
-      m_aProviders.put (sName, aItem);
+      aProviderMap.put (sName, aItem);
     }
 
     final QueryRequest ret = RegRepHelper.createEmptyQueryRequest ();
@@ -280,7 +281,7 @@ public class EDMRequest
     // All top-level slots outside of query
     for (final String sTopLevel : TOP_LEVEL_SLOTS)
     {
-      final ISlotProvider aSP = m_aProviders.get (sTopLevel);
+      final ISlotProvider aSP = aProviderMap.get (sTopLevel);
       if (aSP != null)
         ret.addSlot (aSP.createSlot ());
     }
@@ -290,7 +291,7 @@ public class EDMRequest
       aQuery.setQueryDefinition (m_eQueryDefinition.getID ());
 
       // All slots inside of query
-      for (final Map.Entry <String, ISlotProvider> aEntry : m_aProviders.entrySet ())
+      for (final Map.Entry <String, ISlotProvider> aEntry : aProviderMap.entrySet ())
         if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
           aQuery.addSlot (aEntry.getValue ().createSlot ());
 

@@ -20,11 +20,11 @@ import javax.xml.bind.JAXBException;
 import com.helger.datetime.util.PDTXMLConverter;
 
 import eu.toop.edm.EDMResponse;
-import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DatasetPojo;
+import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
 import eu.toop.edm.slot.SlotDocumentMetadata;

@@ -37,6 +37,7 @@ import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.model.DocumentReferencePojo;
+import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.model.QualifiedRelationPojo;
 import eu.toop.edm.pilot.gbm.EToopConcept;
 import eu.toop.regrep.ERegRepResponseStatus;

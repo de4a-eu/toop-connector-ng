@@ -16,6 +16,7 @@
 package eu.toop.edm;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -24,20 +25,24 @@ import javax.annotation.Nullable;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.CommonsLinkedHashMap;
+import com.helger.commons.collection.impl.CommonsLinkedHashSet;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.collection.impl.ICommonsOrderedMap;
+import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
-import eu.toop.edm.creator.EDMResponseCreator;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DatasetPojo;
+import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
@@ -49,10 +54,38 @@ import eu.toop.edm.xml.JAXBVersatileWriter;
 import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRep4Writer;
+import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.rim.RegistryObjectListType;
+import eu.toop.regrep.rim.RegistryObjectType;
 
+/**
+ * This class contains the data model for a single TOOP EDM Request. It requires
+ * at least the following fields:
+ * <ul>
+ * <li>QueryDefinition - Concept or Document query?</li>
+ * <li>Response Status - Success, partial success or failure</li>
+ * <li>Request ID - the ID of the request to which this response
+ * correlates.</li>
+ * <li>Specification Identifier - must be the value
+ * {@link CToopEDM#SPECIFICATION_IDENTIFIER_TOOP_EDM_V20}.</li>
+ * <li>Issue date time - when the response was created. Ideally in UTC.</li>
+ * <li>Data Provider - the basic infos of the DP</li>
+ * <li>If it is a "ConceptQuery" the response Concepts must be provided.</li>
+ * <li>If it is a "DocumentQuery" the response Dataset must be provided.</li>
+ * </ul>
+ * It is recommended to use the {@link #builder()} methods to create the EDM
+ * request using the builder pattern with a fluent API.
+ *
+ * @author Philip Helger
+ * @author Konstantinos Douloudis
+ */
 public class EDMResponse
 {
+  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
+                                                                                                  SlotIssueDateTime.NAME,
+                                                                                                  SlotDataProvider.NAME);
+
   private final EQueryDefinitionType m_eQueryDefinition;
   private final ERegRepResponseStatus m_eResponseStatus;
   private final String m_sRequestID;
@@ -152,6 +185,46 @@ public class EDMResponse
   }
 
   @Nonnull
+  private QueryResponse _createQueryResponse (@Nonnull final ICommonsList <ISlotProvider> aProviders)
+  {
+    final ICommonsOrderedMap <String, ISlotProvider> aProviderMap = new CommonsLinkedHashMap <> ();
+    for (final ISlotProvider aItem : aProviders)
+    {
+      final String sName = aItem.getName ();
+      if (aProviderMap.containsKey (sName))
+        throw new IllegalArgumentException ("A slot provider for name '" + sName + "' is already present");
+      aProviderMap.put (sName, aItem);
+    }
+
+    final QueryResponse ret = RegRepHelper.createEmptyQueryResponse (m_eResponseStatus);
+    ret.setRequestId (m_sRequestID);
+
+    // All top-level slots outside of object list
+    for (final String sHeader : TOP_LEVEL_SLOTS)
+    {
+      final ISlotProvider aSP = aProviderMap.get (sHeader);
+      if (aSP != null)
+        ret.addSlot (aSP.createSlot ());
+    }
+
+    {
+      final RegistryObjectListType aROList = new RegistryObjectListType ();
+      final RegistryObjectType aRO = new RegistryObjectType ();
+      aRO.setId (UUID.randomUUID ().toString ());
+
+      // All slots inside of RegistryObject
+      for (final Map.Entry <String, ISlotProvider> aEntry : aProviderMap.entrySet ())
+        if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
+          aRO.addSlot (aEntry.getValue ().createSlot ());
+
+      aROList.addRegistryObject (aRO);
+      ret.setRegistryObjectList (aROList);
+    }
+
+    return ret;
+  }
+
+  @Nonnull
   public QueryResponse getAsQueryResponse ()
   {
     final ICommonsList <ISlotProvider> aSlots = new CommonsArrayList <> ();
@@ -170,7 +243,7 @@ public class EDMResponse
     if (m_aDataset != null)
       aSlots.add (new SlotDocumentMetadata (m_aDataset));
 
-    return new EDMResponseCreator (m_eResponseStatus, m_sRequestID, aSlots).createQueryResponse ();
+    return _createQueryResponse (aSlots);
   }
 
   @Nonnull

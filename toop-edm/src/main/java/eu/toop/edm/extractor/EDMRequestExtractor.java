@@ -20,12 +20,12 @@ import javax.xml.bind.JAXBException;
 import com.helger.datetime.util.PDTXMLConverter;
 
 import eu.toop.edm.EDMRequest;
-import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DistributionPojo;
+import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.slot.SlotAuthorizedRepresentative;
 import eu.toop.edm.slot.SlotConceptRequestList;

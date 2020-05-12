@@ -40,6 +40,7 @@ import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DistributionPojo;
 import eu.toop.edm.model.EDistributionFormat;
 import eu.toop.edm.model.EGenderCode;
+import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.pilot.gbm.EToopConcept;
 

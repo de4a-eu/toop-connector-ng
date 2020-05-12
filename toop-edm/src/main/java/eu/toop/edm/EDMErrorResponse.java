@@ -15,11 +15,14 @@
  */
 package eu.toop.edm;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
@@ -28,12 +31,16 @@ import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.string.StringHelper;
 
+import eu.toop.edm.error.EDMExceptionBuilder;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotErrorProvider;
 import eu.toop.edm.slot.SlotSpecificationIdentifier;
+import eu.toop.edm.xml.IVersatileWriter;
+import eu.toop.edm.xml.JAXBVersatileWriter;
 import eu.toop.regrep.ERegRepResponseStatus;
+import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
 import eu.toop.regrep.rs.RegistryExceptionType;
@@ -44,52 +51,120 @@ import eu.toop.regrep.rs.RegistryExceptionType;
  *
  * @author Philip Helger
  */
-public class EDMErrorCreator
+public class EDMErrorResponse
 {
   private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
                                                                                                   SlotErrorProvider.NAME);
 
   private final ERegRepResponseStatus m_eResponseStatus;
   private final String m_sRequestID;
-  private final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
+  private final String m_sSpecificationIdentifier;
+  private final AgentType m_aErrorProvider;
+  private final ICommonsList <RegistryExceptionType> m_aExceptions = new CommonsArrayList <> ();
 
-  private EDMErrorCreator (@Nonnull final ERegRepResponseStatus eResponseStatus,
+  public EDMErrorResponse (@Nonnull final ERegRepResponseStatus eResponseStatus,
                            @Nonnull @Nonempty final String sRequestID,
-                           @Nonnull final ICommonsList <ISlotProvider> aProviders)
+                           @Nonnull @Nonempty final String sSpecificationIdentifier,
+                           @Nullable final AgentType aErrorProvider,
+                           @Nonnull @Nonempty final ICommonsList <RegistryExceptionType> aExceptions)
   {
     ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
-    ValueEnforcer.noNullValue (aProviders, "Providers");
+    ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
+    ValueEnforcer.notEmptyNoNullValue (aExceptions, "Exceptions");
 
     m_eResponseStatus = eResponseStatus;
     m_sRequestID = sRequestID;
-
-    for (final ISlotProvider aItem : aProviders)
-    {
-      final String sName = aItem.getName ();
-      if (m_aProviders.containsKey (sName))
-        throw new IllegalArgumentException ("A slot provider for name '" + sName + "' is already present");
-      m_aProviders.put (sName, aItem);
-    }
+    m_sSpecificationIdentifier = sSpecificationIdentifier;
+    m_aErrorProvider = aErrorProvider;
   }
 
   @Nonnull
-  QueryResponse createQueryResponse (@Nonnull @Nonempty final ICommonsList <RegistryExceptionType> aExceptions)
+  public final ERegRepResponseStatus getResponseStatus ()
   {
+    return m_eResponseStatus;
+  }
+
+  @Nonnull
+  @Nonempty
+  public final String getRequestID ()
+  {
+    return m_sRequestID;
+  }
+
+  @Nonnull
+  @Nonempty
+  public final String getSpecificationIdentifier ()
+  {
+    return m_sSpecificationIdentifier;
+  }
+
+  @Nullable
+  public final AgentType getErrorProvider ()
+  {
+    return m_aErrorProvider;
+  }
+
+  @Nonnull
+  @Nonempty
+  public final List <RegistryExceptionType> exceptions ()
+  {
+    return m_aExceptions;
+  }
+
+  @Nonnull
+  @Nonempty
+  @ReturnsMutableCopy
+  public final List <RegistryExceptionType> getAllExceptions ()
+  {
+    return m_aExceptions.getClone ();
+  }
+
+  @Nonnull
+  private QueryResponse _createQueryResponse (@Nonnull final ICommonsList <ISlotProvider> aProviders)
+  {
+    final ICommonsOrderedMap <String, ISlotProvider> aProviderMap = new CommonsLinkedHashMap <> ();
+    for (final ISlotProvider aItem : aProviders)
+    {
+      final String sName = aItem.getName ();
+      if (aProviderMap.containsKey (sName))
+        throw new IllegalArgumentException ("A slot provider for name '" + sName + "' is already present");
+      aProviderMap.put (sName, aItem);
+    }
+
     final QueryResponse ret = RegRepHelper.createEmptyQueryResponse (m_eResponseStatus);
     ret.setRequestId (m_sRequestID);
 
     // All top-level slots outside of object list
     for (final String sHeader : TOP_LEVEL_SLOTS)
     {
-      final ISlotProvider aSP = m_aProviders.get (sHeader);
+      final ISlotProvider aSP = aProviderMap.get (sHeader);
       if (aSP != null)
         ret.addSlot (aSP.createSlot ());
     }
 
-    ret.getException ().addAll (aExceptions);
+    ret.getException ().addAll (m_aExceptions);
 
     return ret;
+  }
+
+  @Nonnull
+  public QueryResponse getAsErrorResponse ()
+  {
+    final ICommonsList <ISlotProvider> aSlots = new CommonsArrayList <> ();
+    if (m_sSpecificationIdentifier != null)
+      aSlots.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
+    if (m_aErrorProvider != null)
+      aSlots.add (new SlotErrorProvider (m_aErrorProvider));
+
+    // Exceptions
+    return _createQueryResponse (aSlots);
+  }
+
+  @Nonnull
+  public IVersatileWriter <QueryResponse> getWriter ()
+  {
+    return new JAXBVersatileWriter <> (getAsErrorResponse (), RegRep4Writer.queryResponse ().setFormattedOutput (true));
   }
 
   @Nonnull
@@ -209,18 +284,15 @@ public class EDMErrorCreator
     }
 
     @Nonnull
-    public QueryResponse build ()
+    public EDMErrorResponse build ()
     {
       checkConsistency ();
 
-      final ICommonsList <ISlotProvider> aSlots = new CommonsArrayList <> ();
-      if (m_sSpecificationIdentifier != null)
-        aSlots.add (new SlotSpecificationIdentifier (m_sSpecificationIdentifier));
-      if (m_aErrorProvider != null)
-        aSlots.add (new SlotErrorProvider (m_aErrorProvider));
-
-      // Exceptions
-      return new EDMErrorCreator (m_eResponseStatus, m_sRequestID, aSlots).createQueryResponse (m_aExceptions);
+      return new EDMErrorResponse (m_eResponseStatus,
+                                   m_sRequestID,
+                                   m_sSpecificationIdentifier,
+                                   m_aErrorProvider,
+                                   m_aExceptions);
     }
   }
 }

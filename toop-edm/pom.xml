@@ -217,23 +217,23 @@
         </executions>
       </plugin>
       <!--
-              <plugin>
-                <groupId>com.helger.maven</groupId>
-                <artifactId>ph-schematron-maven-plugin</artifactId>
-                <version>5.6.0</version>
-                <executions>
-                  <execution>
-                    <id>edm2</id>
-                    <goals>
-                      <goal>convert</goal>
-                    </goals>
-                    <configuration>
-                      <schematronDirectory>src/main/resources/200/schematron</schematronDirectory>
-                      <xsltDirectory>src/main/resources/200/xslt</xsltDirectory>
-                    </configuration>
-                  </execution>
-                </executions>
-              </plugin>
+      <plugin>
+        <groupId>com.helger.maven</groupId>
+        <artifactId>ph-schematron-maven-plugin</artifactId>
+        <version>5.6.0</version>
+        <executions>
+          <execution>
+            <id>edm2</id>
+            <goals>
+              <goal>convert</goal>
+            </goals>
+            <configuration>
+              <schematronDirectory>src/main/resources/200/schematron</schematronDirectory>
+              <xsltDirectory>src/main/resources/200/xslt</xsltDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
         -->
     </plugins>
   </build>

@@ -28,21 +28,20 @@ import org.w3c.dom.Document;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
+import eu.toop.edm.error.EDMExceptionBuilder;
 import eu.toop.edm.error.EEDMExceptionType;
 import eu.toop.edm.error.EToopErrorOrigin;
 import eu.toop.edm.error.EToopErrorSeverity;
 import eu.toop.edm.schematron.SchematronEDM2Validator;
-import eu.toop.regrep.RegRep4Writer;
-import eu.toop.regrep.query.QueryResponse;
 
 /**
- * Test class for class {@link EDMErrorCreator}
+ * Test class for class {@link EDMErrorResponse}
  *
  * @author Philip Helger
  */
-public final class EDMErrorCreatorTest
+public final class EDMErrorResponseTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (EDMErrorCreatorTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger (EDMErrorResponseTest.class);
 
   @Nonnull
   private static EDMExceptionBuilder _exBuilder (final EEDMExceptionType eType)
@@ -56,21 +55,20 @@ public final class EDMErrorCreatorTest
   }
 
   @Nonnull
-  private static EDMErrorCreator.Builder _builder ()
+  private static EDMErrorResponse.Builder _builder ()
   {
-    return EDMErrorCreator.builder ().requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629");
+    return EDMErrorResponse.builder ().requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629");
   }
 
   @Test
   public void testRequestConceptLegalPerson ()
   {
-    final QueryResponse aErrorResponse = _builder ().exception (_exBuilder (EEDMExceptionType.OBJECT_NOT_FOUND))
-                                                    .exception (_exBuilder (EEDMExceptionType.TIMEOUT))
-                                                    .build ();
+    final EDMErrorResponse aErrorResponse = _builder ().exception (_exBuilder (EEDMExceptionType.OBJECT_NOT_FOUND))
+                                                       .exception (_exBuilder (EEDMExceptionType.TIMEOUT))
+                                                       .build ();
     assertNotNull (aErrorResponse);
 
-    final RegRep4Writer <QueryResponse> aWriter = RegRep4Writer.queryResponse ().setFormattedOutput (true);
-    final String sXML = aWriter.getAsString (aErrorResponse);
+    final String sXML = aErrorResponse.getWriter ().getAsString ();
     assertNotNull (sXML);
 
     if (true)
@@ -78,7 +76,7 @@ public final class EDMErrorCreatorTest
 
     {
       // Schematron validation
-      final Document aDoc = aWriter.getAsDocument (aErrorResponse);
+      final Document aDoc = aErrorResponse.getWriter ().getAsDocument ();
       assertNotNull (aDoc);
       final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
       assertTrue (aMsgs.toString (), aMsgs.isEmpty ());

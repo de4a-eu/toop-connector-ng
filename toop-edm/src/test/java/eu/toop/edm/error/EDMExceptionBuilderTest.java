@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm;
+package eu.toop.edm.error;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import eu.toop.edm.error.EDMExceptionBuilder;
 import eu.toop.edm.error.EEDMExceptionType;
 import eu.toop.edm.error.EToopErrorOrigin;
 import eu.toop.edm.error.EToopErrorSeverity;
