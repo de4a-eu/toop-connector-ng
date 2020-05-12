@@ -627,8 +627,8 @@ public class EDMResponse
   public static EDMResponse create (@Nonnull final QueryResponse aQueryResponse)
   {
     final EDMResponse.Builder aBuilder = EDMResponse.builder ()
-                                                    .requestID (aQueryResponse.getRequestId ())
-                                                    .responseStatus (ERegRepResponseStatus.getFromIDOrNull (aQueryResponse.getStatus ()));
+                                                    .responseStatus (ERegRepResponseStatus.getFromIDOrNull (aQueryResponse.getStatus ()))
+                                                    .requestID (aQueryResponse.getRequestId ());
 
     for (final SlotType s : aQueryResponse.getSlot ())
       _applySlots (s, aBuilder);

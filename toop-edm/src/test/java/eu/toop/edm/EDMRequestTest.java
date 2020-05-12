@@ -18,6 +18,7 @@ package eu.toop.edm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
@@ -26,10 +27,13 @@ import java.util.Locale;
 import javax.annotation.Nonnull;
 
 import org.junit.Test;
+import org.w3c.dom.Document;
 
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.mime.CMimeType;
+import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.model.AddressPojo;
@@ -42,6 +46,7 @@ import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.pilot.gbm.EToopConcept;
+import eu.toop.edm.schematron.SchematronEDM2Validator;
 
 /**
  * Test class for class {@link EDMRequest}.
@@ -63,6 +68,15 @@ public final class EDMRequestTest
 
     // Compare with original
     assertEquals (aReq, aReq2);
+
+    {
+      // Schematron validation
+      final Document aDoc = aReq.getWriter ().getAsDocument ();
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
+
   }
 
   @Nonnull

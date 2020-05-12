@@ -20,6 +20,8 @@ import java.util.List;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.w3c.dom.Node;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -37,12 +39,20 @@ import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotErrorProvider;
 import eu.toop.edm.slot.SlotSpecificationIdentifier;
+import eu.toop.edm.xml.IJAXBVersatileReader;
 import eu.toop.edm.xml.IVersatileWriter;
+import eu.toop.edm.xml.JAXBVersatileReader;
 import eu.toop.edm.xml.JAXBVersatileWriter;
+import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.regrep.ERegRepResponseStatus;
+import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.rim.AnyValueType;
+import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.rim.StringValueType;
+import eu.toop.regrep.rim.ValueType;
 import eu.toop.regrep.rs.RegistryExceptionType;
 
 /**
@@ -166,6 +176,12 @@ public class EDMErrorResponse
   public IVersatileWriter <QueryResponse> getWriter ()
   {
     return new JAXBVersatileWriter <> (getAsErrorResponse (), RegRep4Writer.queryResponse ().setFormattedOutput (true));
+  }
+
+  @Nonnull
+  public static IJAXBVersatileReader <EDMErrorResponse> getReader ()
+  {
+    return new JAXBVersatileReader <> (RegRep4Reader.queryResponse (), EDMErrorResponse::create);
   }
 
   @Nonnull
@@ -295,5 +311,44 @@ public class EDMErrorResponse
                                    m_aErrorProvider,
                                    m_aExceptions);
     }
+  }
+
+  private static void _applySlots (@Nonnull final SlotType aSlot, @Nonnull final EDMErrorResponse.Builder aBuilder)
+  {
+    final String sName = aSlot.getName ();
+    final ValueType aSlotValue = aSlot.getSlotValue ();
+    switch (sName)
+    {
+      case SlotSpecificationIdentifier.NAME:
+        if (aSlotValue instanceof StringValueType)
+        {
+          final String sValue = ((StringValueType) aSlotValue).getValue ();
+          aBuilder.specificationIdentifier (sValue);
+        }
+        break;
+      case SlotErrorProvider.NAME:
+        if (aSlotValue instanceof AnyValueType)
+        {
+          final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
+          aBuilder.errorProvider (AgentPojo.builder (new AgentMarshaller ().read (aAny)));
+        }
+        break;
+      default:
+        throw new IllegalStateException ("Slot is not defined: " + sName);
+    }
+  }
+
+  @Nonnull
+  public static EDMErrorResponse create (@Nonnull final QueryResponse aQueryResponse)
+  {
+    final EDMErrorResponse.Builder aBuilder = EDMErrorResponse.builder ()
+                                                              .responseStatus (ERegRepResponseStatus.getFromIDOrNull (aQueryResponse.getStatus ()))
+                                                              .requestID (aQueryResponse.getRequestId ());
+
+    for (final SlotType s : aQueryResponse.getSlot ())
+      _applySlots (s, aBuilder);
+
+    aBuilder.exceptions (aQueryResponse.getException ());
+    return aBuilder.build ();
   }
 }

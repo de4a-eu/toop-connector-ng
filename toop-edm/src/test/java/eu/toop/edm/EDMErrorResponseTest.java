@@ -15,14 +15,13 @@
  */
 package eu.toop.edm;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import javax.annotation.Nonnull;
 
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
 import com.helger.commons.collection.impl.ICommonsList;
@@ -41,7 +40,28 @@ import eu.toop.edm.schematron.SchematronEDM2Validator;
  */
 public final class EDMErrorResponseTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (EDMErrorResponseTest.class);
+  private static void _testWriteAndRead (@Nonnull final EDMErrorResponse aResp)
+  {
+    assertNotNull (aResp);
+
+    // Write
+    final byte [] aBytes = aResp.getWriter ().getAsBytes ();
+    assertNotNull (aBytes);
+
+    // Re-read
+    final EDMErrorResponse aResp2 = EDMErrorResponse.getReader ().read (aBytes);
+
+    // Compare with original
+    assertEquals (aResp, aResp2);
+
+    {
+      // Schematron validation
+      final Document aDoc = aResp.getWriter ().getAsDocument ();
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
+  }
 
   @Nonnull
   private static EDMExceptionBuilder _exBuilder (final EEDMExceptionType eType)
@@ -66,20 +86,6 @@ public final class EDMErrorResponseTest
     final EDMErrorResponse aErrorResponse = _builder ().addException (_exBuilder (EEDMExceptionType.OBJECT_NOT_FOUND))
                                                        .addException (_exBuilder (EEDMExceptionType.TIMEOUT))
                                                        .build ();
-    assertNotNull (aErrorResponse);
-
-    final String sXML = aErrorResponse.getWriter ().getAsString ();
-    assertNotNull (sXML);
-
-    if (true)
-      LOGGER.info (sXML);
-
-    {
-      // Schematron validation
-      final Document aDoc = aErrorResponse.getWriter ().getAsDocument ();
-      assertNotNull (aDoc);
-      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
-      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
-    }
+    _testWriteAndRead (aErrorResponse);
   }
 }

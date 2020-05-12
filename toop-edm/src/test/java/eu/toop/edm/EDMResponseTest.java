@@ -18,6 +18,7 @@ package eu.toop.edm;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
@@ -26,9 +27,12 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import org.junit.Test;
+import org.w3c.dom.Document;
 
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
@@ -38,6 +42,7 @@ import eu.toop.edm.model.DocumentReferencePojo;
 import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.model.QualifiedRelationPojo;
 import eu.toop.edm.pilot.gbm.EToopConcept;
+import eu.toop.edm.schematron.SchematronEDM2Validator;
 import eu.toop.regrep.ERegRepResponseStatus;
 
 /**
@@ -60,6 +65,14 @@ public final class EDMResponseTest
 
     // Compare with original
     assertEquals (aResp, aResp2);
+
+    {
+      // Schematron validation
+      final Document aDoc = aResp.getWriter ().getAsDocument ();
+      assertNotNull (aDoc);
+      final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
+      assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
+    }
   }
 
   @Nonnull
