@@ -71,11 +71,13 @@
                 The QueryRequest must contain ZERO or ONE Procedure slots (found: <value-of select="$countProcedure"/>).
             </assert>
             
+            <!--  [ph]
             <let name="countFullfillingRequirement" value="count(rim:Slot[@name = 'FullfillingRequirement'])"/>  
             <assert test="($countFullfillingRequirement=0) or ($countFullfillingRequirement=1)" flag='ERROR' id='req_card_FullfillingRequirement'>
                 The QueryRequest must contain ZERO or ONE FullfillingRequirement slots (found: <value-of select="$countFullfillingRequirement"/>).
             </assert>
-            
+             -->
+             
             <let name="countDataConsumer" value="count(rim:Slot[@name = 'DataConsumer'])"/>  
             <assert test="($countDataConsumer=1)" flag='ERROR' id='req_card_DataConsumer'>
                 The QueryRequest must contain exactly ONE DataConsumer slot (found: <value-of select="$countDataConsumer"/>).
@@ -884,7 +886,6 @@
             | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue/rim:Element 
             | rim:Slot[@name = 'DataProvider']/rim:SlotValue
             | rim:Slot[@name = 'ConceptValues']/rim:SlotValue/rim:Element 
-            | rim:Slot[@name = 'FullfillingRequirement']/rim:SlotValue
             ">
             <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
             <assert test="matches($datatype,':AnyValueType$')" flag='ERROR' id="expecting_AnyValueType">
@@ -897,6 +898,7 @@
             rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue
             | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue
             | rim:Slot[@name = 'ErrorText']/rim:SlotValue
+            | rim:Slot[@name = 'FullfillingRequirement']/rim:SlotValue
             ">
             <let name="datatype" value="@*[ends-with(name(.), ':type') and . != '']"/>
             <assert test="matches($datatype,':CollectionValueType$')" flag='ERROR' id="expecting_CollectionValueType">

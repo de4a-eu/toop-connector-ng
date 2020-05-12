@@ -490,26 +490,6 @@
         </svrl:failed-assert>
       </xsl:otherwise>
     </xsl:choose>
-    <xsl:variable name="countFullfillingRequirement" select="count(rim:Slot[@name = 'FullfillingRequirement'])" />
-
-		<!--ASSERT -->
-<xsl:choose>
-      <xsl:when test="($countFullfillingRequirement=0) or ($countFullfillingRequirement=1)" />
-      <xsl:otherwise>
-        <svrl:failed-assert test="($countFullfillingRequirement=0) or ($countFullfillingRequirement=1)">
-          <xsl:attribute name="id">req_card_FullfillingRequirement</xsl:attribute>
-          <xsl:attribute name="flag">ERROR</xsl:attribute>
-          <xsl:attribute name="location">
-            <xsl:apply-templates mode="schematron-select-full-path" select="." />
-          </xsl:attribute>
-          <svrl:text>
-                The QueryRequest must contain ZERO or ONE FullfillingRequirement slots (found: <xsl:text />
-            <xsl:value-of select="$countFullfillingRequirement" />
-            <xsl:text />).
-            </svrl:text>
-        </svrl:failed-assert>
-      </xsl:otherwise>
-    </xsl:choose>
     <xsl:variable name="countDataConsumer" select="count(rim:Slot[@name = 'DataConsumer'])" />
 
 		<!--ASSERT -->
@@ -2747,8 +2727,8 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="             rim:Slot[@name = 'DataConsumer']/rim:SlotValue             | rim:Slot[@name = 'LegalPerson']/rim:SlotValue             | rim:Slot[@name = 'NaturalPerson']/rim:SlotValue             | rim:Slot[@name = 'AuthorizedRepresentative']/rim:SlotValue             | rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DataProvider']/rim:SlotValue             | rim:Slot[@name = 'ConceptValues']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'FullfillingRequirement']/rim:SlotValue             " mode="M45" priority="1002">
-    <svrl:fired-rule context="             rim:Slot[@name = 'DataConsumer']/rim:SlotValue             | rim:Slot[@name = 'LegalPerson']/rim:SlotValue             | rim:Slot[@name = 'NaturalPerson']/rim:SlotValue             | rim:Slot[@name = 'AuthorizedRepresentative']/rim:SlotValue             | rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DataProvider']/rim:SlotValue             | rim:Slot[@name = 'ConceptValues']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'FullfillingRequirement']/rim:SlotValue             " />
+<xsl:template match="             rim:Slot[@name = 'DataConsumer']/rim:SlotValue             | rim:Slot[@name = 'LegalPerson']/rim:SlotValue             | rim:Slot[@name = 'NaturalPerson']/rim:SlotValue             | rim:Slot[@name = 'AuthorizedRepresentative']/rim:SlotValue             | rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DataProvider']/rim:SlotValue             | rim:Slot[@name = 'ConceptValues']/rim:SlotValue/rim:Element              " mode="M45" priority="1002">
+    <svrl:fired-rule context="             rim:Slot[@name = 'DataConsumer']/rim:SlotValue             | rim:Slot[@name = 'LegalPerson']/rim:SlotValue             | rim:Slot[@name = 'NaturalPerson']/rim:SlotValue             | rim:Slot[@name = 'AuthorizedRepresentative']/rim:SlotValue             | rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue/rim:Element              | rim:Slot[@name = 'DataProvider']/rim:SlotValue             | rim:Slot[@name = 'ConceptValues']/rim:SlotValue/rim:Element              " />
     <xsl:variable name="datatype" select="@*[ends-with(name(.), ':type') and . != '']" />
 
 		<!--ASSERT -->
@@ -2778,8 +2758,8 @@
   </xsl:template>
 
 	<!--RULE -->
-<xsl:template match="             rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue             | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue             | rim:Slot[@name = 'ErrorText']/rim:SlotValue             " mode="M45" priority="1001">
-    <svrl:fired-rule context="             rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue             | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue             | rim:Slot[@name = 'ErrorText']/rim:SlotValue             " />
+<xsl:template match="             rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue             | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue             | rim:Slot[@name = 'ErrorText']/rim:SlotValue             | rim:Slot[@name = 'FullfillingRequirement']/rim:SlotValue             " mode="M45" priority="1001">
+    <svrl:fired-rule context="             rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue             | rim:Slot[@name = 'DistributionRequestList']/rim:SlotValue             | rim:Slot[@name = 'ErrorText']/rim:SlotValue             | rim:Slot[@name = 'FullfillingRequirement']/rim:SlotValue             " />
     <xsl:variable name="datatype" select="@*[ends-with(name(.), ':type') and . != '']" />
 
 		<!--ASSERT -->
