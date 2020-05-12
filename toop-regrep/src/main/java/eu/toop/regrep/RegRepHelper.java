@@ -25,6 +25,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import com.helger.commons.ValueEnforcer;
@@ -143,6 +144,14 @@ public final class RegRepHelper
     ret.setVocabulary (sVocabulary);
     ret.setTerm (sTerm);
     return ret;
+  }
+
+  @Nullable
+  public static AnyValueType createSlotValueMaybe (@Nullable final Document d)
+  {
+    if (d != null)
+      return createSlotValue (d.getDocumentElement ());
+    return null;
   }
 
   @Nonnull
