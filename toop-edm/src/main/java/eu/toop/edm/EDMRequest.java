@@ -16,6 +16,7 @@
 package eu.toop.edm;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -558,7 +559,7 @@ public class EDMRequest
     @Nonnull
     public Builder issueDateTime (@Nullable final LocalDateTime a)
     {
-      m_aIssueDateTime = a;
+      m_aIssueDateTime = a == null ? null : a.truncatedTo (ChronoUnit.MILLIS);
       return this;
     }
 
