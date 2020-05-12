@@ -24,7 +24,7 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.xsds.xlink.CXLink;
-import com.helger.xsds.xmlenc.CXML;
+import com.helger.xsds.xml.CXML_XSD;
 
 /**
  * Contains all the constants for RegRep XSD handling.
@@ -103,7 +103,7 @@ public final class CRegRep4
   @ReturnsMutableCopy
   public static ICommonsList <ClassPathResource> getAllXSDIncludes ()
   {
-    return new CommonsArrayList <> (CXML.getXSDResource (),
+    return new CommonsArrayList <> (CXML_XSD.getXSDResource (),
                                     CXLink.getXSDResource (),
                                     getXSDResourceWSAddr (),
                                     getXSDResourceRIM (),

@@ -23,7 +23,7 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.xsds.ccts.cct.schemamodule.CCCTS;
 import com.helger.xsds.xlink.CXLink;
-import com.helger.xsds.xmlenc.CXML;
+import com.helger.xsds.xml.CXML_XSD;
 
 public final class CDCatAP
 {
@@ -34,7 +34,7 @@ public final class CDCatAP
   }
 
   public static final List <ClassPathResource> XSDS = new CommonsArrayList <> (CCCTS.getXSDResource (),
-                                                                               CXML.getXSDResource (),
+                                                                               CXML_XSD.getXSDResource (),
                                                                                CXLink.getXSDResource (),
                                                                                new ClassPathResource ("schemas/skos.xsd",
                                                                                                       _getCL ()),

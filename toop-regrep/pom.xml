@@ -161,7 +161,7 @@
           <dependency>
             <groupId>com.helger</groupId>
             <artifactId>ph-xsds-xlink</artifactId>
-            <version>2.2.5</version>
+            <version>${ph-xsds.version}</version>
           </dependency>
           <dependency>
             <groupId>com.helger</groupId>
