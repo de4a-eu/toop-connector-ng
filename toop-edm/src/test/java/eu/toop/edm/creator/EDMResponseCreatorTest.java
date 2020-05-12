@@ -32,13 +32,13 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
+import eu.toop.edm.EDMResponse;
 import eu.toop.edm.error.EToopDataElementResponseErrorCode;
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.model.DocumentReferencePojo;
-import eu.toop.edm.model.EDMResponse;
 import eu.toop.edm.model.QualifiedRelationPojo;
 import eu.toop.edm.schematron.SchematronEDM2Validator;
 import eu.toop.edm.xml.cagv.CCAGV;
@@ -60,20 +60,20 @@ public final class EDMResponseCreatorTest
   public static EDMResponse.Builder _dataResponseConcept ()
   {
     return EDMResponse.builderConcept ()
-                             .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
-                             .responseStatus (ERegRepResponseStatus.SUCCESS)
-                             .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
-                             .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
+                      .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
+                      .responseStatus (ERegRepResponseStatus.SUCCESS)
+                      .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
+                      .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
   }
 
   @Nonnull
   public static EDMResponse.Builder _dataResponseDocument ()
   {
     return EDMResponse.builderDocument ()
-                             .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
-                             .responseStatus (ERegRepResponseStatus.SUCCESS)
-                             .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
-                             .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
+                      .requestID ("c4369c4d-740e-4b64-80f0-7b209a66d629")
+                      .responseStatus (ERegRepResponseStatus.SUCCESS)
+                      .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
+                      .dataProvider (AgentPojo.builder ().id ("12345678").idSchemeID ("VAT").name ("DPName"));
   }
 
   @Test
@@ -126,7 +126,8 @@ public final class EDMResponseCreatorTest
                                                                                                       .name (sConceptNS,
                                                                                                              "Concept-Name-9")
                                                                                                       .valueErrorCode (EToopDataElementResponseErrorCode.DP_ELE_001)))
-                                                           .build ().getAsQueryResponse();
+                                                           .build ()
+                                                           .getAsQueryResponse ();
     assertNotNull (aResponse);
 
     final RegRep4Writer <QueryResponse> aWriter = RegRep4Writer.queryResponse (CCAGV.XSDS).setFormattedOutput (true);
@@ -171,7 +172,8 @@ public final class EDMResponseCreatorTest
                                                                                                                           .description ("LegalResourceDesc")
                                                                                                                           .title ("Name")
                                                                                                                           .id ("RE238918378")))
-                                                            .build ().getAsQueryResponse();
+                                                            .build ()
+                                                            .getAsQueryResponse ();
     assertNotNull (aResponse);
 
     final RegRep4Writer <QueryResponse> aWriter = RegRep4Writer.queryResponse (CDCatAP.XSDS).setFormattedOutput (true);

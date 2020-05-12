@@ -62,8 +62,8 @@ public class EDMRequestCreator
    *        All slot providers to be added. May not be <code>null</code>.
    */
   public EDMRequestCreator (@Nonnull final EQueryDefinitionType eQueryDefinition,
-                             @Nonnull final String sID,
-                             @Nonnull final ICommonsList <ISlotProvider> aProviders)
+                            @Nonnull final String sID,
+                            @Nonnull final ICommonsList <ISlotProvider> aProviders)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
     ValueEnforcer.notEmpty (sID, "ID");
@@ -84,7 +84,7 @@ public class EDMRequestCreator
   public QueryRequest createQueryRequest ()
   {
     final QueryRequest ret = RegRepHelper.createEmptyQueryRequest ();
-    ret.setId(m_sID);
+    ret.setId (m_sID);
 
     // All top-level slots outside of query
     for (final String sTopLevel : TOP_LEVEL_SLOTS)

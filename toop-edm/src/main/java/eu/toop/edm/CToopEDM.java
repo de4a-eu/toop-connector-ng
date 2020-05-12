@@ -17,6 +17,11 @@ package eu.toop.edm;
 
 import javax.annotation.concurrent.Immutable;
 
+/**
+ * Constants for the TOOP EDM.
+ * 
+ * @author Philip Helger
+ */
 @Immutable
 public final class CToopEDM
 {

@@ -38,6 +38,7 @@ import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.error.IToopErrorCode;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
+import eu.toop.edm.jaxb.cccev.CCCEVValueType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
 
 /**
@@ -120,7 +121,13 @@ public class ConceptPojo
     if (m_aName != null)
       ret.addQName (m_aName);
     if (m_aValue != null)
-      ret.addValue (m_aValue.getAsCCCEVValueType ());
+    {
+      final CCCEVValueType aValue = m_aValue.getAsCCCEVValueType ();
+      if (aValue != null)
+        ret.addValue (aValue);
+    }
+
+    // Recursive call
     for (final ConceptPojo aChild : m_aChildren)
       ret.addConcept (aChild.getAsCCCEVConcept ());
     return ret;

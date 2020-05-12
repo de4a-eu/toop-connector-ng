@@ -11,14 +11,16 @@ import org.w3c.dom.Node;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 
-public class FulFillingRequirementUnmarshaller implements SlotUnmarshaller<CCCEVRequirementType> {
-    @Override
-    public CCCEVRequirementType unmarshal(Object object) throws JAXBException {
-        if (Objects.isNull(object))
-            return null;
-        JAXBContext context = JAXBContext.newInstance(CCCEVRequirementType.class);
-        Unmarshaller um = context.createUnmarshaller();
-        JAXBElement<CCCEVRequirementType> root = um.unmarshal((Node)object, CCCEVRequirementType.class);
-        return root.getValue();
-    }
+public class FulFillingRequirementUnmarshaller implements SlotUnmarshaller <CCCEVRequirementType>
+{
+  @Override
+  public CCCEVRequirementType unmarshal (Object object) throws JAXBException
+  {
+    if (Objects.isNull (object))
+      return null;
+    JAXBContext context = JAXBContext.newInstance (CCCEVRequirementType.class);
+    Unmarshaller um = context.createUnmarshaller ();
+    JAXBElement <CCCEVRequirementType> root = um.unmarshal ((Node) object, CCCEVRequirementType.class);
+    return root.getValue ();
+  }
 }

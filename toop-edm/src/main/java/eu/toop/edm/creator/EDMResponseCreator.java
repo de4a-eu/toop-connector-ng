@@ -52,8 +52,8 @@ public class EDMResponseCreator
   private final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
 
   public EDMResponseCreator (@Nonnull final ERegRepResponseStatus eResponseStatus,
-                              @Nonnull @Nonempty final String sRequestID,
-                              @Nonnull final ICommonsList <ISlotProvider> aProviders)
+                             @Nonnull @Nonempty final String sRequestID,
+                             @Nonnull final ICommonsList <ISlotProvider> aProviders)
   {
     ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");

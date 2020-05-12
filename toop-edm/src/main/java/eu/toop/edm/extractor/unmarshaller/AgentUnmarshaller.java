@@ -11,13 +11,15 @@ import org.w3c.dom.Node;
 
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 
-class AgentUnmarshaller implements SlotUnmarshaller<AgentType> {
-    public AgentType unmarshal(Object object) throws JAXBException {
-        if (Objects.isNull(object))
-            return null;
-        JAXBContext context = JAXBContext.newInstance(AgentType.class);
-        Unmarshaller um = context.createUnmarshaller();
-        JAXBElement<AgentType> root = um.unmarshal((Node)object, AgentType.class);
-        return root.getValue();
-    }
+class AgentUnmarshaller implements SlotUnmarshaller <AgentType>
+{
+  public AgentType unmarshal (Object object) throws JAXBException
+  {
+    if (Objects.isNull (object))
+      return null;
+    JAXBContext context = JAXBContext.newInstance (AgentType.class);
+    Unmarshaller um = context.createUnmarshaller ();
+    JAXBElement <AgentType> root = um.unmarshal ((Node) object, AgentType.class);
+    return root.getValue ();
+  }
 }

@@ -243,19 +243,19 @@ public class ConceptValuePojo
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Identifier", m_sIdentifier)
-                                       .append ("Amount", m_aAmount)
-                                       .append ("Code", m_sCode)
-                                       .append ("Date", m_aDate)
-                                       .append ("Indicator", m_aIndicator)
-                                       .append ("Measure", m_aMeasure)
-                                       .append ("Numeric", m_aNumeric)
-                                       .append ("Period", m_aPeriod)
-                                       .append ("Quantity", m_aQuantity)
-                                       .append ("Text", m_aText)
-                                       .append ("Time", m_aTime)
-                                       .append ("URI", m_sURI)
-                                       .append ("ErrorCode", m_sErrorCode)
+    return new ToStringGenerator (this).appendIfNotNull ("Identifier", m_sIdentifier)
+                                       .appendIfNotNull ("Amount", m_aAmount)
+                                       .appendIfNotNull ("Code", m_sCode)
+                                       .appendIfNotNull ("Date", m_aDate)
+                                       .appendIfNotNull ("Indicator", m_aIndicator)
+                                       .appendIfNotNull ("Measure", m_aMeasure)
+                                       .appendIfNotNull ("Numeric", m_aNumeric)
+                                       .appendIfNotNull ("Period", m_aPeriod)
+                                       .appendIfNotNull ("Quantity", m_aQuantity)
+                                       .appendIfNotNull ("Text", m_aText)
+                                       .appendIfNotNull ("Time", m_aTime)
+                                       .appendIfNotNull ("URI", m_sURI)
+                                       .appendIfNotNull ("ErrorCode", m_sErrorCode)
                                        .getToString ();
   }
 

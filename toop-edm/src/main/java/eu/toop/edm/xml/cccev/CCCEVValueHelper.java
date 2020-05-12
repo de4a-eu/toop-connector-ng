@@ -17,7 +17,6 @@ package eu.toop.edm.xml.cccev;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.Collection;
 
@@ -266,42 +265,6 @@ public final class CCCEVValueHelper
     final CCCEVValueType ret = new CCCEVValueType ();
     ret.setUriValue (a);
     return ret;
-  }
-
-  @Nonnull
-  public static CCCEVValueType createPeriod (@Nonnull final LocalDateTime aStart, @Nonnull final LocalDateTime aEnd)
-  {
-    return createPeriod (aStart.toLocalDate (), aStart.toLocalTime (), aEnd.toLocalDate (), aEnd.toLocalTime ());
-  }
-
-  @Nonnull
-  public static CCCEVValueType createPeriod (@Nullable final LocalDate aStartDate,
-                                             @Nullable final LocalTime aStartTime,
-                                             @Nullable final LocalDate aEndDate,
-                                             @Nullable final LocalTime aEndTime)
-  {
-    return createPeriod (PDTXMLConverter.getXMLCalendarDate (aStartDate),
-                         PDTXMLConverter.getXMLCalendarTime (aStartTime),
-                         PDTXMLConverter.getXMLCalendarDate (aEndDate),
-                         PDTXMLConverter.getXMLCalendarTime (aEndTime));
-  }
-
-  @Nonnull
-  public static CCCEVValueType createPeriod (@Nonnull final XMLGregorianCalendar aStartDate,
-                                             @Nonnull final XMLGregorianCalendar aStartTime,
-                                             @Nonnull final XMLGregorianCalendar aEndDate,
-                                             @Nonnull final XMLGregorianCalendar aEndTime)
-  {
-    final PeriodType a = new PeriodType ();
-    if (aStartDate != null)
-      a.setStartDate (aStartDate);
-    if (aStartTime != null)
-      a.setStartTime (aStartTime);
-    if (aEndDate != null)
-      a.setEndDate (aEndDate);
-    if (aEndTime != null)
-      a.setEndTime (aEndTime);
-    return create (a);
   }
 
   @Nonnull

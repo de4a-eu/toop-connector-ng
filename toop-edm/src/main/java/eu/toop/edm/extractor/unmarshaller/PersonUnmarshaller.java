@@ -11,13 +11,15 @@ import org.w3c.dom.Node;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
 
-class PersonUnmarshaller implements SlotUnmarshaller<CorePersonType> {
-    public CorePersonType unmarshal(Object object) throws JAXBException {
-        if (Objects.isNull(object))
-            return null;
-        JAXBContext context = JAXBContext.newInstance(CorePersonType.class);
-        Unmarshaller um = context.createUnmarshaller();
-        JAXBElement<CorePersonType> root = um.unmarshal((Node)object, CorePersonType.class);
-        return root.getValue();
-    }
+class PersonUnmarshaller implements SlotUnmarshaller <CorePersonType>
+{
+  public CorePersonType unmarshal (Object object) throws JAXBException
+  {
+    if (Objects.isNull (object))
+      return null;
+    JAXBContext context = JAXBContext.newInstance (CorePersonType.class);
+    Unmarshaller um = context.createUnmarshaller ();
+    JAXBElement <CorePersonType> root = um.unmarshal ((Node) object, CorePersonType.class);
+    return root.getValue ();
+  }
 }

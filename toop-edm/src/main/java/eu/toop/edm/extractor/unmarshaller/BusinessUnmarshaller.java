@@ -11,13 +11,15 @@ import org.w3c.dom.Node;
 
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 
-class BusinessUnmarshaller implements SlotUnmarshaller<CoreBusinessType> {
-    public CoreBusinessType unmarshal(Object object) throws JAXBException {
-        if (Objects.isNull(object))
-            return null;
-        JAXBContext context = JAXBContext.newInstance(CoreBusinessType.class);
-        Unmarshaller um = context.createUnmarshaller();
-        JAXBElement<CoreBusinessType> root = um.unmarshal((Node)object, CoreBusinessType.class);
-        return root.getValue();
-    }
+class BusinessUnmarshaller implements SlotUnmarshaller <CoreBusinessType>
+{
+  public CoreBusinessType unmarshal (Object object) throws JAXBException
+  {
+    if (Objects.isNull (object))
+      return null;
+    JAXBContext context = JAXBContext.newInstance (CoreBusinessType.class);
+    Unmarshaller um = context.createUnmarshaller ();
+    JAXBElement <CoreBusinessType> root = um.unmarshal ((Node) object, CoreBusinessType.class);
+    return root.getValue ();
+  }
 }

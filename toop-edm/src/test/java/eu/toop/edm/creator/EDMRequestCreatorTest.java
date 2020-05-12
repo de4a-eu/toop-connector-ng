@@ -34,12 +34,12 @@ import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.mime.CMimeType;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
+import eu.toop.edm.EDMRequest;
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DistributionPojo;
-import eu.toop.edm.model.EDMRequest;
 import eu.toop.edm.model.EDistributionFormat;
 import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.PersonPojo;

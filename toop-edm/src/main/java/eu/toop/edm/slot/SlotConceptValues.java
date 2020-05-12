@@ -27,6 +27,7 @@ import eu.toop.edm.xml.cccev.ConceptMarshaller;
 import eu.toop.regrep.ERegRepCollectionType;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.SlotBuilder;
+import eu.toop.regrep.rim.AnyValueType;
 import eu.toop.regrep.rim.SlotType;
 
 /**
@@ -63,10 +64,9 @@ public class SlotConceptValues implements ISlotProvider
   public SlotType createSlot ()
   {
     final ConceptMarshaller m = new ConceptMarshaller ();
-    return new SlotBuilder ().setName (NAME)
-                             .setValue (ERegRepCollectionType.SET,
-                                        m_aConcepts.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x.getAsCCCEVConcept ())
-                                                                                                      .getDocumentElement ())))
-                             .build ();
+    final ICommonsList <AnyValueType> aValues = new CommonsArrayList <> ();
+    m_aConcepts.findAllMapped (x -> RegRepHelper.createSlotValueMaybe (m.getAsDocument (x.getAsCCCEVConcept ())),
+                               aValues::add);
+    return new SlotBuilder ().setName (NAME).setValue (ERegRepCollectionType.SET, aValues).build ();
   }
 }

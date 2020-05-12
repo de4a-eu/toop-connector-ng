@@ -11,14 +11,16 @@ import org.w3c.dom.Node;
 
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 
-class DatasetUnmarshaller implements SlotUnmarshaller<DCatAPDatasetType> {
-    @Override
-    public DCatAPDatasetType unmarshal(Object object) throws JAXBException {
-        if (Objects.isNull(object))
-            return null;
-        JAXBContext context = JAXBContext.newInstance(DCatAPDatasetType.class);
-        Unmarshaller um = context.createUnmarshaller();
-        JAXBElement<DCatAPDatasetType> root = um.unmarshal((Node)object, DCatAPDatasetType.class);
-        return root.getValue();
-    }
+class DatasetUnmarshaller implements SlotUnmarshaller <DCatAPDatasetType>
+{
+  @Override
+  public DCatAPDatasetType unmarshal (Object object) throws JAXBException
+  {
+    if (Objects.isNull (object))
+      return null;
+    JAXBContext context = JAXBContext.newInstance (DCatAPDatasetType.class);
+    Unmarshaller um = context.createUnmarshaller ();
+    JAXBElement <DCatAPDatasetType> root = um.unmarshal ((Node) object, DCatAPDatasetType.class);
+    return root.getValue ();
+  }
 }

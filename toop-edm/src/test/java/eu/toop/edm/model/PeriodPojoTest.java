@@ -47,6 +47,21 @@ public final class PeriodPojoTest
   }
 
   @Test
+  public void testDateOnly ()
+  {
+    final PeriodPojo x = PeriodPojo.builder ()
+                                   .startDate (PDTFactory.getCurrentLocalDate ().minusMonths (1))
+                                   .endDate (PDTFactory.getCurrentLocalDate ().plusMonths (7))
+                                   .build ();
+
+    final PeriodType a = x.getAsPeriod ();
+    assertNotNull (a);
+
+    final PeriodPojo y = PeriodPojo.builder (a).build ();
+    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+  }
+
+  @Test
   public void testMinimum ()
   {
     final PeriodPojo x = PeriodPojo.builder ().build ();
