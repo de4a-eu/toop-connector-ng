@@ -106,6 +106,9 @@ public class EDMResponse
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
     ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
+    ValueEnforcer.isTrue (eResponseStatus == ERegRepResponseStatus.SUCCESS ||
+                          eResponseStatus == ERegRepResponseStatus.FAILURE,
+                          "Only success and failure are supported");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
     ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
     ValueEnforcer.notNull (aIssueDateTime, "IssueDateTime");
@@ -442,6 +445,8 @@ public class EDMResponse
         throw new IllegalStateException ("Query Definition must be present");
       if (m_eResponseStatus == null)
         throw new IllegalStateException ("Response Status must be present");
+      if (m_eResponseStatus != ERegRepResponseStatus.SUCCESS && m_eResponseStatus != ERegRepResponseStatus.FAILURE)
+        throw new IllegalStateException ("Response Status must be SUCCESS or FAILURE");
       if (StringHelper.hasNoText (m_sRequestID))
         throw new IllegalStateException ("Request ID must be present");
       if (StringHelper.hasNoText (m_sSpecificationIdentifier))
