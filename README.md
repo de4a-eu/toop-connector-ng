@@ -7,6 +7,10 @@ The TOOP Connector NG is a Java only solution. Other environments like .NET etc.
 
 ## Status
 
+2020-05-12: release of `v2.0.0-beta2`
+* Changed the main EDM classes for request, response and error response to `EDMRequest`, `EDMResponse` and `EDMErrorResponse`
+* Added `getReader()` and `getWriter()` methods to easily read and write these objects from and to different structures
+
 2020-05-06: release of `v2.0.0-beta1`
 * Libraries for creating the new data model
 * Consisting of `toop-edm`, `toop-regrep`, `toop-kafka-client` and `toop-commons`
@@ -18,7 +22,7 @@ The TOOP Connector NG is a Java only solution. Other environments like .NET etc.
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>toop-edm</artifactId>
-        <version>2.0.0-beta1</version>
+        <version>2.0.0-beta2</version>
       </dependency>
 ```
 
