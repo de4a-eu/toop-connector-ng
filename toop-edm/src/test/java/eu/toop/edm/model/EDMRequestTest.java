@@ -1,24 +1,24 @@
 package eu.toop.edm.model;
 
-import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.mime.CMimeType;
-import eu.toop.edm.EQueryDefinitionType;
-import eu.toop.edm.extractor.EDMExtractors;
-import eu.toop.edm.pilot.gbm.EToopConcept;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.time.Month;
 import java.util.Locale;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import javax.xml.bind.JAXBException;
+import javax.xml.stream.XMLStreamException;
+
+import org.junit.Test;
+
+import com.helger.commons.datetime.PDTFactory;
+import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.mime.CMimeType;
+
+import eu.toop.edm.EQueryDefinitionType;
+import eu.toop.edm.extractor.EDMExtractors;
+import eu.toop.edm.pilot.gbm.EToopConcept;
 
 public final class EDMRequestTest {
 

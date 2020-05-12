@@ -1,18 +1,27 @@
 package eu.toop.edm.extractor;
 
+import javax.xml.bind.JAXBException;
+
 import com.helger.datetime.util.PDTXMLConverter;
+
 import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.model.EDMResponse;
-import eu.toop.edm.slot.*;
+import eu.toop.edm.slot.SlotConceptValues;
+import eu.toop.edm.slot.SlotDataProvider;
+import eu.toop.edm.slot.SlotDocumentMetadata;
+import eu.toop.edm.slot.SlotIssueDateTime;
+import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.query.QueryResponse;
-import eu.toop.regrep.rim.*;
-
-import javax.xml.bind.JAXBException;
+import eu.toop.regrep.rim.AnyValueType;
+import eu.toop.regrep.rim.CollectionValueType;
+import eu.toop.regrep.rim.DateTimeValueType;
+import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.rim.StringValueType;
 
 final class EDMResponseExtractor {
     private EDMResponseExtractor() {

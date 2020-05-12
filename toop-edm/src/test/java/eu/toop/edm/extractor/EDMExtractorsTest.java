@@ -1,16 +1,14 @@
 package eu.toop.edm.extractor;
 
-import com.helger.commons.io.resource.ClassPathResource;
-import eu.toop.edm.model.EDMRequest;
-import eu.toop.edm.model.EDMResponse;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLStreamException;
-import java.io.InputStream;
 
-import static org.junit.Assert.*;
+import org.junit.Test;
+
+import com.helger.commons.io.resource.ClassPathResource;
 
 public final class EDMExtractorsTest {
 

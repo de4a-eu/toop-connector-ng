@@ -15,36 +15,21 @@
  */
 package eu.toop.edm.creator;
 
-import java.time.LocalDateTime;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
-import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.string.StringHelper;
 
-import eu.toop.edm.CToopEDM;
-import eu.toop.edm.EQueryDefinitionType;
-import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
-import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
-import eu.toop.edm.model.AgentPojo;
-import eu.toop.edm.model.ConceptPojo;
-import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.slot.ISlotProvider;
-import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
-import eu.toop.edm.slot.SlotDocumentMetadata;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.regrep.ERegRepResponseStatus;

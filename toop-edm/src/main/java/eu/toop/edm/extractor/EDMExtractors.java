@@ -1,22 +1,25 @@
 package eu.toop.edm.extractor;
 
-import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
-import eu.toop.edm.model.EDMRequest;
-import eu.toop.edm.model.EDMResponse;
-import eu.toop.edm.xml.cagv.CCAGV;
-import eu.toop.edm.xml.cccev.CCCEV;
-import eu.toop.regrep.RegRep4Reader;
-import eu.toop.regrep.RegRep4Writer;
-import eu.toop.regrep.query.QueryRequest;
-import eu.toop.regrep.query.QueryResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 
 import javax.xml.bind.JAXBException;
 import javax.xml.stream.XMLEventReader;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
+
+import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
+
+import eu.toop.edm.model.EDMRequest;
+import eu.toop.edm.model.EDMResponse;
+import eu.toop.edm.xml.cccev.CCCEV;
+import eu.toop.regrep.RegRep4Reader;
+import eu.toop.regrep.query.QueryRequest;
+import eu.toop.regrep.query.QueryResponse;
 
 public final class EDMExtractors {
 

@@ -1,16 +1,36 @@
 package eu.toop.edm.extractor;
 
+import javax.xml.bind.JAXBException;
+
 import com.helger.datetime.util.PDTXMLConverter;
+
 import eu.toop.edm.EQueryDefinitionType;
 import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
-import eu.toop.edm.model.*;
-import eu.toop.edm.slot.*;
+import eu.toop.edm.model.AgentPojo;
+import eu.toop.edm.model.BusinessPojo;
+import eu.toop.edm.model.ConceptPojo;
+import eu.toop.edm.model.DistributionPojo;
+import eu.toop.edm.model.EDMRequest;
+import eu.toop.edm.model.PersonPojo;
+import eu.toop.edm.slot.SlotAuthorizedRepresentative;
+import eu.toop.edm.slot.SlotConceptRequestList;
+import eu.toop.edm.slot.SlotConsentToken;
+import eu.toop.edm.slot.SlotDataConsumer;
+import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
+import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
+import eu.toop.edm.slot.SlotDatasetIdentifier;
+import eu.toop.edm.slot.SlotDistributionRequestList;
+import eu.toop.edm.slot.SlotFullfillingRequirement;
+import eu.toop.edm.slot.SlotIssueDateTime;
+import eu.toop.edm.slot.SlotProcedure;
+import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.regrep.query.QueryRequest;
-import eu.toop.regrep.rim.*;
-
-
-import javax.xml.bind.JAXBException;
-import java.util.Locale;
+import eu.toop.regrep.rim.AnyValueType;
+import eu.toop.regrep.rim.CollectionValueType;
+import eu.toop.regrep.rim.DateTimeValueType;
+import eu.toop.regrep.rim.InternationalStringValueType;
+import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.rim.StringValueType;
 
 
 final class EDMRequestExtractor {

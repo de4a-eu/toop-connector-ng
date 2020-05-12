@@ -1,35 +1,50 @@
 package eu.toop.edm.model;
 
+import java.io.InputStream;
+import java.time.LocalDateTime;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+
 import eu.toop.edm.CToopEDM;
-import eu.toop.edm.creator.EDMRequestCreator;
 import eu.toop.edm.EQueryDefinitionType;
+import eu.toop.edm.creator.EDMRequestCreator;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
-import eu.toop.edm.slot.*;
+import eu.toop.edm.slot.ISlotProvider;
+import eu.toop.edm.slot.SlotAuthorizedRepresentative;
+import eu.toop.edm.slot.SlotConceptRequestList;
+import eu.toop.edm.slot.SlotConsentToken;
+import eu.toop.edm.slot.SlotDataConsumer;
+import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
+import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
+import eu.toop.edm.slot.SlotDatasetIdentifier;
+import eu.toop.edm.slot.SlotDistributionRequestList;
+import eu.toop.edm.slot.SlotFullfillingRequirement;
+import eu.toop.edm.slot.SlotIssueDateTime;
+import eu.toop.edm.slot.SlotProcedure;
+import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.edm.xml.cagv.CCAGV;
-import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.LocalizedStringType;
-import eu.toop.regrep.rim.QueryType;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.io.InputStream;
-import java.time.LocalDateTime;
-import java.util.*;
 
 public class EDMRequest {
 

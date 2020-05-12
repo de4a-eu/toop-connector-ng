@@ -1,17 +1,15 @@
 package eu.toop.edm.extractor;
 
-import com.helger.commons.io.resource.ClassPathResource;
-import eu.toop.edm.model.EDMRequest;
-import eu.toop.edm.xml.cagv.CCAGV;
-import eu.toop.edm.xml.cccev.CCCEV;
-import eu.toop.regrep.RegRep4Reader;
-import eu.toop.regrep.query.QueryRequest;
-import org.junit.Before;
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
 
 import javax.xml.bind.JAXBException;
 
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
+
+import com.helger.commons.io.resource.ClassPathResource;
+
+import eu.toop.edm.xml.cagv.CCAGV;
+import eu.toop.regrep.RegRep4Reader;
 
 public final class EDMRequestExtractorTest {
 
