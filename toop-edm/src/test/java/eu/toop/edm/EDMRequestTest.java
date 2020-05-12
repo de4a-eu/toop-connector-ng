@@ -17,6 +17,7 @@ package eu.toop.edm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 import java.time.Month;
@@ -49,6 +50,21 @@ import eu.toop.edm.pilot.gbm.EToopConcept;
  */
 public final class EDMRequestTest
 {
+  private static void _testWriteAndRead (@Nonnull final EDMRequest aReq)
+  {
+    assertNotNull (aReq);
+
+    // Write
+    final byte [] aBytes = aReq.getWriter ().getAsBytes ();
+    assertNotNull (aBytes);
+
+    // Re-read
+    final EDMRequest aReq2 = EDMRequest.getReader ().read (aBytes);
+
+    // Compare with original
+    assertEquals (aReq, aReq2);
+  }
+
   @Nonnull
   private static EDMRequest.Builder _req ()
   {
@@ -149,21 +165,6 @@ public final class EDMRequestTest
                        .id ("anID");
   }
 
-  private void _testWriteAndRead (@Nonnull final EDMRequest aReq)
-  {
-    assertNotNull (aReq);
-
-    // Write
-    final byte [] aBytes = aReq.getWriter ().getAsBytes ();
-    assertNotNull (aBytes);
-
-    // Re-read
-    final EDMRequest aReq2 = EDMRequest.getReader ().read (aBytes);
-
-    // Compare with original
-    assertEquals (aReq, aReq2);
-  }
-
   @Test
   public void createEDMConceptRequestLP ()
   {
@@ -197,8 +198,7 @@ public final class EDMRequestTest
     try
     {
       // This attempts to create an EDMRequest with both concept and
-      // distribution
-      // which is not permitted and fails
+      // distribution which is not permitted and fails
       _reqConcept ().dataSubject (_np ())
                     .distribution (DistributionPojo.builder ()
                                                    .format (EDistributionFormat.STRUCTURED)
@@ -226,5 +226,15 @@ public final class EDMRequestTest
 
     aRequest = EDMRequest.getReader ().read (new ClassPathResource ("Document Request_NP.xml"));
     _testWriteAndRead (aRequest);
+  }
+
+  @Test
+  public void testBadCases ()
+  {
+    EDMRequest aRequest = EDMRequest.getReader ().read (new ClassPathResource ("Bogus.xml"));
+    assertNull (aRequest);
+
+    aRequest = EDMRequest.getReader ().read (new ClassPathResource ("Concept Response.xml"));
+    assertNull (aRequest);
   }
 }

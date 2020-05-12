@@ -16,17 +16,21 @@
 package eu.toop.edm;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import javax.xml.bind.JAXBException;
+import javax.xml.datatype.XMLGregorianCalendar;
 
 import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.annotation.ReturnsMutableObject;
+import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
@@ -40,7 +44,6 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.datetime.util.PDTXMLConverter;
 
-import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
@@ -60,6 +63,8 @@ import eu.toop.edm.xml.JAXBVersatileReader;
 import eu.toop.edm.xml.JAXBVersatileWriter;
 import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.edm.xml.cccev.CCCEV;
+import eu.toop.edm.xml.cccev.ConceptMarshaller;
+import eu.toop.edm.xml.dcatap.DatasetMarshaller;
 import eu.toop.regrep.ERegRepResponseStatus;
 import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.RegRep4Writer;
@@ -107,7 +112,7 @@ public class EDMResponse
   private final String m_sSpecificationIdentifier;
   private final LocalDateTime m_aIssueDateTime;
   private final AgentPojo m_aDataProvider;
-  private final ConceptPojo m_aConcept;
+  private final ICommonsList <ConceptPojo> m_aConcepts = new CommonsArrayList <> ();
   private final DatasetPojo m_aDataset;
 
   public EDMResponse (@Nonnull final EQueryDefinitionType eQueryDefinition,
@@ -116,7 +121,7 @@ public class EDMResponse
                       @Nonnull @Nonempty final String sSpecificationIdentifier,
                       @Nonnull final LocalDateTime aIssueDateTime,
                       @Nonnull final AgentPojo aDataProvider,
-                      @Nullable final ConceptPojo aConcept,
+                      @Nullable final ICommonsList <ConceptPojo> aConcepts,
                       @Nullable final DatasetPojo aDataset)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
@@ -128,12 +133,13 @@ public class EDMResponse
     ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
     ValueEnforcer.notNull (aIssueDateTime, "IssueDateTime");
     ValueEnforcer.notNull (aDataProvider, "DataProvider");
-    ValueEnforcer.isFalse ((aConcept == null && aDataset == null) || (aConcept != null && aDataset != null),
+    final int nConcepts = CollectionHelper.getSize (aConcepts);
+    ValueEnforcer.isFalse ((nConcepts == 0 && aDataset == null) || (nConcepts != 0 && aDataset != null),
                            "Exactly one of Concept and Dataset must be set");
     switch (eQueryDefinition)
     {
       case CONCEPT:
-        ValueEnforcer.notNull (aConcept, "Concept");
+        ValueEnforcer.notEmpty (aConcepts, "Concept");
         break;
       case DOCUMENT:
         ValueEnforcer.notNull (aDataset, "Dataset");
@@ -148,7 +154,8 @@ public class EDMResponse
     m_sSpecificationIdentifier = sSpecificationIdentifier;
     m_aIssueDateTime = aIssueDateTime;
     m_aDataProvider = aDataProvider;
-    m_aConcept = aConcept;
+    if (aConcepts != null)
+      m_aConcepts.addAll (aConcepts);
     m_aDataset = aDataset;
   }
 
@@ -190,10 +197,18 @@ public class EDMResponse
     return m_aDataProvider;
   }
 
-  @Nullable
-  public final ConceptPojo getConcept ()
+  @Nonnull
+  @ReturnsMutableObject
+  public final List <ConceptPojo> concepts ()
   {
-    return m_aConcept;
+    return m_aConcepts;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public final List <ConceptPojo> getAllConcepts ()
+  {
+    return m_aConcepts.getClone ();
   }
 
   @Nullable
@@ -254,8 +269,8 @@ public class EDMResponse
       aSlots.add (new SlotDataProvider (m_aDataProvider));
 
     // ConceptValues
-    if (m_aConcept != null)
-      aSlots.add (new SlotConceptValues (m_aConcept));
+    if (m_aConcepts.isNotEmpty ())
+      aSlots.add (new SlotConceptValues (m_aConcepts));
 
     // DocumentMetadata
     if (m_aDataset != null)
@@ -291,7 +306,7 @@ public class EDMResponse
            EqualsHelper.equals (m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
            EqualsHelper.equals (m_aIssueDateTime, that.m_aIssueDateTime) &&
            EqualsHelper.equals (m_aDataProvider, that.m_aDataProvider) &&
-           EqualsHelper.equals (m_aConcept, that.m_aConcept) &&
+           EqualsHelper.equals (m_aConcepts, that.m_aConcepts) &&
            EqualsHelper.equals (m_aDataset, that.m_aDataset);
   }
 
@@ -304,7 +319,7 @@ public class EDMResponse
                                        .append (m_sSpecificationIdentifier)
                                        .append (m_aIssueDateTime)
                                        .append (m_aDataProvider)
-                                       .append (m_aConcept)
+                                       .append (m_aConcepts)
                                        .append (m_aDataset)
                                        .getHashCode ();
   }
@@ -318,7 +333,7 @@ public class EDMResponse
                                        .append ("SpecificationIdentifier", m_sSpecificationIdentifier)
                                        .append ("IssueDateTime", m_aIssueDateTime)
                                        .append ("DataProvider", m_aDataProvider)
-                                       .append ("Concept", m_aConcept)
+                                       .append ("Concepts", m_aConcepts)
                                        .append ("Dataset", m_aDataset)
                                        .getToString ();
   }
@@ -350,7 +365,7 @@ public class EDMResponse
     private String m_sSpecificationIdentifier;
     private LocalDateTime m_aIssueDateTime;
     private AgentPojo m_aDataProvider;
-    private ConceptPojo m_aConcept;
+    private final ICommonsList <ConceptPojo> m_aConcepts = new CommonsArrayList <> ();
     private DatasetPojo m_aDataset;
 
     protected Builder ()
@@ -423,6 +438,32 @@ public class EDMResponse
     }
 
     @Nonnull
+    public Builder addConcept (@Nullable final CCCEVConceptType a)
+    {
+      return addConcept (a == null ? null : ConceptPojo.builder (a));
+    }
+
+    @Nonnull
+    public Builder addConcept (@Nullable final ConceptPojo.Builder a)
+    {
+      return addConcept (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder addConcept (@Nullable final ConceptPojo a)
+    {
+      if (a != null)
+        m_aConcepts.add (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder concept (@Nullable final CCCEVConceptType a)
+    {
+      return concept (a == null ? null : ConceptPojo.builder (a));
+    }
+
+    @Nonnull
     public Builder concept (@Nullable final ConceptPojo.Builder a)
     {
       return concept (a == null ? null : a.build ());
@@ -431,14 +472,25 @@ public class EDMResponse
     @Nonnull
     public Builder concept (@Nullable final ConceptPojo a)
     {
-      m_aConcept = a;
+      if (a != null)
+        m_aConcepts.set (a);
+      else
+        m_aConcepts.clear ();
       return this;
     }
 
     @Nonnull
-    public Builder concept (@Nullable final CCCEVConceptType a)
+    public Builder concepts (@Nullable final ConceptPojo... a)
     {
-      return concept (a == null ? null : ConceptPojo.builder (a));
+      m_aConcepts.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder concepts (@Nullable final Iterable <ConceptPojo> a)
+    {
+      m_aConcepts.setAll (a);
+      return this;
     }
 
     @Nonnull
@@ -480,13 +532,13 @@ public class EDMResponse
       switch (m_eQueryDefinition)
       {
         case CONCEPT:
-          if (m_aConcept == null)
+          if (m_aConcepts.isEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Concept' must contain a Concept");
           if (m_aDataset != null)
             throw new IllegalStateException ("A Query Definition of type 'Concept' must NOT contain a Dataset");
           break;
         case DOCUMENT:
-          if (m_aConcept != null)
+          if (m_aConcepts.isNotEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Concept");
           if (m_aDataset == null)
             throw new IllegalStateException ("A Query Definition of type 'Document' must contain a Dataset");
@@ -507,7 +559,7 @@ public class EDMResponse
                               m_sSpecificationIdentifier,
                               m_aIssueDateTime,
                               m_aDataProvider,
-                              m_aConcept,
+                              m_aConcepts,
                               m_aDataset);
     }
   }
@@ -515,46 +567,59 @@ public class EDMResponse
   private static void _applySlots (@Nonnull final SlotType aSlot, @Nonnull final EDMResponse.Builder aBuilder)
   {
     final String sName = aSlot.getName ();
-    final ValueType aValue = aSlot.getSlotValue ();
-    try
+    final ValueType aSlotValue = aSlot.getSlotValue ();
+    switch (sName)
     {
-      switch (sName)
+      case SlotSpecificationIdentifier.NAME:
+        if (aSlotValue instanceof StringValueType)
+        {
+          final String sValue = ((StringValueType) aSlotValue).getValue ();
+          aBuilder.specificationIdentifier (sValue);
+        }
+        break;
+      case SlotIssueDateTime.NAME:
+        if (aSlotValue instanceof DateTimeValueType)
+        {
+          final XMLGregorianCalendar aCal = ((DateTimeValueType) aSlotValue).getValue ();
+          aBuilder.issueDateTime (PDTXMLConverter.getLocalDateTime (aCal));
+        }
+        break;
+      case SlotDataProvider.NAME:
+        if (aSlotValue instanceof AnyValueType)
+        {
+          final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
+          aBuilder.dataProvider (AgentPojo.builder (new AgentMarshaller ().read (aAny)));
+        }
+        break;
+      case SlotConceptValues.NAME:
+        if (aSlotValue instanceof CollectionValueType)
+        {
+          final List <ValueType> aElements = ((CollectionValueType) aSlotValue).getElement ();
+          if (!aElements.isEmpty ())
+          {
+            for (final ValueType aElement : aElements)
+              if (aElement instanceof AnyValueType)
+              {
+                final Object aElementValue = ((AnyValueType) aElement).getAny ();
+                if (aElementValue instanceof Node)
+                  aBuilder.addConcept (new ConceptMarshaller ().read ((Node) aElementValue));
+              }
+            aBuilder.queryDefinition (EQueryDefinitionType.CONCEPT);
+          }
+        }
+        break;
+      case SlotDocumentMetadata.NAME:
       {
-        case SlotSpecificationIdentifier.NAME:
-          aBuilder.specificationIdentifier (((StringValueType) aValue).getValue ());
-          break;
-        case SlotIssueDateTime.NAME:
-          aBuilder.issueDateTime (PDTXMLConverter.getLocalDateTime (((DateTimeValueType) aValue).getValue ()));
-          break;
-        case SlotDataProvider.NAME:
+        if (aSlotValue instanceof AnyValueType)
         {
-          final Node aAny = (Node) ((AnyValueType) aValue).getAny ();
-          aBuilder.dataProvider (AgentPojo.builder (new AgentMarshaller ().read (aAny)).build ());
-          break;
-        }
-        case SlotConceptValues.NAME:
-        {
-          aBuilder.concept (ConceptPojo.builder (Unmarshallers.getConceptUnmarshaller ()
-                                                              .unmarshal (((AnyValueType) ((CollectionValueType) aValue).getElementAtIndex (0)).getAny ()))
-                                       .build ());
-          aBuilder.queryDefinition (EQueryDefinitionType.CONCEPT);
-          break;
-        }
-        case SlotDocumentMetadata.NAME:
-        {
-          aBuilder.dataset (DatasetPojo.builder (Unmarshallers.getDatasetUnmarshaller ()
-                                                              .unmarshal (((AnyValueType) aValue).getAny ()))
-                                       .build ());
+          final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
+          aBuilder.dataset (DatasetPojo.builder (new DatasetMarshaller ().read (aAny)));
           aBuilder.queryDefinition (EQueryDefinitionType.DOCUMENT);
-          break;
         }
-        default:
-          throw new IllegalStateException ("Slot is not defined: " + sName);
+        break;
       }
-    }
-    catch (final JAXBException ex)
-    {
-      throw new IllegalStateException ("Ooops", ex);
+      default:
+        throw new IllegalStateException ("Slot is not defined: " + sName);
     }
   }
 
@@ -568,7 +633,8 @@ public class EDMResponse
     for (final SlotType s : aQueryResponse.getSlot ())
       _applySlots (s, aBuilder);
 
-    if (aQueryResponse.getRegistryObjectList ().hasRegistryObjectEntries ())
+    if (aQueryResponse.getRegistryObjectList () != null &&
+        aQueryResponse.getRegistryObjectList ().hasRegistryObjectEntries ())
       for (final SlotType aSlot : aQueryResponse.getRegistryObjectList ().getRegistryObjectAtIndex (0).getSlot ())
         _applySlots (aSlot, aBuilder);
 

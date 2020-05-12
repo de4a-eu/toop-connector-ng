@@ -175,10 +175,10 @@ public class EDMRequest
     switch (eQueryDefinition)
     {
       case CONCEPT:
-        ValueEnforcer.notNull (aConcepts, "Concept");
+        ValueEnforcer.notEmpty (aConcepts, "Concept");
         break;
       case DOCUMENT:
-        ValueEnforcer.notNull (aDistributions, "Distribution");
+        ValueEnforcer.notEmpty (aDistributions, "Distribution");
         break;
       default:
         throw new IllegalArgumentException ("Unsupported query definition: " + eQueryDefinition);
@@ -940,28 +940,28 @@ public class EDMRequest
         if (aSlotValue instanceof AnyValueType)
         {
           final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
-          aBuilder.dataConsumer (AgentPojo.builder (new AgentMarshaller ().read (aAny)).build ());
+          aBuilder.dataConsumer (AgentPojo.builder (new AgentMarshaller ().read (aAny)));
         }
         break;
       case SlotDataSubjectLegalPerson.NAME:
         if (aSlotValue instanceof AnyValueType)
         {
           final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
-          aBuilder.dataSubject (BusinessPojo.builder (new BusinessMarshaller ().read (aAny)).build ());
+          aBuilder.dataSubject (BusinessPojo.builder (new BusinessMarshaller ().read (aAny)));
         }
         break;
       case SlotDataSubjectNaturalPerson.NAME:
         if (aSlotValue instanceof AnyValueType)
         {
           final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
-          aBuilder.dataSubject (PersonPojo.builder (new PersonMarshaller ().read (aAny)).build ());
+          aBuilder.dataSubject (PersonPojo.builder (new PersonMarshaller ().read (aAny)));
         }
         break;
       case SlotAuthorizedRepresentative.NAME:
         if (aSlotValue instanceof AnyValueType)
         {
           final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
-          aBuilder.authorizedRepresentative (PersonPojo.builder (new PersonMarshaller ().read (aAny)).build ());
+          aBuilder.authorizedRepresentative (PersonPojo.builder (new PersonMarshaller ().read (aAny)));
         }
         break;
       case SlotConceptRequestList.NAME:

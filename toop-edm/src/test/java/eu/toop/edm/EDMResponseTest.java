@@ -17,21 +17,19 @@ package eu.toop.edm;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
-import java.io.FileNotFoundException;
 import java.time.Month;
 import java.util.UUID;
 
-import javax.xml.bind.JAXBException;
-import javax.xml.stream.XMLStreamException;
+import javax.annotation.Nonnull;
 
 import org.junit.Test;
 
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 
-import eu.toop.edm.extractor.EDMExtractors;
 import eu.toop.edm.model.AddressPojo;
 import eu.toop.edm.model.AgentPojo;
 import eu.toop.edm.model.ConceptPojo;
@@ -42,171 +40,151 @@ import eu.toop.edm.model.QualifiedRelationPojo;
 import eu.toop.edm.pilot.gbm.EToopConcept;
 import eu.toop.regrep.ERegRepResponseStatus;
 
+/**
+ * Test class for class {@link EDMResponse}.
+ *
+ * @author Philip Helger
+ */
 public final class EDMResponseTest
 {
+  private static void _testWriteAndRead (@Nonnull final EDMResponse aResp)
+  {
+    assertNotNull (aResp);
+
+    // Write
+    final byte [] aBytes = aResp.getWriter ().getAsBytes ();
+    assertNotNull (aBytes);
+
+    // Re-read
+    final EDMResponse aResp2 = EDMResponse.getReader ().read (aBytes);
+
+    // Compare with original
+    assertEquals (aResp, aResp2);
+  }
+
+  @Nonnull
+  private static EDMResponse.Builder _resp ()
+  {
+    return EDMResponse.builder ()
+                      .requestID (UUID.randomUUID ())
+                      .issueDateTimeNow ()
+                      .dataProvider (AgentPojo.builder ()
+                                              .address (AddressPojo.builder ()
+                                                                   .town ("MyTown")
+                                                                   .streetName ("MyStreet")
+                                                                   .buildingNumber ("22")
+                                                                   .countryCode ("GR")
+                                                                   .fullAddress ("MyStreet 22, 11134, MyTown, GR")
+                                                                   .postalCode ("11134")
+                                                                   .build ())
+                                              .name ("DP NAME")
+                                              .id ("1234")
+                                              .idSchemeID ("VAT")
+                                              .build ())
+                      .responseStatus (ERegRepResponseStatus.SUCCESS)
+                      .specificationIdentifier ("Niar");
+  }
+
+  @Nonnull
+  private static EDMResponse.Builder _respConcept ()
+  {
+    return _resp ().queryDefinition (EQueryDefinitionType.CONCEPT)
+                   .concept (ConceptPojo.builder ()
+                                        .id ("ConceptID-1")
+                                        .name (EToopConcept.REGISTERED_ORGANIZATION)
+                                        .addChild (ConceptPojo.builder ()
+                                                              .name (EToopConcept.COMPANY_NAME)
+                                                              .valueText ("Helger Enterprises"))
+                                        .addChild (ConceptPojo.builder ()
+                                                              .name (EToopConcept.FAX_NUMBER)
+                                                              .valueText ("342342424"))
+                                        .addChild (ConceptPojo.builder ()
+                                                              .name (EToopConcept.FOUNDATION_DATE)
+                                                              .valueDate (PDTFactory.createLocalDate (1960,
+                                                                                                      Month.AUGUST,
+                                                                                                      12))));
+  }
+
+  @Nonnull
+  private static DatasetPojo.Builder _dataset ()
+  {
+    return DatasetPojo.builder ()
+                      .description ("bla desc")
+                      .title ("bla title")
+                      .distribution (DocumentReferencePojo.builder ()
+                                                          .documentURI ("URI")
+                                                          .documentDescription ("DocumentDescription")
+                                                          .documentType ("docType")
+                                                          .localeCode ("GR"))
+                      .creator (AgentPojo.builder ()
+                                         .name ("Agent name")
+                                         .address (AddressPojo.builder ().town ("Kewlkidshome")))
+                      .ids ("RE238918378", "DOC-555")
+                      .issuedNow ()
+                      .language ("en")
+                      .lastModifiedNow ()
+                      .validFrom (PDTFactory.getCurrentLocalDate ().minusMonths (1))
+                      .validTo (PDTFactory.getCurrentLocalDate ().plusYears (1))
+                      .qualifiedRelation (QualifiedRelationPojo.builder ()
+                                                               .description ("LegalResourceDesc")
+                                                               .title ("Name")
+                                                               .id ("RE238918378"));
+  }
+
+  @Nonnull
+  private static EDMResponse.Builder _respDocument ()
+  {
+    return _resp ().queryDefinition (EQueryDefinitionType.DOCUMENT).dataset (_dataset ());
+  }
 
   @Test
   public void createConceptResponse ()
   {
-    final EDMResponse res = new EDMResponse.Builder ().queryDefinition (EQueryDefinitionType.CONCEPT)
-                                                      .requestID (UUID.randomUUID ())
-                                                      .issueDateTimeNow ()
-                                                      .concept (ConceptPojo.builder ()
-                                                                           .id ("ConceptID-1")
-                                                                           .name (EToopConcept.REGISTERED_ORGANIZATION)
-                                                                           .addChild (ConceptPojo.builder ()
-                                                                                                 .name (EToopConcept.COMPANY_NAME)
-                                                                                                 .valueText ("Helger Enterprises"))
-                                                                           .addChild (ConceptPojo.builder ()
-                                                                                                 .name (EToopConcept.FAX_NUMBER)
-                                                                                                 .valueText ("342342424"))
-                                                                           .addChild (ConceptPojo.builder ()
-                                                                                                 .name (EToopConcept.FOUNDATION_DATE)
-                                                                                                 .valueDate (PDTFactory.createLocalDate (1960,
-                                                                                                                                         Month.AUGUST,
-                                                                                                                                         12)))
-                                                                           .build ())
-                                                      .dataProvider (AgentPojo.builder ()
-                                                                              .address (AddressPojo.builder ()
-                                                                                                   .town ("MyTown")
-                                                                                                   .streetName ("MyStreet")
-                                                                                                   .buildingNumber ("22")
-                                                                                                   .countryCode ("GR")
-                                                                                                   .fullAddress ("MyStreet 22, 11134, MyTown, GR")
-                                                                                                   .postalCode ("11134")
-                                                                                                   .build ())
-                                                                              .name ("DP NAME")
-                                                                              .id ("1234")
-                                                                              .idSchemeID ("VAT")
-                                                                              .build ())
-                                                      .responseStatus (ERegRepResponseStatus.SUCCESS)
-                                                      .specificationIdentifier ("Niar")
-                                                      .build ();
-    assertNotNull (res);
+    final EDMResponse aResp = _respConcept ().build ();
+    _testWriteAndRead (aResp);
   }
 
   @Test
   public void createDocumentResponse ()
   {
-    final EDMResponse res = new EDMResponse.Builder ().queryDefinition (EQueryDefinitionType.DOCUMENT)
-                                                      .requestID (UUID.randomUUID ())
-                                                      .issueDateTimeNow ()
-                                                      .dataset ((DatasetPojo.builder ()
-                                                                            .description ("bla desc")
-                                                                            .title ("bla title")
-                                                                            .distribution (DocumentReferencePojo.builder ()
-                                                                                                                .documentURI ("URI")
-                                                                                                                .documentDescription ("DocumentDescription")
-                                                                                                                .documentType ("docType")
-                                                                                                                .localeCode ("GR"))
-                                                                            .creator (AgentPojo.builder ()
-                                                                                               .name ("Agent name")
-                                                                                               .address (AddressPojo.builder ()
-                                                                                                                    .town ("Kewlkidshome")))
-                                                                            .ids ("RE238918378", "DOC-555")
-                                                                            .issuedNow ()
-                                                                            .language ("en")
-                                                                            .lastModifiedNow ()
-                                                                            .validFrom (PDTFactory.getCurrentLocalDate ()
-                                                                                                  .minusMonths (1))
-                                                                            .validTo (PDTFactory.getCurrentLocalDate ()
-                                                                                                .plusYears (1))
-                                                                            .qualifiedRelation (QualifiedRelationPojo.builder ()
-                                                                                                                     .description ("LegalResourceDesc")
-                                                                                                                     .title ("Name")
-                                                                                                                     .id ("RE238918378"))).build ())
-                                                      .dataProvider (AgentPojo.builder ()
-                                                                              .address (AddressPojo.builder ()
-                                                                                                   .town ("MyTown")
-                                                                                                   .streetName ("MyStreet")
-                                                                                                   .buildingNumber ("22")
-                                                                                                   .countryCode ("GR")
-                                                                                                   .fullAddress ("MyStreet 22, 11134, MyTown, GR")
-                                                                                                   .postalCode ("11134")
-                                                                                                   .build ())
-                                                                              .name ("DP NAME")
-                                                                              .id ("1234")
-                                                                              .idSchemeID ("VAT")
-                                                                              .build ())
-                                                      .responseStatus (ERegRepResponseStatus.SUCCESS)
-                                                      .specificationIdentifier ("Niar")
-                                                      .build ();
+    final EDMResponse aResp = _respDocument ().build ();
+    _testWriteAndRead (aResp);
   }
 
-  // This attempts to create an EDMResponse with a dataset element but with
-  // ConceptQuery set as the QueryDefinition
-  // which is not permitted and fails
-  @Test (expected = IllegalStateException.class)
+  @Test
   public void createDocumentResponseWithConceptType ()
   {
-    final EDMResponse res = new EDMResponse.Builder ().queryDefinition (EQueryDefinitionType.CONCEPT)
-                                                      .requestID (UUID.randomUUID ())
-                                                      .issueDateTimeNow ()
-                                                      .dataset ((DatasetPojo.builder ()
-                                                                            .description ("bla desc")
-                                                                            .title ("bla title")
-                                                                            .distribution (DocumentReferencePojo.builder ()
-                                                                                                                .documentURI ("URI")
-                                                                                                                .documentDescription ("DocumentDescription")
-                                                                                                                .documentType ("docType")
-                                                                                                                .localeCode ("GR"))
-                                                                            .creator (AgentPojo.builder ()
-                                                                                               .name ("Agent name")
-                                                                                               .address (AddressPojo.builder ()
-                                                                                                                    .town ("Kewlkidshome")))
-                                                                            .ids ("RE238918378", "DOC-555")
-                                                                            .issuedNow ()
-                                                                            .language ("en")
-                                                                            .lastModifiedNow ()
-                                                                            .validFrom (PDTFactory.getCurrentLocalDate ()
-                                                                                                  .minusMonths (1))
-                                                                            .validTo (PDTFactory.getCurrentLocalDate ()
-                                                                                                .plusYears (1))
-                                                                            .qualifiedRelation (QualifiedRelationPojo.builder ()
-                                                                                                                     .description ("LegalResourceDesc")
-                                                                                                                     .title ("Name")
-                                                                                                                     .id ("RE238918378"))).build ())
-                                                      .dataProvider (AgentPojo.builder ()
-                                                                              .address (AddressPojo.builder ()
-                                                                                                   .town ("MyTown")
-                                                                                                   .streetName ("MyStreet")
-                                                                                                   .buildingNumber ("22")
-                                                                                                   .countryCode ("GR")
-                                                                                                   .fullAddress ("MyStreet 22, 11134, MyTown, GR")
-                                                                                                   .postalCode ("11134")
-                                                                                                   .build ())
-                                                                              .name ("DP NAME")
-                                                                              .id ("1234")
-                                                                              .idSchemeID ("VAT")
-                                                                              .build ())
-                                                      .responseStatus (ERegRepResponseStatus.SUCCESS)
-                                                      .specificationIdentifier ("Niar")
-                                                      .build ();
+    try
+    {
+      // This attempts to create an EDMResponse with a dataset element but with
+      // ConceptQuery set as the QueryDefinition
+      // which is not permitted and fails
+      _respConcept ().dataset (_dataset ()).build ();
+      fail ();
+    }
+    catch (final IllegalStateException ex)
+    {
+      // Expected
+    }
   }
 
   @Test
-  public void testEDMConceptResponseExport () throws JAXBException, XMLStreamException, FileNotFoundException
+  public void testReadAndWriteExampleFiles ()
   {
-    final EDMResponse aResp = EDMExtractors.extractEDMResponse (ClassPathResource.getInputStream ("Concept Response.xml"));
-    assertNotNull (aResp);
+    EDMResponse aResponse = EDMResponse.getReader ().read (new ClassPathResource ("Concept Response.xml"));
+    _testWriteAndRead (aResponse);
 
-    final byte [] aBytes = aResp.getWriter ().getAsBytes ();
-    assertNotNull (aBytes);
-
-    final EDMResponse aResp2 = EDMExtractors.extractEDMResponse (new NonBlockingByteArrayInputStream (aBytes));
-    assertEquals (aResp, aResp2);
+    aResponse = EDMResponse.getReader ().read (new ClassPathResource ("Document Response.xml"));
+    _testWriteAndRead (aResponse);
   }
 
   @Test
-  public void testEDMDocumentResponseExport () throws JAXBException, XMLStreamException, FileNotFoundException
+  public void testBadCases ()
   {
-    final EDMResponse aResp = EDMExtractors.extractEDMResponse (ClassPathResource.getInputStream ("Document Response.xml"));
-    assertNotNull (aResp);
+    EDMResponse aResponse = EDMResponse.getReader ().read (new ClassPathResource ("Bogus.xml"));
+    assertNull (aResponse);
 
-    final byte [] aBytes = aResp.getWriter ().getAsBytes ();
-    assertNotNull (aBytes);
-
-    final EDMResponse aResp2 = EDMExtractors.extractEDMResponse (new NonBlockingByteArrayInputStream (aBytes));
-    assertEquals (aResp, aResp2);
+    aResponse = EDMResponse.getReader ().read (new ClassPathResource ("Concept Request_LP.xml"));
+    assertNull (aResponse);
   }
 }

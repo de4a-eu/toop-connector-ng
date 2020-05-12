@@ -38,7 +38,17 @@ public class JAXBVersatileReader <JAXBTYPE, T> implements IJAXBVersatileReader <
   public T read (@Nonnull final Source aSource)
   {
     final JAXBTYPE aObj = m_aReader.read (aSource);
-    return aObj == null ? null : m_aMapper.apply (aObj);
+    if (aObj == null)
+      return null;
+
+    try
+    {
+      return m_aMapper.apply (aObj);
+    }
+    catch (final RuntimeException ex)
+    {
+      return null;
+    }
   }
 
   @Nullable
