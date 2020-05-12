@@ -21,6 +21,7 @@ import javax.xml.XMLConstants;
 import com.helger.commons.annotation.Singleton;
 import com.helger.xml.CXML;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
+import com.helger.xsds.wsaddr.CWSAddr;
 import com.helger.xsds.xlink.CXLink;
 
 /**
@@ -40,7 +41,7 @@ public class RegRep4NamespaceContext extends MapBasedNamespaceContext
   {
     addMapping (CXML.XML_NS_PREFIX_XSI, XMLConstants.W3C_XML_SCHEMA_INSTANCE_NS_URI);
     addMapping (CXLink.DEFAULT_PREFIX, CXLink.NAMESPACE_URI);
-    addMapping (CRegRep4.DEFAULT_PREFIX_WS_ADDRESSING, CRegRep4.NAMESPACE_URI_WS_ADDRESSING);
+    addMapping (CWSAddr.DEFAULT_PREFIX, CWSAddr.NAMESPACE_URI);
     addMapping (CRegRep4.DEFAULT_PREFIX_RIM, CRegRep4.NAMESPACE_URI_RIM);
     addMapping (CRegRep4.DEFAULT_PREFIX_RS, CRegRep4.NAMESPACE_URI_RS);
     addMapping (CRegRep4.DEFAULT_PREFIX_LCM, CRegRep4.NAMESPACE_URI_LCM);

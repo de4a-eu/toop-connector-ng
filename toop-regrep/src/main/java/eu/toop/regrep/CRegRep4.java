@@ -23,6 +23,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.xsds.wsaddr.CWSAddr;
 import com.helger.xsds.xlink.CXLink;
 import com.helger.xsds.xml.CXML_XSD;
 
@@ -34,9 +35,6 @@ import com.helger.xsds.xml.CXML_XSD;
 @Immutable
 public final class CRegRep4
 {
-  public static final String DEFAULT_PREFIX_WS_ADDRESSING = "wsa";
-  public static final String NAMESPACE_URI_WS_ADDRESSING = "http://www.w3.org/2005/08/addressing";
-
   public static final String DEFAULT_PREFIX_RIM = "rim";
   public static final String NAMESPACE_URI_RIM = "urn:oasis:names:tc:ebxml-regrep:xsd:rim:4.0";
 
@@ -94,18 +92,12 @@ public final class CRegRep4
   }
 
   @Nonnull
-  public static ClassPathResource getXSDResourceWSAddr ()
-  {
-    return new ClassPathResource ("/schemas/regrep4/ws-addr.xsd", _getCL ());
-  }
-
-  @Nonnull
   @ReturnsMutableCopy
   public static ICommonsList <ClassPathResource> getAllXSDIncludes ()
   {
     return new CommonsArrayList <> (CXML_XSD.getXSDResource (),
                                     CXLink.getXSDResource (),
-                                    getXSDResourceWSAddr (),
+                                    CWSAddr.getXSDResource (),
                                     getXSDResourceRIM (),
                                     getXSDResourceRS ());
   }
