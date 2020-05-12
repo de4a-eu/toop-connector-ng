@@ -48,12 +48,4 @@
       <package name="eu.toop.regrep.spi" />
     </schemaBindings>
   </bindings>
-  <bindings schemaLocation="../resources/schemas/regrep4/ws-addr.xsd" node="/xs:schema">
-    <schemaBindings>
-      <package name="eu.toop.regrep.wsaddr" />
-      <nameXmlTransform>
-        <typeName prefix="WSAddr"/>
-      </nameXmlTransform>
-    </schemaBindings>
-  </bindings>
 </bindings>

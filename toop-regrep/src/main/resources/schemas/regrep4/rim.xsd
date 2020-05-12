@@ -45,7 +45,7 @@
   </annotation>
   <import namespace="http://www.w3.org/XML/1998/namespace" />
   <import namespace="http://www.w3.org/1999/xlink" />
-  <import namespace="http://www.w3.org/2005/08/addressing" schemaLocation="ws-addr.xsd"/>
+  <import namespace="http://www.w3.org/2005/08/addressing" />
   
   <!-- Begin information model mapping from ebRIM. -->
   <!-- Define Data Types -->

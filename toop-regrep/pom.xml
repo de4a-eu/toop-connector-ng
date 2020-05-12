@@ -74,6 +74,10 @@
       <artifactId>ph-xsds-xlink</artifactId>
     </dependency>
     <dependency>
+      <groupId>com.helger</groupId>
+      <artifactId>ph-xsds-wsaddr</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.sun.activation</groupId>
       <artifactId>jakarta.activation</artifactId>
     </dependency>
@@ -153,6 +157,10 @@
             <episode>
               <groupId>com.helger</groupId>
               <artifactId>ph-xsds-xlink</artifactId>
+            </episode>
+            <episode>
+              <groupId>com.helger</groupId>
+              <artifactId>ph-xsds-wsaddr</artifactId>
             </episode>
           </episodes>
         </configuration>
