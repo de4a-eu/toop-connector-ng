@@ -139,11 +139,16 @@
                 A QueryResponse including Exceptions must contain ZERO or ONE ErrorProvider slots (found: <value-of select="$countExceptionErrorProvider"/>).  
             </report>  
             
-            <let name="countAgent" value="count(rim:Slot[@name = 'ErrorProvider']/rim:SlotValue/cagv:Agent)"/>      
-            <report test="( ($countAgent != 1) and ($IAMERROR=true()) )" flag='ERROR' id='exc_dc_card_Agent'>
+        </rule>
+    </pattern>
+    <pattern>
+        <rule context="query:QueryResponse/rim:Slot[@name = 'ErrorProvider']">
+            
+            <let name="countAgent" value="count(rim:SlotValue/cagv:Agent)"/>      
+            <assert test="( ($countAgent = 1) )" flag='ERROR' id='exc_dc_card_Agent'>
                 The ErrorProvider slot must contain exactly ONE Agent (found: <value-of select="$countAgent"/>).
-            </report>
-
+            </assert>
+            
         </rule>
     </pattern>
     <pattern>
