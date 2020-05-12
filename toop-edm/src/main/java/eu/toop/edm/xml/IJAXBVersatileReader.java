@@ -1,6 +1,5 @@
 /**
- * Copyright (C) 2014-2020 Philip Helger (www.helger.com)
- * philip[at]helger[dot]com
+ * Copyright (C) 2018-2020 toop.eu
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,7 +45,7 @@ import com.helger.xml.serialize.read.SAXReaderFactory;
 import com.helger.xml.serialize.read.SAXReaderSettings;
 
 /**
- * Interface for reading JAXB documents from various sources.
+ * Interface for reading XML documents from various sources.
  *
  * @author Philip Helger
  * @param <T>

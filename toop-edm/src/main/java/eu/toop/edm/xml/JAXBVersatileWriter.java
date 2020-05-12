@@ -19,6 +19,14 @@ import javax.annotation.Nonnull;
 
 import com.helger.jaxb.IJAXBWriter;
 
+/**
+ * The default implementation of {@link IJAXBVersatileWriter} using a constant
+ * value and an instance of {@link IJAXBWriter}.
+ *
+ * @author Philip Helger
+ * @param <T>
+ *        Type to be written.
+ */
 public final class JAXBVersatileWriter <T> implements IJAXBVersatileWriter <T>
 {
   private final T m_aObject;

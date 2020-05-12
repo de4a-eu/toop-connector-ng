@@ -38,11 +38,25 @@ import com.helger.xml.microdom.IMicroDocument;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.serialize.write.SafeXMLStreamWriter;
 
+/**
+ * Default implementation of {@link IVersatileWriter} based on
+ * {@link IJAXBWriter}.
+ *
+ * @author Philip Helger
+ * @param <T>
+ *        Type to be written.
+ */
 public interface IJAXBVersatileWriter <T> extends IVersatileWriter <T>
 {
+  /**
+   * @return The object to write. May not be <code>null</code>.
+   */
   @Nonnull
   T getObjectToWrite ();
 
+  /**
+   * @return The JAXB writer to use. May not be <code>null</code>.
+   */
   @Nonnull
   IJAXBWriter <T> getWriter ();
 

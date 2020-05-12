@@ -37,10 +37,17 @@ import com.helger.xml.microdom.IMicroDocument;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.serialize.write.SafeXMLStreamWriter;
 
+/**
+ * Base interface for something that can be written to different destinations.
+ *
+ * @author Philip Helger
+ * @param <T>
+ *        Type to be written.
+ */
 public interface IVersatileWriter <T>
 {
   /**
-   * Write the passed object to a {@link File}.
+   * Write the object to a {@link File}.
    *
    * @param aResultFile
    *        The result file to be written to. May not be <code>null</code>.
@@ -50,7 +57,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull File aResultFile);
 
   /**
-   * Write the passed object to a {@link Path}.
+   * Write the object to a {@link Path}.
    *
    * @param aResultPath
    *        The result path to be written to. May not be <code>null</code>.
@@ -60,7 +67,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull Path aResultPath);
 
   /**
-   * Write the passed object to an {@link OutputStream}.
+   * Write the object to an {@link OutputStream}.
    *
    * @param aOS
    *        The output stream to write to. Will always be closed. May not be
@@ -71,7 +78,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull @WillClose OutputStream aOS);
 
   /**
-   * Write the passed object to a {@link Writer}.
+   * Write the object to a {@link Writer}.
    *
    * @param aWriter
    *        The writer to write to. Will always be closed. May not be
@@ -82,7 +89,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull @WillClose Writer aWriter);
 
   /**
-   * Write the passed object to a {@link ByteBuffer}.
+   * Write the object to a {@link ByteBuffer}.
    *
    * @param aBuffer
    *        The byte buffer to write to. If the buffer is too small, it is
@@ -95,7 +102,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull ByteBuffer aBuffer);
 
   /**
-   * Write the passed object to an {@link IWritableResource}.
+   * Write the object to an {@link IWritableResource}.
    *
    * @param aResource
    *        The result resource to be written to. May not be <code>null</code>.
@@ -105,7 +112,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull IWritableResource aResource);
 
   /**
-   * Convert the passed object to XML.
+   * Convert the object to XML.
    *
    * @param aMarshallerFunc
    *        The marshalling function. May not be <code>null</code>.
@@ -115,10 +122,9 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull IJAXBMarshaller <T> aMarshallerFunc);
 
   /**
-   * Convert the passed object to XML. This method is potentially dangerous,
-   * when using StreamResult because it may create invalid XML. Only when using
-   * the {@link SafeXMLStreamWriter} it is ensured that only valid XML is
-   * created!
+   * Convert the object to XML. This method is potentially dangerous, when using
+   * StreamResult because it may create invalid XML. Only when using the
+   * {@link SafeXMLStreamWriter} it is ensured that only valid XML is created!
    *
    * @param aResult
    *        The result object holder. May not be <code>null</code>. Usually
@@ -129,7 +135,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull Result aResult);
 
   /**
-   * Convert the passed object to XML.
+   * Convert the object to XML.
    *
    * @param aHandler
    *        XML will be sent to this handler as SAX2 events. May not be
@@ -140,7 +146,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull org.xml.sax.ContentHandler aHandler);
 
   /**
-   * Convert the passed object to XML.
+   * Convert the object to XML.
    *
    * @param aWriter
    *        XML will be sent to this writer. May not be <code>null</code>.
@@ -150,7 +156,7 @@ public interface IVersatileWriter <T>
   ESuccess write (@Nonnull @WillClose javax.xml.stream.XMLStreamWriter aWriter);
 
   /**
-   * Convert the passed object to a new DOM document (write).
+   * Convert the object to a new DOM document (write).
    *
    * @return <code>null</code> if converting the document failed.
    */
@@ -158,7 +164,7 @@ public interface IVersatileWriter <T>
   Document getAsDocument ();
 
   /**
-   * Convert the passed object to a new micro document (write).
+   * Convert the object to a new micro document (write).
    *
    * @return <code>null</code> if converting the document failed.
    */
@@ -166,8 +172,8 @@ public interface IVersatileWriter <T>
   IMicroDocument getAsMicroDocument ();
 
   /**
-   * Convert the passed object to a new micro document and return only the root
-   * element (write).
+   * Convert the object to a new micro document and return only the root element
+   * (write).
    *
    * @return <code>null</code> if converting the document failed.
    */
@@ -185,7 +191,7 @@ public interface IVersatileWriter <T>
   String getAsString ();
 
   /**
-   * Write the passed object to a {@link ByteBuffer} and return it (write).
+   * Write the object to a {@link ByteBuffer} and return it (write).
    *
    * @return <code>null</code> if the passed domain object could not be
    *         converted because of validation errors.
@@ -194,8 +200,7 @@ public interface IVersatileWriter <T>
   ByteBuffer getAsByteBuffer ();
 
   /**
-   * Write the passed object to a byte array and return the created byte array
-   * (write).
+   * Write the object to a byte array and return the created byte array (write).
    *
    * @return <code>null</code> if the passed domain object could not be
    *         converted because of validation errors.
@@ -204,8 +209,7 @@ public interface IVersatileWriter <T>
   byte [] getAsBytes ();
 
   /**
-   * Write the passed object to a byte array and return the input stream on that
-   * array.
+   * Write the object to a byte array and return the input stream on that array.
    *
    * @return <code>null</code> if the passed domain object could not be
    *         converted because of validation errors.

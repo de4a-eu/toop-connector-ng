@@ -82,6 +82,9 @@ public class EDMErrorResponse
                            @Nonnull @Nonempty final ICommonsList <RegistryExceptionType> aExceptions)
   {
     ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
+    ValueEnforcer.isTrue (eResponseStatus == ERegRepResponseStatus.SUCCESS ||
+                          eResponseStatus == ERegRepResponseStatus.FAILURE,
+                          "Only SUCCESS and FAILURE are supported");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
     ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
     ValueEnforcer.notEmptyNoNullValue (aExceptions, "Exceptions");
@@ -332,6 +335,8 @@ public class EDMErrorResponse
     {
       if (m_eResponseStatus == null)
         throw new IllegalStateException ("Response Status must be present");
+      if (m_eResponseStatus != ERegRepResponseStatus.SUCCESS && m_eResponseStatus != ERegRepResponseStatus.FAILURE)
+        throw new IllegalStateException ("Response Status must be SUCCESS or FAILURE");
       if (StringHelper.hasNoText (m_sRequestID))
         throw new IllegalStateException ("Request ID must be present");
       if (StringHelper.hasNoText (m_sSpecificationIdentifier))

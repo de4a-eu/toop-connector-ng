@@ -128,7 +128,7 @@ public class EDMResponse
     ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
     ValueEnforcer.isTrue (eResponseStatus == ERegRepResponseStatus.SUCCESS ||
                           eResponseStatus == ERegRepResponseStatus.FAILURE,
-                          "Only success and failure are supported");
+                          "Only SUCCESS and FAILURE are supported");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
     ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
     ValueEnforcer.notNull (aIssueDateTime, "IssueDateTime");
