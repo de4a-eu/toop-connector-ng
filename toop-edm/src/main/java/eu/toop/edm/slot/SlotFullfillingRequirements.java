@@ -15,13 +15,19 @@
  */
 package eu.toop.edm.slot;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.xml.cccev.RequirementMarshaller;
+import eu.toop.regrep.ERegRepCollectionType;
+import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
 
@@ -30,16 +36,16 @@ import eu.toop.regrep.rim.SlotType;
  *
  * @author Philip Helger
  */
-public class SlotFullfillingRequirement implements ISlotProvider
+public class SlotFullfillingRequirements implements ISlotProvider
 {
   public static final String NAME = "FullfillingRequirement";
 
-  private final CCCEVRequirementType m_aRequirement;
+  private final ICommonsList <CCCEVRequirementType> m_aRequirements = new CommonsArrayList <> ();
 
-  public SlotFullfillingRequirement (@Nonnull final CCCEVRequirementType aRequirement)
+  public SlotFullfillingRequirements (@Nonnull final List <CCCEVRequirementType> aRequirements)
   {
-    ValueEnforcer.notNull (aRequirement, "Requirement");
-    m_aRequirement = aRequirement;
+    ValueEnforcer.notNull (aRequirements, "Requirements");
+    m_aRequirements.addAll (aRequirements);
   }
 
   @Nonnull
@@ -52,9 +58,11 @@ public class SlotFullfillingRequirement implements ISlotProvider
   @Nonnull
   public SlotType createSlot ()
   {
+    final RequirementMarshaller m = new RequirementMarshaller ();
     return new SlotBuilder ().setName (NAME)
-                             .setValue (new RequirementMarshaller ().getAsDocument (m_aRequirement)
-                                                                    .getDocumentElement ())
+                             .setValue (ERegRepCollectionType.SET,
+                                        m_aRequirements.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x)
+                                                                                                          .getDocumentElement ())))
                              .build ();
   }
 }

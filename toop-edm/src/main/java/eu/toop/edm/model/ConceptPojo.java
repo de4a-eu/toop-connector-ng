@@ -393,6 +393,12 @@ public class ConceptPojo
     }
 
     @Nonnull
+    public Builder addChild (@Nullable final IConceptName a)
+    {
+      return addChild (a == null ? null : ConceptPojo.builder ().name (a));
+    }
+
+    @Nonnull
     public Builder addChild (@Nullable final ConceptPojo.Builder a)
     {
       return addChild (a == null ? null : a.build ());

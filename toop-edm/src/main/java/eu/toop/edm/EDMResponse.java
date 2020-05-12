@@ -21,6 +21,9 @@ import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.bind.JAXBException;
+
+import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
@@ -35,7 +38,9 @@ import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.datetime.util.PDTXMLConverter;
 
+import eu.toop.edm.extractor.unmarshaller.Unmarshallers;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
@@ -49,15 +54,25 @@ import eu.toop.edm.slot.SlotDataProvider;
 import eu.toop.edm.slot.SlotDocumentMetadata;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.edm.slot.SlotSpecificationIdentifier;
+import eu.toop.edm.xml.IJAXBVersatileReader;
 import eu.toop.edm.xml.IVersatileWriter;
+import eu.toop.edm.xml.JAXBVersatileReader;
 import eu.toop.edm.xml.JAXBVersatileWriter;
+import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.ERegRepResponseStatus;
+import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.rim.AnyValueType;
+import eu.toop.regrep.rim.CollectionValueType;
+import eu.toop.regrep.rim.DateTimeValueType;
 import eu.toop.regrep.rim.RegistryObjectListType;
 import eu.toop.regrep.rim.RegistryObjectType;
+import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.rim.StringValueType;
+import eu.toop.regrep.rim.ValueType;
 
 /**
  * This class contains the data model for a single TOOP EDM Request. It requires
@@ -138,51 +153,51 @@ public class EDMResponse
   }
 
   @Nonnull
-  public EQueryDefinitionType getQueryDefinition ()
+  public final EQueryDefinitionType getQueryDefinition ()
   {
     return m_eQueryDefinition;
   }
 
   @Nonnull
-  public ERegRepResponseStatus getResponseStatus ()
+  public final ERegRepResponseStatus getResponseStatus ()
   {
     return m_eResponseStatus;
   }
 
   @Nonnull
   @Nonempty
-  public String getRequestID ()
+  public final String getRequestID ()
   {
     return m_sRequestID;
   }
 
   @Nonnull
   @Nonempty
-  public String getSpecificationIdentifier ()
+  public final String getSpecificationIdentifier ()
   {
     return m_sSpecificationIdentifier;
   }
 
   @Nonnull
-  public LocalDateTime getIssueDateTime ()
+  public final LocalDateTime getIssueDateTime ()
   {
     return m_aIssueDateTime;
   }
 
   @Nonnull
-  public AgentPojo getDataProvider ()
+  public final AgentPojo getDataProvider ()
   {
     return m_aDataProvider;
   }
 
   @Nullable
-  public ConceptPojo getConcept ()
+  public final ConceptPojo getConcept ()
   {
     return m_aConcept;
   }
 
   @Nullable
-  public DatasetPojo getDataset ()
+  public final DatasetPojo getDataset ()
   {
     return m_aDataset;
   }
@@ -254,6 +269,12 @@ public class EDMResponse
   {
     return new JAXBVersatileWriter <> (getAsQueryResponse (),
                                        RegRep4Writer.queryResponse (CCCEV.XSDS).setFormattedOutput (true));
+  }
+
+  @Nonnull
+  public static IJAXBVersatileReader <EDMResponse> getReader ()
+  {
+    return new JAXBVersatileReader <> (RegRep4Reader.queryResponse (CCCEV.XSDS), EDMResponse::create);
   }
 
   @Override
@@ -489,5 +510,68 @@ public class EDMResponse
                               m_aConcept,
                               m_aDataset);
     }
+  }
+
+  private static void _applySlots (@Nonnull final SlotType aSlot, @Nonnull final EDMResponse.Builder aBuilder)
+  {
+    final String sName = aSlot.getName ();
+    final ValueType aValue = aSlot.getSlotValue ();
+    try
+    {
+      switch (sName)
+      {
+        case SlotSpecificationIdentifier.NAME:
+          aBuilder.specificationIdentifier (((StringValueType) aValue).getValue ());
+          break;
+        case SlotIssueDateTime.NAME:
+          aBuilder.issueDateTime (PDTXMLConverter.getLocalDateTime (((DateTimeValueType) aValue).getValue ()));
+          break;
+        case SlotDataProvider.NAME:
+        {
+          final Node aAny = (Node) ((AnyValueType) aValue).getAny ();
+          aBuilder.dataProvider (AgentPojo.builder (new AgentMarshaller ().read (aAny)).build ());
+          break;
+        }
+        case SlotConceptValues.NAME:
+        {
+          aBuilder.concept (ConceptPojo.builder (Unmarshallers.getConceptUnmarshaller ()
+                                                              .unmarshal (((AnyValueType) ((CollectionValueType) aValue).getElementAtIndex (0)).getAny ()))
+                                       .build ());
+          aBuilder.queryDefinition (EQueryDefinitionType.CONCEPT);
+          break;
+        }
+        case SlotDocumentMetadata.NAME:
+        {
+          aBuilder.dataset (DatasetPojo.builder (Unmarshallers.getDatasetUnmarshaller ()
+                                                              .unmarshal (((AnyValueType) aValue).getAny ()))
+                                       .build ());
+          aBuilder.queryDefinition (EQueryDefinitionType.DOCUMENT);
+          break;
+        }
+        default:
+          throw new IllegalStateException ("Slot is not defined: " + sName);
+      }
+    }
+    catch (final JAXBException ex)
+    {
+      throw new IllegalStateException ("Ooops", ex);
+    }
+  }
+
+  @Nonnull
+  public static EDMResponse create (@Nonnull final QueryResponse aQueryResponse)
+  {
+    final EDMResponse.Builder aBuilder = EDMResponse.builder ()
+                                                    .requestID (aQueryResponse.getRequestId ())
+                                                    .responseStatus (ERegRepResponseStatus.getFromIDOrNull (aQueryResponse.getStatus ()));
+
+    for (final SlotType s : aQueryResponse.getSlot ())
+      _applySlots (s, aBuilder);
+
+    if (aQueryResponse.getRegistryObjectList ().hasRegistryObjectEntries ())
+      for (final SlotType aSlot : aQueryResponse.getRegistryObjectList ().getRegistryObjectAtIndex (0).getSlot ())
+        _applySlots (aSlot, aBuilder);
+
+    return aBuilder.build ();
   }
 }

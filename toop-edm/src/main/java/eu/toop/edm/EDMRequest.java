@@ -16,15 +16,22 @@
 package eu.toop.edm;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.xml.datatype.XMLGregorianCalendar;
+
+import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.annotation.ReturnsMutableObject;
+import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
@@ -36,6 +43,7 @@ import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+import com.helger.datetime.util.PDTXMLConverter;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
@@ -58,19 +66,35 @@ import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
 import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
 import eu.toop.edm.slot.SlotDatasetIdentifier;
 import eu.toop.edm.slot.SlotDistributionRequestList;
-import eu.toop.edm.slot.SlotFullfillingRequirement;
+import eu.toop.edm.slot.SlotFullfillingRequirements;
 import eu.toop.edm.slot.SlotIssueDateTime;
 import eu.toop.edm.slot.SlotProcedure;
 import eu.toop.edm.slot.SlotSpecificationIdentifier;
+import eu.toop.edm.xml.IJAXBVersatileReader;
 import eu.toop.edm.xml.IVersatileWriter;
+import eu.toop.edm.xml.JAXBVersatileReader;
 import eu.toop.edm.xml.JAXBVersatileWriter;
+import eu.toop.edm.xml.cagv.AgentMarshaller;
 import eu.toop.edm.xml.cagv.CCAGV;
+import eu.toop.edm.xml.cccev.ConceptMarshaller;
+import eu.toop.edm.xml.cccev.RequirementMarshaller;
+import eu.toop.edm.xml.cv.BusinessMarshaller;
+import eu.toop.edm.xml.cv.PersonMarshaller;
+import eu.toop.edm.xml.dcatap.DistributionMarshaller;
+import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
+import eu.toop.regrep.rim.AnyValueType;
+import eu.toop.regrep.rim.CollectionValueType;
+import eu.toop.regrep.rim.DateTimeValueType;
 import eu.toop.regrep.rim.InternationalStringType;
+import eu.toop.regrep.rim.InternationalStringValueType;
 import eu.toop.regrep.rim.LocalizedStringType;
 import eu.toop.regrep.rim.QueryType;
+import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.rim.StringValueType;
+import eu.toop.regrep.rim.ValueType;
 
 /**
  * This class contains the data model for a single TOOP EDM Request. It requires
@@ -100,7 +124,7 @@ public class EDMRequest
   private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
                                                                                                   SlotIssueDateTime.NAME,
                                                                                                   SlotProcedure.NAME,
-                                                                                                  SlotFullfillingRequirement.NAME,
+                                                                                                  SlotFullfillingRequirements.NAME,
                                                                                                   SlotConsentToken.NAME,
                                                                                                   SlotDatasetIdentifier.NAME,
                                                                                                   SlotDataConsumer.NAME);
@@ -110,48 +134,51 @@ public class EDMRequest
   private final String m_sSpecificationIdentifier;
   private final LocalDateTime m_aIssueDateTime;
   private final InternationalStringType m_aProcedure;
-  private final CCCEVRequirementType m_aFullfillingRequirement;
+  private final ICommonsList <CCCEVRequirementType> m_aFullfillingRequirements = new CommonsArrayList <> ();
   private final AgentPojo m_aDataConsumer;
   private final String m_sConsentToken;
   private final String m_sDatasetIdentifier;
   private final BusinessPojo m_aDataSubjectLegalPerson;
   private final PersonPojo m_aDataSubjectNaturalPerson;
   private final PersonPojo m_aAuthorizedRepresentative;
-  private final ConceptPojo m_aConcept;
-  private final DistributionPojo m_aDistribution;
+  private final ICommonsList <ConceptPojo> m_aConcepts = new CommonsArrayList <> ();
+  private final ICommonsList <DistributionPojo> m_aDistributions = new CommonsArrayList <> ();
 
   public EDMRequest (@Nonnull final EQueryDefinitionType eQueryDefinition,
                      @Nonnull @Nonempty final String sRequestID,
                      @Nonnull @Nonempty final String sSpecificationIdentifier,
                      @Nonnull final LocalDateTime aIssueDateTime,
                      @Nullable final InternationalStringType aProcedure,
-                     @Nullable final CCCEVRequirementType aFullfillingRequirement,
+                     @Nullable final ICommonsList <CCCEVRequirementType> aFullfillingRequirements,
                      @Nonnull final AgentPojo aDataConsumer,
                      @Nullable final String sConsentToken,
                      @Nullable final String sDatasetIdentifier,
                      @Nullable final BusinessPojo aDataSubjectLegalPerson,
                      @Nullable final PersonPojo aDataSubjectNaturalPerson,
                      @Nullable final PersonPojo aAuthorizedRepresentative,
-                     @Nullable final ConceptPojo aConcept,
-                     @Nullable final DistributionPojo aDistribution)
+                     @Nullable final ICommonsList <ConceptPojo> aConcepts,
+                     @Nullable final ICommonsList <DistributionPojo> aDistributions)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
     ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
     ValueEnforcer.notNull (aIssueDateTime, "IssueDateTime");
+    ValueEnforcer.noNullValue (aFullfillingRequirements, "FullfillingRequirements");
     ValueEnforcer.notNull (aDataConsumer, "DataConsumer");
     ValueEnforcer.isFalse ((aDataSubjectLegalPerson == null && aDataSubjectNaturalPerson == null) ||
                            (aDataSubjectLegalPerson != null && aDataSubjectNaturalPerson != null),
                            "Exactly one DataSubject must be set");
-    ValueEnforcer.isFalse ((aConcept == null && aDistribution == null) || (aConcept != null && aDistribution != null),
+    final int nConcepts = CollectionHelper.getSize (aConcepts);
+    final int nDistributions = CollectionHelper.getSize (aDistributions);
+    ValueEnforcer.isFalse ((nConcepts == 0 && nDistributions == 0) || (nConcepts != 0 && nDistributions != 0),
                            "Exactly one of Concept and Distribution must be set");
     switch (eQueryDefinition)
     {
       case CONCEPT:
-        ValueEnforcer.notNull (aConcept, "Concept");
+        ValueEnforcer.notNull (aConcepts, "Concept");
         break;
       case DOCUMENT:
-        ValueEnforcer.notNull (aDistribution, "Distribution");
+        ValueEnforcer.notNull (aDistributions, "Distribution");
         break;
       default:
         throw new IllegalArgumentException ("Unsupported query definition: " + eQueryDefinition);
@@ -162,101 +189,128 @@ public class EDMRequest
     m_sSpecificationIdentifier = sSpecificationIdentifier;
     m_aIssueDateTime = aIssueDateTime;
     m_aProcedure = aProcedure;
-    m_aFullfillingRequirement = aFullfillingRequirement;
+    if (aFullfillingRequirements != null)
+      m_aFullfillingRequirements.addAll (aFullfillingRequirements);
     m_aDataConsumer = aDataConsumer;
     m_sConsentToken = sConsentToken;
     m_sDatasetIdentifier = sDatasetIdentifier;
     m_aDataSubjectLegalPerson = aDataSubjectLegalPerson;
     m_aDataSubjectNaturalPerson = aDataSubjectNaturalPerson;
     m_aAuthorizedRepresentative = aAuthorizedRepresentative;
-    m_aConcept = aConcept;
-    m_aDistribution = aDistribution;
+    if (aConcepts != null)
+      m_aConcepts.addAll (aConcepts);
+    if (aDistributions != null)
+      m_aDistributions.addAll (aDistributions);
   }
 
   @Nonnull
-  public EQueryDefinitionType getQueryDefinition ()
+  public final EQueryDefinitionType getQueryDefinition ()
   {
     return m_eQueryDefinition;
   }
 
   @Nonnull
   @Nonempty
-  public String getRequestID ()
+  public final String getRequestID ()
   {
     return m_sRequestID;
   }
 
   @Nonnull
   @Nonempty
-  public String getSpecificationIdentifier ()
+  public final String getSpecificationIdentifier ()
   {
     return m_sSpecificationIdentifier;
   }
 
   @Nonnull
-  public LocalDateTime getIssueDateTime ()
+  public final LocalDateTime getIssueDateTime ()
   {
     return m_aIssueDateTime;
   }
 
   @Nullable
-  public InternationalStringType getProcedure ()
+  public final InternationalStringType getProcedure ()
   {
     return m_aProcedure;
   }
 
-  @Nullable
-  public CCCEVRequirementType getFullfillingRequirement ()
+  @Nonnull
+  @ReturnsMutableObject
+  public final List <CCCEVRequirementType> fullfillingRequirements ()
   {
-    return m_aFullfillingRequirement;
+    return m_aFullfillingRequirements;
   }
 
   @Nonnull
-  public AgentPojo getDataConsumer ()
+  @ReturnsMutableCopy
+  public final List <CCCEVRequirementType> getAllFullfillingRequirements ()
+  {
+    return m_aFullfillingRequirements.getClone ();
+  }
+
+  @Nonnull
+  public final AgentPojo getDataConsumer ()
   {
     return m_aDataConsumer;
   }
 
   @Nullable
-  public String getConsentToken ()
+  public final String getConsentToken ()
   {
     return m_sConsentToken;
   }
 
   @Nullable
-  public String getDatasetIdentifier ()
+  public final String getDatasetIdentifier ()
   {
     return m_sDatasetIdentifier;
   }
 
   @Nullable
-  public BusinessPojo getDataSubjectLegalPerson ()
+  public final BusinessPojo getDataSubjectLegalPerson ()
   {
     return m_aDataSubjectLegalPerson;
   }
 
   @Nullable
-  public PersonPojo getDataSubjectNaturalPerson ()
+  public final PersonPojo getDataSubjectNaturalPerson ()
   {
     return m_aDataSubjectNaturalPerson;
   }
 
   @Nullable
-  public PersonPojo getAuthorizedRepresentative ()
+  public final PersonPojo getAuthorizedRepresentative ()
   {
     return m_aAuthorizedRepresentative;
   }
 
-  @Nullable
-  public ConceptPojo getConcept ()
+  @Nonnull
+  @ReturnsMutableObject
+  public final List <ConceptPojo> concepts ()
   {
-    return m_aConcept;
+    return m_aConcepts;
   }
 
-  @Nullable
-  public DistributionPojo getDistribution ()
+  @Nonnull
+  @ReturnsMutableCopy
+  public final List <ConceptPojo> getAllConcepts ()
   {
-    return m_aDistribution;
+    return m_aConcepts.getClone ();
+  }
+
+  @Nonnull
+  @ReturnsMutableObject
+  public final List <DistributionPojo> distributions ()
+  {
+    return m_aDistributions;
+  }
+
+  @Nonnull
+  @ReturnsMutableCopy
+  public final List <DistributionPojo> getAllDistributions ()
+  {
+    return m_aDistributions.getClone ();
   }
 
   @Nonnull
@@ -313,8 +367,8 @@ public class EDMRequest
       aSlots.add (new SlotIssueDateTime (m_aIssueDateTime));
     if (m_aProcedure != null)
       aSlots.add (new SlotProcedure (m_aProcedure));
-    if (m_aFullfillingRequirement != null)
-      aSlots.add (new SlotFullfillingRequirement (m_aFullfillingRequirement));
+    if (m_aFullfillingRequirements.isNotEmpty ())
+      aSlots.add (new SlotFullfillingRequirements (m_aFullfillingRequirements));
     if (m_sConsentToken != null)
       aSlots.add (new SlotConsentToken (m_sConsentToken));
     if (m_sDatasetIdentifier != null)
@@ -331,12 +385,12 @@ public class EDMRequest
       aSlots.add (new SlotAuthorizedRepresentative (m_aAuthorizedRepresentative));
 
     // Concept Query
-    if (m_aConcept != null)
-      aSlots.add (new SlotConceptRequestList (m_aConcept));
+    if (m_aConcepts.isNotEmpty ())
+      aSlots.add (new SlotConceptRequestList (m_aConcepts));
 
     // Document Query
-    if (m_aDistribution != null)
-      aSlots.add (new SlotDistributionRequestList (m_aDistribution));
+    if (m_aDistributions.isNotEmpty ())
+      aSlots.add (new SlotDistributionRequestList (m_aDistributions));
 
     return _createQueryRequest (aSlots);
   }
@@ -346,6 +400,12 @@ public class EDMRequest
   {
     return new JAXBVersatileWriter <> (getAsQueryRequest (),
                                        RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true));
+  }
+
+  @Nonnull
+  public static IJAXBVersatileReader <EDMRequest> getReader ()
+  {
+    return new JAXBVersatileReader <> (RegRep4Reader.queryRequest (CCAGV.XSDS), EDMRequest::create);
   }
 
   @Override
@@ -361,15 +421,15 @@ public class EDMRequest
            EqualsHelper.equals (m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
            EqualsHelper.equals (m_aIssueDateTime, that.m_aIssueDateTime) &&
            EqualsHelper.equals (m_aProcedure, that.m_aProcedure) &&
-           EqualsHelper.equals (m_aFullfillingRequirement, that.m_aFullfillingRequirement) &&
+           EqualsHelper.equals (m_aFullfillingRequirements, that.m_aFullfillingRequirements) &&
            EqualsHelper.equals (m_aDataConsumer, that.m_aDataConsumer) &&
            EqualsHelper.equals (m_sConsentToken, that.m_sConsentToken) &&
            EqualsHelper.equals (m_sDatasetIdentifier, that.m_sDatasetIdentifier) &&
            EqualsHelper.equals (m_aDataSubjectLegalPerson, that.m_aDataSubjectLegalPerson) &&
            EqualsHelper.equals (m_aDataSubjectNaturalPerson, that.m_aDataSubjectNaturalPerson) &&
            EqualsHelper.equals (m_aAuthorizedRepresentative, that.m_aAuthorizedRepresentative) &&
-           EqualsHelper.equals (m_aConcept, that.m_aConcept) &&
-           EqualsHelper.equals (m_aDistribution, that.m_aDistribution);
+           EqualsHelper.equals (m_aConcepts, that.m_aConcepts) &&
+           EqualsHelper.equals (m_aDistributions, that.m_aDistributions);
   }
 
   @Override
@@ -380,15 +440,15 @@ public class EDMRequest
                                        .append (m_sSpecificationIdentifier)
                                        .append (m_aIssueDateTime)
                                        .append (m_aProcedure)
-                                       .append (m_aFullfillingRequirement)
+                                       .append (m_aFullfillingRequirements)
                                        .append (m_aDataConsumer)
                                        .append (m_sConsentToken)
                                        .append (m_sDatasetIdentifier)
                                        .append (m_aDataSubjectLegalPerson)
                                        .append (m_aDataSubjectNaturalPerson)
                                        .append (m_aAuthorizedRepresentative)
-                                       .append (m_aConcept)
-                                       .append (m_aDistribution)
+                                       .append (m_aConcepts)
+                                       .append (m_aDistributions)
                                        .getHashCode ();
   }
 
@@ -400,15 +460,15 @@ public class EDMRequest
                                        .append ("SpecificationIdentifier", m_sSpecificationIdentifier)
                                        .append ("IssueDateTime", m_aIssueDateTime)
                                        .append ("Procedure", m_aProcedure)
-                                       .append ("FullfillingRequirement", m_aFullfillingRequirement)
+                                       .append ("FullfillingRequirements", m_aFullfillingRequirements)
                                        .append ("DataConsumer", m_aDataConsumer)
                                        .append ("ConsentToken", m_sConsentToken)
                                        .append ("DatasetIdentifier", m_sDatasetIdentifier)
                                        .append ("DataSubjectLegalPerson", m_aDataSubjectLegalPerson)
                                        .append ("DataSubjectNaturalPerson", m_aDataSubjectNaturalPerson)
                                        .append ("AuthorizedRepresentative", m_aAuthorizedRepresentative)
-                                       .append ("Concept", m_aConcept)
-                                       .append ("Distribution", m_aDistribution)
+                                       .append ("Concepts", m_aConcepts)
+                                       .append ("Distributions", m_aDistributions)
                                        .getToString ();
   }
 
@@ -443,15 +503,15 @@ public class EDMRequest
     private String m_sSpecificationIdentifier;
     private LocalDateTime m_aIssueDateTime;
     private InternationalStringType m_aProcedure;
-    private CCCEVRequirementType m_aFullfillingRequirement;
+    private final ICommonsList <CCCEVRequirementType> m_aFullfillingRequirements = new CommonsArrayList <> ();
     private AgentPojo m_aDataConsumer;
     private String m_sConsentToken;
     private String m_sDatasetIdentifier;
     private BusinessPojo m_aDataSubjectLegalPerson;
     private PersonPojo m_aDataSubjectNaturalPerson;
     private PersonPojo m_aAuthorizedRepresentative;
-    private ConceptPojo m_aConcept;
-    private DistributionPojo m_aDistribution;
+    private final ICommonsList <ConceptPojo> m_aConcepts = new CommonsArrayList <> ();
+    private final ICommonsList <DistributionPojo> m_aDistributions = new CommonsArrayList <> ();
 
     protected Builder ()
     {}
@@ -503,6 +563,12 @@ public class EDMRequest
     }
 
     @Nonnull
+    public Builder procedure (@Nullable final LocalizedStringType... a)
+    {
+      return procedure (a == null ? null : RegRepHelper.createInternationalStringType (a));
+    }
+
+    @Nonnull
     public Builder procedure (@Nonnull final Locale aLocale, @Nonnull final String sText)
     {
       return procedure (RegRepHelper.createLocalizedString (aLocale, sText));
@@ -515,12 +581,6 @@ public class EDMRequest
     }
 
     @Nonnull
-    public Builder procedure (@Nullable final LocalizedStringType... a)
-    {
-      return procedure (a == null ? null : RegRepHelper.createInternationalStringType (a));
-    }
-
-    @Nonnull
     public Builder procedure (@Nullable final InternationalStringType a)
     {
       m_aProcedure = a;
@@ -528,9 +588,34 @@ public class EDMRequest
     }
 
     @Nonnull
+    public Builder addFullfillingRequirement (@Nullable final CCCEVRequirementType a)
+    {
+      if (a != null)
+        m_aFullfillingRequirements.add (a);
+      return this;
+    }
+
+    @Nonnull
     public Builder fullfillingRequirement (@Nullable final CCCEVRequirementType a)
     {
-      m_aFullfillingRequirement = a;
+      if (a != null)
+        m_aFullfillingRequirements.set (a);
+      else
+        m_aFullfillingRequirements.clear ();
+      return this;
+    }
+
+    @Nonnull
+    public Builder fullfillingRequirements (@Nullable final CCCEVRequirementType... a)
+    {
+      m_aFullfillingRequirements.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder fullfillingRequirements (@Nullable final Iterable <? extends CCCEVRequirementType> a)
+    {
+      m_aFullfillingRequirements.setAll (a);
       return this;
     }
 
@@ -549,6 +634,12 @@ public class EDMRequest
     }
 
     @Nonnull
+    public Builder dataConsumer (@Nullable final AgentType a)
+    {
+      return dataConsumer (a == null ? null : AgentPojo.builder (a));
+    }
+
+    @Nonnull
     public Builder dataConsumer (@Nullable final AgentPojo.Builder a)
     {
       return dataConsumer (a == null ? null : a.build ());
@@ -562,9 +653,9 @@ public class EDMRequest
     }
 
     @Nonnull
-    public Builder dataConsumer (@Nullable final AgentType a)
+    public Builder dataSubject (@Nullable final CoreBusinessType a)
     {
-      return dataConsumer (a == null ? null : AgentPojo.builder (a));
+      return dataSubject (a == null ? null : BusinessPojo.builder (a));
     }
 
     @Nonnull
@@ -582,9 +673,9 @@ public class EDMRequest
     }
 
     @Nonnull
-    public Builder dataSubject (@Nullable final CoreBusinessType a)
+    public Builder dataSubject (@Nullable final CorePersonType a)
     {
-      return dataSubject (a == null ? null : BusinessPojo.builder (a));
+      return dataSubject (a == null ? null : PersonPojo.builder (a));
     }
 
     @Nonnull
@@ -602,9 +693,9 @@ public class EDMRequest
     }
 
     @Nonnull
-    public Builder dataSubject (@Nullable final CorePersonType a)
+    public Builder authorizedRepresentative (@Nullable final CorePersonType a)
     {
-      return dataSubject (a == null ? null : PersonPojo.builder (a));
+      return authorizedRepresentative (a == null ? null : PersonPojo.builder (a));
     }
 
     @Nonnull
@@ -621,9 +712,29 @@ public class EDMRequest
     }
 
     @Nonnull
-    public Builder authorizedRepresentative (@Nullable final CorePersonType a)
+    public Builder addConcept (@Nullable final CCCEVConceptType a)
     {
-      return authorizedRepresentative (a == null ? null : PersonPojo.builder (a));
+      return addConcept (a == null ? null : ConceptPojo.builder (a));
+    }
+
+    @Nonnull
+    public Builder addConcept (@Nullable final ConceptPojo.Builder a)
+    {
+      return addConcept (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder addConcept (@Nullable final ConceptPojo a)
+    {
+      if (a != null)
+        m_aConcepts.add (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder concept (@Nullable final CCCEVConceptType a)
+    {
+      return concept (a == null ? null : ConceptPojo.builder (a));
     }
 
     @Nonnull
@@ -635,14 +746,51 @@ public class EDMRequest
     @Nonnull
     public Builder concept (@Nullable final ConceptPojo a)
     {
-      m_aConcept = a;
+      if (a != null)
+        m_aConcepts.set (a);
+      else
+        m_aConcepts.clear ();
       return this;
     }
 
     @Nonnull
-    public Builder concept (@Nullable final CCCEVConceptType a)
+    public Builder concepts (@Nullable final ConceptPojo... a)
     {
-      return concept (a == null ? null : ConceptPojo.builder (a));
+      m_aConcepts.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder concepts (@Nullable final Iterable <ConceptPojo> a)
+    {
+      m_aConcepts.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder addDistribution (@Nullable final DCatAPDistributionType a)
+    {
+      return addDistribution (a == null ? null : DistributionPojo.builder (a));
+    }
+
+    @Nonnull
+    public Builder addDistribution (@Nullable final DistributionPojo.Builder a)
+    {
+      return addDistribution (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder addDistribution (@Nullable final DistributionPojo a)
+    {
+      if (a != null)
+        m_aDistributions.add (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder distribution (@Nullable final DCatAPDistributionType a)
+    {
+      return distribution (a == null ? null : DistributionPojo.builder (a));
     }
 
     @Nonnull
@@ -654,14 +802,25 @@ public class EDMRequest
     @Nonnull
     public Builder distribution (@Nullable final DistributionPojo a)
     {
-      m_aDistribution = a;
+      if (a != null)
+        m_aDistributions.set (a);
+      else
+        m_aDistributions.clear ();
       return this;
     }
 
     @Nonnull
-    public Builder distribution (@Nullable final DCatAPDistributionType a)
+    public Builder distributions (@Nullable final DistributionPojo... a)
     {
-      return distribution (a == null ? null : DistributionPojo.builder (a));
+      m_aDistributions.setAll (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder distributions (@Nullable final Iterable <DistributionPojo> a)
+    {
+      m_aDistributions.setAll (a);
+      return this;
     }
 
     public void checkConsistency ()
@@ -685,15 +844,15 @@ public class EDMRequest
       switch (m_eQueryDefinition)
       {
         case CONCEPT:
-          if (m_aConcept == null)
+          if (m_aConcepts.isEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Concept' must contain a Concept");
-          if (m_aDistribution != null)
+          if (m_aDistributions.isNotEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Concept' must NOT contain a Distribution");
           break;
         case DOCUMENT:
-          if (m_aConcept != null)
+          if (m_aConcepts.isNotEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Concept");
-          if (m_aDistribution == null)
+          if (m_aDistributions.isEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Document' must contain a Distribution");
           break;
         default:
@@ -711,15 +870,152 @@ public class EDMRequest
                              m_sSpecificationIdentifier,
                              m_aIssueDateTime,
                              m_aProcedure,
-                             m_aFullfillingRequirement,
+                             m_aFullfillingRequirements,
                              m_aDataConsumer,
                              m_sConsentToken,
                              m_sDatasetIdentifier,
                              m_aDataSubjectLegalPerson,
                              m_aDataSubjectNaturalPerson,
                              m_aAuthorizedRepresentative,
-                             m_aConcept,
-                             m_aDistribution);
+                             m_aConcepts,
+                             m_aDistributions);
     }
+  }
+
+  private static void _applySlots (@Nonnull final SlotType aSlot, @Nonnull final EDMRequest.Builder aBuilder)
+  {
+    final String sName = aSlot.getName ();
+    final ValueType aSlotValue = aSlot.getSlotValue ();
+    switch (sName)
+    {
+      case SlotSpecificationIdentifier.NAME:
+        if (aSlotValue instanceof StringValueType)
+        {
+          final String sValue = ((StringValueType) aSlotValue).getValue ();
+          aBuilder.specificationIdentifier (sValue);
+        }
+        break;
+      case SlotIssueDateTime.NAME:
+        if (aSlotValue instanceof DateTimeValueType)
+        {
+          final XMLGregorianCalendar aCal = ((DateTimeValueType) aSlotValue).getValue ();
+          aBuilder.issueDateTime (PDTXMLConverter.getLocalDateTime (aCal));
+        }
+        break;
+      case SlotProcedure.NAME:
+        if (aSlotValue instanceof InternationalStringValueType)
+        {
+          final InternationalStringType aIntString = ((InternationalStringValueType) aSlotValue).getValue ();
+          aBuilder.procedure (aIntString);
+        }
+        break;
+      case SlotFullfillingRequirements.NAME:
+        if (aSlotValue instanceof CollectionValueType)
+        {
+          final List <ValueType> aElements = ((CollectionValueType) aSlotValue).getElement ();
+          for (final ValueType aElement : aElements)
+            if (aElement instanceof AnyValueType)
+            {
+              final Object aElementValue = ((AnyValueType) aElement).getAny ();
+              if (aElementValue instanceof Node)
+                aBuilder.addFullfillingRequirement (new RequirementMarshaller ().read ((Node) aElementValue));
+            }
+        }
+        break;
+      case SlotConsentToken.NAME:
+        if (aSlotValue instanceof StringValueType)
+        {
+          final String sValue = ((StringValueType) aSlotValue).getValue ();
+          aBuilder.consentToken (sValue);
+        }
+        break;
+      case SlotDatasetIdentifier.NAME:
+        if (aSlotValue instanceof StringValueType)
+        {
+          final String sValue = ((StringValueType) aSlotValue).getValue ();
+          aBuilder.datasetIdentifier (sValue);
+        }
+        break;
+      case SlotDataConsumer.NAME:
+        if (aSlotValue instanceof AnyValueType)
+        {
+          final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
+          aBuilder.dataConsumer (AgentPojo.builder (new AgentMarshaller ().read (aAny)).build ());
+        }
+        break;
+      case SlotDataSubjectLegalPerson.NAME:
+        if (aSlotValue instanceof AnyValueType)
+        {
+          final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
+          aBuilder.dataSubject (BusinessPojo.builder (new BusinessMarshaller ().read (aAny)).build ());
+        }
+        break;
+      case SlotDataSubjectNaturalPerson.NAME:
+        if (aSlotValue instanceof AnyValueType)
+        {
+          final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
+          aBuilder.dataSubject (PersonPojo.builder (new PersonMarshaller ().read (aAny)).build ());
+        }
+        break;
+      case SlotAuthorizedRepresentative.NAME:
+        if (aSlotValue instanceof AnyValueType)
+        {
+          final Node aAny = (Node) ((AnyValueType) aSlotValue).getAny ();
+          aBuilder.authorizedRepresentative (PersonPojo.builder (new PersonMarshaller ().read (aAny)).build ());
+        }
+        break;
+      case SlotConceptRequestList.NAME:
+        if (aSlotValue instanceof CollectionValueType)
+        {
+          final List <ValueType> aElements = ((CollectionValueType) aSlotValue).getElement ();
+          if (!aElements.isEmpty ())
+          {
+            for (final ValueType aElement : aElements)
+              if (aElement instanceof AnyValueType)
+              {
+                final Object aElementValue = ((AnyValueType) aElement).getAny ();
+                if (aElementValue instanceof Node)
+                  aBuilder.addConcept (new ConceptMarshaller ().read ((Node) aElementValue));
+              }
+            aBuilder.queryDefinition (EQueryDefinitionType.CONCEPT);
+          }
+        }
+        break;
+      case SlotDistributionRequestList.NAME:
+        if (aSlotValue instanceof CollectionValueType)
+        {
+          final List <ValueType> aElements = ((CollectionValueType) aSlotValue).getElement ();
+          if (!aElements.isEmpty ())
+          {
+            for (final ValueType aElement : aElements)
+              if (aElement instanceof AnyValueType)
+              {
+                final Object aElementValue = ((AnyValueType) aElement).getAny ();
+                if (aElementValue instanceof Node)
+                  aBuilder.addDistribution (new DistributionMarshaller ().read ((Node) aElementValue));
+              }
+            aBuilder.queryDefinition (EQueryDefinitionType.DOCUMENT);
+          }
+        }
+        break;
+      default:
+        throw new IllegalStateException ("Slot is not defined: " + sName);
+    }
+  }
+
+  @Nonnull
+  public static EDMRequest create (@Nonnull final QueryRequest aQueryRequest)
+  {
+    final EDMRequest.Builder aBuilder = EDMRequest.builder ().id (aQueryRequest.getId ());
+
+    for (final SlotType slot : aQueryRequest.getSlot ())
+      _applySlots (slot, aBuilder);
+
+    if (aQueryRequest.getQuery () != null && aQueryRequest.getQuery ().hasSlotEntries ())
+      for (final SlotType aSlot : aQueryRequest.getQuery ().getSlot ())
+        if (aSlot != null)
+          _applySlots (aSlot, aBuilder);
+
+    return aBuilder.build ();
   }
 }
