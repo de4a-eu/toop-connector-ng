@@ -63,8 +63,8 @@ public final class EDMErrorResponseTest
   @Test
   public void testRequestConceptLegalPerson ()
   {
-    final EDMErrorResponse aErrorResponse = _builder ().exception (_exBuilder (EEDMExceptionType.OBJECT_NOT_FOUND))
-                                                       .exception (_exBuilder (EEDMExceptionType.TIMEOUT))
+    final EDMErrorResponse aErrorResponse = _builder ().addException (_exBuilder (EEDMExceptionType.OBJECT_NOT_FOUND))
+                                                       .addException (_exBuilder (EEDMExceptionType.TIMEOUT))
                                                        .build ();
     assertNotNull (aErrorResponse);
 

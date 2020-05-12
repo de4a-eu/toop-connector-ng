@@ -77,6 +77,7 @@ public class EDMErrorResponse
     m_sRequestID = sRequestID;
     m_sSpecificationIdentifier = sSpecificationIdentifier;
     m_aErrorProvider = aErrorProvider;
+    m_aExceptions.addAll (aExceptions);
   }
 
   @Nonnull
