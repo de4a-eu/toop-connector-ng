@@ -32,6 +32,7 @@ import org.w3c.dom.Document;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.resource.ClassPathResource;
+import com.helger.commons.mock.CommonsTestHelper;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.model.AddressPojo;
@@ -65,6 +66,7 @@ public final class EDMResponseTest
 
     // Compare with original
     assertEquals (aResp, aResp2);
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (aResp, aResp2);
 
     {
       // Schematron validation

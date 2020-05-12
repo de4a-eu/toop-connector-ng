@@ -350,9 +350,9 @@ public class ConceptPojo
     }
 
     @Nonnull
-    public Builder valueText (@Nonnull final String s)
+    public Builder valueText (@Nonnull final String... a)
     {
-      return value (ConceptValuePojo.builder ().text (s));
+      return value (ConceptValuePojo.builder ().text (a));
     }
 
     @Nonnull

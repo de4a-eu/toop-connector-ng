@@ -17,6 +17,8 @@ package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
 
 import com.helger.commons.datetime.PDTFactory;
@@ -31,6 +33,18 @@ import eu.toop.edm.jaxb.cv.cac.PeriodType;
  */
 public final class PeriodPojoTest
 {
+  private static void _testWriteAndRead (@Nonnull final PeriodPojo x)
+  {
+    assertNotNull (x);
+
+    final PeriodType a = x.getAsPeriod ();
+    assertNotNull (a);
+
+    // Re-read
+    final PeriodPojo y = PeriodPojo.builder (a).build ();
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (x, y);
+  }
+
   @Test
   public void testBasic ()
   {
@@ -38,12 +52,7 @@ public final class PeriodPojoTest
                                    .startDateTime (PDTFactory.getCurrentLocalDateTime ().minusMonths (1))
                                    .endDateTime (PDTFactory.getCurrentLocalDateTime ().plusMonths (7))
                                    .build ();
-
-    final PeriodType a = x.getAsPeriod ();
-    assertNotNull (a);
-
-    final PeriodPojo y = PeriodPojo.builder (a).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 
   @Test
@@ -53,24 +62,13 @@ public final class PeriodPojoTest
                                    .startDate (PDTFactory.getCurrentLocalDate ().minusMonths (1))
                                    .endDate (PDTFactory.getCurrentLocalDate ().plusMonths (7))
                                    .build ();
-
-    final PeriodType a = x.getAsPeriod ();
-    assertNotNull (a);
-
-    final PeriodPojo y = PeriodPojo.builder (a).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 
   @Test
   public void testMinimum ()
   {
     final PeriodPojo x = PeriodPojo.builder ().build ();
-    assertNotNull (x);
-
-    final PeriodType a = x.getAsPeriod ();
-    assertNotNull (a);
-
-    final PeriodPojo y = PeriodPojo.builder (a).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 }

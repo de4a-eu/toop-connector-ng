@@ -38,8 +38,10 @@ public final class PersonPojoTest
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (PersonPojoTest.class);
 
-  private static void _validate (@Nonnull final PersonPojo x)
+  private static void _testWriteAndRead (@Nonnull final PersonPojo x)
   {
+    assertNotNull (x);
+
     final CorePersonType aPerson = x.getAsCorePerson ();
     assertNotNull (aPerson);
 
@@ -49,7 +51,7 @@ public final class PersonPojoTest
     LOGGER.info (m.getAsString (aPerson));
 
     final PersonPojo y = PersonPojo.builder (aPerson).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -73,7 +75,7 @@ public final class PersonPojoTest
                                    .birthDate (PDTFactory.getCurrentLocalDate ())
                                    .address (a)
                                    .build ();
-    _validate (x);
+    _testWriteAndRead (x);
   }
 
   @Test
@@ -87,6 +89,6 @@ public final class PersonPojoTest
                                    .birthDate (PDTFactory.getCurrentLocalDate ())
 
                                    .build ();
-    _validate (x);
+    _testWriteAndRead (x);
   }
 }

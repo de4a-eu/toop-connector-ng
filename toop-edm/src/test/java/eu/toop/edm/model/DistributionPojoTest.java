@@ -17,6 +17,8 @@ package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +38,24 @@ public final class DistributionPojoTest
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (DistributionPojoTest.class);
 
+  private static void _testWriteAndRead (@Nonnull final DistributionPojo x)
+  {
+    assertNotNull (x);
+
+    final DCatAPDistributionType aDist = x.getAsDistribution ();
+    assertNotNull (aDist);
+
+    // Write
+    final DistributionMarshaller m = new DistributionMarshaller ();
+    m.setFormattedOutput (true);
+    assertNotNull (m.getAsDocument (aDist));
+    LOGGER.info (m.getAsString (aDist));
+
+    // Re-read
+    final DistributionPojo y = DistributionPojo.builder (aDist).build ();
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (x, y);
+  }
+
   @Test
   public void testBasic ()
   {
@@ -43,33 +63,13 @@ public final class DistributionPojoTest
                                                .format (EDistributionFormat.STRUCTURED)
                                                .mediaType (CMimeType.TEXT_PLAIN)
                                                .build ();
-    final DCatAPDistributionType aDist = x.getAsDistribution ();
-    assertNotNull (aDist);
-
-    final DistributionMarshaller m = new DistributionMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aDist));
-    LOGGER.info (m.getAsString (aDist));
-
-    final DistributionPojo y = DistributionPojo.builder (aDist).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 
   @Test
   public void testMinimum ()
   {
     final DistributionPojo x = DistributionPojo.builder ().build ();
-    assertNotNull (x);
-
-    final DCatAPDistributionType aDist = x.getAsDistribution ();
-    assertNotNull (aDist);
-
-    final DistributionMarshaller m = new DistributionMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aDist));
-    LOGGER.info (m.getAsString (aDist));
-
-    final DistributionPojo y = DistributionPojo.builder (aDist).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 }

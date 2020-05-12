@@ -25,6 +25,7 @@ import org.junit.Test;
 import org.w3c.dom.Document;
 
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.mock.CommonsTestHelper;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.error.EDMExceptionBuilder;
@@ -53,6 +54,7 @@ public final class EDMErrorResponseTest
 
     // Compare with original
     assertEquals (aResp, aResp2);
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (aResp, aResp2);
 
     {
       // Schematron validation

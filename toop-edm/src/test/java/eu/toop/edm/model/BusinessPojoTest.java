@@ -37,18 +37,22 @@ public final class BusinessPojoTest
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (BusinessPojoTest.class);
 
-  private static void _validate (@Nonnull final BusinessPojo x)
+  private static void _testWriteAndRead (@Nonnull final BusinessPojo x)
   {
+    assertNotNull (x);
+
     final CoreBusinessType aBusiness = x.getAsCoreBusiness ();
     assertNotNull (aBusiness);
 
+    // Write
     final BusinessMarshaller m = new BusinessMarshaller ();
     m.setFormattedOutput (true);
     assertNotNull (m.getAsDocument (aBusiness));
     LOGGER.info (m.getAsString (aBusiness));
 
+    // Re-read
     final BusinessPojo y = BusinessPojo.builder (aBusiness).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (x, y);
   }
 
   @Test
@@ -70,13 +74,13 @@ public final class BusinessPojoTest
                                        .legalName ("LegalName")
                                        .address (a)
                                        .build ();
-    _validate (x);
+    _testWriteAndRead (x);
   }
 
   @Test
   public void testMinimum ()
   {
     final BusinessPojo x = BusinessPojo.builder ().build ();
-    _validate (x);
+    _testWriteAndRead (x);
   }
 }

@@ -33,6 +33,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.mime.CMimeType;
+import com.helger.commons.mock.CommonsTestHelper;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
@@ -68,6 +69,7 @@ public final class EDMRequestTest
 
     // Compare with original
     assertEquals (aReq, aReq2);
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (aReq, aReq2);
 
     {
       // Schematron validation
@@ -76,7 +78,6 @@ public final class EDMRequestTest
       final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
       assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
     }
-
   }
 
   @Nonnull

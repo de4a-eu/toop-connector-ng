@@ -17,9 +17,9 @@ package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.mock.CommonsTestHelper;
@@ -34,7 +34,22 @@ import eu.toop.edm.xml.dcatap.DatasetMarshaller;
  */
 public final class DatasetPojoTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (DatasetPojoTest.class);
+  private static void _testWriteAndRead (@Nonnull final DatasetPojo x)
+  {
+    assertNotNull (x);
+
+    final DCatAPDatasetType aDataset = x.getAsDataset ();
+    assertNotNull (aDataset);
+
+    // Write
+    final DatasetMarshaller m = new DatasetMarshaller ();
+    m.setFormattedOutput (true);
+    assertNotNull (m.getAsDocument (aDataset));
+
+    // Re-read
+    final DatasetPojo y = DatasetPojo.builder (aDataset).build ();
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (x, y);
+  }
 
   @Test
   public void testBasic ()
@@ -50,6 +65,8 @@ public final class DatasetPojoTest
                                      .creator (AgentPojo.builder ()
                                                         .name ("Agent name")
                                                         .address (AddressPojo.builder ().town ("Kewlkidshome")))
+                                     .addID ("bla")
+                                     .id ("foo")
                                      .ids ("RE238918378", "DOC-555")
                                      .issuedNow ()
                                      .language ("en")
@@ -61,34 +78,13 @@ public final class DatasetPojoTest
                                                                               .title ("Name")
                                                                               .id ("RE238918378"))
                                      .build ();
-    final DCatAPDatasetType aDataset = x.getAsDataset ();
-    assertNotNull (aDataset);
-
-    final DatasetMarshaller m = new DatasetMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aDataset));
-    LOGGER.info (m.getAsString (aDataset));
-
-    final DatasetPojo y = DatasetPojo.builder (aDataset).build ();
-    LOGGER.info ("\n" + x.toString () + "\n" + y.toString ());
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 
   @Test
   public void testMinimum ()
   {
     final DatasetPojo x = DatasetPojo.builder ().title ("bla title").description ("bla desc").build ();
-    assertNotNull (x);
-
-    final DCatAPDatasetType aDataset = x.getAsDataset ();
-    assertNotNull (aDataset);
-
-    final DatasetMarshaller m = new DatasetMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aDataset));
-    LOGGER.info (m.getAsString (aDataset));
-
-    final DatasetPojo y = DatasetPojo.builder (aDataset).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 }

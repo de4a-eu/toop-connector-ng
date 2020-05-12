@@ -17,6 +17,8 @@ package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,32 +37,8 @@ public final class QualifiedRelationPojoTest
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (QualifiedRelationPojoTest.class);
 
-  @Test
-  public void testBasic ()
+  private static void _testWriteAndRead (@Nonnull final QualifiedRelationPojo x)
   {
-    final QualifiedRelationPojo x = QualifiedRelationPojo.builder ()
-                                                         .addDescription ("desc1")
-                                                         .addDescription ("desc2")
-                                                         .titles ("Title", "Title2")
-                                                         .addID ("ID1")
-                                                         .addID ("ID2")
-                                                         .build ();
-    final DCatAPRelationshipType aQualifiedRelation = x.getAsRelationship ();
-    assertNotNull (aQualifiedRelation);
-
-    final RelationshipMarshaller m = new RelationshipMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aQualifiedRelation));
-    LOGGER.info (m.getAsString (aQualifiedRelation));
-
-    final QualifiedRelationPojo y = QualifiedRelationPojo.builder (aQualifiedRelation).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
-  }
-
-  @Test
-  public void testMinimum ()
-  {
-    final QualifiedRelationPojo x = QualifiedRelationPojo.builder ().description ("desc").title ("ti").build ();
     assertNotNull (x);
 
     final DCatAPRelationshipType aQualifiedRelation = x.getAsRelationship ();
@@ -72,6 +50,26 @@ public final class QualifiedRelationPojoTest
     LOGGER.info (m.getAsString (aQualifiedRelation));
 
     final QualifiedRelationPojo y = QualifiedRelationPojo.builder (aQualifiedRelation).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (x, y);
+  }
+
+  @Test
+  public void testBasic ()
+  {
+    final QualifiedRelationPojo x = QualifiedRelationPojo.builder ()
+                                                         .addDescription ("desc1")
+                                                         .addDescription ("desc2")
+                                                         .titles ("Title", "Title2")
+                                                         .addID ("ID1")
+                                                         .addID ("ID2")
+                                                         .build ();
+    _testWriteAndRead (x);
+  }
+
+  @Test
+  public void testMinimum ()
+  {
+    final QualifiedRelationPojo x = QualifiedRelationPojo.builder ().description ("desc").title ("ti").build ();
+    _testWriteAndRead (x);
   }
 }

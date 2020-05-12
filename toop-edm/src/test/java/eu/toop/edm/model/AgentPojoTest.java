@@ -17,9 +17,9 @@ package eu.toop.edm.model;
 
 import static org.junit.Assert.assertNotNull;
 
+import javax.annotation.Nonnull;
+
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.mock.CommonsTestHelper;
 
@@ -33,7 +33,20 @@ import eu.toop.edm.xml.cagv.AgentMarshaller;
  */
 public final class AgentPojoTest
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (AgentPojoTest.class);
+  private static void _testWriteAndRead (@Nonnull final AgentPojo x)
+  {
+    assertNotNull (x);
+
+    final AgentType aAgent = x.getAsAgent ();
+    assertNotNull (aAgent);
+
+    final AgentMarshaller m = new AgentMarshaller ();
+    m.setFormattedOutput (true);
+    assertNotNull (m.getAsDocument (aAgent));
+
+    final AgentPojo y = AgentPojo.builder (aAgent).build ();
+    CommonsTestHelper.testDefaultImplementationWithEqualContentObject (x, y);
+  }
 
   @Test
   public void testBasic ()
@@ -50,49 +63,20 @@ public final class AgentPojoTest
                                                       .postalCode ("PostalCode")
                                                       .countryCode ("CountryCode"))
                                  .build ();
-    final AgentType aAgent = x.getAsAgent ();
-    assertNotNull (aAgent);
-
-    final AgentMarshaller m = new AgentMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aAgent));
-    LOGGER.info (m.getAsString (aAgent));
-
-    final AgentPojo y = AgentPojo.builder (aAgent).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 
   @Test
   public void testMinimum ()
   {
     final AgentPojo x = AgentPojo.builder ().build ();
-    assertNotNull (x);
-
-    final AgentType aAgent = x.getAsAgent ();
-    assertNotNull (aAgent);
-
-    final AgentMarshaller m = new AgentMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aAgent));
-    LOGGER.info (m.getAsString (aAgent));
-
-    final AgentPojo y = AgentPojo.builder (aAgent).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 
   @Test
   public void testNoAddress ()
   {
     final AgentPojo x = AgentPojo.builder ().id ("ID").idSchemeID ("IDType").name ("Name").build ();
-    final AgentType aAgent = x.getAsAgent ();
-    assertNotNull (aAgent);
-
-    final AgentMarshaller m = new AgentMarshaller ();
-    m.setFormattedOutput (true);
-    assertNotNull (m.getAsDocument (aAgent));
-    LOGGER.info (m.getAsString (aAgent));
-
-    final AgentPojo y = AgentPojo.builder (aAgent).build ();
-    CommonsTestHelper.testEqualsImplementationWithEqualContentObject (x, y);
+    _testWriteAndRead (x);
   }
 }
