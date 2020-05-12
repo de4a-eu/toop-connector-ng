@@ -21,7 +21,6 @@ import com.helger.xml.namespace.IIterableNamespaceContext;
 import com.helger.xml.namespace.MapBasedNamespaceContext;
 
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
-import eu.toop.edm.jaxb.cccev.ObjectFactory;
 
 public class ConceptMarshaller extends AbstractCCCEVMarshaller <CCCEVConceptType>
 {
@@ -32,7 +31,7 @@ public class ConceptMarshaller extends AbstractCCCEVMarshaller <CCCEVConceptType
 
   public ConceptMarshaller (@Nullable final IIterableNamespaceContext aAdditionalNSPrefixes)
   {
-    super (CCCEVConceptType.class, x -> new ObjectFactory ().createConcept (x));
+    super (CCCEVConceptType.class, x -> new eu.toop.edm.jaxb.cccev.ObjectFactory ().createConcept (x));
 
     if (aAdditionalNSPrefixes != null)
     {

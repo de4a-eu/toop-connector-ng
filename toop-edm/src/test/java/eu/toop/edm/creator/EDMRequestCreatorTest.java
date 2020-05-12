@@ -44,9 +44,6 @@ import eu.toop.edm.model.EDistributionFormat;
 import eu.toop.edm.model.EGenderCode;
 import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.schematron.SchematronEDM2Validator;
-import eu.toop.edm.xml.cagv.CCAGV;
-import eu.toop.regrep.RegRep4Writer;
-import eu.toop.regrep.query.QueryRequest;
 
 /**
  * Test class for class {@link EDMRequestCreator}
@@ -103,70 +100,69 @@ public final class EDMRequestCreatorTest
   {
     final String sConceptNS = "http://toop.eu/registered-organization";
     return EDMRequest.builderConcept ()
-                             .randomID()
-                             .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
-                             .procedure (Locale.UK, "GBM Procedure")
-                             .fullfillingRequirement (null)
-                             .consentToken ("MTExMDEwMTAxMDEwMTAwMDExMTAxMDE=")
-                             .datasetIdentifier ("DATASETIDENTIFIER")
-                             .dataConsumer (AgentPojo.builder ()
-                                                     .id ("DE730757727")
-                                                     .idSchemeID ("VAT")
-                                                     .name ("aCompanyName")
-                                                     .address (AddressPojo.builder ()
-                                                                          .fullAddress ("Prince Street 15")
-                                                                          .streetName ("Prince Street")
-                                                                          .buildingNumber ("15")
-                                                                          .town ("Liverpool")
-                                                                          .postalCode ("15115")
-                                                                          .countryCode ("GB")))
-                             .authorizedRepresentative (PersonPojo.builder ()
-                                                                  .id ("1515")
-                                                                  .idSchemeID ("VAT")
-                                                                  .familyName ("Smith")
-                                                                  .givenName ("Mark")
-                                                                  .genderCode (EGenderCode.M)
-                                                                  .birthName ("Mark Smith")
-                                                                  .birthDate (PDTFactory.createLocalDate (1990,
-                                                                                                          Month.JANUARY,
-                                                                                                          1))
-                                                                  .address (AddressPojo.builder ()
-                                                                                       .fullAddress ("Some other 15")
-                                                                                       .streetName ("Some other")
-                                                                                       .buildingNumber ("15")
-                                                                                       .town ("Liverpool")
-                                                                                       .postalCode ("15115")
-                                                                                       .countryCode ("GB")))
-                             .concept (ConceptPojo.builder ()
-                                                  .id ("ConceptID-1")
-                                                  .name (sConceptNS, "CompanyData")
-                                                  .addChild (ConceptPojo.builder ()
-                                                                        .id ("ConceptID-2")
-                                                                        .name (sConceptNS, "Concept-Name-2"))
-                                                  .addChild (ConceptPojo.builder ()
-                                                                        .id ("ConceptID-3")
-                                                                        .name (sConceptNS, "Concept-Name-3")
-                                                                        .addChild (ConceptPojo.builder ()
-                                                                                              .id ("ConceptID-31")
-                                                                                              .name (sConceptNS,
-                                                                                                     "Concept-Name-31"))
-                                                                        .addChild (ConceptPojo.builder ()
-                                                                                              .id ("ConceptID-32")
-                                                                                              .name (sConceptNS,
-                                                                                                     "Concept-Name-32")))
-                                                  .addChild (ConceptPojo.builder ()
-                                                                        .id ("ConceptID-4")
-                                                                        .name (sConceptNS, "Concept-Name-4")));
+                     .randomID ()
+                     .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
+                     .procedure (Locale.UK, "GBM Procedure")
+                     .fullfillingRequirement (null)
+                     .consentToken ("MTExMDEwMTAxMDEwMTAwMDExMTAxMDE=")
+                     .datasetIdentifier ("DATASETIDENTIFIER")
+                     .dataConsumer (AgentPojo.builder ()
+                                             .id ("DE730757727")
+                                             .idSchemeID ("VAT")
+                                             .name ("aCompanyName")
+                                             .address (AddressPojo.builder ()
+                                                                  .fullAddress ("Prince Street 15")
+                                                                  .streetName ("Prince Street")
+                                                                  .buildingNumber ("15")
+                                                                  .town ("Liverpool")
+                                                                  .postalCode ("15115")
+                                                                  .countryCode ("GB")))
+                     .authorizedRepresentative (PersonPojo.builder ()
+                                                          .id ("1515")
+                                                          .idSchemeID ("VAT")
+                                                          .familyName ("Smith")
+                                                          .givenName ("Mark")
+                                                          .genderCode (EGenderCode.M)
+                                                          .birthName ("Mark Smith")
+                                                          .birthDate (PDTFactory.createLocalDate (1990,
+                                                                                                  Month.JANUARY,
+                                                                                                  1))
+                                                          .address (AddressPojo.builder ()
+                                                                               .fullAddress ("Some other 15")
+                                                                               .streetName ("Some other")
+                                                                               .buildingNumber ("15")
+                                                                               .town ("Liverpool")
+                                                                               .postalCode ("15115")
+                                                                               .countryCode ("GB")))
+                     .concept (ConceptPojo.builder ()
+                                          .id ("ConceptID-1")
+                                          .name (sConceptNS, "CompanyData")
+                                          .addChild (ConceptPojo.builder ()
+                                                                .id ("ConceptID-2")
+                                                                .name (sConceptNS, "Concept-Name-2"))
+                                          .addChild (ConceptPojo.builder ()
+                                                                .id ("ConceptID-3")
+                                                                .name (sConceptNS, "Concept-Name-3")
+                                                                .addChild (ConceptPojo.builder ()
+                                                                                      .id ("ConceptID-31")
+                                                                                      .name (sConceptNS,
+                                                                                             "Concept-Name-31"))
+                                                                .addChild (ConceptPojo.builder ()
+                                                                                      .id ("ConceptID-32")
+                                                                                      .name (sConceptNS,
+                                                                                             "Concept-Name-32")))
+                                          .addChild (ConceptPojo.builder ()
+                                                                .id ("ConceptID-4")
+                                                                .name (sConceptNS, "Concept-Name-4")));
   }
 
   @Test
   public void testRequestConceptLegalPerson ()
   {
-    final QueryRequest aRequest = _builderConcept ().dataSubject (_dsBusiness ()).build ().getAsQueryRequest();
+    final EDMRequest aRequest = _builderConcept ().dataSubject (_dsBusiness ()).build ();
     assertNotNull (aRequest);
 
-    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
-    final String sXML = aWriter.getAsString (aRequest);
+    final String sXML = aRequest.getWriter ().getAsString ();
     assertNotNull (sXML);
 
     if (false)
@@ -174,7 +170,7 @@ public final class EDMRequestCreatorTest
 
     {
       // Schematron validation
-      final Document aDoc = aWriter.getAsDocument (aRequest);
+      final Document aDoc = aRequest.getWriter ().getAsDocument ();
       assertNotNull (aDoc);
       final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
       assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
@@ -184,19 +180,18 @@ public final class EDMRequestCreatorTest
   @Test
   public void testRequestConceptNaturalPerson ()
   {
-    final QueryRequest aRequest = _builderConcept ().dataSubject (_dsPerson ()).build ().getAsQueryRequest();
+    final EDMRequest aRequest = _builderConcept ().dataSubject (_dsPerson ()).build ();
     assertNotNull (aRequest);
 
-    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
-    final String sXML = aWriter.getAsString (aRequest);
+    final String sXML = aRequest.getWriter ().getAsString ();
     assertNotNull (sXML);
 
-    if (false)
+    if (true)
       LOGGER.info (sXML);
 
     {
       // Schematron validation
-      final Document aDoc = aWriter.getAsDocument (aRequest);
+      final Document aDoc = aRequest.getWriter ().getAsDocument ();
       assertNotNull (aDoc);
       final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
       assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
@@ -207,53 +202,52 @@ public final class EDMRequestCreatorTest
   private static EDMRequest.Builder _builderDocument ()
   {
     return EDMRequest.builderDocument ()
-                             .randomID()
-                             .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
-                             .procedure (Locale.UK, "GBM Procedure")
-                             .fullfillingRequirement (null)
-                             .consentToken ("MTExMDEwMTAxMDEwMTAwMDExMTAxMDE=")
-                             .datasetIdentifier ("DATASETIDENTIFIER")
-                             .dataConsumer (AgentPojo.builder ()
-                                                     .id ("DE730757727")
-                                                     .idSchemeID ("VAT")
-                                                     .name ("aCompanyName")
-                                                     .address (AddressPojo.builder ()
-                                                                          .fullAddress ("Prince Street 15")
-                                                                          .streetName ("Prince Street")
-                                                                          .buildingNumber ("15")
-                                                                          .town ("Liverpool")
-                                                                          .postalCode ("15115")
-                                                                          .countryCode ("GB")))
-                             .authorizedRepresentative (PersonPojo.builder ()
-                                                                  .id ("1515")
-                                                                  .idSchemeID ("VAT")
-                                                                  .familyName ("Smith")
-                                                                  .givenName ("Mark")
-                                                                  .genderCode (EGenderCode.M)
-                                                                  .birthName ("Mark Smith")
-                                                                  .birthDate (PDTFactory.createLocalDate (1990,
-                                                                                                          Month.JANUARY,
-                                                                                                          1))
-                                                                  .address (AddressPojo.builder ()
-                                                                                       .fullAddress ("Some other 15")
-                                                                                       .streetName ("Some other")
-                                                                                       .buildingNumber ("15")
-                                                                                       .town ("Liverpool")
-                                                                                       .postalCode ("15115")
-                                                                                       .countryCode ("GB")))
-                             .distribution (DistributionPojo.builder ()
-                                                            .format (EDistributionFormat.UNSTRUCTURED)
-                                                            .mediaType (CMimeType.APPLICATION_PDF));
+                     .randomID ()
+                     .issueDateTime (PDTFactory.createLocalDateTime (2020, Month.FEBRUARY, 14, 19, 20, 30))
+                     .procedure (Locale.UK, "GBM Procedure")
+                     .fullfillingRequirement (null)
+                     .consentToken ("MTExMDEwMTAxMDEwMTAwMDExMTAxMDE=")
+                     .datasetIdentifier ("DATASETIDENTIFIER")
+                     .dataConsumer (AgentPojo.builder ()
+                                             .id ("DE730757727")
+                                             .idSchemeID ("VAT")
+                                             .name ("aCompanyName")
+                                             .address (AddressPojo.builder ()
+                                                                  .fullAddress ("Prince Street 15")
+                                                                  .streetName ("Prince Street")
+                                                                  .buildingNumber ("15")
+                                                                  .town ("Liverpool")
+                                                                  .postalCode ("15115")
+                                                                  .countryCode ("GB")))
+                     .authorizedRepresentative (PersonPojo.builder ()
+                                                          .id ("1515")
+                                                          .idSchemeID ("VAT")
+                                                          .familyName ("Smith")
+                                                          .givenName ("Mark")
+                                                          .genderCode (EGenderCode.M)
+                                                          .birthName ("Mark Smith")
+                                                          .birthDate (PDTFactory.createLocalDate (1990,
+                                                                                                  Month.JANUARY,
+                                                                                                  1))
+                                                          .address (AddressPojo.builder ()
+                                                                               .fullAddress ("Some other 15")
+                                                                               .streetName ("Some other")
+                                                                               .buildingNumber ("15")
+                                                                               .town ("Liverpool")
+                                                                               .postalCode ("15115")
+                                                                               .countryCode ("GB")))
+                     .distribution (DistributionPojo.builder ()
+                                                    .format (EDistributionFormat.UNSTRUCTURED)
+                                                    .mediaType (CMimeType.APPLICATION_PDF));
   }
 
   @Test
   public void testRequestDocumentLegalPerson ()
   {
-    final QueryRequest aRequest = _builderDocument ().dataSubject (_dsBusiness ()).build ().getAsQueryRequest();
+    final EDMRequest aRequest = _builderDocument ().dataSubject (_dsBusiness ()).build ();
     assertNotNull (aRequest);
 
-    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
-    final String sXML = aWriter.getAsString (aRequest);
+    final String sXML = aRequest.getWriter ().getAsString ();
     assertNotNull (sXML);
 
     if (false)
@@ -261,7 +255,7 @@ public final class EDMRequestCreatorTest
 
     {
       // Schematron validation
-      final Document aDoc = aWriter.getAsDocument (aRequest);
+      final Document aDoc = aRequest.getWriter ().getAsDocument ();
       assertNotNull (aDoc);
       final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
       assertTrue (aMsgs.toString (), aMsgs.isEmpty ());
@@ -271,11 +265,10 @@ public final class EDMRequestCreatorTest
   @Test
   public void testRequestDocumentNaturalPerson ()
   {
-    final QueryRequest aRequest = _builderDocument ().dataSubject (_dsPerson ()).build ().getAsQueryRequest();
+    final EDMRequest aRequest = _builderDocument ().dataSubject (_dsPerson ()).build ();
     assertNotNull (aRequest);
 
-    final RegRep4Writer <QueryRequest> aWriter = RegRep4Writer.queryRequest (CCAGV.XSDS).setFormattedOutput (true);
-    final String sXML = aWriter.getAsString (aRequest);
+    final String sXML = aRequest.getWriter ().getAsString ();
     assertNotNull (sXML);
 
     if (false)
@@ -283,7 +276,7 @@ public final class EDMRequestCreatorTest
 
     {
       // Schematron validation
-      final Document aDoc = aWriter.getAsDocument (aRequest);
+      final Document aDoc = aRequest.getWriter ().getAsDocument ();
       assertNotNull (aDoc);
       final ICommonsList <AbstractSVRLMessage> aMsgs = new SchematronEDM2Validator ().validateDocument (aDoc);
       assertTrue (aMsgs.toString (), aMsgs.isEmpty ());

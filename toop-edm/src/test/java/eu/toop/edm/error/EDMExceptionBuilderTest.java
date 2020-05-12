@@ -21,10 +21,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import eu.toop.edm.error.EDMExceptionBuilder;
-import eu.toop.edm.error.EEDMExceptionType;
-import eu.toop.edm.error.EToopErrorOrigin;
-import eu.toop.edm.error.EToopErrorSeverity;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.rs.RegistryExceptionType;
 
