@@ -26,14 +26,17 @@ import javax.annotation.Nullable;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.CommonsLinkedHashMap;
+import com.helger.commons.collection.impl.CommonsLinkedHashSet;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.commons.collection.impl.ICommonsOrderedMap;
+import com.helger.commons.collection.impl.ICommonsOrderedSet;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.equals.EqualsHelper;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
-import eu.toop.edm.creator.EDMRequestCreator;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
@@ -66,9 +69,41 @@ import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.LocalizedStringType;
+import eu.toop.regrep.rim.QueryType;
 
+/**
+ * This class contains the data model for a single TOOP EDM Request. It requires
+ * at least the following fields:
+ * <ul>
+ * <li>QueryDefinition - Concept or Document query?</li>
+ * <li>Request ID - the internal ID of the request that must be part of the
+ * response. Can be a UUID.</li>
+ * <li>Specification Identifier - must be the value
+ * {@link CToopEDM#SPECIFICATION_IDENTIFIER_TOOP_EDM_V20}.</li>
+ * <li>Issue date time - when the request was created. Ideally in UTC.</li>
+ * <li>Data Consumer - the basic infos of the DC</li>
+ * <li>Data Subject - either as Legal Person or as Natural Person, but not
+ * both.</li>
+ * <li>If it is a "ConceptQuery" the request Concepts must be provided.</li>
+ * <li>If it is a "DocumentQuery" the request distribution must be
+ * provided.</li>
+ * </ul>
+ * It is recommended to use the {@link #builder()} method to create the EDM
+ * request using the builder pattern with a fluent API.
+ *
+ * @author Philip Helger
+ * @author Konstantinos Douloudis
+ */
 public class EDMRequest
 {
+  private static final ICommonsOrderedSet <String> TOP_LEVEL_SLOTS = new CommonsLinkedHashSet <> (SlotSpecificationIdentifier.NAME,
+                                                                                                  SlotIssueDateTime.NAME,
+                                                                                                  SlotProcedure.NAME,
+                                                                                                  SlotFullfillingRequirement.NAME,
+                                                                                                  SlotConsentToken.NAME,
+                                                                                                  SlotDatasetIdentifier.NAME,
+                                                                                                  SlotDataConsumer.NAME);
+
   private final EQueryDefinitionType m_eQueryDefinition;
   private final String m_sRequestID;
   private final String m_sSpecificationIdentifier;
@@ -224,6 +259,48 @@ public class EDMRequest
   }
 
   @Nonnull
+  private QueryRequest _createQueryRequest (@Nonnull final ICommonsList <ISlotProvider> aProviders)
+  {
+    ValueEnforcer.notNull (m_eQueryDefinition, "QueryDefinition");
+    ValueEnforcer.notEmpty (m_sRequestID, "RequestID");
+    ValueEnforcer.noNullValue (aProviders, "Providers");
+
+    final ICommonsOrderedMap <String, ISlotProvider> m_aProviders = new CommonsLinkedHashMap <> ();
+    for (final ISlotProvider aItem : aProviders)
+    {
+      final String sName = aItem.getName ();
+      if (m_aProviders.containsKey (sName))
+        throw new IllegalArgumentException ("A slot provider for name '" + sName + "' is already present");
+      m_aProviders.put (sName, aItem);
+    }
+
+    final QueryRequest ret = RegRepHelper.createEmptyQueryRequest ();
+    ret.setId (m_sRequestID);
+
+    // All top-level slots outside of query
+    for (final String sTopLevel : TOP_LEVEL_SLOTS)
+    {
+      final ISlotProvider aSP = m_aProviders.get (sTopLevel);
+      if (aSP != null)
+        ret.addSlot (aSP.createSlot ());
+    }
+
+    {
+      final QueryType aQuery = new QueryType ();
+      aQuery.setQueryDefinition (m_eQueryDefinition.getID ());
+
+      // All slots inside of query
+      for (final Map.Entry <String, ISlotProvider> aEntry : m_aProviders.entrySet ())
+        if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
+          aQuery.addSlot (aEntry.getValue ().createSlot ());
+
+      ret.setQuery (aQuery);
+    }
+
+    return ret;
+  }
+
+  @Nonnull
   public QueryRequest getAsQueryRequest ()
   {
     final ICommonsList <ISlotProvider> aSlots = new CommonsArrayList <> ();
@@ -260,7 +337,7 @@ public class EDMRequest
     if (m_aDistribution != null)
       aSlots.add (new SlotDistributionRequestList (m_aDistribution));
 
-    return new EDMRequestCreator (m_eQueryDefinition, m_sRequestID, aSlots).createQueryRequest ();
+    return _createQueryRequest (aSlots);
   }
 
   @Nonnull
@@ -353,6 +430,11 @@ public class EDMRequest
     return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
   }
 
+  /**
+   * Builder for an EDM request
+   *
+   * @author Philip Helger
+   */
   public static class Builder
   {
     private EQueryDefinitionType m_eQueryDefinition;

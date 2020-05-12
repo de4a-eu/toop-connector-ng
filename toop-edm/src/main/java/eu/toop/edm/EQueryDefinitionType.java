@@ -16,30 +16,39 @@
 package eu.toop.edm;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.id.IHasID;
+import com.helger.commons.lang.EnumHelper;
 
 /**
  * The RegRep Query "queryDefinition" value to use
  *
  * @author Philip Helger
  */
-public enum EQueryDefinitionType
+public enum EQueryDefinitionType implements IHasID <String>
 {
   CONCEPT ("ConceptQuery"),
   DOCUMENT ("DocumentQuery");
 
-  private String m_sAttrValue;
+  private String m_sID;
 
-  EQueryDefinitionType (@Nonnull @Nonempty final String sAttrValue)
+  EQueryDefinitionType (@Nonnull @Nonempty final String sID)
   {
-    m_sAttrValue = sAttrValue;
+    m_sID = sID;
   }
 
   @Nonnull
   @Nonempty
-  public String getAttrValue ()
+  public String getID ()
   {
-    return m_sAttrValue;
+    return m_sID;
+  }
+
+  @Nullable
+  public static EQueryDefinitionType getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EQueryDefinitionType.class, sID);
   }
 }
