@@ -26,6 +26,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import eu.toop.edm.model.*;
+import eu.toop.edm.slot.*;
 import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
@@ -52,25 +54,6 @@ import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
-import eu.toop.edm.model.AgentPojo;
-import eu.toop.edm.model.BusinessPojo;
-import eu.toop.edm.model.ConceptPojo;
-import eu.toop.edm.model.DistributionPojo;
-import eu.toop.edm.model.EQueryDefinitionType;
-import eu.toop.edm.model.PersonPojo;
-import eu.toop.edm.slot.ISlotProvider;
-import eu.toop.edm.slot.SlotAuthorizedRepresentative;
-import eu.toop.edm.slot.SlotConceptRequestList;
-import eu.toop.edm.slot.SlotConsentToken;
-import eu.toop.edm.slot.SlotDataConsumer;
-import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
-import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
-import eu.toop.edm.slot.SlotDatasetIdentifier;
-import eu.toop.edm.slot.SlotDistributionRequestList;
-import eu.toop.edm.slot.SlotFullfillingRequirements;
-import eu.toop.edm.slot.SlotIssueDateTime;
-import eu.toop.edm.slot.SlotProcedure;
-import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.edm.xml.IJAXBVersatileReader;
 import eu.toop.edm.xml.IVersatileWriter;
 import eu.toop.edm.xml.JAXBVersatileReader;
@@ -132,6 +115,7 @@ public class EDMRequest
 
   private final EQueryDefinitionType m_eQueryDefinition;
   private final String m_sRequestID;
+  private final EResponseOptionType m_eResponseOption;
   private final String m_sSpecificationIdentifier;
   private final LocalDateTime m_aIssueDateTime;
   private final InternationalStringType m_aProcedure;
@@ -139,6 +123,7 @@ public class EDMRequest
   private final AgentPojo m_aDataConsumer;
   private final String m_sConsentToken;
   private final String m_sDatasetIdentifier;
+  private final String m_sDocumentID;
   private final BusinessPojo m_aDataSubjectLegalPerson;
   private final PersonPojo m_aDataSubjectNaturalPerson;
   private final PersonPojo m_aAuthorizedRepresentative;
@@ -147,6 +132,7 @@ public class EDMRequest
 
   public EDMRequest (@Nonnull final EQueryDefinitionType eQueryDefinition,
                      @Nonnull @Nonempty final String sRequestID,
+                     @Nonnull final EResponseOptionType eResponseOption,
                      @Nonnull @Nonempty final String sSpecificationIdentifier,
                      @Nonnull final LocalDateTime aIssueDateTime,
                      @Nullable final InternationalStringType aProcedure,
@@ -154,6 +140,7 @@ public class EDMRequest
                      @Nonnull final AgentPojo aDataConsumer,
                      @Nullable final String sConsentToken,
                      @Nullable final String sDatasetIdentifier,
+                     @Nullable final String sDocumentID,
                      @Nullable final BusinessPojo aDataSubjectLegalPerson,
                      @Nullable final PersonPojo aDataSubjectNaturalPerson,
                      @Nullable final PersonPojo aAuthorizedRepresentative,
@@ -161,6 +148,7 @@ public class EDMRequest
                      @Nullable final ICommonsList <DistributionPojo> aDistributions)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
+    ValueEnforcer.notNull(eResponseOption, "ResponseOption");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
     ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
     ValueEnforcer.notNull (aIssueDateTime, "IssueDateTime");
@@ -171,8 +159,9 @@ public class EDMRequest
                            "Exactly one DataSubject must be set");
     final int nConcepts = CollectionHelper.getSize (aConcepts);
     final int nDistributions = CollectionHelper.getSize (aDistributions);
-    ValueEnforcer.isFalse ((nConcepts == 0 && nDistributions == 0) || (nConcepts != 0 && nDistributions != 0),
-                           "Exactly one of Concept and Distribution must be set");
+    ValueEnforcer.isFalse (((nConcepts == 0 && nDistributions == 0) || (nConcepts != 0 && nDistributions != 0)) &&
+                           (sDocumentID == null),
+                           "Exactly one of Concept and Distribution or a Document ID must be set");
     switch (eQueryDefinition)
     {
       case CONCEPT:
@@ -181,12 +170,16 @@ public class EDMRequest
       case DOCUMENT:
         ValueEnforcer.notEmpty (aDistributions, "Distribution");
         break;
+      case GETOBJECTBYID:
+        ValueEnforcer.notEmpty(sDocumentID, "Document ID");
+        break;
       default:
         throw new IllegalArgumentException ("Unsupported query definition: " + eQueryDefinition);
     }
 
     m_eQueryDefinition = eQueryDefinition;
     m_sRequestID = sRequestID;
+    m_eResponseOption = eResponseOption;
     m_sSpecificationIdentifier = sSpecificationIdentifier;
     m_aIssueDateTime = aIssueDateTime;
     m_aProcedure = aProcedure;
@@ -195,6 +188,7 @@ public class EDMRequest
     m_aDataConsumer = aDataConsumer;
     m_sConsentToken = sConsentToken;
     m_sDatasetIdentifier = sDatasetIdentifier;
+    m_sDocumentID = sDocumentID;
     m_aDataSubjectLegalPerson = aDataSubjectLegalPerson;
     m_aDataSubjectNaturalPerson = aDataSubjectNaturalPerson;
     m_aAuthorizedRepresentative = aAuthorizedRepresentative;
@@ -269,6 +263,12 @@ public class EDMRequest
   }
 
   @Nullable
+  public final String getDocumentID ()
+  {
+    return m_sDocumentID;
+  }
+
+  @Nullable
   public final BusinessPojo getDataSubjectLegalPerson ()
   {
     return m_aDataSubjectLegalPerson;
@@ -332,6 +332,7 @@ public class EDMRequest
 
     final QueryRequest ret = RegRepHelper.createEmptyQueryRequest ();
     ret.setId (m_sRequestID);
+    ret.getResponseOption().setReturnType(m_eResponseOption.getID());
 
     // All top-level slots outside of query
     for (final String sTopLevel : TOP_LEVEL_SLOTS)
@@ -393,6 +394,10 @@ public class EDMRequest
     if (m_aDistributions.isNotEmpty ())
       aSlots.add (new SlotDistributionRequestList (m_aDistributions));
 
+    // DocumentRef Query
+    if (m_sDocumentID != null)
+      aSlots.add (new SlotId(m_sDocumentID));
+
     return _createQueryRequest (aSlots);
   }
 
@@ -418,6 +423,7 @@ public class EDMRequest
       return false;
     final EDMRequest that = (EDMRequest) o;
     return EqualsHelper.equals (m_eQueryDefinition, that.m_eQueryDefinition) &&
+           EqualsHelper.equals (m_eResponseOption, that.m_eResponseOption) &&
            EqualsHelper.equals (m_sRequestID, that.m_sRequestID) &&
            EqualsHelper.equals (m_sSpecificationIdentifier, that.m_sSpecificationIdentifier) &&
            EqualsHelper.equals (m_aIssueDateTime, that.m_aIssueDateTime) &&
@@ -425,6 +431,7 @@ public class EDMRequest
            EqualsHelper.equals (m_aFullfillingRequirements, that.m_aFullfillingRequirements) &&
            EqualsHelper.equals (m_aDataConsumer, that.m_aDataConsumer) &&
            EqualsHelper.equals (m_sConsentToken, that.m_sConsentToken) &&
+           EqualsHelper.equals (m_sDocumentID, that.m_sDocumentID) &&
            EqualsHelper.equals (m_sDatasetIdentifier, that.m_sDatasetIdentifier) &&
            EqualsHelper.equals (m_aDataSubjectLegalPerson, that.m_aDataSubjectLegalPerson) &&
            EqualsHelper.equals (m_aDataSubjectNaturalPerson, that.m_aDataSubjectNaturalPerson) &&
@@ -437,6 +444,7 @@ public class EDMRequest
   public int hashCode ()
   {
     return new HashCodeGenerator (this).append (m_eQueryDefinition)
+                                       .append (m_eResponseOption)
                                        .append (m_sRequestID)
                                        .append (m_sSpecificationIdentifier)
                                        .append (m_aIssueDateTime)
@@ -445,6 +453,7 @@ public class EDMRequest
                                        .append (m_aDataConsumer)
                                        .append (m_sConsentToken)
                                        .append (m_sDatasetIdentifier)
+                                       .append (m_sDocumentID)
                                        .append (m_aDataSubjectLegalPerson)
                                        .append (m_aDataSubjectNaturalPerson)
                                        .append (m_aAuthorizedRepresentative)
@@ -457,6 +466,7 @@ public class EDMRequest
   public String toString ()
   {
     return new ToStringGenerator (this).append ("QueryDefinition", m_eQueryDefinition)
+                                       .append ("ResponseOption", m_eResponseOption)
                                        .append ("RequestID", m_sRequestID)
                                        .append ("SpecificationIdentifier", m_sSpecificationIdentifier)
                                        .append ("IssueDateTime", m_aIssueDateTime)
@@ -465,6 +475,7 @@ public class EDMRequest
                                        .append ("DataConsumer", m_aDataConsumer)
                                        .append ("ConsentToken", m_sConsentToken)
                                        .append ("DatasetIdentifier", m_sDatasetIdentifier)
+                                       .append ("Document ID", m_sDocumentID)
                                        .append ("DataSubjectLegalPerson", m_aDataSubjectLegalPerson)
                                        .append ("DataSubjectNaturalPerson", m_aDataSubjectNaturalPerson)
                                        .append ("AuthorizedRepresentative", m_aAuthorizedRepresentative)
@@ -477,7 +488,8 @@ public class EDMRequest
   public static Builder builder ()
   {
     // Use the default specification identifier
-    return new Builder ().specificationIdentifier (CToopEDM.SPECIFICATION_IDENTIFIER_TOOP_EDM_V20);
+    return new Builder ().specificationIdentifier (CToopEDM.SPECIFICATION_IDENTIFIER_TOOP_EDM_V20)
+            .responseOption(EResponseOptionType.LEAFCLASSWRI);
   }
 
   @Nonnull
@@ -492,6 +504,18 @@ public class EDMRequest
     return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
   }
 
+  @Nonnull
+  public static Builder builderDocumentRef ()
+  {
+    return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT).responseOption(EResponseOptionType.OBJECTREF);
+  }
+
+  @Nonnull
+  public static Builder builderGetDocumentByID()
+  {
+    return builder ().queryDefinition (EQueryDefinitionType.GETOBJECTBYID);
+  }
+
   /**
    * Builder for an EDM request
    *
@@ -501,6 +525,7 @@ public class EDMRequest
   {
     private EQueryDefinitionType m_eQueryDefinition;
     private String m_sRequestID;
+    private EResponseOptionType m_eResponseOption;
     private String m_sSpecificationIdentifier;
     private LocalDateTime m_aIssueDateTime;
     private InternationalStringType m_aProcedure;
@@ -508,6 +533,7 @@ public class EDMRequest
     private AgentPojo m_aDataConsumer;
     private String m_sConsentToken;
     private String m_sDatasetIdentifier;
+    private String m_sDocumentID;
     private BusinessPojo m_aDataSubjectLegalPerson;
     private PersonPojo m_aDataSubjectNaturalPerson;
     private PersonPojo m_aAuthorizedRepresentative;
@@ -531,6 +557,13 @@ public class EDMRequest
     }
 
     @Nonnull
+    public Builder responseOption (@Nullable final EResponseOptionType e)
+    {
+      m_eResponseOption = e;
+      return this;
+    }
+
+    @Nonnull
     public final Builder id (@Nullable final UUID a)
     {
       return id (a == null ? null : a.toString ());
@@ -549,6 +582,14 @@ public class EDMRequest
       m_sSpecificationIdentifier = s;
       return this;
     }
+
+    @Nonnull
+    public Builder documentID (@Nullable final String s)
+    {
+      m_sDocumentID = s;
+      return this;
+    }
+
 
     @Nonnull
     public Builder issueDateTimeNow ()
@@ -849,12 +890,24 @@ public class EDMRequest
             throw new IllegalStateException ("A Query Definition of type 'Concept' must contain a Concept");
           if (m_aDistributions.isNotEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Concept' must NOT contain a Distribution");
+          if (m_sDocumentID != null)
+            throw new IllegalStateException ("A Query Definition of type 'Concept' must NOT contain a Document ID");
           break;
         case DOCUMENT:
           if (m_aConcepts.isNotEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Concept");
           if (m_aDistributions.isEmpty ())
             throw new IllegalStateException ("A Query Definition of type 'Document' must contain a Distribution");
+          if (m_sDocumentID != null)
+            throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Document ID");
+          break;
+        case GETOBJECTBYID:
+          if (m_aConcepts.isNotEmpty ())
+            throw new IllegalStateException ("A Query Definition of type 'DocumentRef' must NOT contain a Concept");
+          if (m_aDistributions.isNotEmpty ())
+            throw new IllegalStateException ("A Query Definition of type 'DocumentRef' must NOT contain a Distribution");
+          if (m_sDocumentID == null)
+            throw new IllegalStateException ("A Query Definition of type 'DocumentRef' must contain a Document ID");
           break;
         default:
           throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
@@ -868,6 +921,7 @@ public class EDMRequest
 
       return new EDMRequest (m_eQueryDefinition,
                              m_sRequestID,
+                             m_eResponseOption,
                              m_sSpecificationIdentifier,
                              m_aIssueDateTime,
                              m_aProcedure,
@@ -875,6 +929,7 @@ public class EDMRequest
                              m_aDataConsumer,
                              m_sConsentToken,
                              m_sDatasetIdentifier,
+                             m_sDocumentID,
                              m_aDataSubjectLegalPerson,
                              m_aDataSubjectNaturalPerson,
                              m_aAuthorizedRepresentative,
@@ -935,6 +990,14 @@ public class EDMRequest
         {
           final String sValue = ((StringValueType) aSlotValue).getValue ();
           aBuilder.datasetIdentifier (sValue);
+        }
+        break;
+      case SlotId.NAME:
+        if (aSlotValue instanceof StringValueType)
+        {
+          final String sValue = ((StringValueType) aSlotValue).getValue ();
+          aBuilder.documentID (sValue);
+          aBuilder.queryDefinition (EQueryDefinitionType.GETOBJECTBYID);
         }
         break;
       case SlotDataConsumer.NAME:
@@ -1016,6 +1079,9 @@ public class EDMRequest
       for (final SlotType aSlot : aQueryRequest.getQuery ().getSlot ())
         if (aSlot != null)
           _applySlots (aSlot, aBuilder);
+
+    if(aQueryRequest.getResponseOption() != null && aQueryRequest.getResponseOption().getReturnType() != null)
+      aBuilder.responseOption(EResponseOptionType.getFromIDOrNull(aQueryRequest.getResponseOption().getReturnType()));
 
     return aBuilder.build ();
   }

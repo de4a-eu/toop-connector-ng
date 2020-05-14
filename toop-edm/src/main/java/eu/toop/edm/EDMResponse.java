@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import eu.toop.regrep.rim.*;
 import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
@@ -71,14 +72,6 @@ import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
-import eu.toop.regrep.rim.AnyValueType;
-import eu.toop.regrep.rim.CollectionValueType;
-import eu.toop.regrep.rim.DateTimeValueType;
-import eu.toop.regrep.rim.RegistryObjectListType;
-import eu.toop.regrep.rim.RegistryObjectType;
-import eu.toop.regrep.rim.SlotType;
-import eu.toop.regrep.rim.StringValueType;
-import eu.toop.regrep.rim.ValueType;
 
 /**
  * This class contains the data model for a single TOOP EDM Request. It requires
@@ -145,6 +138,8 @@ public class EDMResponse
       case DOCUMENT:
         ValueEnforcer.notNull (aDataset, "Dataset");
         break;
+      case GETOBJECTBYID:
+// break;
       default:
         throw new IllegalArgumentException ("Unsupported query definition: " + eQueryDefinition);
     }
@@ -244,6 +239,14 @@ public class EDMResponse
     {
       final RegistryObjectListType aROList = new RegistryObjectListType ();
       final RegistryObjectType aRO = new RegistryObjectType ();
+      final SimpleLinkType aSL = new SimpleLinkType();
+
+      // Setter currently not available
+//      aRO.setRepositoryItemRef(aSL);
+
+      aSL.setTitle("TEST");
+      aSL.setHref("cid:attachment123@example.toop.eu");
+
       aRO.setId (UUID.randomUUID ().toString ());
 
       // All slots inside of RegistryObject

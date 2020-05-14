@@ -30,7 +30,8 @@ import com.helger.commons.lang.EnumHelper;
 public enum EQueryDefinitionType implements IHasID <String>
 {
   CONCEPT ("ConceptQuery"),
-  DOCUMENT ("DocumentQuery");
+  DOCUMENT ("DocumentQuery"),
+  GETOBJECTBYID("urn:oasis:names:tc:ebxml-regrep:query:GetObjectById");
 
   private String m_sID;
 
