@@ -2,7 +2,7 @@
 
 This is the successor project of the old [toop-commons](https://github.com/TOOP4EU/toop-commons), [toop-interface](https://github.com/TOOP4EU/toop-interface) and [toop-connector](https://github.com/TOOP4EU/toop-connector) projects.
 
-The TOOP Connector NG is a set of shared utility functions that you include in your DC (Data Consumer) and/or DP (Data Provider) to perform common tasks that are required for a safe and interoperable data exchange.
+The TOOP Connector NG is a set of shared utility functions that you CAN include in your DC (Data Consumer) and/or DP (Data Provider) to perform common tasks that are required for a safe and interoperable data exchange. The TOOP Connector NG can be used both as a Java library AND via an REST API.  
 The TOOP Connector NG is a Java only solution. Other environments like .NET etc. are currently not supported.
 
 ## Status
