@@ -331,7 +331,13 @@
                 The ConceptRequestList slot must contain at least ONE Element (found: <value-of select="$countElement"/>).
             </assert>  
             
-            <let name="countElementConcept" value="count(rim:SlotValue/rim:Element/cccev:concept)"/>      
+        </rule>
+    </pattern>
+
+    <pattern>
+        <rule context="query:QueryRequest/query:Query/rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue/rim:Element">
+            
+            <let name="countElementConcept" value="count(cccev:concept)"/>      
             <assert test="($countElementConcept = 1)" flag='ERROR' id='req_crlist_element_concept'>
                 Each ConceptRequestList/Element must contain exactly ONE concept (found: <value-of select="$countElementConcept"/>).
             </assert>   
@@ -446,22 +452,12 @@
     <!--CHECK CONCEPT STRUCTURE-->
     <!--***********************-->
     <pattern>
-        <rule context="query:QueryRequest/query:Query/rim:Slot[@name = 'ConceptRequestList']/cccev:concept
+        <rule context="query:QueryRequest/query:Query/rim:Slot[@name = 'ConceptRequestList']/rim:SlotValue/rim:Element/cccev:concept
                       |query:QueryResponse/rim:RegistryObjectList/rim:RegistryObject/rim:Slot/rim:SlotValue/rim:Element/cccev:concept">
-            
-            <let name="countConceptId" value="count(cbc:id)"/>      
-            <assert test="($countConceptId=1)" flag='ERROR' id='req_card_concept_id'>
-                Each root concept must have ONE id (found: <value-of select="$countConceptId"/>).
-            </assert>  
-            
-            <let name="countConceptQName" value="count(cbc:QName)"/>      
-            <assert test="($countConceptQName=1)" flag='ERROR' id='req_card_concept_qname'>
-                Each root concept must have ONE QName (found: <value-of select="$countConceptQName"/>).
-            </assert>   
             
             <let name="countconcepts" value="count(cccev:concept)"/>      
             <assert test="($countconcepts &gt; 0)" flag='ERROR' id='req_card_Concepts_concepts'>
-                The root concept must contain at least ONE concepts element (found: <value-of select="$countconcepts"/>).
+                The root concept must contain at least ONE concept Element (found: <value-of select="$countconcepts"/>).
             </assert>  
             
         </rule>
