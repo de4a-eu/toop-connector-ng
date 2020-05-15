@@ -1,0 +1,10 @@
+{
+toop: {
+  r2d2: {
+    usedns: false,
+    directory: {
+      baseurl: "http://directory.central.toop/pd"
+    }
+  }
+}
+}
