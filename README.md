@@ -1,32 +1,21 @@
 # TOOP Connector NG
 
-This is the successor project of the old [toop-commons](https://github.com/TOOP4EU/toop-commons), [toop-interface](https://github.com/TOOP4EU/toop-interface) and [toop-connector](https://github.com/TOOP4EU/toop-connector) projects.
+This is the successor project of the old [toop-interface](https://github.com/TOOP4EU/toop-interface) and [toop-connector](https://github.com/TOOP4EU/toop-connector) projects.
 
 The TOOP Connector NG is a set of shared utility functions that you CAN include in your DC (Data Consumer) and/or DP (Data Provider) to perform common tasks that are required for a safe and interoperable data exchange. The TOOP Connector NG can be used both as a Java library AND via an REST API.  
 The TOOP Connector NG is a Java only solution. Other environments like .NET etc. are currently not supported.
 
+It uses the shared components from:
+* https://github.com/TOOP4EU/toop-commons-ng
+
 ## Status
 
-2020-05-12: release of `v2.0.0-beta2`
-* Changed the main EDM classes for request, response and error response to `EDMRequest`, `EDMResponse` and `EDMErrorResponse`
-* Added `getReader()` and `getWriter()` methods to easily read and write these objects from and to different structures
-
-2020-05-06: release of `v2.0.0-beta1`
-* Libraries for creating the new data model
-* Consisting of `toop-edm`, `toop-regrep`, `toop-kafka-client` and `toop-commons`
-* Allows to create Requests, Responses and Errors according to the new EDM (Electronic Data Model)
+Work in progress
+* For dependency management reasons, the TOOP shared libraries are now available in https://github.com/TOOP4EU/toop-commons-ng
 
 ## Maven coordinates
 
-```xml
-      <dependency>
-        <groupId>eu.toop</groupId>
-        <artifactId>toop-edm</artifactId>
-        <version>2.0.0-beta2</version>
-      </dependency>
-```
-
-The rest comes via transitive dependencies.
+Only the TOOP Commons NG have some yet.
 
 ## Design considerations
 
@@ -55,11 +44,3 @@ Requires at least
 * Apache Maven for building
 
 Do an initial `mvn clean install` on the command line.
-
-Afterwards don't forget to add the following paths to your build path (in your IDE):
-
-* toop-regrep/target/generated-sources/xjc
-* toop-edm/target/generated-sources/xjc
-
-
-Note: the `toop-codelist-tools` is for internal usage only.
