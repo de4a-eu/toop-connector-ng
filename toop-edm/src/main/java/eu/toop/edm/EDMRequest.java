@@ -26,8 +26,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import eu.toop.edm.model.*;
-import eu.toop.edm.slot.*;
 import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
@@ -54,6 +52,25 @@ import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 import eu.toop.edm.jaxb.w3.cv.ac.CoreBusinessType;
 import eu.toop.edm.jaxb.w3.cv.ac.CorePersonType;
+import eu.toop.edm.model.AgentPojo;
+import eu.toop.edm.model.BusinessPojo;
+import eu.toop.edm.model.ConceptPojo;
+import eu.toop.edm.model.DistributionPojo;
+import eu.toop.edm.model.EQueryDefinitionType;
+import eu.toop.edm.model.EResponseOptionType;
+import eu.toop.edm.model.PersonPojo;
+import eu.toop.edm.slot.SlotAuthorizedRepresentative;
+import eu.toop.edm.slot.SlotConceptRequestList;
+import eu.toop.edm.slot.SlotConsentToken;
+import eu.toop.edm.slot.SlotDataConsumer;
+import eu.toop.edm.slot.SlotDataSubjectLegalPerson;
+import eu.toop.edm.slot.SlotDataSubjectNaturalPerson;
+import eu.toop.edm.slot.SlotDatasetIdentifier;
+import eu.toop.edm.slot.SlotDistributionRequestList;
+import eu.toop.edm.slot.SlotFullfillingRequirements;
+import eu.toop.edm.slot.SlotIssueDateTime;
+import eu.toop.edm.slot.SlotProcedure;
+import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.edm.xml.IJAXBVersatileReader;
 import eu.toop.edm.xml.IVersatileWriter;
 import eu.toop.edm.xml.JAXBVersatileReader;
@@ -79,6 +96,9 @@ import eu.toop.regrep.rim.QueryType;
 import eu.toop.regrep.rim.SlotType;
 import eu.toop.regrep.rim.StringValueType;
 import eu.toop.regrep.rim.ValueType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotHelper;
+import eu.toop.regrep.slot.predefined.SlotId;
 
 /**
  * This class contains the data model for a single TOOP EDM Request. It requires
@@ -148,7 +168,7 @@ public class EDMRequest
                      @Nullable final ICommonsList <DistributionPojo> aDistributions)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
-    ValueEnforcer.notNull(eResponseOption, "ResponseOption");
+    ValueEnforcer.notNull (eResponseOption, "ResponseOption");
     ValueEnforcer.notEmpty (sRequestID, "RequestID");
     ValueEnforcer.notEmpty (sSpecificationIdentifier, "SpecificationIdentifier");
     ValueEnforcer.notNull (aIssueDateTime, "IssueDateTime");
@@ -171,7 +191,7 @@ public class EDMRequest
         ValueEnforcer.notEmpty (aDistributions, "Distribution");
         break;
       case OBJECTREF:
-        ValueEnforcer.notEmpty(sDocumentID, "Document ID");
+        ValueEnforcer.notEmpty (sDocumentID, "Document ID");
         break;
       default:
         throw new IllegalArgumentException ("Unsupported query definition: " + eQueryDefinition);
@@ -332,7 +352,7 @@ public class EDMRequest
 
     final QueryRequest ret = RegRepHelper.createEmptyQueryRequest ();
     ret.setId (m_sRequestID);
-    ret.getResponseOption().setReturnType(m_eResponseOption.getID());
+    ret.getResponseOption ().setReturnType (m_eResponseOption.getID ());
 
     // All top-level slots outside of query
     for (final String sTopLevel : TOP_LEVEL_SLOTS)
@@ -396,7 +416,7 @@ public class EDMRequest
 
     // DocumentRef Query
     if (m_sDocumentID != null)
-      aSlots.add (new SlotId(m_sDocumentID));
+      aSlots.add (new SlotId (m_sDocumentID));
 
     return _createQueryRequest (aSlots);
   }
@@ -489,7 +509,7 @@ public class EDMRequest
   {
     // Use the default specification identifier
     return new Builder ().specificationIdentifier (CToopEDM.SPECIFICATION_IDENTIFIER_TOOP_EDM_V20)
-            .responseOption(EResponseOptionType.CONTAINED);
+                         .responseOption (EResponseOptionType.CONTAINED);
   }
 
   @Nonnull
@@ -507,11 +527,11 @@ public class EDMRequest
   @Nonnull
   public static Builder builderDocumentRef ()
   {
-    return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT).responseOption(EResponseOptionType.REFERENCED);
+    return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT).responseOption (EResponseOptionType.REFERENCED);
   }
 
   @Nonnull
-  public static Builder builderGetDocumentByID()
+  public static Builder builderGetDocumentByID ()
   {
     return builder ().queryDefinition (EQueryDefinitionType.OBJECTREF);
   }
@@ -590,7 +610,6 @@ public class EDMRequest
       return this;
     }
 
-
     @Nonnull
     public Builder issueDateTimeNow ()
     {
@@ -607,19 +626,19 @@ public class EDMRequest
     @Nonnull
     public Builder procedure (@Nullable final LocalizedStringType... a)
     {
-      return procedure (a == null ? null : RegRepHelper.createInternationalStringType (a));
+      return procedure (a == null ? null : SlotHelper.createInternationalStringType (a));
     }
 
     @Nonnull
     public Builder procedure (@Nonnull final Locale aLocale, @Nonnull final String sText)
     {
-      return procedure (RegRepHelper.createLocalizedString (aLocale, sText));
+      return procedure (SlotHelper.createLocalizedString (aLocale, sText));
     }
 
     @Nonnull
     public Builder procedure (@Nullable final Map <Locale, String> a)
     {
-      return procedure (a == null ? null : RegRepHelper.createInternationalStringType (a));
+      return procedure (a == null ? null : SlotHelper.createInternationalStringType (a));
     }
 
     @Nonnull
@@ -1080,8 +1099,9 @@ public class EDMRequest
         if (aSlot != null)
           _applySlots (aSlot, aBuilder);
 
-    if(aQueryRequest.getResponseOption() != null && aQueryRequest.getResponseOption().getReturnType() != null)
-      aBuilder.responseOption(EResponseOptionType.getFromIDOrNull(aQueryRequest.getResponseOption().getReturnType()));
+    if (aQueryRequest.getResponseOption () != null && aQueryRequest.getResponseOption ().getReturnType () != null)
+      aBuilder.responseOption (EResponseOptionType.getFromIDOrNull (aQueryRequest.getResponseOption ()
+                                                                                 .getReturnType ()));
 
     return aBuilder.build ();
   }

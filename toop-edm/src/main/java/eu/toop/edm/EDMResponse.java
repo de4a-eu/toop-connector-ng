@@ -25,8 +25,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
-import eu.toop.edm.model.*;
-import eu.toop.regrep.rim.*;
 import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
@@ -50,7 +48,11 @@ import com.helger.datetime.util.PDTXMLConverter;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
-import eu.toop.edm.slot.ISlotProvider;
+import eu.toop.edm.model.AgentPojo;
+import eu.toop.edm.model.ConceptPojo;
+import eu.toop.edm.model.DatasetPojo;
+import eu.toop.edm.model.EQueryDefinitionType;
+import eu.toop.edm.model.RepositoryItemRefPojo;
 import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
 import eu.toop.edm.slot.SlotDocumentMetadata;
@@ -69,6 +71,18 @@ import eu.toop.regrep.RegRep4Reader;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.rim.AnyValueType;
+import eu.toop.regrep.rim.CollectionValueType;
+import eu.toop.regrep.rim.DateTimeValueType;
+import eu.toop.regrep.rim.ExtrinsicObjectType;
+import eu.toop.regrep.rim.ObjectRefListType;
+import eu.toop.regrep.rim.ObjectRefType;
+import eu.toop.regrep.rim.RegistryObjectListType;
+import eu.toop.regrep.rim.SimpleLinkType;
+import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.rim.StringValueType;
+import eu.toop.regrep.rim.ValueType;
+import eu.toop.regrep.slot.ISlotProvider;
 
 /**
  * This class contains the data model for a single TOOP EDM Request. It requires
@@ -236,9 +250,8 @@ public class EDMResponse
     }
 
     {
-      if(m_eQueryDefinition.equals(EQueryDefinitionType.OBJECTREF))
+      if (m_eQueryDefinition.equals (EQueryDefinitionType.OBJECTREF))
       {
-        final ObjectRefListType aORList = new ObjectRefListType ();
         final ObjectRefType aOR = new ObjectRefType ();
 
         aOR.setId (UUID.randomUUID ().toString ());
@@ -248,17 +261,16 @@ public class EDMResponse
           if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
             aOR.addSlot (aEntry.getValue ().createSlot ());
 
+        final ObjectRefListType aORList = new ObjectRefListType ();
         aORList.addObjectRef (aOR);
         ret.setObjectRefList (aORList);
       }
       else
       {
-        final RegistryObjectListType aROList = new RegistryObjectListType ();
         final ExtrinsicObjectType aEO = new ExtrinsicObjectType ();
-        final SimpleLinkType aSL = new SimpleLinkType ();
 
-        if(m_aRepositoryItemRef!=null)
-          aEO.setRepositoryItemRef(m_aRepositoryItemRef.getAsSimpleLink ());
+        if (m_aRepositoryItemRef != null)
+          aEO.setRepositoryItemRef (m_aRepositoryItemRef.getAsSimpleLink ());
 
         aEO.setId (UUID.randomUUID ().toString ());
 
@@ -267,10 +279,10 @@ public class EDMResponse
           if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
             aEO.addSlot (aEntry.getValue ().createSlot ());
 
+        final RegistryObjectListType aROList = new RegistryObjectListType ();
         aROList.addRegistryObject (aEO);
         ret.setRegistryObjectList (aROList);
       }
-
     }
 
     return ret;
@@ -681,34 +693,35 @@ public class EDMResponse
   }
 
   @Nonnull
-  public static EDMResponse create (@Nonnull final QueryResponse aQueryResponse) {
-    final EDMResponse.Builder aBuilder = EDMResponse.builder()
-            .responseStatus(ERegRepResponseStatus.getFromIDOrNull(aQueryResponse.getStatus()))
-            .requestID(aQueryResponse.getRequestId());
+  public static EDMResponse create (@Nonnull final QueryResponse aQueryResponse)
+  {
+    final EDMResponse.Builder aBuilder = EDMResponse.builder ()
+                                                    .responseStatus (ERegRepResponseStatus.getFromIDOrNull (aQueryResponse.getStatus ()))
+                                                    .requestID (aQueryResponse.getRequestId ());
 
-    for (final SlotType s : aQueryResponse.getSlot())
-      _applySlots(s, aBuilder);
+    for (final SlotType s : aQueryResponse.getSlot ())
+      _applySlots (s, aBuilder);
 
-    if (aQueryResponse.getRegistryObjectList() != null &&
-            aQueryResponse.getRegistryObjectList().hasRegistryObjectEntries())
+    if (aQueryResponse.getRegistryObjectList () != null &&
+        aQueryResponse.getRegistryObjectList ().hasRegistryObjectEntries ())
     {
-      for (final SlotType aSlot : aQueryResponse.getRegistryObjectList().getRegistryObjectAtIndex(0).getSlot())
-        _applySlots(aSlot, aBuilder);
+      for (final SlotType aSlot : aQueryResponse.getRegistryObjectList ().getRegistryObjectAtIndex (0).getSlot ())
+        _applySlots (aSlot, aBuilder);
 
-      if(aQueryResponse.getRegistryObjectList().getRegistryObjectAtIndex(0) instanceof ExtrinsicObjectType)
+      if (aQueryResponse.getRegistryObjectList ().getRegistryObjectAtIndex (0) instanceof ExtrinsicObjectType)
       {
-        ExtrinsicObjectType aEO = (ExtrinsicObjectType) aQueryResponse.getRegistryObjectList().getRegistryObjectAtIndex(0);
+        final ExtrinsicObjectType aEO = (ExtrinsicObjectType) aQueryResponse.getRegistryObjectList ()
+                                                                            .getRegistryObjectAtIndex (0);
 
-        if((aEO != null) && (aEO.getRepositoryItemRef() != null))
-          aBuilder.repositoryItemRef(aEO.getRepositoryItemRef());
+        if ((aEO != null) && (aEO.getRepositoryItemRef () != null))
+          aBuilder.repositoryItemRef (aEO.getRepositoryItemRef ());
       }
     }
 
-    if (aQueryResponse.getObjectRefList () != null &&
-            aQueryResponse.getObjectRefList ().hasObjectRefEntries() )
+    if (aQueryResponse.getObjectRefList () != null && aQueryResponse.getObjectRefList ().hasObjectRefEntries ())
     {
-      for (final SlotType aSlot : aQueryResponse.getObjectRefList().getObjectRefAtIndex(0).getSlot())
-        _applySlots(aSlot, aBuilder);
+      for (final SlotType aSlot : aQueryResponse.getObjectRefList ().getObjectRefAtIndex (0).getSlot ())
+        _applySlots (aSlot, aBuilder);
       aBuilder.queryDefinition (EQueryDefinitionType.OBJECTREF);
     }
 

@@ -24,10 +24,11 @@ import com.helger.commons.collection.impl.ICommonsList;
 
 import eu.toop.edm.model.ConceptPojo;
 import eu.toop.edm.xml.cccev.ConceptMarshaller;
-import eu.toop.regrep.ERegRepCollectionType;
-import eu.toop.regrep.RegRepHelper;
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.slot.ERegRepCollectionType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotHelper;
+import eu.toop.regrep.slot.SlotBuilder;
 
 /**
  * "ConceptRequestList" slot
@@ -65,7 +66,7 @@ public class SlotConceptRequestList implements ISlotProvider
     final ConceptMarshaller m = new ConceptMarshaller ();
     return new SlotBuilder ().setName (NAME)
                              .setValue (ERegRepCollectionType.SET,
-                                        m_aConcepts.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x.getAsCCCEVConcept ())
+                                        m_aConcepts.getAllMapped (x -> SlotHelper.createSlotValue (m.getAsDocument (x.getAsCCCEVConcept ())
                                                                                                       .getDocumentElement ())))
                              .build ();
   }

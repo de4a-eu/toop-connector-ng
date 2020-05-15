@@ -39,7 +39,6 @@ import com.helger.commons.string.ToStringGenerator;
 import eu.toop.edm.error.EDMExceptionBuilder;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.model.AgentPojo;
-import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotErrorProvider;
 import eu.toop.edm.slot.SlotSpecificationIdentifier;
 import eu.toop.edm.xml.IJAXBVersatileReader;
@@ -57,6 +56,7 @@ import eu.toop.regrep.rim.SlotType;
 import eu.toop.regrep.rim.StringValueType;
 import eu.toop.regrep.rim.ValueType;
 import eu.toop.regrep.rs.RegistryExceptionType;
+import eu.toop.regrep.slot.ISlotProvider;
 
 /**
  * A simple builder to create valid TOOP Error responses for both "concept

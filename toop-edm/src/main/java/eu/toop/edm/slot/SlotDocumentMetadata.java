@@ -22,8 +22,9 @@ import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.edm.model.DatasetPojo;
 import eu.toop.edm.xml.dcatap.DatasetMarshaller;
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotBuilder;
 
 /**
  * "DocumentMetadata" slot

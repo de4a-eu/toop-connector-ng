@@ -13,37 +13,44 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.slot;
-
-import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
-import eu.toop.regrep.SlotBuilder;
-import eu.toop.regrep.rim.SlotType;
+package eu.toop.regrep.slot.predefined;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.Nonempty;
+
+import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotBuilder;
+
+/**
+ * Predefined RegRep slot "id"
+ *
+ * @author Konstantinos Douloudis
+ */
 public class SlotId implements ISlotProvider
 {
-    public static final String NAME = "id";
+  public static final String NAME = "id";
 
-    private final String m_sValue;
+  private final String m_sValue;
 
-    public SlotId (@Nonnull final String sValue)
-    {
-        ValueEnforcer.notNull (sValue, "Value");
-        m_sValue = sValue;
-    }
+  public SlotId (@Nonnull final String sValue)
+  {
+    ValueEnforcer.notNull (sValue, "Value");
+    m_sValue = sValue;
+  }
 
-    @Nonnull
-    @Nonempty
-    public String getName ()
-    {
-        return NAME;
-    }
+  @Nonnull
+  @Nonempty
+  public String getName ()
+  {
+    return NAME;
+  }
 
-    @Nonnull
-    public SlotType createSlot ()
-    {
-        return new SlotBuilder().setName (NAME).setValue (m_sValue).build ();
-    }
+  @Nonnull
+  public SlotType createSlot ()
+  {
+    return new SlotBuilder ().setName (NAME).setValue (m_sValue).build ();
+  }
 }

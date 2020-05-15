@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.regrep.slot;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -35,10 +35,8 @@ import com.helger.commons.mutable.MutableInt;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.xml.serialize.read.DOMReader;
 
-import eu.toop.regrep.ERegRepCollectionType;
 import eu.toop.regrep.RegRep4Writer;
 import eu.toop.regrep.RegRepHelper;
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.rim.ValueType;
 
@@ -63,17 +61,16 @@ public final class SlotBuilderTest
   {
     final Document aDoc = DOMReader.readXMLDOM ("<root attr='a' xmlns='urn:anything-weird/bla-foo'><child><child2>value</child2></child></root>");
     final ICommonsMap <ValueType, ValueType> aMap = new CommonsLinkedHashMap <> ();
-    aMap.put (RegRepHelper.createSlotValue ("Key1"),
-              RegRepHelper.createSlotValue (PDTXMLConverter.getXMLCalendarNow ()));
-    aMap.put (RegRepHelper.createSlotValue (BigInteger.valueOf (1234)), RegRepHelper.createSlotValue (42f));
+    aMap.put (SlotHelper.createSlotValue ("Key1"), SlotHelper.createSlotValue (PDTXMLConverter.getXMLCalendarNow ()));
+    aMap.put (SlotHelper.createSlotValue (BigInteger.valueOf (1234)), SlotHelper.createSlotValue (42f));
 
     final QueryRequest aQR;
     aQR = RegRepHelper.createQueryRequest ("mock-data-request",
                                            _sb ().setValue (aDoc.getDocumentElement ()).build (),
                                            _sb ().setValue (true).build (),
                                            _sb ().setValue (ERegRepCollectionType.LIST,
-                                                            RegRepHelper.createSlotValue ("ListItem1"),
-                                                            RegRepHelper.createSlotValue ("ListItem2"))
+                                                            SlotHelper.createSlotValue ("ListItem1"),
+                                                            SlotHelper.createSlotValue ("ListItem2"))
                                                  .build (),
                                            _sb ().setValue (PDTXMLConverter.getXMLCalendarNow ()).build (),
                                            _sb ().setValue (PDTFactory.getCurrentLocalDateTime ()).build (),
@@ -84,17 +81,17 @@ public final class SlotBuilderTest
                                            _sb ().setValue (BigInteger.TEN).build (),
                                            _sb ().setValue (11).build (),
                                            _sb ().setValue (12L).build (),
-                                           _sb ().setValue (RegRepHelper.createInternationalStringType (RegRepHelper.createLocalizedString (Locale.ENGLISH,
-                                                                                                                                            "Qualification Procedure in Public Procurement"),
-                                                                                                        RegRepHelper.createLocalizedString (Locale.GERMAN,
-                                                                                                                                            "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
+                                           _sb ().setValue (SlotHelper.createInternationalStringType (SlotHelper.createLocalizedString (Locale.ENGLISH,
+                                                                                                                                        "Qualification Procedure in Public Procurement"),
+                                                                                                      SlotHelper.createLocalizedString (Locale.GERMAN,
+                                                                                                                                        "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
                                                  .build (),
-                                           _sb ().setValue (RegRepHelper.createMap (aMap)).build (),
-                                           _sb ().setValue (RegRepHelper.createSlot ("nestedSlot",
-                                                                                     RegRepHelper.createSlotValue ("simpleString")))
+                                           _sb ().setValue (SlotHelper.createMap (aMap)).build (),
+                                           _sb ().setValue (SlotHelper.createSlot ("nestedSlot",
+                                                                                   SlotHelper.createSlotValue ("simpleString")))
                                                  .build (),
                                            _sb ().setValue ("text only").build (),
-                                           _sb ().setValue (RegRepHelper.createVocabularyTerm ("myVoc", "myTerm"))
+                                           _sb ().setValue (SlotHelper.createVocabularyTerm ("myVoc", "myTerm"))
                                                  .build (),
                                            _sb ().setVocabularyTermValue ("myVoc2", "myTerm2").build ());
     assertNotNull (RegRep4Writer.queryRequest ().getAsDocument (aQR));

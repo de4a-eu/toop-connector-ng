@@ -22,28 +22,28 @@ import com.helger.commons.lang.EnumHelper;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public enum EResponseOptionType implements IHasID<String>
+public enum EResponseOptionType implements IHasID <String>
 {
-    CONTAINED("LeafClassWithRepositoryItem"),
-    REFERENCED("ObjectRef");
+  CONTAINED ("LeafClassWithRepositoryItem"),
+  REFERENCED ("ObjectRef");
 
-    private final String m_sID;
+  private final String m_sID;
 
-    EResponseOptionType (@Nonnull @Nonempty final String sID)
-    {
-        m_sID = sID;
-    }
+  EResponseOptionType (@Nonnull @Nonempty final String sID)
+  {
+    m_sID = sID;
+  }
 
-    @Nonnull
-    @Nonempty
-    public String getID ()
-    {
-        return m_sID;
-    }
+  @Nonnull
+  @Nonempty
+  public String getID ()
+  {
+    return m_sID;
+  }
 
-    @Nullable
-    public static EResponseOptionType getFromIDOrNull (@Nullable final String sID)
-    {
-        return EnumHelper.getFromIDOrNull (EResponseOptionType.class, sID);
-    }
+  @Nullable
+  public static EResponseOptionType getFromIDOrNull (@Nullable final String sID)
+  {
+    return EnumHelper.getFromIDOrNull (EResponseOptionType.class, sID);
+  }
 }

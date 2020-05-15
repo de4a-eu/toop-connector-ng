@@ -26,10 +26,11 @@ import com.helger.commons.collection.impl.ICommonsList;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
 import eu.toop.edm.xml.cccev.RequirementMarshaller;
-import eu.toop.regrep.ERegRepCollectionType;
-import eu.toop.regrep.RegRepHelper;
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.slot.ERegRepCollectionType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotHelper;
+import eu.toop.regrep.slot.SlotBuilder;
 
 /**
  * "FullfillingRequirement" slot
@@ -61,7 +62,7 @@ public class SlotFullfillingRequirements implements ISlotProvider
     final RequirementMarshaller m = new RequirementMarshaller ();
     return new SlotBuilder ().setName (NAME)
                              .setValue (ERegRepCollectionType.SET,
-                                        m_aRequirements.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x)
+                                        m_aRequirements.getAllMapped (x -> SlotHelper.createSlotValue (m.getAsDocument (x)
                                                                                                           .getDocumentElement ())))
                              .build ();
   }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.regrep;
+package eu.toop.regrep;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -29,12 +29,10 @@ import org.w3c.dom.Document;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.xml.serialize.read.DOMReader;
 
-import eu.toop.regrep.ERegRepResponseStatus;
-import eu.toop.regrep.RegRep4Writer;
-import eu.toop.regrep.RegRepHelper;
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.query.QueryRequest;
 import eu.toop.regrep.query.QueryResponse;
+import eu.toop.regrep.slot.SlotBuilder;
+import eu.toop.regrep.slot.SlotHelper;
 
 /**
  * Test class for class {@link RegRepHelper}
@@ -65,10 +63,10 @@ public final class RegRepHelperTest
                                                                                 .setValue (PDTXMLConverter.getXMLCalendarNow ())
                                                                                 .build (),
                                                               new SlotBuilder ().setName ("DataConsumerRequestPurpose")
-                                                                                .setValue (RegRepHelper.createInternationalStringType (RegRepHelper.createLocalizedString (Locale.ENGLISH,
-                                                                                                                                                                           "Qualification Procedure in Public Procurement"),
-                                                                                                                                       RegRepHelper.createLocalizedString (Locale.GERMAN,
-                                                                                                                                                                           "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
+                                                                                .setValue (SlotHelper.createInternationalStringType (SlotHelper.createLocalizedString (Locale.ENGLISH,
+                                                                                                                                                                       "Qualification Procedure in Public Procurement"),
+                                                                                                                                     SlotHelper.createLocalizedString (Locale.GERMAN,
+                                                                                                                                                                       "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
                                                                                 .build (),
                                                               new SlotBuilder ().setName ("DummyXML")
                                                                                 .setValue (aDoc.getDocumentElement ())
@@ -97,10 +95,10 @@ public final class RegRepHelperTest
                                                                                   .setValue (PDTXMLConverter.getXMLCalendarNow ())
                                                                                   .build (),
                                                                 new SlotBuilder ().setName ("DataConsumerResponsePurpose")
-                                                                                  .setValue (RegRepHelper.createInternationalStringType (RegRepHelper.createLocalizedString (Locale.ENGLISH,
-                                                                                                                                                                             "Qualification Procedure in Public Procurement"),
-                                                                                                                                         RegRepHelper.createLocalizedString (Locale.GERMAN,
-                                                                                                                                                                             "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
+                                                                                  .setValue (SlotHelper.createInternationalStringType (SlotHelper.createLocalizedString (Locale.ENGLISH,
+                                                                                                                                                                         "Qualification Procedure in Public Procurement"),
+                                                                                                                                       SlotHelper.createLocalizedString (Locale.GERMAN,
+                                                                                                                                                                         "Qualifizierungsverfahren im öffentlichen Beschaffungswesen")))
                                                                                   .build (),
                                                                 new SlotBuilder ().setName ("DummyXML")
                                                                                   .setValue (aDoc.getDocumentElement ())

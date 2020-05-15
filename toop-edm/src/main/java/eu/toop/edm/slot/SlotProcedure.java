@@ -20,9 +20,10 @@ import javax.annotation.Nonnull;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.InternationalStringType;
 import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotBuilder;
 
 /**
  * "Procedure" slot

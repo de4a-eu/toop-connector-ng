@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.regrep;
+package eu.toop.regrep.slot;
 
 import java.math.BigInteger;
 import java.time.LocalDate;
@@ -73,33 +73,33 @@ public class SlotBuilder
   public SlotBuilder setValue (@Nonnull final Element aNode)
   {
     // Cannot be a DOM Document
-    return setValue (RegRepHelper.createSlotValue (aNode));
+    return setValue (SlotHelper.createSlotValue (aNode));
   }
 
   @Nonnull
   public SlotBuilder setValue (final boolean b)
   {
-    return setValue (RegRepHelper.createSlotValue (b));
+    return setValue (SlotHelper.createSlotValue (b));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nullable final ERegRepCollectionType eCollectionType,
                                @Nullable final ValueType... aArray)
   {
-    return setValue (RegRepHelper.createSlotValue (eCollectionType, aArray));
+    return setValue (SlotHelper.createSlotValue (eCollectionType, aArray));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nullable final ERegRepCollectionType eCollectionType,
                                @Nullable final Iterable <? extends ValueType> aCont)
   {
-    return setValue (RegRepHelper.createSlotValue (eCollectionType, aCont));
+    return setValue (SlotHelper.createSlotValue (eCollectionType, aCont));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nonnull final XMLGregorianCalendar x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   @Nonnull
@@ -133,13 +133,13 @@ public class SlotBuilder
   @Nonnull
   public SlotBuilder setValue (final float x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nonnull final BigInteger x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   @Nonnull
@@ -157,43 +157,43 @@ public class SlotBuilder
   @Nonnull
   public SlotBuilder setValue (@Nonnull final InternationalStringType x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nonnull final MapType x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nonnull final SlotType x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nonnull final String x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   @Nonnull
   public SlotBuilder setVocabularyTermValue (@Nonnull final String sVocabulary, @Nonnull final String sTerm)
   {
-    return setValue (RegRepHelper.createVocabularyTerm (sVocabulary, sTerm));
+    return setValue (SlotHelper.createVocabularyTerm (sVocabulary, sTerm));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nonnull final VocabularyTerm x)
   {
-    return setValue (RegRepHelper.createVocabularyTerm (x));
+    return setValue (SlotHelper.createVocabularyTerm (x));
   }
 
   @Nonnull
   public SlotBuilder setValue (@Nonnull final VocabularyTermType x)
   {
-    return setValue (RegRepHelper.createSlotValue (x));
+    return setValue (SlotHelper.createSlotValue (x));
   }
 
   /**
@@ -213,6 +213,6 @@ public class SlotBuilder
     if (m_aValue == null)
       throw new IllegalStateException ("Value is missing");
 
-    return RegRepHelper.createSlot (m_sName, m_aValue);
+    return SlotHelper.createSlot (m_sName, m_aValue);
   }
 }

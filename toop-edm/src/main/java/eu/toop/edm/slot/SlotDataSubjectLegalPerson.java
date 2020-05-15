@@ -22,8 +22,9 @@ import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.edm.model.BusinessPojo;
 import eu.toop.edm.xml.cv.BusinessMarshaller;
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotBuilder;
 
 /**
  * DataSubject "LegalPerson" slot

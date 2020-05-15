@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.edm.slot;
+package eu.toop.regrep.slot;
 
 import javax.annotation.Nonnull;
 
@@ -23,7 +23,7 @@ import com.helger.commons.name.IHasName;
 import eu.toop.regrep.rim.SlotType;
 
 /**
- * TOOP slot provider.
+ * Generic slot provider.
  *
  * @author Philip Helger
  */

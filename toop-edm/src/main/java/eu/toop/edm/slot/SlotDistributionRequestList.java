@@ -24,10 +24,11 @@ import com.helger.commons.collection.impl.ICommonsList;
 
 import eu.toop.edm.model.DistributionPojo;
 import eu.toop.edm.xml.dcatap.DistributionMarshaller;
-import eu.toop.regrep.ERegRepCollectionType;
-import eu.toop.regrep.RegRepHelper;
-import eu.toop.regrep.SlotBuilder;
 import eu.toop.regrep.rim.SlotType;
+import eu.toop.regrep.slot.ERegRepCollectionType;
+import eu.toop.regrep.slot.ISlotProvider;
+import eu.toop.regrep.slot.SlotHelper;
+import eu.toop.regrep.slot.SlotBuilder;
 
 /**
  * "DistributionRequestList" slot
@@ -65,7 +66,7 @@ public class SlotDistributionRequestList implements ISlotProvider
     final DistributionMarshaller m = new DistributionMarshaller ();
     return new SlotBuilder ().setName (NAME)
                              .setValue (ERegRepCollectionType.SORTED_SET,
-                                        m_aDistributions.getAllMapped (x -> RegRepHelper.createSlotValue (m.getAsDocument (x.getAsDistribution ())
+                                        m_aDistributions.getAllMapped (x -> SlotHelper.createSlotValue (m.getAsDocument (x.getAsDistribution ())
                                                                                                            .getDocumentElement ())))
                              .build ();
   }
