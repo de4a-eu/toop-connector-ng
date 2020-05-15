@@ -15,41 +15,35 @@
  */
 package eu.toop.edm.model;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.id.IHasID;
 import com.helger.commons.lang.EnumHelper;
 
-/**
- * The RegRep Query "queryDefinition" value to use
- *
- * @author Philip Helger
- */
-public enum EQueryDefinitionType implements IHasID <String>
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+public enum EResponseOptionType implements IHasID<String>
 {
-  CONCEPT ("ConceptQuery"),
-  DOCUMENT ("DocumentQuery"),
-  OBJECTREF("urn:oasis:names:tc:ebxml-regrep:query:GetObjectById");
+    CONTAINED("LeafClassWithRepositoryItem"),
+    REFERENCED("ObjectRef");
 
-  private String m_sID;
+    private final String m_sID;
 
-  EQueryDefinitionType (@Nonnull @Nonempty final String sID)
-  {
-    m_sID = sID;
-  }
+    EResponseOptionType (@Nonnull @Nonempty final String sID)
+    {
+        m_sID = sID;
+    }
 
-  @Nonnull
-  @Nonempty
-  public String getID ()
-  {
-    return m_sID;
-  }
+    @Nonnull
+    @Nonempty
+    public String getID ()
+    {
+        return m_sID;
+    }
 
-  @Nullable
-  public static EQueryDefinitionType getFromIDOrNull (@Nullable final String sID)
-  {
-    return EnumHelper.getFromIDOrNull (EQueryDefinitionType.class, sID);
-  }
+    @Nullable
+    public static EResponseOptionType getFromIDOrNull (@Nullable final String sID)
+    {
+        return EnumHelper.getFromIDOrNull (EResponseOptionType.class, sID);
+    }
 }

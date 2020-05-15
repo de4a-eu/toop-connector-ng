@@ -23,9 +23,11 @@ import static org.junit.Assert.fail;
 
 import java.time.Month;
 import java.util.Locale;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
+import eu.toop.edm.model.*;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -37,15 +39,6 @@ import com.helger.commons.mock.CommonsTestHelper;
 import com.helger.schematron.svrl.AbstractSVRLMessage;
 
 import eu.toop.edm.jaxb.cccev.CCCEVRequirementType;
-import eu.toop.edm.model.AddressPojo;
-import eu.toop.edm.model.AgentPojo;
-import eu.toop.edm.model.BusinessPojo;
-import eu.toop.edm.model.ConceptPojo;
-import eu.toop.edm.model.DistributionPojo;
-import eu.toop.edm.model.EDistributionFormat;
-import eu.toop.edm.model.EGenderCode;
-import eu.toop.edm.model.EQueryDefinitionType;
-import eu.toop.edm.model.PersonPojo;
 import eu.toop.edm.pilot.gbm.EToopConcept;
 import eu.toop.edm.schematron.SchematronEDM2Validator;
 
@@ -65,7 +58,7 @@ public final class EDMRequestTest
     assertNotNull (aBytes);
 
     // Re-read
-    final EDMRequest aReq2 = EDMRequest.getReader ().read (aBytes);
+    final EDMRequest aReq2 = EDMRequest.getReader().read(aBytes);
 
     // Compare with original
     assertEquals (aReq, aReq2);
@@ -144,6 +137,13 @@ public final class EDMRequestTest
   }
 
   @Nonnull
+  private static EDMRequest.Builder _reqDocumentByID()
+  {
+    return _req ().queryDefinition (EQueryDefinitionType.OBJECTREF)
+            .documentID(UUID.randomUUID().toString());
+  }
+
+  @Nonnull
   private static PersonPojo.Builder _np ()
   {
     return PersonPojo.builder ()
@@ -206,6 +206,28 @@ public final class EDMRequestTest
   public void createEDMDocumentRequestNP ()
   {
     final EDMRequest aRequest = _reqDocument ().dataSubject (_np ()).build ();
+    _testWriteAndRead (aRequest);
+  }
+
+  @Test
+  public void createEDMDocumentGetByIDRequestLP ()
+  {
+    final EDMRequest aRequest = _reqDocumentByID().dataSubject (_lp ()).build ();
+    _testWriteAndRead (aRequest);
+  }
+
+  @Test
+  public void createEDMDocumentGetByIDRequestNP ()
+  {
+    final EDMRequest aRequest = _reqDocumentByID().dataSubject (_np ()).build ();
+    _testWriteAndRead (aRequest);
+  }
+
+  @Test
+  public void createEDMDocumentRefRequestNP ()
+  {
+    final EDMRequest aRequest = _reqDocument ().dataSubject (_np ())
+            .responseOption(EResponseOptionType.REFERENCED).build ();
     _testWriteAndRead (aRequest);
   }
 

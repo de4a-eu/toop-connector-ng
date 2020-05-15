@@ -76,9 +76,6 @@
                     </dcat:Dataset>
                 </rim:SlotValue>
             </rim:Slot>
-            <!-- The attached Document Provided as Evidence. Points to an AS4 attachment -->
-            <rim:RepositoryItemRef xlink:href="cid:attachment123@example.toop.eu"
-                                   xlink:title="Company Registration Document"/>
         </rim:RegistryObject>
     </rim:RegistryObjectList>
 </query:QueryResponse>
