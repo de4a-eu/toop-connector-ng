@@ -61,6 +61,10 @@
                 The QueryRequest must contain an id attribute.
             </assert>  
             
+            <report test="exists(@requestId)" flag='ERROR' id='misplaced_request_id'>
+                A QueryRequest cannot contain a requestId, which is used to link the QueryResponse to the correct QueryRequest.
+            </report> 
+            
             <let name="countIssueDateTime" value="count(rim:Slot[@name = 'IssueDateTime'])"/>      
             <assert test="($countIssueDateTime=1)" flag='ERROR' id='req_card_IssueDateTime'>
                 The QueryRequest must contain exactly ONE IssueDateTime slot (found: <value-of select="$countIssueDateTime"/>).
@@ -70,14 +74,7 @@
             <assert test="($countProcedure=0) or ($countProcedure=1)" flag='ERROR' id='req_card_Procedure'>
                 The QueryRequest must contain ZERO or ONE Procedure slots (found: <value-of select="$countProcedure"/>).
             </assert>
-            
-            <!--  [ph]
-            <let name="countFullfillingRequirement" value="count(rim:Slot[@name = 'FullfillingRequirement'])"/>  
-            <assert test="($countFullfillingRequirement=0) or ($countFullfillingRequirement=1)" flag='ERROR' id='req_card_FullfillingRequirement'>
-                The QueryRequest must contain ZERO or ONE FullfillingRequirement slots (found: <value-of select="$countFullfillingRequirement"/>).
-            </assert>
-             -->
-             
+                         
             <let name="countDataConsumer" value="count(rim:Slot[@name = 'DataConsumer'])"/>  
             <assert test="($countDataConsumer=1)" flag='ERROR' id='req_card_DataConsumer'>
                 The QueryRequest must contain exactly ONE DataConsumer slot (found: <value-of select="$countDataConsumer"/>).
@@ -232,32 +229,32 @@
             
             <let name="countAgentAddressFullAddress" value="count(cagv:location/locn:address/locn:fullAddress)"/>  
             <assert test="($countAgentAddressFullAddress &lt; 4)" flag='ERROR' id='req_card_Agent_Address_FullAddress'>
-                The Agent Address must contain UP TO THREE AddressFullAddress elements (found: <value-of select="$countAgentAddressFullAddress"/>).
+                The Agent Address must contain UP TO THREE FullAddress elements (found: <value-of select="$countAgentAddressFullAddress"/>).
             </assert>
             
             <let name="countAgentAddressThoroughfare" value="count(cagv:location/locn:address/locn:thoroughfare)"/>  
             <assert test="($countAgentAddressThoroughfare=0) or ($countAgentAddressThoroughfare=1)" flag='ERROR' id='req_card_Agent_Address_AddressThoroughfare'>
-                The Agent Address must contain ZERO or ONE AddressThoroughfare elements (found: <value-of select="$countAgentAddressThoroughfare"/>).
+                The Agent Address must contain ZERO or ONE Thoroughfare elements (found: <value-of select="$countAgentAddressThoroughfare"/>).
             </assert>
             
-            <let name="countAgentAddressLocatorDesignator" value="count(cagv:location/locn:address/locn:thoroughfare)"/>  
+            <let name="countAgentAddressLocatorDesignator" value="count(cagv:location/locn:address/locn:locatorDesignator)"/>  
             <assert test="($countAgentAddressLocatorDesignator=0) or ($countAgentAddressLocatorDesignator=1)" flag='ERROR' id='req_card_Agent_Address_AddressLocatorDesignator'>
-                The Agent Address must contain ZERO or ONE AddressLocatorDesignator elements (found: <value-of select="$countAgentAddressLocatorDesignator"/>).
+                The Agent Address must contain ZERO or ONE LocatorDesignator elements (found: <value-of select="$countAgentAddressLocatorDesignator"/>).
             </assert>
             
-            <let name="countAgentAddressPostName" value="count(cagv:location/locn:address/locn:thoroughfare)"/>  
+            <let name="countAgentAddressPostName" value="count(cagv:location/locn:address/locn:postName)"/>  
             <assert test="($countAgentAddressPostName=0) or ($countAgentAddressPostName=1)" flag='ERROR' id='req_card_Agent_Address_AddressPostName'>
-                The Agent Address must contain ZERO or ONE AddressPostName elements (found: <value-of select="$countAgentAddressPostName"/>).
+                The Agent Address must contain ZERO or ONE PostName elements (found: <value-of select="$countAgentAddressPostName"/>).
             </assert>
             
-            <let name="countAgentAddressAdminUnitLocationOne" value="count(cagv:location/locn:address/locn:thoroughfare)"/>  
-            <assert test="($countAgentAddressAdminUnitLocationOne=0) or ($countAgentAddressAdminUnitLocationOne=1)" flag='ERROR' id='req_card_Agent_Address_AddressAdminUnitLocationOne'>
-                The Agent Address must contain ZERO or ONE AddressAdminUnitLocationOne elements (found: <value-of select="$countAgentAddressAdminUnitLocationOne"/>).
+            <let name="countAgentAddressAdminUnitLocationOne" value="count(cagv:location/locn:address/locn:adminUnitLevel1)"/>  
+            <assert test="($countAgentAddressAdminUnitLocationOne=0) or ($countAgentAddressAdminUnitLocationOne=1)" flag='ERROR' id='req_card_Agent_Address_AddressAdminUnitLevel1'>
+                The Agent Address must contain ZERO or ONE AdminUnitLocationOne elements (found: <value-of select="$countAgentAddressAdminUnitLocationOne"/>).
             </assert>
             
-            <let name="countAgentAddressPostCode" value="count(cagv:location/locn:address/locn:thoroughfare)"/>  
+            <let name="countAgentAddressPostCode" value="count(cagv:location/locn:address/locn:postCodee)"/>  
             <assert test="($countAgentAddressPostCode=0) or ($countAgentAddressPostCode=1)" flag='ERROR' id='req_card_Agent_Address_AddressPostCode'>
-                The Agent Address must contain ZERO or ONE AddressPostCode elements (found: <value-of select="$countAgentAddressPostCode"/>).
+                The Agent Address must contain ZERO or ONE PostCode elements (found: <value-of select="$countAgentAddressPostCode"/>).
             </assert>
             
         </rule>
@@ -830,6 +827,7 @@
             
         </rule>
     </pattern>
+    
    
     
     <!--****************-->
