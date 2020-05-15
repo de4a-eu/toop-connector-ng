@@ -37,7 +37,7 @@ import com.helger.peppolid.IProcessIdentifier;
  */
 public class R2D2EndpointProviderConstant implements IR2D2EndpointProvider
 {
-  private final ICommonsOrderedSet <IR2D2Endpoint> m_aSet = new CommonsLinkedHashSet <> ();
+  private final ICommonsOrderedSet <IR2D2Endpoint> m_aEndpoints = new CommonsLinkedHashSet <> ();
 
   /**
    * Constructor to return an empty endpoint set.
@@ -54,7 +54,7 @@ public class R2D2EndpointProviderConstant implements IR2D2EndpointProvider
   public R2D2EndpointProviderConstant (@Nonnull final IR2D2Endpoint aEndpoint)
   {
     ValueEnforcer.notNull (aEndpoint, "Endpoint");
-    m_aSet.add (aEndpoint);
+    m_aEndpoints.add (aEndpoint);
   }
 
   /**
@@ -67,7 +67,7 @@ public class R2D2EndpointProviderConstant implements IR2D2EndpointProvider
   public R2D2EndpointProviderConstant (@Nonnull final Iterable <? extends IR2D2Endpoint> aEndpoints)
   {
     ValueEnforcer.notNullNoNullValue (aEndpoints, "Endpoints");
-    m_aSet.addAll (aEndpoints);
+    m_aEndpoints.addAll (aEndpoints);
   }
 
   /**
@@ -80,7 +80,7 @@ public class R2D2EndpointProviderConstant implements IR2D2EndpointProvider
   public R2D2EndpointProviderConstant (@Nonnull final IR2D2Endpoint... aEndpoints)
   {
     ValueEnforcer.notNullNoNullValue (aEndpoints, "Endpoints");
-    m_aSet.addAll (aEndpoints);
+    m_aEndpoints.addAll (aEndpoints);
   }
 
   @Nonnull
@@ -92,12 +92,12 @@ public class R2D2EndpointProviderConstant implements IR2D2EndpointProvider
                                                     @Nonnull @Nonempty final String sTransportProfileID,
                                                     @Nonnull final IR2D2ErrorHandler aErrorHandler)
   {
-    return m_aSet.getCopyAsList ();
+    return m_aEndpoints.getCopyAsList ();
   }
 
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Endpoints", m_aSet).getToString ();
+    return new ToStringGenerator (this).append ("Endpoints", m_aEndpoints).getToString ();
   }
 }

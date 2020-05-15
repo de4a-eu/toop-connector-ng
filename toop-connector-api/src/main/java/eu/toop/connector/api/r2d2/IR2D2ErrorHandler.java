@@ -15,8 +15,6 @@
  */
 package eu.toop.connector.api.r2d2;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -29,7 +27,7 @@ import eu.toop.edm.error.IToopErrorCode;
  *
  * @author Philip Helger
  */
-public interface IR2D2ErrorHandler extends Serializable
+public interface IR2D2ErrorHandler
 {
   /**
    * The main error handler method to be implemented

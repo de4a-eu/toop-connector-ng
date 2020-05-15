@@ -31,7 +31,7 @@ import com.helger.peppolid.IParticipantIdentifier;
  * This class contains a single result endpoint for an R2D2 query. Default
  * implementation of {@link IR2D2Endpoint}.
  *
- * @author Philip Helger, BRZ, AT
+ * @author Philip Helger
  */
 @Immutable
 @MustImplementEqualsAndHashcode

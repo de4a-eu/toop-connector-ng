@@ -80,7 +80,7 @@ public class MessageExchangeManager
   @Nonnull
   public static IMessageExchangeSPI getConfiguredImplementation ()
   {
-    final String sID = TCConfig.getMEMImplementationID ();
+    final String sID = TCConfig.MEM.getMEMImplementationID ();
     final IMessageExchangeSPI ret = getSafeImplementationOfID (sID);
     if (ret == null)
       throw new IllegalStateException ("Failed to resolve MEM implementation ID '" + sID + "'");

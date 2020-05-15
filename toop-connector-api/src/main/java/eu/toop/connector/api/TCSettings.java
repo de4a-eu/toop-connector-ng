@@ -23,7 +23,7 @@ import com.helger.peppolid.factory.IIdentifierFactory;
 /**
  * This class contains global settings for the TOOP Connector.
  *
- * @author Philip Helger, BRZ, AT
+ * @author Philip Helger
  */
 @Immutable
 public final class TCSettings

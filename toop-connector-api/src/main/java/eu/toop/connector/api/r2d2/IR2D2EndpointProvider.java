@@ -15,8 +15,6 @@
  */
 package eu.toop.connector.api.r2d2;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 
 import com.helger.commons.annotation.Nonempty;
@@ -31,7 +29,7 @@ import com.helger.peppolid.IProcessIdentifier;
  *
  * @author Philip Helger
  */
-public interface IR2D2EndpointProvider extends Serializable
+public interface IR2D2EndpointProvider
 {
   /**
    * Get a list of all endpoints that match the specified requirements. This is

@@ -33,7 +33,7 @@ public class TCHttpClientSettings extends HttpClientSettings
 {
   public TCHttpClientSettings ()
   {
-    if (TCConfig.isUseHttpSystemProperties ())
+    if (TCConfig.HTTP.isUseHttpSystemProperties ())
     {
       // For proxy etc
       setUseSystemProperties (true);
@@ -41,16 +41,16 @@ public class TCHttpClientSettings extends HttpClientSettings
     else
     {
       // Add settings from configuration file here centrally
-      if (TCConfig.isProxyServerEnabled ())
+      if (TCConfig.HTTP.isProxyServerEnabled ())
       {
-        setProxyHost (new HttpHost (TCConfig.getProxyServerAddress (), TCConfig.getProxyServerPort ()));
+        setProxyHost (new HttpHost (TCConfig.HTTP.getProxyServerAddress (), TCConfig.HTTP.getProxyServerPort ()));
 
         // Non-proxy hosts
-        addNonProxyHostsFromPipeString (TCConfig.getProxyServerNonProxyHosts ());
+        addNonProxyHostsFromPipeString (TCConfig.HTTP.getProxyServerNonProxyHosts ());
       }
 
       // Disable SSL checks?
-      if (TCConfig.isTLSTrustAll ())
+      if (TCConfig.HTTP.isTLSTrustAll ())
         try
         {
           setSSLContextTrustAll ();

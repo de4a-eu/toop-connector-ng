@@ -15,8 +15,6 @@
  */
 package eu.toop.connector.api.r2d2;
 
-import java.io.Serializable;
-
 import javax.annotation.Nonnull;
 
 import com.helger.commons.annotation.Nonempty;
@@ -33,7 +31,7 @@ import com.helger.peppolid.IParticipantIdentifier;
  * @author Philip Helger
  */
 @FunctionalInterface
-public interface IR2D2ParticipantIDProvider extends Serializable
+public interface IR2D2ParticipantIDProvider
 {
   /**
    * Get all participant IDs that match the provided country code and document
