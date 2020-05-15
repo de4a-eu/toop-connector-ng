@@ -475,7 +475,7 @@ public class EDMRequest
                                        .append ("DataConsumer", m_aDataConsumer)
                                        .append ("ConsentToken", m_sConsentToken)
                                        .append ("DatasetIdentifier", m_sDatasetIdentifier)
-                                       .append ("Document ID", m_sDocumentID)
+                                       .append ("DocumentID", m_sDocumentID)
                                        .append ("DataSubjectLegalPerson", m_aDataSubjectLegalPerson)
                                        .append ("DataSubjectNaturalPerson", m_aDataSubjectNaturalPerson)
                                        .append ("AuthorizedRepresentative", m_aAuthorizedRepresentative)
@@ -489,7 +489,7 @@ public class EDMRequest
   {
     // Use the default specification identifier
     return new Builder ().specificationIdentifier (CToopEDM.SPECIFICATION_IDENTIFIER_TOOP_EDM_V20)
-            .responseOption(EResponseOptionType.LEAFCLASSWRI);
+            .responseOption(EResponseOptionType.CONTAINED);
   }
 
   @Nonnull
@@ -507,7 +507,7 @@ public class EDMRequest
   @Nonnull
   public static Builder builderDocumentRef ()
   {
-    return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT).responseOption(EResponseOptionType.OBJECTREF);
+    return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT).responseOption(EResponseOptionType.REFERENCED);
   }
 
   @Nonnull

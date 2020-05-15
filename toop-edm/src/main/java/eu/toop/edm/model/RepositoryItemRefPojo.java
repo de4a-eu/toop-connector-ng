@@ -1,3 +1,18 @@
+/**
+ * Copyright (C) 2018-2020 toop.eu
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *         http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package eu.toop.edm.model;
 
 import com.helger.commons.equals.EqualsHelper;
@@ -7,10 +22,6 @@ import eu.toop.regrep.rim.SimpleLinkType;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 public class RepositoryItemRefPojo
 {
@@ -19,8 +30,8 @@ public class RepositoryItemRefPojo
 
     public RepositoryItemRefPojo (@Nullable final String sTitle, @Nullable final String sLink)
     {
-        m_sLink = sLink;
         m_sTitle = sTitle;
+        m_sLink = sLink;
     }
 
     @Nullable
@@ -38,9 +49,10 @@ public class RepositoryItemRefPojo
     @Nonnull
     public SimpleLinkType getAsSimpleLink (){
         final SimpleLinkType ret = new SimpleLinkType ();
-        ret.setTitle (m_sTitle);
-        ret.setHref(m_sLink);
-
+        if(m_sTitle != null)
+            ret.setTitle (m_sTitle);
+        if(m_sLink != null)
+            ret.setHref(m_sLink);
         return ret;
     }
 
@@ -52,7 +64,7 @@ public class RepositoryItemRefPojo
         if (o == null || !getClass ().equals (o.getClass ()))
             return false;
         final RepositoryItemRefPojo rhs = (RepositoryItemRefPojo) o;
-        return EqualsHelper.equals (m_sLink, rhs.m_sLink) && EqualsHelper.equals (m_sTitle, rhs.m_sTitle);
+        return EqualsHelper.equals (m_sTitle, rhs.m_sTitle) && EqualsHelper.equals (m_sLink, rhs.m_sLink);
     }
 
     @Override
@@ -78,7 +90,11 @@ public class RepositoryItemRefPojo
     {
         final RepositoryItemRefPojo.Builder ret = new RepositoryItemRefPojo.Builder();
         if (a != null) {
-            return ret.link(a.getHref()).title(a.getTitle());
+            if(a.getTitle() != null)
+                ret.title(a.getTitle());
+            if(a.getHref() != null)
+                ret.link(a.getHref());
+            return ret;
         }
         return ret;
     }
@@ -91,14 +107,15 @@ public class RepositoryItemRefPojo
         public Builder ()
         {}
 
-        public RepositoryItemRefPojo.Builder title (@Nonnull final String sTitle)
+        @Nonnull
+        public RepositoryItemRefPojo.Builder title (@Nullable final String sTitle)
         {
             m_sTitle = sTitle;
             return this;
         }
 
         @Nonnull
-        public RepositoryItemRefPojo.Builder link (@Nonnull final String sLink)
+        public RepositoryItemRefPojo.Builder link (@Nullable final String sLink)
         {
             m_sLink = sLink;
             return this;

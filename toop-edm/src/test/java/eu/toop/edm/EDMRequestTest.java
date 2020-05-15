@@ -28,8 +28,6 @@ import java.util.UUID;
 import javax.annotation.Nonnull;
 
 import eu.toop.edm.model.*;
-import eu.toop.edm.xml.cagv.CCAGV;
-import eu.toop.regrep.RegRep4Reader;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
@@ -229,7 +227,7 @@ public final class EDMRequestTest
   public void createEDMDocumentRefRequestNP ()
   {
     final EDMRequest aRequest = _reqDocument ().dataSubject (_np ())
-            .responseOption(EResponseOptionType.OBJECTREF).build ();
+            .responseOption(EResponseOptionType.REFERENCED).build ();
     _testWriteAndRead (aRequest);
   }
 
@@ -266,8 +264,6 @@ public final class EDMRequestTest
 
     aRequest = EDMRequest.getReader ().read (new ClassPathResource ("Document Request_NP.xml"));
     _testWriteAndRead (aRequest);
-
-
   }
 
   @Test

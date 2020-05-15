@@ -135,9 +135,6 @@ public class EDMResponse
         ValueEnforcer.notEmpty (aConcepts, "Concept");
         break;
       case DOCUMENT:
-        ValueEnforcer.notNull (aDataset, "Dataset");
-        ValueEnforcer.notNull (aRepositoryItemRef, "RepositoryItemRef");
-        break;
       case OBJECTREF:
         ValueEnforcer.notNull (aDataset, "Dataset");
         break;
@@ -593,8 +590,6 @@ public class EDMResponse
             throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Concept");
           if (m_aDataset == null)
             throw new IllegalStateException ("A Query Definition of type 'Document' must contain a Dataset");
-          if (m_aRepositoryItemRef == null)
-            throw new IllegalStateException ("A Query Definition of type 'Document' must contain a RepositoryItemRef");
           break;
         case OBJECTREF:
           if (m_aConcepts.isNotEmpty ())
@@ -602,7 +597,7 @@ public class EDMResponse
           if (m_aDataset == null)
             throw new IllegalStateException ("A Query Definition of type 'ObjectRef' must contain a Dataset");
           if (m_aRepositoryItemRef != null)
-            throw new IllegalStateException ("A Query Definition of type 'ObjectRef' must contain a RepositoryItemRef");
+            throw new IllegalStateException ("A Query Definition of type 'ObjectRef' must NOT contain a RepositoryItemRef");
           break;
         default:
           throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
