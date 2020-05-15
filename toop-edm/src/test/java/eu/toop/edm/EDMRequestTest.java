@@ -55,8 +55,6 @@ public final class EDMRequestTest
   {
     assertNotNull (aReq);
 
-    System.out.println(aReq.getWriter().getAsString());
-
     // Write
     final byte [] aBytes = aReq.getWriter ().getAsBytes ();
     assertNotNull (aBytes);

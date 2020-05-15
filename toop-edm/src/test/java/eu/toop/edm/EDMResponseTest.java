@@ -44,7 +44,6 @@ public final class EDMResponseTest {
     private static void _testWriteAndRead(@Nonnull final EDMResponse aResp) {
         assertNotNull(aResp);
 
-        System.out.println(aResp.getWriter().getAsString());
         // Write
         final byte[] aBytes = aResp.getWriter().getAsBytes();
         assertNotNull(aBytes);
