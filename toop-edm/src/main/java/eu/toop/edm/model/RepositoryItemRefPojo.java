@@ -8,6 +8,7 @@ import eu.toop.regrep.rim.SimpleLinkType;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 
@@ -35,14 +36,11 @@ public class RepositoryItemRefPojo
     }
 
     @Nonnull
-    public SimpleLinkType getAsExternalLink (){
+    public SimpleLinkType getAsSimpleLink (){
         final SimpleLinkType ret = new SimpleLinkType ();
         ret.setTitle (m_sTitle);
-        try {
-            ret.setHref (URLEncoder.encode(m_sLink, StandardCharsets.UTF_8.toString()));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
+        ret.setHref(m_sLink);
+
         return ret;
     }
 
@@ -79,8 +77,9 @@ public class RepositoryItemRefPojo
     public static RepositoryItemRefPojo.Builder builder (@Nullable final SimpleLinkType a)
     {
         final RepositoryItemRefPojo.Builder ret = new RepositoryItemRefPojo.Builder();
-        if (a != null)
+        if (a != null) {
             return ret.link(a.getHref()).title(a.getTitle());
+        }
         return ret;
     }
 

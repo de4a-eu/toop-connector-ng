@@ -23,14 +23,14 @@ import com.helger.schematron.svrl.AbstractSVRLMessage;
 import eu.toop.edm.model.*;
 import eu.toop.edm.pilot.gbm.EToopConcept;
 import eu.toop.edm.schematron.SchematronEDM2Validator;
+import eu.toop.edm.xml.cagv.CCAGV;
 import eu.toop.regrep.ERegRepResponseStatus;
+import eu.toop.regrep.RegRep4Reader;
 import org.junit.Test;
 import org.w3c.dom.Document;
 
 import javax.annotation.Nonnull;
-import javax.swing.text.DateFormatter;
 import java.time.Month;
-import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
@@ -136,13 +136,23 @@ public final class EDMResponseTest {
 
     @Nonnull
     private static EDMResponse.Builder _respDocument() {
-        return _resp().queryDefinition(EQueryDefinitionType.DOCUMENT).dataset(_dataset());
+        return _resp().queryDefinition(EQueryDefinitionType.DOCUMENT).dataset(_dataset())
+                .repositoryItemRef(
+                        RepositoryItemRefPojo.builder()
+                                .title("Evidence.pdf")
+                                .link("https://www.example.com/evidence.pdf"));
+    }
+
+    @Nonnull
+    private static EDMResponse.Builder _respDocumentRef() {
+        return _resp().queryDefinition(EQueryDefinitionType.OBJECTREF).dataset(_dataset());
     }
 
     @Test
     public void createConceptResponse() {
         final EDMResponse aResp1 = _respConcept().build();
-        EDMResponse aResp = EDMResponse.getReader().read(ClassPathResource.getInputStream("Concept Response.xml"));
+        EDMResponse aResp = EDMResponse.create(RegRep4Reader.queryResponse(CCAGV.XSDS).read(ClassPathResource.getInputStream("Concept Response.xml")));
+//        EDMResponse aResp = EDMResponse.getReader().read(ClassPathResource.getInputStream("Concept Response.xml"));
         _testWriteAndRead(aResp);
     }
 
@@ -153,6 +163,12 @@ public final class EDMResponseTest {
     }
 
     @Test
+    public void createDocumentRefResponse() {
+        final EDMResponse aResp = _respDocumentRef().build();
+        _testWriteAndRead(aResp);
+    }
+
+
     public void createDocumentResponseWithConceptType() {
         try {
             // This attempts to create an EDMResponse with a dataset element but with

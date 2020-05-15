@@ -170,7 +170,7 @@ public class EDMRequest
       case DOCUMENT:
         ValueEnforcer.notEmpty (aDistributions, "Distribution");
         break;
-      case GETOBJECTBYID:
+      case OBJECTREF:
         ValueEnforcer.notEmpty(sDocumentID, "Document ID");
         break;
       default:
@@ -513,7 +513,7 @@ public class EDMRequest
   @Nonnull
   public static Builder builderGetDocumentByID()
   {
-    return builder ().queryDefinition (EQueryDefinitionType.GETOBJECTBYID);
+    return builder ().queryDefinition (EQueryDefinitionType.OBJECTREF);
   }
 
   /**
@@ -901,13 +901,13 @@ public class EDMRequest
           if (m_sDocumentID != null)
             throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Document ID");
           break;
-        case GETOBJECTBYID:
+        case OBJECTREF:
           if (m_aConcepts.isNotEmpty ())
-            throw new IllegalStateException ("A Query Definition of type 'DocumentRef' must NOT contain a Concept");
+            throw new IllegalStateException ("A Query Definition of type 'GetObjectByID' must NOT contain a Concept");
           if (m_aDistributions.isNotEmpty ())
-            throw new IllegalStateException ("A Query Definition of type 'DocumentRef' must NOT contain a Distribution");
+            throw new IllegalStateException ("A Query Definition of type 'GetObjectByID' must NOT contain a Distribution");
           if (m_sDocumentID == null)
-            throw new IllegalStateException ("A Query Definition of type 'DocumentRef' must contain a Document ID");
+            throw new IllegalStateException ("A Query Definition of type 'GetObjectByID' must contain a Document ID");
           break;
         default:
           throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
@@ -997,7 +997,7 @@ public class EDMRequest
         {
           final String sValue = ((StringValueType) aSlotValue).getValue ();
           aBuilder.documentID (sValue);
-          aBuilder.queryDefinition (EQueryDefinitionType.GETOBJECTBYID);
+          aBuilder.queryDefinition (EQueryDefinitionType.OBJECTREF);
         }
         break;
       case SlotDataConsumer.NAME:

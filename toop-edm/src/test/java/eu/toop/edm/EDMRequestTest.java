@@ -23,6 +23,7 @@ import static org.junit.Assert.fail;
 
 import java.time.Month;
 import java.util.Locale;
+import java.util.UUID;
 
 import javax.annotation.Nonnull;
 
@@ -61,7 +62,7 @@ public final class EDMRequestTest
     assertNotNull (aBytes);
 
     // Re-read
-    final EDMRequest aReq2 = EDMRequest.create(RegRep4Reader.queryRequest(CCAGV.XSDS).read(aBytes));
+    final EDMRequest aReq2 = EDMRequest.getReader().read(aBytes);
 
     // Compare with original
     assertEquals (aReq, aReq2);
@@ -142,8 +143,8 @@ public final class EDMRequestTest
   @Nonnull
   private static EDMRequest.Builder _reqDocumentByID()
   {
-    return _req ().queryDefinition (EQueryDefinitionType.GETOBJECTBYID)
-            .documentID("a document id");
+    return _req ().queryDefinition (EQueryDefinitionType.OBJECTREF)
+            .documentID(UUID.randomUUID().toString());
   }
 
   @Nonnull

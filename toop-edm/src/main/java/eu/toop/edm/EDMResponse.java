@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.xml.datatype.XMLGregorianCalendar;
 
+import eu.toop.edm.model.*;
 import eu.toop.regrep.rim.*;
 import org.w3c.dom.Node;
 
@@ -49,10 +50,6 @@ import com.helger.datetime.util.PDTXMLConverter;
 import eu.toop.edm.jaxb.cccev.CCCEVConceptType;
 import eu.toop.edm.jaxb.cv.agent.AgentType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
-import eu.toop.edm.model.AgentPojo;
-import eu.toop.edm.model.ConceptPojo;
-import eu.toop.edm.model.DatasetPojo;
-import eu.toop.edm.model.EQueryDefinitionType;
 import eu.toop.edm.slot.ISlotProvider;
 import eu.toop.edm.slot.SlotConceptValues;
 import eu.toop.edm.slot.SlotDataProvider;
@@ -108,6 +105,7 @@ public class EDMResponse
   private final AgentPojo m_aDataProvider;
   private final ICommonsList <ConceptPojo> m_aConcepts = new CommonsArrayList <> ();
   private final DatasetPojo m_aDataset;
+  private final RepositoryItemRefPojo m_aRepositoryItemRef;
 
   public EDMResponse (@Nonnull final EQueryDefinitionType eQueryDefinition,
                       @Nonnull final ERegRepResponseStatus eResponseStatus,
@@ -116,7 +114,8 @@ public class EDMResponse
                       @Nonnull final LocalDateTime aIssueDateTime,
                       @Nonnull final AgentPojo aDataProvider,
                       @Nullable final ICommonsList <ConceptPojo> aConcepts,
-                      @Nullable final DatasetPojo aDataset)
+                      @Nullable final DatasetPojo aDataset,
+                      @Nullable final RepositoryItemRefPojo aRepositoryItemRef)
   {
     ValueEnforcer.notNull (eQueryDefinition, "QueryDefinition");
     ValueEnforcer.notNull (eResponseStatus, "ResponseStatus");
@@ -137,9 +136,11 @@ public class EDMResponse
         break;
       case DOCUMENT:
         ValueEnforcer.notNull (aDataset, "Dataset");
+        ValueEnforcer.notNull (aRepositoryItemRef, "RepositoryItemRef");
         break;
-      case GETOBJECTBYID:
-// break;
+      case OBJECTREF:
+        ValueEnforcer.notNull (aDataset, "Dataset");
+        break;
       default:
         throw new IllegalArgumentException ("Unsupported query definition: " + eQueryDefinition);
     }
@@ -153,6 +154,7 @@ public class EDMResponse
     if (aConcepts != null)
       m_aConcepts.addAll (aConcepts);
     m_aDataset = aDataset;
+    m_aRepositoryItemRef = aRepositoryItemRef;
   }
 
   @Nonnull
@@ -237,25 +239,41 @@ public class EDMResponse
     }
 
     {
-      final RegistryObjectListType aROList = new RegistryObjectListType ();
-      final RegistryObjectType aRO = new RegistryObjectType ();
-      final SimpleLinkType aSL = new SimpleLinkType();
+      if(m_eQueryDefinition.equals(EQueryDefinitionType.OBJECTREF))
+      {
+        final ObjectRefListType aORList = new ObjectRefListType ();
+        final ObjectRefType aOR = new ObjectRefType ();
 
-      // Setter currently not available
-//      aRO.setRepositoryItemRef(aSL);
+        aOR.setId (UUID.randomUUID ().toString ());
 
-      aSL.setTitle("TEST");
-      aSL.setHref("cid:attachment123@example.toop.eu");
+        // All slots inside of RegistryObject
+        for (final Map.Entry <String, ISlotProvider> aEntry : aProviderMap.entrySet ())
+          if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
+            aOR.addSlot (aEntry.getValue ().createSlot ());
 
-      aRO.setId (UUID.randomUUID ().toString ());
+        aORList.addObjectRef (aOR);
+        ret.setObjectRefList (aORList);
+      }
+      else
+      {
+        final RegistryObjectListType aROList = new RegistryObjectListType ();
+        final ExtrinsicObjectType aEO = new ExtrinsicObjectType ();
+        final SimpleLinkType aSL = new SimpleLinkType ();
 
-      // All slots inside of RegistryObject
-      for (final Map.Entry <String, ISlotProvider> aEntry : aProviderMap.entrySet ())
-        if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
-          aRO.addSlot (aEntry.getValue ().createSlot ());
+        if(m_aRepositoryItemRef!=null)
+          aEO.setRepositoryItemRef(m_aRepositoryItemRef.getAsSimpleLink ());
 
-      aROList.addRegistryObject (aRO);
-      ret.setRegistryObjectList (aROList);
+        aEO.setId (UUID.randomUUID ().toString ());
+
+        // All slots inside of RegistryObject
+        for (final Map.Entry <String, ISlotProvider> aEntry : aProviderMap.entrySet ())
+          if (!TOP_LEVEL_SLOTS.contains (aEntry.getKey ()))
+            aEO.addSlot (aEntry.getValue ().createSlot ());
+
+        aROList.addRegistryObject (aEO);
+        ret.setRegistryObjectList (aROList);
+      }
+
     }
 
     return ret;
@@ -311,7 +329,8 @@ public class EDMResponse
            EqualsHelper.equals (m_aIssueDateTime, that.m_aIssueDateTime) &&
            EqualsHelper.equals (m_aDataProvider, that.m_aDataProvider) &&
            EqualsHelper.equals (m_aConcepts, that.m_aConcepts) &&
-           EqualsHelper.equals (m_aDataset, that.m_aDataset);
+           EqualsHelper.equals (m_aDataset, that.m_aDataset) &&
+           EqualsHelper.equals (m_aRepositoryItemRef, that.m_aRepositoryItemRef);
   }
 
   @Override
@@ -325,6 +344,7 @@ public class EDMResponse
                                        .append (m_aDataProvider)
                                        .append (m_aConcepts)
                                        .append (m_aDataset)
+                                       .append (m_aRepositoryItemRef)
                                        .getHashCode ();
   }
 
@@ -339,6 +359,7 @@ public class EDMResponse
                                        .append ("DataProvider", m_aDataProvider)
                                        .append ("Concepts", m_aConcepts)
                                        .append ("Dataset", m_aDataset)
+                                       .append ("RepositoryItemRef", m_aRepositoryItemRef)
                                        .getToString ();
   }
 
@@ -361,6 +382,12 @@ public class EDMResponse
     return builder ().queryDefinition (EQueryDefinitionType.DOCUMENT);
   }
 
+  @Nonnull
+  public static Builder builderDocumentRef ()
+  {
+    return builder ().queryDefinition (EQueryDefinitionType.OBJECTREF);
+  }
+
   public static class Builder
   {
     private EQueryDefinitionType m_eQueryDefinition;
@@ -371,6 +398,7 @@ public class EDMResponse
     private AgentPojo m_aDataProvider;
     private final ICommonsList <ConceptPojo> m_aConcepts = new CommonsArrayList <> ();
     private DatasetPojo m_aDataset;
+    private RepositoryItemRefPojo m_aRepositoryItemRef;
 
     protected Builder ()
     {}
@@ -516,6 +544,25 @@ public class EDMResponse
       return dataset (a == null ? null : DatasetPojo.builder (a));
     }
 
+    @Nonnull
+    public Builder repositoryItemRef (@Nullable final RepositoryItemRefPojo.Builder a)
+    {
+      return repositoryItemRef (a == null ? null : a.build ());
+    }
+
+    @Nonnull
+    public Builder repositoryItemRef (@Nullable final RepositoryItemRefPojo a)
+    {
+      m_aRepositoryItemRef = a;
+      return this;
+    }
+
+    @Nonnull
+    public Builder repositoryItemRef (@Nullable final SimpleLinkType a)
+    {
+      return repositoryItemRef (a == null ? null : RepositoryItemRefPojo.builder (a));
+    }
+
     public void checkConsistency ()
     {
       if (m_eQueryDefinition == null)
@@ -546,6 +593,16 @@ public class EDMResponse
             throw new IllegalStateException ("A Query Definition of type 'Document' must NOT contain a Concept");
           if (m_aDataset == null)
             throw new IllegalStateException ("A Query Definition of type 'Document' must contain a Dataset");
+          if (m_aRepositoryItemRef == null)
+            throw new IllegalStateException ("A Query Definition of type 'Document' must contain a RepositoryItemRef");
+          break;
+        case OBJECTREF:
+          if (m_aConcepts.isNotEmpty ())
+            throw new IllegalStateException ("A Query Definition of type 'ObjectRef' must NOT contain a Concept");
+          if (m_aDataset == null)
+            throw new IllegalStateException ("A Query Definition of type 'ObjectRef' must contain a Dataset");
+          if (m_aRepositoryItemRef != null)
+            throw new IllegalStateException ("A Query Definition of type 'ObjectRef' must contain a RepositoryItemRef");
           break;
         default:
           throw new IllegalStateException ("Unhandled query definition " + m_eQueryDefinition);
@@ -564,7 +621,8 @@ public class EDMResponse
                               m_aIssueDateTime,
                               m_aDataProvider,
                               m_aConcepts,
-                              m_aDataset);
+                              m_aDataset,
+                              m_aRepositoryItemRef);
     }
   }
 
@@ -628,19 +686,36 @@ public class EDMResponse
   }
 
   @Nonnull
-  public static EDMResponse create (@Nonnull final QueryResponse aQueryResponse)
-  {
-    final EDMResponse.Builder aBuilder = EDMResponse.builder ()
-                                                    .responseStatus (ERegRepResponseStatus.getFromIDOrNull (aQueryResponse.getStatus ()))
-                                                    .requestID (aQueryResponse.getRequestId ());
+  public static EDMResponse create (@Nonnull final QueryResponse aQueryResponse) {
+    final EDMResponse.Builder aBuilder = EDMResponse.builder()
+            .responseStatus(ERegRepResponseStatus.getFromIDOrNull(aQueryResponse.getStatus()))
+            .requestID(aQueryResponse.getRequestId());
 
-    for (final SlotType s : aQueryResponse.getSlot ())
-      _applySlots (s, aBuilder);
+    for (final SlotType s : aQueryResponse.getSlot())
+      _applySlots(s, aBuilder);
 
-    if (aQueryResponse.getRegistryObjectList () != null &&
-        aQueryResponse.getRegistryObjectList ().hasRegistryObjectEntries ())
-      for (final SlotType aSlot : aQueryResponse.getRegistryObjectList ().getRegistryObjectAtIndex (0).getSlot ())
-        _applySlots (aSlot, aBuilder);
+    if (aQueryResponse.getRegistryObjectList() != null &&
+            aQueryResponse.getRegistryObjectList().hasRegistryObjectEntries())
+    {
+      for (final SlotType aSlot : aQueryResponse.getRegistryObjectList().getRegistryObjectAtIndex(0).getSlot())
+        _applySlots(aSlot, aBuilder);
+
+      if(aQueryResponse.getRegistryObjectList().getRegistryObjectAtIndex(0) instanceof ExtrinsicObjectType)
+      {
+        ExtrinsicObjectType aEO = (ExtrinsicObjectType) aQueryResponse.getRegistryObjectList().getRegistryObjectAtIndex(0);
+
+        if((aEO != null) && (aEO.getRepositoryItemRef() != null))
+          aBuilder.repositoryItemRef(aEO.getRepositoryItemRef());
+      }
+    }
+
+    if (aQueryResponse.getObjectRefList () != null &&
+            aQueryResponse.getObjectRefList ().hasObjectRefEntries() )
+    {
+      for (final SlotType aSlot : aQueryResponse.getObjectRefList().getObjectRefAtIndex(0).getSlot())
+        _applySlots(aSlot, aBuilder);
+      aBuilder.queryDefinition (EQueryDefinitionType.OBJECTREF);
+    }
 
     return aBuilder.build ();
   }
