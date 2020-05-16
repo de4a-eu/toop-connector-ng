@@ -32,6 +32,9 @@ public class TCIdentifierFactory extends SimpleIdentifierFactory
 {
   public static final TCIdentifierFactory INSTANCE_TC = new TCIdentifierFactory ();
 
+  private TCIdentifierFactory ()
+  {}
+
   @Override
   @Nullable
   public SimpleDocumentTypeIdentifier createDocumentTypeIdentifier (@Nullable final String sScheme,
