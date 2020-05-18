@@ -16,6 +16,7 @@
 package eu.toop.connector.api.as4;
 
 import java.io.Serializable;
+import java.nio.charset.Charset;
 import java.util.UUID;
 
 import javax.annotation.Nonnull;
@@ -143,6 +144,12 @@ public final class MEPayload implements Serializable
     {
       // Assume: no copy
       return data (a == null ? null : new ByteArrayWrapper (a, false));
+    }
+
+    @Nonnull
+    public Builder data (@Nullable final String s, @Nonnull final Charset aCharset)
+    {
+      return data (s == null ? null : ByteArrayWrapper.create (s, aCharset));
     }
 
     @Nonnull

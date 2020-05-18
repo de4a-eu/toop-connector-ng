@@ -180,27 +180,27 @@
 
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-connector-api</artifactId>
+        <artifactId>tc-api</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-mem-default</artifactId>
+        <artifactId>tc-mem-external</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-mem-phase4</artifactId>
+        <artifactId>tc-mem-phase4</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-connector</artifactId>
+        <artifactId>tc</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-connector-webapp</artifactId>
+        <artifactId>tc-webapp</artifactId>
         <version>${project.version}</version>
       </dependency>
     </dependencies>
@@ -217,7 +217,9 @@
 
   <!-- Sub-projects - must match child directory names; order is important! -->
   <modules>
-    <module>toop-connector-api</module>
+    <module>tc-api</module>
+    <module>tc-mem-external</module>
+    <module>tc-mem-phase4</module>
   </modules>
 
   <build>

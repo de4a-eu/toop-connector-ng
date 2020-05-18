@@ -16,6 +16,8 @@
 package eu.toop.connector.api.as4;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -72,6 +74,13 @@ public class MEMessage implements Serializable
   }
 
   @Nonnull
+  @ReturnsMutableObject
+  public List <MEPayload> payloadsWithoutHead ()
+  {
+    return m_aPayloads.subList (1, m_aPayloads.size ());
+  }
+
+  @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
@@ -85,6 +94,18 @@ public class MEMessage implements Serializable
     {}
 
     @Nonnull
+    public Builder addPayload (@Nullable final Consumer <? super MEPayload.Builder> a)
+    {
+      if (a != null)
+      {
+        final MEPayload.Builder aBuilder = MEPayload.builder ();
+        a.accept (aBuilder);
+        addPayload (aBuilder);
+      }
+      return this;
+    }
+
+    @Nonnull
     public Builder addPayload (@Nullable final MEPayload.Builder a)
     {
       return addPayload (a == null ? null : a.build ());
@@ -95,6 +116,18 @@ public class MEMessage implements Serializable
     {
       if (a != null)
         m_aPayloads.add (a);
+      return this;
+    }
+
+    @Nonnull
+    public Builder payload (@Nullable final Consumer <? super MEPayload.Builder> a)
+    {
+      if (a != null)
+      {
+        final MEPayload.Builder aBuilder = MEPayload.builder ();
+        a.accept (aBuilder);
+        payload (aBuilder);
+      }
       return this;
     }
 
