@@ -23,11 +23,11 @@
     <artifactId>toop-connector-ng-parent-pom</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>toop-connector-api</artifactId>
+  <artifactId>tc-api</artifactId>
   <packaging>bundle</packaging>
-  <name>toop-connector-api</name>
+  <name>tc-api</name>
   <description>Contains the TOOP Connector shared API</description>
-  <url>https://github.com/toop4eu/toop-connector-ng/toop-connector-api</url>
+  <url>https://github.com/toop4eu/toop-connector-ng/tc-api</url>
   <inceptionYear>2020</inceptionYear>
   
   <licenses>

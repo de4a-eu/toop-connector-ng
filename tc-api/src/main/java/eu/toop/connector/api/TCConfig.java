@@ -27,6 +27,7 @@ import javax.annotation.concurrent.ThreadSafe;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.concurrent.SimpleReadWriteLock;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.id.factory.GlobalIDFactory;
@@ -49,7 +50,13 @@ public final class TCConfig
   private static final Logger LOGGER = LoggerFactory.getLogger (TCConfig.class);
   private static final SimpleReadWriteLock s_aRWLock = new SimpleReadWriteLock ();
 
-  private static IConfig s_aConfig = ConfigFactory.getDefaultConfig ();
+  @GuardedBy ("s_aRWLock")
+  private static IConfig s_aConfig;
+
+  static
+  {
+    setDefaultConfig ();
+  }
 
   private TCConfig ()
   {}
@@ -60,7 +67,27 @@ public final class TCConfig
   @Nonnull
   public static IConfig getConfig ()
   {
-    return s_aConfig;
+    return s_aRWLock.readLockedGet ( () -> s_aConfig);
+  }
+
+  /**
+   * Set a different configuration. E.g. for testing.
+   *
+   * @param aConfig
+   *        The config to be set. May not be <code>null</code>.
+   */
+  public static void setConfig (@Nonnull final IConfig aConfig)
+  {
+    ValueEnforcer.notNull (aConfig, "Config");
+    s_aRWLock.writeLockedGet ( () -> s_aConfig = aConfig);
+  }
+
+  /**
+   * Set the default configuration.
+   */
+  public static void setDefaultConfig ()
+  {
+    setConfig (ConfigFactory.getDefaultConfig ());
   }
 
   public static class Global

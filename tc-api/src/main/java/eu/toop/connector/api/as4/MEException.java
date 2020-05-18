@@ -64,7 +64,7 @@ public class MEException extends IllegalStateException
   }
 
   @Nullable
-  public EToopErrorCode getToopErrorCode ()
+  public final EToopErrorCode getToopErrorCode ()
   {
     return m_eToopErrorCode;
   }
