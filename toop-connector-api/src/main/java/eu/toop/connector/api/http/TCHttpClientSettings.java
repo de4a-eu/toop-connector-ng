@@ -18,6 +18,8 @@ package eu.toop.connector.api.http;
 import java.security.GeneralSecurityException;
 
 import org.apache.http.HttpHost;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.exception.InitializationException;
 import com.helger.httpclient.HttpClientSettings;
@@ -31,12 +33,15 @@ import eu.toop.connector.api.TCConfig;
  */
 public class TCHttpClientSettings extends HttpClientSettings
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (TCHttpClientSettings.class);
+
   public TCHttpClientSettings ()
   {
     if (TCConfig.HTTP.isUseHttpSystemProperties ())
     {
       // For proxy etc
       setUseSystemProperties (true);
+      LOGGER.info ("Using predefined System properties to configure HTTP connection. All manually configured values for HTTP connections are not used.");
     }
     else
     {

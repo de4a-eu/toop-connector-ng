@@ -38,8 +38,6 @@ import com.helger.peppol.sml.ESML;
 import com.helger.peppol.sml.ISMLInfo;
 import com.helger.peppol.sml.SMLInfo;
 
-import eu.toop.connector.api.as4.MessageExchangeManager;
-
 /**
  * This class contains global configuration elements for the TOOP Connector.
  *
@@ -67,6 +65,9 @@ public final class TCConfig
 
   public static class Global
   {
+    private Global ()
+    {}
+
     public static boolean isGlobalDebug ()
     {
       return getConfig ().getAsBoolean ("global.debug", GlobalDebug.isDebugMode ());
@@ -93,6 +94,9 @@ public final class TCConfig
     public static final boolean DEFAULT_TOOP_TRACKER_ENABLED = false;
     public static final String DEFAULT_TOOP_TRACKER_TOPIC = "toop";
 
+    private Tracker ()
+    {}
+
     public static boolean isToopTrackerEnabled ()
     {
       return getConfig ().getAsBoolean ("toop.tracker.enabled", DEFAULT_TOOP_TRACKER_ENABLED);
@@ -115,6 +119,9 @@ public final class TCConfig
   {
     public static final boolean DEFAULT_USE_SML = true;
     private static ISMLInfo s_aCachedSMLInfo;
+
+    private R2D2 ()
+    {}
 
     /**
      * @return The TOOP Directory base URL for R2D2. Should never end with a
@@ -191,32 +198,17 @@ public final class TCConfig
 
   public static class MEM
   {
+    private MEM ()
+    {}
+
     /**
      * @return The MEM implementation ID or the default value. Never
      *         <code>null</code>.
      */
-    @Nonnull
+    @Nullable
     public static String getMEMImplementationID ()
     {
-      return getConfig ().getAsString ("toop.mem.implementation", MessageExchangeManager.DEFAULT_ID);
-    }
-
-    /**
-     * Get the overall protocol to be used. Depending on that output different
-     * other properties might be queried.
-     *
-     * @return The overall protocol to use. Never <code>null</code>.
-     */
-    @Nonnull
-    public static ETCProtocol getMEMProtocol ()
-    {
-      final String sID = getConfig ().getAsString ("toop.mem.protocol", ETCProtocol.DEFAULT.getID ());
-      final ETCProtocol eProtocol = ETCProtocol.getFromIDOrNull (sID);
-      if (eProtocol == null)
-      {
-        throw new IllegalStateException ("Failed to resolve protocol with ID '" + sID + "'");
-      }
-      return eProtocol;
+      return getConfig ().getAsString ("toop.mem.implementation");
     }
 
     // GW_URL
@@ -246,9 +238,12 @@ public final class TCConfig
   public static class MP
   {
     @GuardedBy ("s_aRWLock")
-    private static String s_sMPToopInterfaceDPOverrideUrl = null;
+    private static String s_sMPToopInterfaceDPOverrideUrl;
     @GuardedBy ("s_aRWLock")
-    private static String s_sMPToopInterfaceDCOverrideUrl = null;
+    private static String s_sMPToopInterfaceDCOverrideUrl;
+
+    private MP ()
+    {}
 
     /**
      * @return <code>true</code> if Schematron validation is enabled,
@@ -376,6 +371,9 @@ public final class TCConfig
 
   public static class Debug
   {
+    private Debug ()
+    {}
+
     // Servlet "/from-dc", step 1/4:
 
     public static boolean isDebugFromDCDumpEnabled ()
@@ -459,6 +457,9 @@ public final class TCConfig
 
   public static class HTTP
   {
+    private HTTP ()
+    {}
+
     public static boolean isUseHttpSystemProperties ()
     {
       return getConfig ().getAsBoolean ("http.usesysprops", false);

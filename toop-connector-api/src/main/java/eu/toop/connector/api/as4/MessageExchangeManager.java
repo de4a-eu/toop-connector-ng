@@ -20,9 +20,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.ICommonsMap;
 import com.helger.commons.concurrent.SimpleReadWriteLock;
@@ -33,9 +30,6 @@ import eu.toop.connector.api.TCConfig;
 
 public class MessageExchangeManager
 {
-  public static final String DEFAULT_ID = "mem-default";
-  private static final Logger LOGGER = LoggerFactory.getLogger (MessageExchangeManager.class);
-
   private static final SimpleReadWriteLock s_aRWLock = new SimpleReadWriteLock ();
   @GuardedBy ("s_aRWLock")
   private static ICommonsMap <String, IMessageExchangeSPI> s_aMap = new CommonsLinkedHashMap <> ();
@@ -55,9 +49,6 @@ public class MessageExchangeManager
       }
       if (s_aMap.isEmpty ())
         throw new InitializationException ("No IMessageExchangeSPI implementation is registered!");
-      if (false)
-        if (!s_aMap.containsKey (DEFAULT_ID))
-          LOGGER.warn ("The default IMessageExchangeSPI ID '" + DEFAULT_ID + "' is not registered!");
     });
   }
 
@@ -71,19 +62,19 @@ public class MessageExchangeManager
   {}
 
   @Nullable
-  public static IMessageExchangeSPI getSafeImplementationOfID (@Nullable final String sID)
+  public static IMessageExchangeSPI getImplementationOfID (@Nullable final String sID)
   {
     // Fallback to default
-    return s_aRWLock.readLockedGet ( () -> s_aMap.computeIfAbsent (sID, k -> s_aMap.get (DEFAULT_ID)));
+    return s_aRWLock.readLockedGet ( () -> s_aMap.get (sID));
   }
 
   @Nonnull
   public static IMessageExchangeSPI getConfiguredImplementation ()
   {
     final String sID = TCConfig.MEM.getMEMImplementationID ();
-    final IMessageExchangeSPI ret = getSafeImplementationOfID (sID);
+    final IMessageExchangeSPI ret = getImplementationOfID (sID);
     if (ret == null)
-      throw new IllegalStateException ("Failed to resolve MEM implementation ID '" + sID + "'");
+      throw new IllegalStateException ("Failed to resolve MEM implementation with ID '" + sID + "'");
     return ret;
   }
 
