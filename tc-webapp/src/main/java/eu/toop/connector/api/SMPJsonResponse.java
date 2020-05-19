@@ -42,8 +42,6 @@ import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.security.certificate.CertificateHelper;
 import com.helger.smpclient.bdxr1.utils.BDXR1ExtensionConverter;
-import com.helger.smpclient.peppol.utils.SMPExtensionConverter;
-import com.helger.smpclient.peppol.utils.W3CEndpointReferenceHelper;
 
 @Immutable
 public final class SMPJsonResponse
@@ -166,73 +164,6 @@ public final class SMPJsonResponse
       aDetails.add ("sigAlgName", aCert.getSigAlgName ());
     }
     aTarget.add (JSON_CERTIFICATE_DETAILS, aDetails);
-  }
-
-  @Nonnull
-  public static IJsonObject convert (@Nonnull final IParticipantIdentifier aParticipantID,
-                                     @Nonnull final IDocumentTypeIdentifier aDocTypeID,
-                                     @Nonnull final com.helger.smpclient.peppol.jaxb.ServiceMetadataType aSM)
-  {
-    final IJsonObject ret = new JsonObject ();
-    ret.add (JSON_SMPTYPE, ESMPAPIType.PEPPOL.getID ());
-    ret.add (JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
-    ret.add (JSON_DOCUMENT_TYPE_ID, aDocTypeID.getURIEncoded ());
-
-    final com.helger.smpclient.peppol.jaxb.RedirectType aRedirect = aSM.getRedirect ();
-    if (aRedirect != null)
-    {
-      final IJsonObject aJsonRedirect = new JsonObject ().add (JSON_HREF, aRedirect.getHref ())
-                                                         .add (JSON_CERTIFICATE_UID, aRedirect.getCertificateUID ())
-                                                         .add (JSON_EXTENSION,
-                                                               SMPExtensionConverter.convertToString (aRedirect.getExtension ()));
-      ret.add (JSON_REDIRECT, aJsonRedirect);
-    }
-    else
-    {
-      final com.helger.smpclient.peppol.jaxb.ServiceInformationType aSI = aSM.getServiceInformation ();
-      final IJsonObject aJsonSI = new JsonObject ();
-      {
-        final IJsonArray aJsonProcs = new JsonArray ();
-        // For all processes
-        if (aSI.getProcessList () != null)
-          for (final com.helger.smpclient.peppol.jaxb.ProcessType aProcess : aSI.getProcessList ().getProcess ())
-            if (aProcess.getProcessIdentifier () != null)
-            {
-              final IJsonObject aJsonProc = new JsonObject ().add (JSON_PROCESS_ID,
-                                                                   CIdentifier.getURIEncoded (aProcess.getProcessIdentifier ()));
-              final IJsonArray aJsonEPs = new JsonArray ();
-              // For all endpoints
-              if (aProcess.getServiceEndpointList () != null)
-                for (final com.helger.smpclient.peppol.jaxb.EndpointType aEndpoint : aProcess.getServiceEndpointList ().getEndpoint ())
-                {
-                  final String sEndpointRef = aEndpoint.getEndpointReference () == null ? null
-                                                                                        : W3CEndpointReferenceHelper.getAddress (aEndpoint.getEndpointReference ());
-                  final IJsonObject aJsonEP = new JsonObject ().add (JSON_TRANSPORT_PROFILE, aEndpoint.getTransportProfile ())
-                                                               .add (JSON_ENDPOINT_REFERENCE, sEndpointRef)
-                                                               .add (JSON_REQUIRE_BUSINESS_LEVEL_SIGNATURE,
-                                                                     aEndpoint.isRequireBusinessLevelSignature ())
-                                                               .add (JSON_MINIMUM_AUTHENTICATION_LEVEL,
-                                                                     aEndpoint.getMinimumAuthenticationLevel ());
-
-                  aJsonEP.addIfNotNull (JSON_SERVICE_ACTIVATION_DATE, _getLDT (aEndpoint.getServiceActivationDate ()));
-                  aJsonEP.addIfNotNull (JSON_SERVICE_EXPIRATION_DATE, _getLDT (aEndpoint.getServiceExpirationDate ()));
-                  _convertCertificate (aJsonEP, aEndpoint.getCertificate ());
-                  aJsonEP.add (JSON_SERVICE_DESCRIPTION, aEndpoint.getServiceDescription ())
-                         .add (JSON_TECHNICAL_CONTACT_URL, aEndpoint.getTechnicalContactUrl ())
-                         .add (JSON_TECHNICAL_INFORMATION_URL, aEndpoint.getTechnicalInformationUrl ())
-                         .add (JSON_EXTENSION, SMPExtensionConverter.convertToString (aEndpoint.getExtension ()));
-
-                  aJsonEPs.add (aJsonEP);
-                }
-              aJsonProc.add (JSON_ENDPOINTS, aJsonEPs)
-                       .add (JSON_EXTENSION, SMPExtensionConverter.convertToString (aProcess.getExtension ()));
-              aJsonProcs.add (aJsonProc);
-            }
-        aJsonSI.add (JSON_PROCESSES, aJsonProcs).add (JSON_EXTENSION, SMPExtensionConverter.convertToString (aSI.getExtension ()));
-      }
-      ret.add (JSON_SERVICEINFO, aJsonSI);
-    }
-    return ret;
   }
 
   @Nonnull
