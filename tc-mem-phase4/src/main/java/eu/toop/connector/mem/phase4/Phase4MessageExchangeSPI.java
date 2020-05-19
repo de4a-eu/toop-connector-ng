@@ -164,8 +164,6 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     try (final AS4ResourceHelper aResHelper = new AS4ResourceHelper ())
     {
       final AS4ClientUserMessage aClient = new AS4ClientUserMessage (aResHelper);
-      // Enforce the http settings from TOOP
-      aClient.setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()));
       aClient.setSoapVersion (ESoapVersion.SOAP_12);
       aClient.setAS4CryptoFactory (aCF);
 
@@ -214,7 +212,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
         }
       }
 
-      // Proxy config etc
+      // Enforce the http settings from TOOP
       aClient.setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()));
 
       // Main sending
@@ -225,15 +223,16 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                                                                                              aCallback,
                                                                                              aOutgoingDumper,
                                                                                              (IAS4RetryCallback) null);
-      LOGGER.info ("[phase4] Successfully transmitted document with message ID '" +
-                   aResponseEntity.getMessageID () +
-                   "' for '" +
-                   aRoutingInfo.getReceiverID ().getURIEncoded () +
-                   "' to '" +
-                   aRoutingInfo.getEndpointURL () +
-                   "' in " +
-                   aSW.stopAndGetMillis () +
-                   " ms");
+      if (LOGGER.isInfoEnabled ())
+        LOGGER.info ("[phase4] Successfully transmitted document with message ID '" +
+                     aResponseEntity.getMessageID () +
+                     "' for '" +
+                     aRoutingInfo.getReceiverID ().getURIEncoded () +
+                     "' to '" +
+                     aRoutingInfo.getEndpointURL () +
+                     "' in " +
+                     aSW.stopAndGetMillis () +
+                     " ms");
 
       if (aResponseEntity.hasResponse () && aResponseEntity.getResponse ().length > 0)
       {
@@ -262,16 +261,14 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     }
   }
 
-  public void sendDCOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
-                              @Nonnull final MEMessage aMessage) throws MEException
+  public void sendDCOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEException
   {
     LOGGER.info ("[phase4] sendDCOutgoing");
     // No difference
     _sendOutgoing (m_aCF, aRoutingInfo, aMessage);
   }
 
-  public void sendDPOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
-                              @Nonnull final MEMessage aMessage) throws MEException
+  public void sendDPOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEException
   {
     LOGGER.info ("[phase4] sendDPOutgoing");
     // No difference

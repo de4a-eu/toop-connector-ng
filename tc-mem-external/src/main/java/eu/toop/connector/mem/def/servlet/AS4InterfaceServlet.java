@@ -55,7 +55,7 @@ public class AS4InterfaceServlet extends HttpServlet {
     final MimeHeaders mimeHeaders = readMimeHeaders(req);
 
     // no matter what happens, we will return either a receipt or a fault
-    resp.setContentType(CMimeType.TEXT_XML.getAsString ());
+    resp.setContentType(CMimeType.TEXT_XML.getAsString());
 
     SOAPMessage receivedMessage = null;
     try {
@@ -66,7 +66,9 @@ public class AS4InterfaceServlet extends HttpServlet {
       }
 
       // Todo, remove buffering later
-      receivedMessage = SoapUtil.createMessage(mimeHeaders, new NonBlockingByteArrayInputStream(bytes));
+      try (final NonBlockingByteArrayInputStream is = new NonBlockingByteArrayInputStream(bytes)) {
+        receivedMessage = SoapUtil.createMessage(mimeHeaders, is);
+      }
 
       // check if the message is a notification message
 
@@ -75,25 +77,25 @@ public class AS4InterfaceServlet extends HttpServlet {
       }
 
       // get the action from the soap message
-      final String action = SoapXPathUtil
-          .getSingleNodeTextContent(receivedMessage.getSOAPHeader(), "//:CollaborationInfo/:Action");
+      final String action = SoapXPathUtil.getSingleNodeTextContent(receivedMessage.getSOAPHeader(),
+          "//:CollaborationInfo/:Action");
 
       switch (action) {
-        case MEMConstants.ACTION_DELIVER:
-          processDelivery(receivedMessage);
-          break;
+      case MEMConstants.ACTION_DELIVER:
+        processDelivery(receivedMessage);
+        break;
 
-        case MEMConstants.ACTION_RELAY:
-          processRelayResult(receivedMessage);
-          break;
+      case MEMConstants.ACTION_RELAY:
+        processRelayResult(receivedMessage);
+        break;
 
-        //does not exist in the standard CIT interface.
-        case MEMConstants.ACTION_SUBMISSION_RESULT:
-          processSubmissionResult(receivedMessage);
-          break;
+      // does not exist in the standard CIT interface.
+      case MEMConstants.ACTION_SUBMISSION_RESULT:
+        processSubmissionResult(receivedMessage);
+        break;
 
-        default:
-          throw new UnsupportedOperationException("Action '" + action + "' is not supported");
+      default:
+        throw new UnsupportedOperationException("Action '" + action + "' is not supported");
       }
 
       if (LOG.isDebugEnabled()) {
@@ -108,13 +110,13 @@ public class AS4InterfaceServlet extends HttpServlet {
       resp.getOutputStream().write(successReceipt);
       resp.getOutputStream().flush();
 
-      if (LOG.isDebugEnabled ())
+      if (LOG.isDebugEnabled())
         LOG.debug("Done processing inbound AS4 message");
-    } catch (final Throwable th) {
-      LOG.error("Error processing the message", th);
-      sendBackFault(resp, receivedMessage, th);
+    } catch (final Exception ex) {
+      LOG.error("Error processing the message", ex);
+      sendBackFault(resp, receivedMessage, ex);
     } finally {
-      if (LOG.isDebugEnabled ())
+      if (LOG.isDebugEnabled())
         LOG.debug("End doPost");
     }
 
@@ -123,13 +125,16 @@ public class AS4InterfaceServlet extends HttpServlet {
   }
 
   /**
-   * Create a fault message from the given input data and send it back to the client
-   * @param resp HTTP Servlet response
+   * Create a fault message from the given input data and send it back to the
+   * client
+   *
+   * @param resp            HTTP Servlet response
    * @param receivedMessage Received SOAP message
-   * @param th Exception that occurred
+   * @param th              Exception that occurred
    * @throws IOException In case of IO error
    */
-  protected void sendBackFault(final HttpServletResponse resp, final SOAPMessage receivedMessage, final Throwable th) throws IOException {
+  protected void sendBackFault(final HttpServletResponse resp, final SOAPMessage receivedMessage, final Throwable th)
+      throws IOException {
     LOG.error("Failed to process incoming AS4 message", th);
     if (LOG.isDebugEnabled()) {
       LOG.debug("Create fault");

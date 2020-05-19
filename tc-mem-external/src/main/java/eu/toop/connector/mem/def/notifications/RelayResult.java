@@ -16,7 +16,8 @@
 package eu.toop.connector.mem.def.notifications;
 
 /**
- * A java representation of a notification C2 --- C3 message relay. See TOOP AS4 GW backend interface specification
+ * A java representation of a notification C2 --- C3 message relay. See TOOP AS4
+ * GW backend interface specification
  *
  * @author yerlibilgin
  */
@@ -25,16 +26,15 @@ public class RelayResult extends Notification {
   private String shortDescription;
   private String severity;
 
-
   public String getShortDescription() {
     return shortDescription;
   }
 
-  public void setShortDescription(String shortDescription) {
+  public void setShortDescription(final String shortDescription) {
     this.shortDescription = shortDescription;
   }
 
-  public void setSeverity(String severity) {
+  public void setSeverity(final String severity) {
     this.severity = severity;
   }
 

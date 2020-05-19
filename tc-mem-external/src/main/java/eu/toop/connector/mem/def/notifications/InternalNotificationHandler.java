@@ -17,6 +17,7 @@ package eu.toop.connector.mem.def.notifications;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -40,53 +41,51 @@ public class InternalNotificationHandler {
   public InternalNotificationHandler(final Class<? extends Notification> targetType) {
     this.targetTypeName = targetType.getSimpleName();
 
-    //create a timer to periodically purge the expired notification and submission result
-    //messages
+    // create a timer to periodically purge the expired notification and submission
+    // result messages
 
     final Timer timer = new Timer(targetTypeName + "-purgatory-timer");
 
-    final long delay = 5 * CGlobal.MILLISECONDS_PER_MINUTE; //5 minutes
-    final long period = 5 * CGlobal.MILLISECONDS_PER_MINUTE; //5 minutes
+    final long delay = 5 * CGlobal.MILLISECONDS_PER_MINUTE; // 5 minutes
+    final long period = 5 * CGlobal.MILLISECONDS_PER_MINUTE; // 5 minutes
 
     timer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-        purgeExpiredNotifications();
+	purgeExpiredNotifications();
       }
     }, delay, period);
   }
 
-
   protected void handleNotification(final Notification notification) {
     Wrapper<Notification> carrier;
 
-
     LOG.info("Received a notification " + notification.getMessageID() + "\n\t" + notification.getRefToMessageID());
-    //check the message quee and see if the new object is already there
+    // check the message quee and see if the new object is already there
     synchronized (messageQueue) {
       final String submitMessageID = notification.getRefToMessageID();
       if (messageQueue.containsKey(submitMessageID)) {
-        carrier = messageQueue.get(submitMessageID);
+	carrier = messageQueue.get(submitMessageID);
       } else {
-        carrier = new Wrapper<>();
-        messageQueue.put(submitMessageID, carrier);
+	carrier = new Wrapper<>();
+	messageQueue.put(submitMessageID, carrier);
       }
     }
 
-    //now that we have a carrier, notify anyone who waits for it
+    // now that we have a carrier, notify anyone who waits for it
     synchronized (carrier) {
       carrier.set(notification);
       carrier.notifyAll();
     }
   }
 
-
   /**
-   * Wait for a {@link Notification} for a message with the given <code>submitMessageID</code> and for a maximum timeout of
+   * Wait for a {@link Notification} for a message with the given
+   * <code>submitMessageID</code> and for a maximum timeout of
    * <code>timeout</code>. Return the obtained notification
    *
    * @param submitMessageID the id of the submit message
-   * @param timeout maximum amount to wait for the object. 0 means forever
+   * @param timeout         maximum amount to wait for the object. 0 means forever
    * @return the obtained {@link Notification}
    * @throws MEException If waiting fails
    */
@@ -101,31 +100,32 @@ public class InternalNotificationHandler {
 
     synchronized (messageQueue) {
       if (messageQueue.containsKey(submitMessageID)) {
-        if (LOG.isDebugEnabled())
-          LOG.debug("we already have a " + targetTypeName + " message for " + submitMessageID);
-        carrier = messageQueue.remove(submitMessageID);
+	if (LOG.isDebugEnabled())
+	  LOG.debug("we already have a " + targetTypeName + " message for " + submitMessageID);
+	carrier = messageQueue.remove(submitMessageID);
       } else {
-        //we don't have a carrier yet. Create one
-        if (LOG.isDebugEnabled())
-          LOG.debug("We don't have a " + targetTypeName + " waiter for " + submitMessageID + ". Create a waiter for it");
+	// we don't have a carrier yet. Create one
+	if (LOG.isDebugEnabled())
+	  LOG.debug(
+	      "We don't have a " + targetTypeName + " waiter for " + submitMessageID + ". Create a waiter for it");
 
-        carrier = new Wrapper<>();
-        messageQueue.put(submitMessageID, carrier);
+	carrier = new Wrapper<>();
+	messageQueue.put(submitMessageID, carrier);
       }
     }
 
-    //we have a nunnull carrier here
+    // we have a nunnull carrier here
     if (carrier.get() == null) {
-      //we haven't received the actual object yet. So wait for it
+      // we haven't received the actual object yet. So wait for it
       synchronized (carrier) {
-        try {
-          carrier.wait(timeout);
-        } catch (final InterruptedException e) {
-          if (LOG.isWarnEnabled())
-            LOG.warn("Wait for message " + submitMessageID + " was interrupted.");
-          Thread.currentThread().interrupt();
-          throw new MEException("Wait for message " + submitMessageID + " was interrupted.", e);
-        }
+	try {
+	  carrier.wait(timeout);
+	} catch (final InterruptedException e) {
+	  if (LOG.isWarnEnabled())
+	    LOG.warn("Wait for message " + submitMessageID + " was interrupted.");
+	  Thread.currentThread().interrupt();
+	  throw new MEException("Wait for message " + submitMessageID + " was interrupted.", e);
+	}
       }
     }
 
@@ -136,24 +136,23 @@ public class InternalNotificationHandler {
     return carrier.get();
   }
 
-
   /**
    * Check the notification and subm.result queue and purge the expired messages
    */
   private void purgeExpiredNotifications() {
     final long currentTime = System.currentTimeMillis();
     synchronized (messageQueue) {
-      final ArrayList<String> trash = new ArrayList<>();
+      final List<String> trash = new ArrayList<>();
 
       for (final Map.Entry<String, Wrapper<Notification>> entry : messageQueue.entrySet()) {
-        final String messageID = entry.getKey();
-        final Wrapper<Notification> carrier = entry.getValue();
-        if (carrier != null && carrier.get() != null && carrier.get().isExpired(currentTime)) {
-          trash.add(messageID);
-        }
+	final String messageID = entry.getKey();
+	final Wrapper<Notification> carrier = entry.getValue();
+	if (carrier != null && carrier.get() != null && carrier.get().isExpired(currentTime)) {
+	  trash.add(messageID);
+	}
       }
       for (final String messageID : trash) {
-        messageQueue.remove(messageID);
+	messageQueue.remove(messageID);
       }
     }
   }
