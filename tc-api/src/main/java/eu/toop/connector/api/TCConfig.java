@@ -151,12 +151,9 @@ public final class TCConfig
     }
   }
 
-  public static class R2D2
+  public static class DSD
   {
-    public static final boolean DEFAULT_USE_SML = true;
-    private static ISMLInfo s_aCachedSMLInfo;
-
-    private R2D2 ()
+    private DSD ()
     {}
 
     /**
@@ -166,8 +163,18 @@ public final class TCConfig
     @Nullable
     public static String getR2D2DirectoryBaseUrl ()
     {
-      return getConfig ().getAsString ("toop.r2d2.directory.baseurl");
+      return getConfig ().getAsString ("toop.dsd.service.baseurl");
     }
+
+  }
+
+  public static class R2D2
+  {
+    public static final boolean DEFAULT_USE_SML = true;
+    private static ISMLInfo s_aCachedSMLInfo;
+
+    private R2D2 ()
+    {}
 
     /**
      * @return <code>true</code> to use SML lookup, <code>false</code> to not do

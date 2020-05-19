@@ -31,7 +31,7 @@ public final class TCConfigTest
   @Test
   public void testBasic ()
   {
-    assertEquals ("http://directory.central.toop/pd", TCConfig.R2D2.getR2D2DirectoryBaseUrl ());
+    assertEquals ("http://directory.central.toop/pd", TCConfig.DSD.getR2D2DirectoryBaseUrl ());
     assertFalse (TCConfig.R2D2.isR2D2UseDNS ());
     assertNotNull (TCConfig.getIdentifierFactory ());
   }
