@@ -65,6 +65,11 @@
       <groupId>eu.toop</groupId>
       <artifactId>tc-mem-phase4</artifactId>
     </dependency>
+    <!-- For the truststore -->
+    <dependency>
+      <groupId>eu.toop</groupId>
+      <artifactId>toop-commons</artifactId>
+    </dependency>
 
     <!-- Logging -->
     <dependency>

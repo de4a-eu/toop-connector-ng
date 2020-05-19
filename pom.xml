@@ -207,6 +207,7 @@
     <module>tc-mem-external</module>
     <module>tc-mem-phase4</module>
     <module>tc-main</module>
+    <module>tc-webapp</module>
   </modules>
 
   <build>
