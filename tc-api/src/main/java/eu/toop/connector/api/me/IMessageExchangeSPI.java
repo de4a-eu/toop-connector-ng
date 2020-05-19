@@ -13,13 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.as4;
+package eu.toop.connector.api.me;
 
 import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 
 import com.helger.commons.annotation.IsSPIInterface;
 import com.helger.commons.annotation.Nonempty;
+
+import eu.toop.connector.api.me.in.IMEIncomingHandler;
+import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.out.IMERoutingInformation;
+import eu.toop.connector.api.me.out.MEOutgoingException;
 
 /**
  * Abstract API to be implemented for sending and receiving messages.
@@ -53,10 +59,11 @@ public interface IMessageExchangeSPI
    *        <code>null</code>.
    * @param aIncomingHandler
    *        The handler to use. May not be <code>null</code>.
-   * @throws MEException
+   * @throws MEIncomingException
    *         In case of error.
    */
-  void registerIncomingHandler (@Nonnull ServletContext aServletContext, @Nonnull IMEIncomingHandler aIncomingHandler);
+  void registerIncomingHandler (@Nonnull ServletContext aServletContext,
+                                @Nonnull IMEIncomingHandler aIncomingHandler) throws MEIncomingException;
 
   /**
    * Trigger the message transmission in step 1/4. This method acts synchronous.
@@ -65,10 +72,10 @@ public interface IMessageExchangeSPI
    *        Routing information. May not be <code>null</code>.
    * @param aMessage
    *        The message to be exchanged. May not be <code>null</code>.
-   * @throws MEException
+   * @throws MEOutgoingException
    *         In case of error.
    */
-  void sendDCOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage);
+  void sendDCOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEOutgoingException;
 
   /**
    * Trigger the message transmission in step 3/4.
@@ -77,10 +84,10 @@ public interface IMessageExchangeSPI
    *        Routing information. May not be <code>null</code>.
    * @param aMessage
    *        The message to be exchanged. May not be <code>null</code>.
-   * @throws MEException
+   * @throws MEOutgoingException
    *         In case of error.
    */
-  void sendDPOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage);
+  void sendDPOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEOutgoingException;
 
   /**
    * Shutdown the Message Exchange.

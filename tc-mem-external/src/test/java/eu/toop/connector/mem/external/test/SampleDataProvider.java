@@ -27,84 +27,69 @@ import com.helger.commons.mime.CMimeType;
 
 import eu.toop.commons.codelist.EPredefinedDocumentTypeIdentifier;
 import eu.toop.commons.codelist.EPredefinedProcessIdentifier;
-import eu.toop.connector.api.as4.MEException;
-import eu.toop.connector.api.as4.MEMessage;
+import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.mem.external.EActingSide;
 import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 
 /**
  * @author yerlibilgin
  */
-public class SampleDataProvider
-{
+public class SampleDataProvider {
 
   private static KeyStore domibusKeystore;
 
-  public static X509Certificate readDomibusCert (final String alias)
-  {
-    try
-    {
-      if (domibusKeystore == null)
-      {
+  public static X509Certificate readDomibusCert(final String alias) {
+    try {
+      if (domibusKeystore == null) {
         // multithread initialiation danger... yes no big deal.
-        domibusKeystore = KeyStore.getInstance ("JKS");
-        domibusKeystore.load (SampleDataProvider.class.getResourceAsStream ("/dev-gw-jks/domibus-toop-keys.jks"),
-                              "test123".toCharArray ());
+        domibusKeystore = KeyStore.getInstance("JKS");
+        domibusKeystore.load(SampleDataProvider.class.getResourceAsStream("/dev-gw-jks/domibus-toop-keys.jks"),
+                             "test123".toCharArray());
       }
 
-      return (X509Certificate) domibusKeystore.getCertificate (alias);
+      return (X509Certificate) domibusKeystore.getCertificate(alias);
 
-    }
-    catch (final Exception e)
-    {
-      throw new IllegalStateException (e);
+    } catch (final Exception e) {
+      throw new IllegalStateException(e);
     }
   }
 
   @Nonnull
-  public static X509Certificate readCert (final EActingSide actingSide)
-  {
-    try
-    {
+  public static X509Certificate readCert(final EActingSide actingSide) {
+    try {
       // If I am DC, use dp certificate or vice versa
       final String certName = actingSide == EActingSide.DC ? "/freedonia.crt" : "/elonia.crt";
-      return (X509Certificate) CertificateFactory.getInstance ("X509")
-                                                 .generateCertificate (SampleDataProvider.class.getResourceAsStream (certName));
-    }
-    catch (final CertificateException e)
-    {
-      throw new MEException (e.getMessage (), e);
+      return (X509Certificate) CertificateFactory.getInstance("X509")
+                                                 .generateCertificate(SampleDataProvider.class.getResourceAsStream(certName));
+    } catch (final CertificateException e) {
+      throw new IllegalStateException(e);
     }
   }
 
-  public static GatewayRoutingMetadata createGatewayRoutingMetadata (final EActingSide actingSide,
-                                                                     final String receivingGWURL)
-  {
-    final X509Certificate aCert = readCert (actingSide);
-    return createGatewayRoutingMetadata (actingSide, receivingGWURL, aCert);
+  public static GatewayRoutingMetadata createGatewayRoutingMetadata(final EActingSide actingSide,
+      final String receivingGWURL) {
+    final X509Certificate aCert = readCert(actingSide);
+    return createGatewayRoutingMetadata(actingSide, receivingGWURL, aCert);
   }
 
-  public static GatewayRoutingMetadata createGatewayRoutingMetadata (final EActingSide actingSide,
-                                                                     final String targetURL,
-                                                                     final X509Certificate targetCert)
-  {
-    final GatewayRoutingMetadata metadata = new GatewayRoutingMetadata ("iso6523-actorid-upis::0088:123456",
-                                                                        EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST.getURIEncoded (),
-                                                                        EPredefinedProcessIdentifier.DATAREQUESTRESPONSE.getURIEncoded (),
-                                                                        targetURL,
-                                                                        targetCert,
-                                                                        actingSide);
+  public static GatewayRoutingMetadata createGatewayRoutingMetadata(final EActingSide actingSide,
+      final String targetURL, final X509Certificate targetCert) {
+    final GatewayRoutingMetadata metadata = new GatewayRoutingMetadata("iso6523-actorid-upis::0088:123456",
+                                                                       EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST.getURIEncoded(),
+                                                                       EPredefinedProcessIdentifier.DATAREQUESTRESPONSE.getURIEncoded(),
+                                                                       targetURL,
+                                                                       targetCert,
+                                                                       actingSide);
 
     return metadata;
   }
 
   @Nonnull
-  public static MEMessage createSampleMessage ()
-  {
-    return MEMessage.builder ()
-                    .payload (x -> x.mimeType (CMimeType.APPLICATION_XML)
-                                    .contentID ("xmlpayload@dp")
-                                    .data ("<sample>that is a sample xml</sample>", StandardCharsets.ISO_8859_1))
-                    .build ();
+  public static MEMessage createSampleMessage() {
+    return MEMessage.builder()
+                    .payload(x -> x.mimeType(CMimeType.APPLICATION_XML)
+                                   .contentID("xmlpayload@dp")
+                                   .data("<sample>that is a sample xml</sample>", StandardCharsets.ISO_8859_1))
+                    .build();
   }
 }

@@ -1,4 +1,4 @@
-package eu.toop.connector.api.as4;
+package eu.toop.connector.api.me.model;
 
 import java.util.List;
 
@@ -9,6 +9,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.ICommonsOrderedMap;
+import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.EDMResponse;
 
@@ -61,5 +62,11 @@ public class EDMResponseWithAttachments
   public ICommonsOrderedMap <String, MEPayload> getAllAttachments ()
   {
     return m_aAttachments.getClone ();
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("Response", m_aResponse).append ("Attachments", m_aAttachments).getToString ();
   }
 }

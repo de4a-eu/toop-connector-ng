@@ -30,34 +30,32 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.mime.CMimeType;
 
-import eu.toop.connector.api.as4.MEMessage;
+import eu.toop.connector.api.me.MEException;
+import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.mem.external.EBMSUtils;
 import eu.toop.connector.mem.external.SubmissionMessageProperties;
 
-public final class EBSMUtilsTest
-{
-  private static final Logger LOG = LoggerFactory.getLogger (EBSMUtilsTest.class);
+public final class EBSMUtilsTest {
+  private static final Logger LOG = LoggerFactory.getLogger(EBSMUtilsTest.class);
 
   @Test
-  public void testFault () throws SOAPException, IOException
-  {
-    final SubmissionMessageProperties sd = new SubmissionMessageProperties ();
+  public void testFault() throws SOAPException, IOException, MEException {
+    final SubmissionMessageProperties sd = new SubmissionMessageProperties();
     sd.conversationId = "EBSMUtilsTestConv";
-    final MEMessage msg = MEMessage.builder ()
-                                   .payload (x -> x.mimeType (CMimeType.APPLICATION_XML)
-                                                   .contentID ("blafoo")
-                                                   .data ("<?xml version='1.0'?><root demo='true' />",
-                                                          StandardCharsets.ISO_8859_1))
-                                   .build ();
-    final SOAPMessage sm = EBMSUtils.convert2MEOutboundAS4Message (sd, msg);
-    assertNotNull (sm);
-    try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ())
-    {
-      sm.writeTo (aBAOS);
-      LOG.info (aBAOS.getAsString (StandardCharsets.UTF_8));
+    final MEMessage msg = MEMessage.builder()
+                                   .payload(x -> x.mimeType(CMimeType.APPLICATION_XML)
+                                                  .contentID("blafoo")
+                                                  .data("<?xml version='1.0'?><root demo='true' />",
+                                                        StandardCharsets.ISO_8859_1))
+                                   .build();
+    final SOAPMessage sm = EBMSUtils.convert2MEOutboundAS4Message(sd, msg);
+    assertNotNull(sm);
+    try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream()) {
+      sm.writeTo(aBAOS);
+      LOG.info(aBAOS.getAsString(StandardCharsets.UTF_8));
     }
 
-    final byte [] aFault = EBMSUtils.createFault (sm, "Unit test fault");
-    LOG.info (new String (aFault, StandardCharsets.UTF_8));
+    final byte[] aFault = EBMSUtils.createFault(sm, "Unit test fault");
+    LOG.info(new String(aFault, StandardCharsets.UTF_8));
   }
 }

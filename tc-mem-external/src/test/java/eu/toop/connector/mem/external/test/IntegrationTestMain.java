@@ -35,7 +35,7 @@ import com.helger.config.source.res.ConfigurationSourceProperties;
 import com.helger.scope.mock.ScopeAwareTestSetup;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.as4.MEMessage;
+import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.mem.external.EActingSide;
 import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;

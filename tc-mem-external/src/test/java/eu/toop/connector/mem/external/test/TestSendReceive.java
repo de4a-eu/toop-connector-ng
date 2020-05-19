@@ -15,11 +15,12 @@
  */
 package eu.toop.connector.mem.external.test;
 
+import static org.junit.Assert.assertSame;
+
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -34,8 +35,8 @@ import com.helger.config.source.res.ConfigurationSourceProperties;
 import com.helger.scope.mock.ScopeAwareTestSetup;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.as4.MEException;
-import eu.toop.connector.api.as4.MEMessage;
+import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.out.MEOutgoingException;
 import eu.toop.connector.mem.external.EActingSide;
 import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;
@@ -49,16 +50,14 @@ import eu.toop.edm.error.EToopErrorCode;
  * @author myildiz at 16.02.2018.
  */
 @FixMethodOrder
-public class TestSendReceive
-{
-  static
-  {
-    TCConfig.setConfig (Config.create (new ConfigurationSourceProperties (new ClassPathResource ("toop-connector.elonia.unitTest.properties"),
-                                                                          StandardCharsets.UTF_8)));
+public class TestSendReceive {
+  static {
+    TCConfig.setConfig(Config.create(new ConfigurationSourceProperties(new ClassPathResource("toop-connector.elonia.unitTest.properties"),
+                                                                       StandardCharsets.UTF_8)));
   }
 
   // this must be created after the above level setting statement
-  private static final Logger LOG = LoggerFactory.getLogger (TestSendReceive.class);
+  private static final Logger LOG = LoggerFactory.getLogger(TestSendReceive.class);
   private static GatewayRoutingMetadata gatewayRoutingMetadata;
   private static MEMessage sampleMessage;
 
@@ -66,102 +65,86 @@ public class TestSendReceive
    * Create a mock server on localhost that reads and sends back a MEMessage.
    */
   @BeforeClass
-  public static void prepare ()
-  {
+  public static void prepare() {
     // Port must match the message-processor.properties
-    if (LOG.isDebugEnabled ())
-      LOG.debug ("Prepare for the test");
+    if (LOG.isDebugEnabled())
+      LOG.debug("Prepare for the test");
 
-    final URL backendURL = URLHelper.getAsURL ("http://localhost:10001/backend");
-    final URL gwURL = URLHelper.getAsURL (TCConfig.MEM.getMEMAS4Endpoint ());
+    final URL backendURL = URLHelper.getAsURL("http://localhost:10001/backend");
+    final URL gwURL = URLHelper.getAsURL(TCConfig.MEM.getMEMAS4Endpoint());
 
-    if (LOG.isInfoEnabled ())
-    {
-      LOG.info ("backend port: " + backendURL.getPort ());
-      LOG.info ("backend localpath: " + backendURL.getPath ());
-      LOG.info ("GW port: " + gwURL.getPort ());
-      LOG.info ("GW localpath: " + gwURL.getPath ());
+    if (LOG.isInfoEnabled()) {
+      LOG.info("backend port: " + backendURL.getPort());
+      LOG.info("backend localpath: " + backendURL.getPath());
+      LOG.info("GW port: " + gwURL.getPort());
+      LOG.info("GW localpath: " + gwURL.getPath());
     }
 
-    BackendServletContainer.createServletOn (backendURL.getPort (), backendURL.getPath ());
-    GWMocServletContainer.createServletOn (gwURL.getPort (), gwURL.getPath ());
-    ScopeAwareTestSetup.setupScopeTests ();
-    gatewayRoutingMetadata = SampleDataProvider.createGatewayRoutingMetadata (EActingSide.DC,
-                                                                              TCConfig.MEM.getMEMAS4Endpoint ());
-    sampleMessage = SampleDataProvider.createSampleMessage ();
-    final IMessageHandler handler = meMessage1 -> LOG.info ("hooray! I Got a message");
-    MEMDelegate.getInstance ().registerMessageHandler (handler);
+    BackendServletContainer.createServletOn(backendURL.getPort(), backendURL.getPath());
+    GWMocServletContainer.createServletOn(gwURL.getPort(), gwURL.getPath());
+    ScopeAwareTestSetup.setupScopeTests();
+    gatewayRoutingMetadata = SampleDataProvider.createGatewayRoutingMetadata(EActingSide.DC,
+                                                                             TCConfig.MEM.getMEMAS4Endpoint());
+    sampleMessage = SampleDataProvider.createSampleMessage();
+    final IMessageHandler handler = meMessage1 -> LOG.info("hooray! I Got a message");
+    MEMDelegate.getInstance().registerMessageHandler(handler);
 
-    ThreadHelper.sleep (1000);
+    ThreadHelper.sleep(1000);
 
   }
 
   @AfterClass
-  public static void shutdown ()
-  {
-    ScopeAwareTestSetup.shutdownScopeTests ();
+  public static void shutdown() {
+    ScopeAwareTestSetup.shutdownScopeTests();
 
-    BackendServletContainer.stop ();
-    GWMocServletContainer.stop ();
+    BackendServletContainer.stop();
+    GWMocServletContainer.stop();
   }
 
   @Test
-  public void testSendReceive ()
-  {
-    DummyEBMSUtils.setFailOnRelayResult (false, null);
-    DummyEBMSUtils.setFailOnSubmissionResult (false);
-    MEMDelegate.getInstance ().sendMessage (gatewayRoutingMetadata, sampleMessage);
+  public void testSendReceive() throws MEOutgoingException {
+    DummyEBMSUtils.setFailOnRelayResult(false, null);
+    DummyEBMSUtils.setFailOnSubmissionResult(false);
+    MEMDelegate.getInstance().sendMessage(gatewayRoutingMetadata, sampleMessage);
   }
 
   @Test
-  public void testME002 ()
-  {
-    DummyEBMSUtils.setFailOnRelayResult (false, null);
-    DummyEBMSUtils.setFailOnSubmissionResult (true);
-    try
-    {
-      MEMDelegate.getInstance ().sendMessage (gatewayRoutingMetadata, sampleMessage);
-      throw new IllegalStateException ("An error must occur");
-    }
-    catch (final MEException meException)
-    {
-      LOG.error (meException.getMessage (), meException);
-      Assert.assertEquals (EToopErrorCode.ME_002, meException.getToopErrorCode ());
+  public void testME002() {
+    DummyEBMSUtils.setFailOnRelayResult(false, null);
+    DummyEBMSUtils.setFailOnSubmissionResult(true);
+    try {
+      MEMDelegate.getInstance().sendMessage(gatewayRoutingMetadata, sampleMessage);
+      throw new IllegalStateException("An error must occur");
+    } catch (final MEOutgoingException meException) {
+      LOG.error(meException.getMessage(), meException);
+      assertSame(EToopErrorCode.ME_002, meException.getToopErrorCode());
     }
   }
 
   @Test
-  public void testME003 ()
-  {
-    DummyEBMSUtils.setFailOnSubmissionResult (false);
-    DummyEBMSUtils.setFailOnRelayResult (true, "EBMS:0301");
-    try
-    {
-      MEMDelegate.getInstance ().sendMessage (gatewayRoutingMetadata, sampleMessage);
-      throw new IllegalStateException ("An error must occur");
-    }
-    catch (final MEException meException)
-    {
-      LOG.error (meException.getMessage (), meException);
-      Assert.assertEquals (EToopErrorCode.ME_003, meException.getToopErrorCode ());
+  public void testME003() {
+    DummyEBMSUtils.setFailOnSubmissionResult(false);
+    DummyEBMSUtils.setFailOnRelayResult(true, "EBMS:0301");
+    try {
+      MEMDelegate.getInstance().sendMessage(gatewayRoutingMetadata, sampleMessage);
+      throw new IllegalStateException("An error must occur");
+    } catch (final MEOutgoingException meException) {
+      LOG.error(meException.getMessage(), meException);
+      assertSame(EToopErrorCode.ME_003, meException.getToopErrorCode());
     }
 
   }
 
   @Test
-  public void testME004 ()
-  {
-    DummyEBMSUtils.setFailOnSubmissionResult (false);
-    DummyEBMSUtils.setFailOnRelayResult (true, "EBMS:0345");
-    try
-    {
-      MEMDelegate.getInstance ().sendMessage (gatewayRoutingMetadata, sampleMessage);
-      throw new IllegalStateException ("An error must occur");
-    }
-    catch (final MEException meException)
-    {
-      LOG.error (meException.getMessage (), meException);
-      Assert.assertEquals (EToopErrorCode.ME_004, meException.getToopErrorCode ());
+  public void testME004() {
+    DummyEBMSUtils.setFailOnSubmissionResult(false);
+    DummyEBMSUtils.setFailOnRelayResult(true, "EBMS:0345");
+    try {
+      MEMDelegate.getInstance().sendMessage(gatewayRoutingMetadata, sampleMessage);
+      throw new IllegalStateException("An error must occur");
+    } catch (final MEOutgoingException meException) {
+      LOG.error(meException.getMessage(), meException);
+      assertSame(EToopErrorCode.ME_004, meException.getToopErrorCode());
     }
   }
 

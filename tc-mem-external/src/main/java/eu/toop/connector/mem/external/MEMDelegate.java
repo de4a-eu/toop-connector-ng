@@ -30,8 +30,9 @@ import com.helger.commons.url.URLHelper;
 import com.helger.scope.singleton.AbstractGlobalSingleton;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.as4.MEException;
-import eu.toop.connector.api.as4.MEMessage;
+import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.out.MEOutgoingException;
 import eu.toop.connector.mem.external.notifications.IMessageHandler;
 import eu.toop.connector.mem.external.notifications.IRelayResultHandler;
 import eu.toop.connector.mem.external.notifications.ISubmissionResultHandler;
@@ -48,149 +49,133 @@ import eu.toop.kafkaclient.ToopKafkaClient;
  * @author myildiz at 15.02.2018.
  */
 @NotThreadSafe
-public class MEMDelegate extends AbstractGlobalSingleton
-{
+public class MEMDelegate extends AbstractGlobalSingleton {
 
-  private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger (MEMDelegate.class);
-  private final List <IMessageHandler> messageHandlers = new ArrayList <> ();
-  private final List <IRelayResultHandler> relayResultHandlers = new ArrayList <> ();
-  private final List <ISubmissionResultHandler> submissionResultHandlers = new ArrayList <> ();
+  private static final org.slf4j.Logger LOG = org.slf4j.LoggerFactory.getLogger(MEMDelegate.class);
+  private final List<IMessageHandler> messageHandlers = new ArrayList<>();
+  private final List<IRelayResultHandler> relayResultHandlers = new ArrayList<>();
+  private final List<ISubmissionResultHandler> submissionResultHandlers = new ArrayList<>();
 
   private final InternalRelayResultHandler internalRelayResultHandler;
   private final InternalSubmissionResultHandler internalSRHandler;
 
   @UsedViaReflection
-  public MEMDelegate ()
-  {
+  public MEMDelegate() {
     // register this both as a submission result listener
     // and a notification listener in order to watch the process of
     // a send message call
 
-    internalRelayResultHandler = new InternalRelayResultHandler ();
-    internalSRHandler = new InternalSubmissionResultHandler ();
+    internalRelayResultHandler = new InternalRelayResultHandler();
+    internalSRHandler = new InternalSubmissionResultHandler();
 
-    relayResultHandlers.add (internalRelayResultHandler);
-    submissionResultHandlers.add (internalSRHandler);
+    relayResultHandlers.add(internalRelayResultHandler);
+    submissionResultHandlers.add(internalSRHandler);
   }
 
   @Nonnull
-  public static MEMDelegate getInstance ()
-  {
-    return getGlobalSingleton (MEMDelegate.class);
+  public static MEMDelegate getInstance() {
+    return getGlobalSingleton(MEMDelegate.class);
   }
 
   /**
    * The V1 message sending interface for the message exchange module
    *
-   * @param gatewayRoutingMetadata
-   *        The container for the endpoint information and docid/procid
-   * @param meMessage
-   *        the payloads and their metadata to be sent to the gateway.
+   * @param gatewayRoutingMetadata The container for the endpoint information and
+   *                               docid/procid
+   * @param meMessage              the payloads and their metadata to be sent to
+   *                               the gateway.
+   * @throws MEOutgoingException in case of error
    */
-  public void sendMessage (final GatewayRoutingMetadata gatewayRoutingMetadata, final MEMessage meMessage)
-  {
-    if (LOG.isDebugEnabled ())
-    {
-      LOG.debug ("Send message called for procid: " +
-                 gatewayRoutingMetadata.getProcessId () +
-                 " docid: " +
-                 gatewayRoutingMetadata.getDocumentTypeId ());
-      LOG.debug ("Convert gateway routing metadata to submission data");
+  public void sendMessage(final GatewayRoutingMetadata gatewayRoutingMetadata, final MEMessage meMessage)
+      throws MEOutgoingException {
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("Send message called for procid: " + gatewayRoutingMetadata.getProcessId() +
+                " docid: " +
+                gatewayRoutingMetadata.getDocumentTypeId());
+      LOG.debug("Convert gateway routing metadata to submission data");
     }
-    final SubmissionMessageProperties submissionData = EBMSUtils.inferSubmissionData (gatewayRoutingMetadata);
-    if (LOG.isDebugEnabled ())
-      LOG.debug ("Create SOAP Message based on the submission data and the payloads");
-    final SOAPMessage soapMessage = EBMSUtils.convert2MEOutboundAS4Message (submissionData, meMessage);
-    if (LOG.isTraceEnabled ())
-    {
-      LOG.trace (SoapUtil.describe (soapMessage));
+    final SubmissionMessageProperties submissionData = EBMSUtils.inferSubmissionData(gatewayRoutingMetadata);
+    if (LOG.isDebugEnabled())
+      LOG.debug("Create SOAP Message based on the submission data and the payloads");
+    final SOAPMessage soapMessage = EBMSUtils.convert2MEOutboundAS4Message(submissionData, meMessage);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace(SoapUtil.describe(soapMessage));
     }
 
     String messageID;
-    try
-    {
-      messageID = SoapXPathUtil.getSingleNodeTextContent (soapMessage.getSOAPHeader (), "//:MessageInfo/:MessageId");
-    }
-    catch (final SOAPException e)
-    {
-      throw new MEException (e);
+    try {
+      messageID = SoapXPathUtil.getSingleNodeTextContent(soapMessage.getSOAPHeader(), "//:MessageInfo/:MessageId");
+    } catch (final SOAPException e) {
+      throw new MEOutgoingException("Failed to find MessageId", e);
     }
 
-    if (LOG.isDebugEnabled ())
-    {
-      LOG.debug ("New soap message ID " + messageID);
-      LOG.debug ("Send soap message " + messageID);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("New soap message ID " + messageID);
+      LOG.debug("Send soap message " + messageID);
     }
 
-    if (LOG.isDebugEnabled ())
-    {
-      LOG.debug ("\n" + SoapUtil.describe (soapMessage));
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("\n" + SoapUtil.describe(soapMessage));
     }
 
-    EBMSUtils.sendSOAPMessage (soapMessage, URLHelper.getAsURL (TCConfig.MEM.getMEMAS4Endpoint ()));
-    if (LOG.isDebugEnabled ())
-      LOG.debug ("SOAP Message " + messageID + " sent");
+    EBMSUtils.sendSOAPMessage(soapMessage, URLHelper.getAsURL(TCConfig.MEM.getMEMAS4Endpoint()));
+    if (LOG.isDebugEnabled())
+      LOG.debug("SOAP Message " + messageID + " sent");
 
-    final long timeout = TCConfig.MEM.getGatewayNotificationWaitTimeout ();
+    final long timeout = TCConfig.MEM.getGatewayNotificationWaitTimeout();
     // now that we have sent the object, first wait for the submission result
-    if (LOG.isDebugEnabled ())
-      LOG.debug ("Wait for SubmissionResult for " + messageID);
-    final SubmissionResult submissionResult = (SubmissionResult) internalSRHandler.obtainNotification (messageID,
-                                                                                                       timeout);
+    if (LOG.isDebugEnabled())
+      LOG.debug("Wait for SubmissionResult for " + messageID);
+    final SubmissionResult submissionResult = (SubmissionResult) internalSRHandler.obtainNotification(messageID,
+                                                                                                      timeout);
 
-    LOG.info ("SubmissionResult " + submissionResult.getResult ());
-    if (submissionResult.getResult () != ResultType.RECEIPT)
-    {
-      if (LOG.isErrorEnabled ())
-      {
-        LOG.error ("SubmitMessageId: " + submissionResult.getErrorCode ());
-        LOG.error ("C2-C3 MessageId: " + submissionResult.getRefToMessageID ());
-        LOG.error ("ErrorCode: " + submissionResult.getErrorCode ());
-        LOG.error ("Description: " + submissionResult.getDescription ());
+    LOG.info("SubmissionResult " + submissionResult.getResult());
+    if (submissionResult.getResult() != ResultType.RECEIPT) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error("SubmitMessageId: " + submissionResult.getErrorCode());
+        LOG.error("C2-C3 MessageId: " + submissionResult.getRefToMessageID());
+        LOG.error("ErrorCode: " + submissionResult.getErrorCode());
+        LOG.error("Description: " + submissionResult.getDescription());
       }
 
-      final String errorMesage = "Error from AS4 transmission: EToopErrorCode.ME_002 -- " +
-                                 "EBMS ERROR CODE: [" +
-                                 submissionResult.getErrorCode () +
+      final String errorMesage = "Error from AS4 transmission: EToopErrorCode.ME_002 -- " + "EBMS ERROR CODE: [" +
+                                 submissionResult.getErrorCode() +
                                  "]\n";
 
-      ToopKafkaClient.send (EErrorLevel.ERROR, () -> errorMesage);
-      throw new MEException (EToopErrorCode.ME_002, errorMesage);
+      ToopKafkaClient.send(EErrorLevel.ERROR, () -> errorMesage);
+      throw new MEOutgoingException(EToopErrorCode.ME_002, errorMesage);
 
     }
 
-    if (LOG.isDebugEnabled ())
-      LOG.debug ("Wait for RelayResult for " + messageID);
-    final RelayResult relayResult = (RelayResult) internalRelayResultHandler.obtainNotification (submissionResult.getMessageID (),
-                                                                                                 timeout);
+    if (LOG.isDebugEnabled())
+      LOG.debug("Wait for RelayResult for " + messageID);
+    final RelayResult relayResult = (RelayResult) internalRelayResultHandler.obtainNotification(submissionResult.getMessageID(),
+                                                                                                timeout);
 
-    if (LOG.isInfoEnabled ())
-      LOG.info ("RelayResult " + relayResult.getResult ());
+    if (LOG.isInfoEnabled())
+      LOG.info("RelayResult " + relayResult.getResult());
 
-    if (relayResult.getResult () != ResultType.RECEIPT)
-    {
-      if (LOG.isErrorEnabled ())
-      {
-        LOG.error ("SubmitMessageId: " + relayResult.getErrorCode ());
-        LOG.error ("C2-C3 MessageId: " + relayResult.getRefToMessageID ());
-        LOG.error ("ErrorCode: " + relayResult.getErrorCode ());
-        LOG.error ("Severity: " + relayResult.getSeverity ());
-        LOG.error ("ShortDescription: " + relayResult.getShortDescription ());
-        LOG.error ("Description: " + relayResult.getDescription ());
+    if (relayResult.getResult() != ResultType.RECEIPT) {
+      if (LOG.isErrorEnabled()) {
+        LOG.error("SubmitMessageId: " + relayResult.getErrorCode());
+        LOG.error("C2-C3 MessageId: " + relayResult.getRefToMessageID());
+        LOG.error("ErrorCode: " + relayResult.getErrorCode());
+        LOG.error("Severity: " + relayResult.getSeverity());
+        LOG.error("ShortDescription: " + relayResult.getShortDescription());
+        LOG.error("Description: " + relayResult.getDescription());
       }
 
-      final String errorMesage = "Error from AS4 transmission: " +
-                                 "EBMS ERROR CODE: " +
-                                 relayResult.getErrorCode () +
+      final String errorMesage = "Error from AS4 transmission: " + "EBMS ERROR CODE: " +
+                                 relayResult.getErrorCode() +
                                  "\nSeverity: " +
-                                 relayResult.getSeverity () +
+                                 relayResult.getSeverity() +
                                  "\nShort Description: " +
-                                 relayResult.getShortDescription ();
+                                 relayResult.getShortDescription();
 
-      ToopKafkaClient.send (EErrorLevel.ERROR, () -> errorMesage);
-      if ("EBMS:0301".equals (relayResult.getErrorCode ()))
-        throw new MEException (EToopErrorCode.ME_003, errorMesage);
-      throw new MEException (EToopErrorCode.ME_004, errorMesage);
+      ToopKafkaClient.send(EErrorLevel.ERROR, () -> errorMesage);
+      if ("EBMS:0301".equals(relayResult.getErrorCode()))
+        throw new MEOutgoingException(EToopErrorCode.ME_003, errorMesage);
+      throw new MEOutgoingException(EToopErrorCode.ME_004, errorMesage);
     }
   }
 
@@ -201,25 +186,21 @@ public class MEMDelegate extends AbstractGlobalSingleton
    * Duplicate checking skipped for now. So if you register a handler twice, its
    * handle method will be called twice.
    *
-   * @param aMessageHandler
-   *        message handler to be added
+   * @param aMessageHandler message handler to be added
    */
-  public void registerMessageHandler (@Nonnull final IMessageHandler aMessageHandler)
-  {
-    ValueEnforcer.notNull (aMessageHandler, "MessageHandler");
-    messageHandlers.add (aMessageHandler);
+  public void registerMessageHandler(@Nonnull final IMessageHandler aMessageHandler) {
+    ValueEnforcer.notNull(aMessageHandler, "MessageHandler");
+    messageHandlers.add(aMessageHandler);
   }
 
   /**
    * Remove a message handler from this delegate
    *
-   * @param aMessageHandler
-   *        Message handler to be removed
+   * @param aMessageHandler Message handler to be removed
    */
-  public void deregisterMessageHandler (@Nonnull final IMessageHandler aMessageHandler)
-  {
-    ValueEnforcer.notNull (aMessageHandler, "MessageHandler");
-    messageHandlers.remove (aMessageHandler);
+  public void deregisterMessageHandler(@Nonnull final IMessageHandler aMessageHandler) {
+    ValueEnforcer.notNull(aMessageHandler, "MessageHandler");
+    messageHandlers.remove(aMessageHandler);
   }
 
   /**
@@ -228,25 +209,21 @@ public class MEMDelegate extends AbstractGlobalSingleton
    * Duplicate checking skipped for now. So if you register a handler twice, its
    * handle method will be called twice.
    *
-   * @param notificationHandler
-   *        message handler to be added
+   * @param notificationHandler message handler to be added
    */
-  public void registerNotificationHandler (@Nonnull final IRelayResultHandler notificationHandler)
-  {
-    ValueEnforcer.notNull (notificationHandler, "NotificationHandler");
-    relayResultHandlers.add (notificationHandler);
+  public void registerNotificationHandler(@Nonnull final IRelayResultHandler notificationHandler) {
+    ValueEnforcer.notNull(notificationHandler, "NotificationHandler");
+    relayResultHandlers.add(notificationHandler);
   }
 
   /**
    * Remove a notification handler from this delegate
    *
-   * @param notificationHandler
-   *        Message handler to be removed
+   * @param notificationHandler Message handler to be removed
    */
-  public void deregisterNotificationHandler (@Nonnull final IRelayResultHandler notificationHandler)
-  {
-    ValueEnforcer.notNull (notificationHandler, "NotificationHandler");
-    relayResultHandlers.remove (notificationHandler);
+  public void deregisterNotificationHandler(@Nonnull final IRelayResultHandler notificationHandler) {
+    ValueEnforcer.notNull(notificationHandler, "NotificationHandler");
+    relayResultHandlers.remove(notificationHandler);
   }
 
   /**
@@ -255,115 +232,96 @@ public class MEMDelegate extends AbstractGlobalSingleton
    * Duplicate checking skipped for now. So if you register a handler twice, its
    * handle method will be called twice.
    *
-   * @param submissionResultHandler
-   *        submission result handler to be added
+   * @param submissionResultHandler submission result handler to be added
    */
-  public void registerSubmissionResultHandler (@Nonnull final ISubmissionResultHandler submissionResultHandler)
-  {
-    ValueEnforcer.notNull (submissionResultHandler, "SubmissionResultHandler");
-    submissionResultHandlers.add (submissionResultHandler);
+  public void registerSubmissionResultHandler(@Nonnull final ISubmissionResultHandler submissionResultHandler) {
+    ValueEnforcer.notNull(submissionResultHandler, "SubmissionResultHandler");
+    submissionResultHandlers.add(submissionResultHandler);
   }
 
   /**
    * Remove a submissionResultHandler handler from this delegate
    *
-   * @param submissionResultHandler
-   *        submissionResultHandler to be removed
+   * @param submissionResultHandler submissionResultHandler to be removed
    */
-  public void deregisterSubmissionResultHandler (@Nonnull final ISubmissionResultHandler submissionResultHandler)
-  {
-    ValueEnforcer.notNull (submissionResultHandler, "SubmissionResultHandler");
-    submissionResultHandlers.remove (submissionResultHandler);
+  public void deregisterSubmissionResultHandler(@Nonnull final ISubmissionResultHandler submissionResultHandler) {
+    ValueEnforcer.notNull(submissionResultHandler, "SubmissionResultHandler");
+    submissionResultHandlers.remove(submissionResultHandler);
   }
 
   /**
    * Dispatch the received inbound message form the AS4 gateway to the handlers
    *
-   * @param message
-   *        message to be dispatched
+   * @param message message to be dispatched
+   * @throws MEIncomingException in case of error
    */
-  public void dispatchInboundMessage (@Nonnull final SOAPMessage message)
-  {
-    if (LOG.isInfoEnabled ())
-      LOG.info ("Received a Deliver message\n" + //
-                "   Inbound  AS4  Message ID: " +
-                EBMSUtils.getMessageId (message));
-    try
-    {
+  public void dispatchInboundMessage(@Nonnull final SOAPMessage message) throws MEIncomingException {
+    if (LOG.isInfoEnabled())
+      LOG.info("Received a Deliver message\n" + //
+               "   Inbound  AS4  Message ID: " +
+               EBMSUtils.getMessageId(message));
+    try {
       // Do it only once
-      final MEMessage aMEMessage = EBMSUtils.soap2MEMessage (message);
-      for (final IMessageHandler messageHandler : messageHandlers)
-      {
-        messageHandler.handleMessage (aMEMessage);
+      final MEMessage aMEMessage = EBMSUtils.soap2MEMessage(message);
+      for (final IMessageHandler messageHandler : messageHandlers) {
+        messageHandler.handleMessage(aMEMessage);
       }
-    }
-    catch (final Exception e)
-    {
-      throw new MEException ("Error handling message " + message, e);
+    } catch (final Exception e) {
+      throw new MEIncomingException("Error handling message " + message, e);
     }
   }
 
   /**
    * Dispatch the received RelayResult to the registered listeners
    *
-   * @param notification
-   *        Relay result
+   * @param notification Relay result
+   * @throws MEIncomingException in case of error
    */
-  public void dispatchRelayResult (final SOAPMessage notification)
-  {
-    try
-    {
+  public void dispatchRelayResult(final SOAPMessage notification) throws MEIncomingException {
+    try {
       // Do it only once
-      final RelayResult relayResult = EBMSUtils.soap2RelayResult (notification);
+      final RelayResult relayResult = EBMSUtils.soap2RelayResult(notification);
 
-      if (LOG.isInfoEnabled ())
-        LOG.info ("RelayResult for \n" + //
-                  "   Outbound AS4  Message ID: " +
-                  relayResult.getRefToMessageID () +
-                  "\n" + //
-                  "   MessageID:                " +
-                  relayResult.getMessageID ());
+      if (LOG.isInfoEnabled())
+        LOG.info("RelayResult for \n" + //
+                 "   Outbound AS4  Message ID: " +
+                 relayResult.getRefToMessageID() +
+                 "\n" + //
+                 "   MessageID:                " +
+                 relayResult.getMessageID());
 
-      for (final IRelayResultHandler notificationHandler : relayResultHandlers)
-      {
-        notificationHandler.handleNotification (relayResult);
+      for (final IRelayResultHandler notificationHandler : relayResultHandlers) {
+        notificationHandler.handleNotification(relayResult);
       }
-    }
-    catch (final Exception e)
-    {
-      throw new MEException ("Error handling message " + notification, e);
+    } catch (final Exception e) {
+      throw new MEIncomingException("Error handling message " + notification, e);
     }
   }
 
   /**
    * Dispatch the received SubmissioNResult to the registered listeners
    *
-   * @param submissionResult
-   *        Submission result SOAP message
+   * @param submissionResult Submission result SOAP message
+   * @throws MEIncomingException in case of error
    */
-  public void dispatchSubmissionResult (final SOAPMessage submissionResult)
-  {
-    try
-    {
+  public void dispatchSubmissionResult(final SOAPMessage submissionResult) throws MEIncomingException {
+    try {
       // Do it only once
-      final SubmissionResult sSubmissionResult = EBMSUtils.soap2SubmissionResult (submissionResult);
+      final SubmissionResult sSubmissionResult = EBMSUtils.soap2SubmissionResult(submissionResult);
 
-      if (LOG.isInfoEnabled ())
-        LOG.info ("SubmissionResult for \n" + //
-                  "   SubmitMessage Message ID: " +
-                  sSubmissionResult.getRefToMessageID () +
-                  "\n" +
-                  "   Outbound AS4  Message ID: " +
-                  sSubmissionResult.getMessageID ());
+      if (LOG.isInfoEnabled())
+        LOG.info("SubmissionResult for \n" + //
+                 "   SubmitMessage Message ID: " +
+                 sSubmissionResult.getRefToMessageID() +
+                 "\n" +
+                 "   Outbound AS4  Message ID: " +
+                 sSubmissionResult.getMessageID());
 
-      for (final ISubmissionResultHandler submissionResultHandler : submissionResultHandlers)
-      {
-        submissionResultHandler.handleSubmissionResult (sSubmissionResult);
+      for (final ISubmissionResultHandler submissionResultHandler : submissionResultHandlers) {
+        submissionResultHandler.handleSubmissionResult(sSubmissionResult);
       }
-    }
-    catch (final Exception e)
-    {
-      throw new MEException ("Error handling message " + submissionResult, e);
+    } catch (final Exception e) {
+      throw new MEIncomingException("Error handling message " + submissionResult, e);
     }
   }
 }

@@ -53,7 +53,7 @@ public class Notification implements Serializable {
    */
   private final long creationTime;
 
-  Notification(){
+  Notification() {
     creationTime = System.currentTimeMillis();
   }
 
@@ -102,8 +102,7 @@ public class Notification implements Serializable {
     this.messageID = messageID;
   }
 
-
-  public boolean isExpired(final long currentTime){
+  public boolean isExpired(final long currentTime) {
     return (currentTime - creationTime) > EXPIRATION_PERIOD;
   }
 }

@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.as4;
-
-import java.io.Serializable;
+package eu.toop.connector.api.me.in;
 
 import javax.annotation.Nonnull;
 
+import eu.toop.connector.api.me.model.EDMResponseWithAttachments;
 import eu.toop.edm.EDMErrorResponse;
 import eu.toop.edm.EDMRequest;
 
@@ -27,35 +26,35 @@ import eu.toop.edm.EDMRequest;
  *
  * @author Philip Helger
  */
-public interface IMEIncomingHandler extends Serializable
+public interface IMEIncomingHandler
 {
   /**
    * Handle an incoming request for step 2/4.
    *
    * @param aRequest
    *        The request to handle. Never <code>null</code>.
-   * @throws MEException
+   * @throws MEIncomingException
    *         In case of error.
    */
-  void handleIncomingRequest (@Nonnull EDMRequest aRequest);
+  void handleIncomingRequest (@Nonnull EDMRequest aRequest) throws MEIncomingException;
 
   /**
    * Handle an incoming response for step 4/4.
    *
    * @param aResponse
    *        The response to handle. Never <code>null</code>.
-   * @throws MEException
+   * @throws MEIncomingException
    *         In case of error.
    */
-  void handleIncomingResponse (@Nonnull EDMResponseWithAttachments aResponse);
+  void handleIncomingResponse (@Nonnull EDMResponseWithAttachments aResponse) throws MEIncomingException;
 
   /**
    * Handle an incoming error response for step 4/4.
    *
    * @param aErrorResponse
    *        The response to handle. Never <code>null</code>.
-   * @throws MEException
+   * @throws MEIncomingException
    *         In case of error.
    */
-  void handleIncomingErrorResponse (@Nonnull EDMErrorResponse aErrorResponse);
+  void handleIncomingErrorResponse (@Nonnull EDMErrorResponse aErrorResponse) throws MEIncomingException;
 }

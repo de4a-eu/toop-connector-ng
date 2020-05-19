@@ -26,7 +26,7 @@ import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.wrapper.Wrapper;
 
-import eu.toop.connector.api.as4.MEException;
+import eu.toop.connector.api.me.out.MEOutgoingException;
 
 /**
  * @author yerlibilgin
@@ -52,7 +52,7 @@ public class InternalNotificationHandler {
     timer.scheduleAtFixedRate(new TimerTask() {
       @Override
       public void run() {
-	purgeExpiredNotifications();
+        purgeExpiredNotifications();
       }
     }, delay, period);
   }
@@ -65,10 +65,10 @@ public class InternalNotificationHandler {
     synchronized (messageQueue) {
       final String submitMessageID = notification.getRefToMessageID();
       if (messageQueue.containsKey(submitMessageID)) {
-	carrier = messageQueue.get(submitMessageID);
+        carrier = messageQueue.get(submitMessageID);
       } else {
-	carrier = new Wrapper<>();
-	messageQueue.put(submitMessageID, carrier);
+        carrier = new Wrapper<>();
+        messageQueue.put(submitMessageID, carrier);
       }
     }
 
@@ -87,9 +87,9 @@ public class InternalNotificationHandler {
    * @param submitMessageID the id of the submit message
    * @param timeout         maximum amount to wait for the object. 0 means forever
    * @return the obtained {@link Notification}
-   * @throws MEException If waiting fails
+   * @throws MEOutgoingException If waiting fails
    */
-  public Notification obtainNotification(final String submitMessageID, final long timeout) throws MEException {
+  public Notification obtainNotification(final String submitMessageID, final long timeout) throws MEOutgoingException {
     ValueEnforcer.isGE0(timeout, "timeout");
     ValueEnforcer.notNull(submitMessageID, "MessageId");
 
@@ -100,17 +100,19 @@ public class InternalNotificationHandler {
 
     synchronized (messageQueue) {
       if (messageQueue.containsKey(submitMessageID)) {
-	if (LOG.isDebugEnabled())
-	  LOG.debug("we already have a " + targetTypeName + " message for " + submitMessageID);
-	carrier = messageQueue.remove(submitMessageID);
+        if (LOG.isDebugEnabled())
+          LOG.debug("we already have a " + targetTypeName + " message for " + submitMessageID);
+        carrier = messageQueue.remove(submitMessageID);
       } else {
-	// we don't have a carrier yet. Create one
-	if (LOG.isDebugEnabled())
-	  LOG.debug(
-	      "We don't have a " + targetTypeName + " waiter for " + submitMessageID + ". Create a waiter for it");
+        // we don't have a carrier yet. Create one
+        if (LOG.isDebugEnabled())
+          LOG.debug("We don't have a " + targetTypeName +
+                    " waiter for " +
+                    submitMessageID +
+                    ". Create a waiter for it");
 
-	carrier = new Wrapper<>();
-	messageQueue.put(submitMessageID, carrier);
+        carrier = new Wrapper<>();
+        messageQueue.put(submitMessageID, carrier);
       }
     }
 
@@ -118,19 +120,19 @@ public class InternalNotificationHandler {
     if (carrier.get() == null) {
       // we haven't received the actual object yet. So wait for it
       synchronized (carrier) {
-	try {
-	  carrier.wait(timeout);
-	} catch (final InterruptedException e) {
-	  if (LOG.isWarnEnabled())
-	    LOG.warn("Wait for message " + submitMessageID + " was interrupted.");
-	  Thread.currentThread().interrupt();
-	  throw new MEException("Wait for message " + submitMessageID + " was interrupted.", e);
-	}
+        try {
+          carrier.wait(timeout);
+        } catch (final InterruptedException e) {
+          if (LOG.isWarnEnabled())
+            LOG.warn("Wait for message " + submitMessageID + " was interrupted.");
+          Thread.currentThread().interrupt();
+          throw new MEOutgoingException("Wait for message " + submitMessageID + " was interrupted.", e);
+        }
       }
     }
 
     if (carrier.get() == null) {
-      throw new MEException("Couldn't obtain a " + targetTypeName + " with a messageID " + submitMessageID);
+      throw new MEOutgoingException("Couldn't obtain a " + targetTypeName + " with a messageID " + submitMessageID);
     }
 
     return carrier.get();
@@ -145,14 +147,14 @@ public class InternalNotificationHandler {
       final List<String> trash = new ArrayList<>();
 
       for (final Map.Entry<String, Wrapper<Notification>> entry : messageQueue.entrySet()) {
-	final String messageID = entry.getKey();
-	final Wrapper<Notification> carrier = entry.getValue();
-	if (carrier != null && carrier.get() != null && carrier.get().isExpired(currentTime)) {
-	  trash.add(messageID);
-	}
+        final String messageID = entry.getKey();
+        final Wrapper<Notification> carrier = entry.getValue();
+        if (carrier != null && carrier.get() != null && carrier.get().isExpired(currentTime)) {
+          trash.add(messageID);
+        }
       }
       for (final String messageID : trash) {
-	messageQueue.remove(messageID);
+        messageQueue.remove(messageID);
       }
     }
   }

@@ -25,13 +25,14 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.level.EErrorLevel;
 
-import eu.toop.connector.api.as4.EDMResponseWithAttachments;
-import eu.toop.connector.api.as4.IMEIncomingHandler;
-import eu.toop.connector.api.as4.IMERoutingInformation;
-import eu.toop.connector.api.as4.IMessageExchangeSPI;
-import eu.toop.connector.api.as4.MEException;
-import eu.toop.connector.api.as4.MEMessage;
-import eu.toop.connector.api.as4.MEPayload;
+import eu.toop.connector.api.me.IMessageExchangeSPI;
+import eu.toop.connector.api.me.in.IMEIncomingHandler;
+import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.model.EDMResponseWithAttachments;
+import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.model.MEPayload;
+import eu.toop.connector.api.me.out.IMERoutingInformation;
+import eu.toop.connector.api.me.out.MEOutgoingException;
 import eu.toop.connector.mem.external.EActingSide;
 import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;
@@ -62,7 +63,7 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
   }
 
   public void registerIncomingHandler(@Nonnull final ServletContext aServletContext,
-      @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEException {
+      @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEIncomingException {
     ValueEnforcer.notNull(aServletContext, "ServletContext");
     ValueEnforcer.notNull(aIncomingHandler, "IncomingHandler");
     if (m_aIncomingHandler != null)
@@ -74,13 +75,15 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
     aDelegate.registerNotificationHandler(aRelayResult -> {
       // more to come
       ToopKafkaClient.send(EErrorLevel.INFO,
-          () -> "Notification[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
+                           () -> "Notification[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
     });
 
     aDelegate.registerSubmissionResultHandler(aRelayResult -> {
       // more to come
       ToopKafkaClient.send(EErrorLevel.INFO,
-          () -> "SubmissionResult[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
+                           () -> "SubmissionResult[" + aRelayResult.getErrorCode() +
+                                 "]: " +
+                                 aRelayResult.getDescription());
     });
 
     // Register the AS4 handler needed
@@ -97,7 +100,7 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
           if (aItem != aHead)
             aAttachments.add(aItem);
         final EDMResponseWithAttachments aResponse = new EDMResponseWithAttachments((EDMResponse) aTopLevel,
-            aAttachments);
+                                                                                    aAttachments);
         m_aIncomingHandler.handleIncomingResponse(aResponse);
       } else if (aTopLevel instanceof EDMErrorResponse) {
         // Error response
@@ -109,18 +112,25 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
     });
   }
 
-  public void sendDCOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) {
+  public void sendDCOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
+      throws MEOutgoingException {
     final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
-        aRoutingInfo.getDocumentTypeID().getURIEncoded(), aRoutingInfo.getProcessID().getURIEncoded(),
-        aRoutingInfo.getEndpointURL(), aRoutingInfo.getCertificate(), EActingSide.DC);
+                                                                   aRoutingInfo.getDocumentTypeID().getURIEncoded(),
+                                                                   aRoutingInfo.getProcessID().getURIEncoded(),
+                                                                   aRoutingInfo.getEndpointURL(),
+                                                                   aRoutingInfo.getCertificate(),
+                                                                   EActingSide.DC);
     MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
   }
 
   public void sendDPOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
-      throws MEException {
+      throws MEOutgoingException {
     final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
-        aRoutingInfo.getDocumentTypeID().getURIEncoded(), aRoutingInfo.getProcessID().getURIEncoded(),
-        aRoutingInfo.getEndpointURL(), aRoutingInfo.getCertificate(), EActingSide.DP);
+                                                                   aRoutingInfo.getDocumentTypeID().getURIEncoded(),
+                                                                   aRoutingInfo.getProcessID().getURIEncoded(),
+                                                                   aRoutingInfo.getEndpointURL(),
+                                                                   aRoutingInfo.getCertificate(),
+                                                                   EActingSide.DP);
     MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
   }
 

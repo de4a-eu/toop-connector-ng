@@ -20,8 +20,7 @@ import javax.annotation.Nonnull;
 /**
  * @author yerlibilgin
  */
-public class InternalSubmissionResultHandler extends InternalNotificationHandler implements
-    ISubmissionResultHandler {
+public class InternalSubmissionResultHandler extends InternalNotificationHandler implements ISubmissionResultHandler {
 
   public InternalSubmissionResultHandler() {
     super(SubmissionResult.class);

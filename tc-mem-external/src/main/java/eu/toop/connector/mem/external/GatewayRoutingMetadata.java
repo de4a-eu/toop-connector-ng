@@ -55,10 +55,8 @@ public class GatewayRoutingMetadata implements Serializable {
   private final EActingSide side;
 
   public GatewayRoutingMetadata(@Nonnull @Nonempty final String sSenderParticipantId,
-      @Nonnull @Nonempty final String sDocumentTypeId,
-      @Nonnull @Nonempty final String sProcessId, 
-      @Nonnull @Nonempty final String sEndpointUrl, 
-      @Nonnull final X509Certificate aCert,
+      @Nonnull @Nonempty final String sDocumentTypeId, @Nonnull @Nonempty final String sProcessId,
+      @Nonnull @Nonempty final String sEndpointUrl, @Nonnull final X509Certificate aCert,
       @Nonnull final EActingSide eSide) {
     ValueEnforcer.notEmpty(sSenderParticipantId, "SenderParticipantID");
     ValueEnforcer.notEmpty(sDocumentTypeId, "DocumentTypeID");

@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import eu.toop.connector.api.as4.MEException;
+import eu.toop.connector.api.me.in.MEIncomingException;
 import eu.toop.connector.mem.external.DateTimeUtils;
 import eu.toop.connector.mem.external.EBMSUtils;
 import eu.toop.connector.mem.external.MEMConstants;
@@ -36,32 +36,29 @@ public class DummyEBMSUtils {
   private static boolean failOnRelayResult;
   private static String relayEbmsError;
 
-  final static String xmlTemplate = com.helger.commons.io.stream.StreamHelper
-      .getAllBytesAsString(DummyEBMSUtils.class.getResourceAsStream("/relay-sr-template.txt"),
-          StandardCharsets.UTF_8);
+  final static String xmlTemplate = com.helger.commons.io.stream.StreamHelper.getAllBytesAsString(DummyEBMSUtils.class.getResourceAsStream("/relay-sr-template.txt"),
+                                                                                                  StandardCharsets.UTF_8);
 
   /*
    * Process the soap message and create a SubmissionResult from it
    */
-  public static SOAPMessage inferSubmissionResult(final SOAPMessage receivedMessage) {
+  public static SOAPMessage inferSubmissionResult(final SOAPMessage receivedMessage) throws MEIncomingException {
     final String action = MEMConstants.ACTION_SUBMISSION_RESULT;
 
     String theAS4Message;
     try {
-      theAS4Message = SoapXPathUtil
-          .safeFindSingleNode(receivedMessage.getSOAPHeader(), ".//:Property[@name='MessageId']/text()")
-          .getTextContent();
+      theAS4Message = SoapXPathUtil.safeFindSingleNode(receivedMessage.getSOAPHeader(),
+                                                       ".//:Property[@name='MessageId']/text()")
+                                   .getTextContent();
     } catch (final SOAPException e) {
-      throw new MEException(e.getMessage(), e);
+      throw new MEIncomingException(e.getMessage(), e);
     }
 
-    String xml =
-        xmlTemplate.replace("${timestamp}", DateTimeUtils.getCurrentTimestamp()).
-            replace("${messageId}", EBMSUtils.genereateEbmsMessageId("test")).
-            replace("${action}", action).
-            replace("${propMessageId}", theAS4Message).
-            replace("${propRefToMessageId}", EBMSUtils.getMessageId(receivedMessage)
-            );
+    String xml = xmlTemplate.replace("${timestamp}", DateTimeUtils.getCurrentTimestamp())
+                            .replace("${messageId}", EBMSUtils.genereateEbmsMessageId("test"))
+                            .replace("${action}", action)
+                            .replace("${propMessageId}", theAS4Message)
+                            .replace("${propRefToMessageId}", EBMSUtils.getMessageId(receivedMessage));
 
     if (failOnSubmissionResult) {
       xml = xml.replace("${result}", "Error");
@@ -74,33 +71,30 @@ public class DummyEBMSUtils {
     try {
       return SoapUtil.createMessage(null, new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     } catch (final Exception e) {
-      throw new MEException(e.getMessage(), e);
+      throw new MEIncomingException(e.getMessage(), e);
     }
   }
-
 
   /*
    * Process the soap message and create a RelayResult from it
    */
-  public static SOAPMessage inferRelayResult(final SOAPMessage receivedMessage) {
+  public static SOAPMessage inferRelayResult(final SOAPMessage receivedMessage) throws MEIncomingException {
     final String action = MEMConstants.ACTION_RELAY;
 
     String refToMessageId;
     try {
-      refToMessageId = SoapXPathUtil
-          .safeFindSingleNode(receivedMessage.getSOAPHeader(), ".//:Property[@name='MessageId']/text()")
-          .getTextContent();
+      refToMessageId = SoapXPathUtil.safeFindSingleNode(receivedMessage.getSOAPHeader(),
+                                                        ".//:Property[@name='MessageId']/text()")
+                                    .getTextContent();
     } catch (final SOAPException e) {
-      throw new MEException(e.getMessage(), e);
+      throw new MEIncomingException(e.getMessage(), e);
     }
 
-    String xml =
-        xmlTemplate.replace("${timestamp}", DateTimeUtils.getCurrentTimestamp()).
-            replace("${messageId}", EBMSUtils.genereateEbmsMessageId("test")).
-            replace("${action}", action).
-            replace("${propMessageId}", refToMessageId).
-            replace("${propRefToMessageId}", refToMessageId
-            );
+    String xml = xmlTemplate.replace("${timestamp}", DateTimeUtils.getCurrentTimestamp())
+                            .replace("${messageId}", EBMSUtils.genereateEbmsMessageId("test"))
+                            .replace("${action}", action)
+                            .replace("${propMessageId}", refToMessageId)
+                            .replace("${propRefToMessageId}", refToMessageId);
 
     if (failOnRelayResult) {
       xml = xml.replace("${result}", "Error");
@@ -112,7 +106,7 @@ public class DummyEBMSUtils {
     try {
       return SoapUtil.createMessage(null, new ByteArrayInputStream(xml.getBytes(StandardCharsets.UTF_8)));
     } catch (final Exception e) {
-      throw new MEException(e.getMessage(), e);
+      throw new MEIncomingException(e.getMessage(), e);
     }
   }
 
@@ -123,12 +117,11 @@ public class DummyEBMSUtils {
     return receivedMessage;
   }
 
-
-  public static void setFailOnSubmissionResult(boolean fail) {
+  public static void setFailOnSubmissionResult(final boolean fail) {
     DummyEBMSUtils.failOnSubmissionResult = fail;
   }
 
-  public static void setFailOnRelayResult(boolean fail, String errorCode) {
+  public static void setFailOnRelayResult(final boolean fail, final String errorCode) {
     DummyEBMSUtils.failOnRelayResult = fail;
     DummyEBMSUtils.relayEbmsError = errorCode;
 

@@ -46,9 +46,9 @@ import com.helger.phase4.servlet.spi.AS4SignalMessageProcessorResult;
 import com.helger.phase4.servlet.spi.IAS4ServletMessageProcessorSPI;
 import com.helger.xml.serialize.write.XMLWriter;
 
-import eu.toop.connector.api.as4.EDMResponseWithAttachments;
-import eu.toop.connector.api.as4.IMEIncomingHandler;
-import eu.toop.connector.api.as4.MEPayload;
+import eu.toop.connector.api.me.in.IMEIncomingHandler;
+import eu.toop.connector.api.me.model.EDMResponseWithAttachments;
+import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.mem.phase4.Phase4Config;
 import eu.toop.edm.EDMErrorResponse;
 import eu.toop.edm.EDMRequest;
@@ -60,7 +60,7 @@ import eu.toop.kafkaclient.ToopKafkaClient;
 /**
  * TOOP specific implementation of {@link IAS4ServletMessageProcessorSPI}. It
  * takes incoming AS4 messages and forwards it accordingly to the correct TOOP
- * {@link eu.toop.connector.api.as4.IMEIncomingHandler}.
+ * {@link eu.toop.connector.api.me.in.IMEIncomingHandler}.
  *
  * @author Philip Helger
  */

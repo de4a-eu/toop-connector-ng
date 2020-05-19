@@ -30,7 +30,8 @@ import com.helger.commons.annotation.Nonempty;
  * @author myildiz on 16.02.2018.
  */
 public final class DateTimeUtils {
-  private DateTimeUtils () {}
+  private DateTimeUtils() {
+  }
 
   /**
    * Create the current date time string in format

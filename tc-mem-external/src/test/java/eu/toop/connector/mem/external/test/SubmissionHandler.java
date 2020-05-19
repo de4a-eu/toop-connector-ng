@@ -25,14 +25,17 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.concurrent.ThreadHelper;
 import com.helger.commons.url.URLHelper;
 
+import eu.toop.connector.api.me.MEException;
 import eu.toop.connector.mem.external.EBMSUtils;
 
 /**
- * An internal representation of a simple gateway that handles a submitted message.
+ * An internal representation of a simple gateway that handles a submitted
+ * message.
  *
  * Since it represents both c2 and c3 It does three things:
  *
- * 1. send back a submission result 2. send back a relay result 3. deliver a message back to the backend
+ * 1. send back a submission result 2. send back a relay result 3. deliver a
+ * message back to the backend
  *
  * @author myildiz
  */
@@ -43,34 +46,35 @@ public class SubmissionHandler {
 
   public static void handle(final SOAPMessage receivedMessage) {
     final Thread th = new Thread(() -> {
-      //send back a submission result
+      try {
+        // send back a submission result
+        LOG.info("Handle submission for " + EBMSUtils.getMessageId(receivedMessage));
 
-      LOG.info("Handle submission for " + EBMSUtils.getMessageId(receivedMessage));
+        LOG.info("Send back a submission result");
+        final SOAPMessage submissionResult = DummyEBMSUtils.inferSubmissionResult(receivedMessage);
 
+        EBMSUtils.sendSOAPMessage(submissionResult, BACKEND_URL);
 
+        // wait a bit
+        ThreadHelper.sleep(1000);
 
-      LOG.info("Send back a submission result");
-      final SOAPMessage submissionResult = DummyEBMSUtils.inferSubmissionResult(receivedMessage);
+        LOG.info("Send back a relay result");
+        final SOAPMessage relayResult = DummyEBMSUtils.inferRelayResult(receivedMessage);
 
-      EBMSUtils.sendSOAPMessage(submissionResult, BACKEND_URL);
+        EBMSUtils.sendSOAPMessage(relayResult, BACKEND_URL);
 
-      //wait a bit
-      ThreadHelper.sleep(1000);
+        // wait a bit
+        ThreadHelper.sleep(1000);
 
-      LOG.info("Send back a relay result");
-      final SOAPMessage relayResult = DummyEBMSUtils.inferRelayResult(receivedMessage);
+        // LOG.info("Send back a delivery message");
+        // SOAPMessage deliveryMessage = TestEBMSUtils.inferDelivery(receivedMessage);
+        // EBMSUtils.sendSOAPMessage(deliveryMessage, BACKEND_URL);
 
-      EBMSUtils.sendSOAPMessage(relayResult, BACKEND_URL);
-
-      //wait a bit
-      ThreadHelper.sleep(1000);
-
-      //LOG.info("Send back a delivery message");
-      //SOAPMessage deliveryMessage = TestEBMSUtils.inferDelivery(receivedMessage);
-      //EBMSUtils.sendSOAPMessage(deliveryMessage, BACKEND_URL);
-
-      //done
-      LOG.info("DONE");
+        // done
+        LOG.info("DONE");
+      } catch (final MEException ex) {
+        LOG.error("Error processing in Thread", ex);
+      }
     });
     th.setName("submission-handler");
     th.start();

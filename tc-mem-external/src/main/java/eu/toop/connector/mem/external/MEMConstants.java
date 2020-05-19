@@ -26,11 +26,12 @@ public final class MEMConstants {
 
   public static final String ACTION_SUBMIT = "Submit";
   public static final String ACTION_DELIVER = "Deliver";
-  //this is recommended to be a Relay instead of Notify
-  //but its kept like this for a while
+  // this is recommended to be a Relay instead of Notify
+  // but its kept like this for a while
   public static final String ACTION_RELAY = "Notify";
   public static final String ACTION_SUBMISSION_RESULT = "SubmissionResult";
   public static final String SERVICE = "http://www.toop.eu/edelivery/bit";
 
-  private MEMConstants () {}
+  private MEMConstants() {
+  }
 }

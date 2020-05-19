@@ -39,6 +39,8 @@ import com.helger.peppol.sml.ESML;
 import com.helger.peppol.sml.ISMLInfo;
 import com.helger.peppol.sml.SMLInfo;
 
+import eu.toop.connector.api.me.EMEProtocol;
+
 /**
  * This class contains global configuration elements for the TOOP Connector.
  *
@@ -198,11 +200,7 @@ public final class TCConfig
           final String sManagementServiceURL = getConfig ().getAsString ("toop.r2d2.sml.serviceurl");
           final boolean bClientCertificateRequired = getConfig ().getAsBoolean ("toop.r2d2.sml.clientcert", false);
           // No need for a persistent ID here
-          ret = new SMLInfo (GlobalIDFactory.getNewStringID (),
-                             sDisplayName,
-                             sDNSZone,
-                             sManagementServiceURL,
-                             bClientCertificateRequired);
+          ret = new SMLInfo (GlobalIDFactory.getNewStringID (), sDisplayName, sDNSZone, sManagementServiceURL, bClientCertificateRequired);
         }
         // Remember in cache
         s_aCachedSMLInfo = ret;
@@ -236,6 +234,22 @@ public final class TCConfig
     public static String getMEMImplementationID ()
     {
       return getConfig ().getAsString ("toop.mem.implementation");
+    }
+
+    /**
+     * Get the overall protocol to be used. Depending on that output different
+     * other properties might be queried.
+     *
+     * @return The overall protocol to use. Never <code>null</code>.
+     */
+    @Nonnull
+    public static EMEProtocol getMEMProtocol ()
+    {
+      final String sID = getConfig ().getAsString ("toop.mem.protocol", EMEProtocol.DEFAULT.getID ());
+      final EMEProtocol eProtocol = EMEProtocol.getFromIDOrNull (sID);
+      if (eProtocol == null)
+        throw new IllegalStateException ("Failed to resolve protocol with ID '" + sID + "'");
+      return eProtocol;
     }
 
     // GW_URL

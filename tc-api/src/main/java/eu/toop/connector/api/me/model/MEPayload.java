@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.as4;
+package eu.toop.connector.api.me.model;
 
 import java.io.Serializable;
 import java.nio.charset.Charset;

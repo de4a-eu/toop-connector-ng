@@ -55,9 +55,9 @@ public class SubmissionMessageProperties {
   @Nonnull
   public String toPartyRole;
 
-
   /**
-   * ToPartyIdType: The identification of the naming scheme of the used party identifier
+   * ToPartyIdType: The identification of the naming scheme of the used party
+   * identifier
    */
   @Nullable
   public String toPartyIdType;
@@ -75,7 +75,8 @@ public class SubmissionMessageProperties {
   public String action;
 
   /**
-   * ToPartyCertificate: the certificate of the destination gateway, to be used for encryption
+   * ToPartyCertificate: the certificate of the destination gateway, to be used
+   * for encryption
    */
   @Nonnull
   public String toPartyCertificate;

@@ -63,13 +63,14 @@ import com.helger.phase4.util.AS4ResourceHelper;
 import com.helger.photon.app.io.WebFileIO;
 import com.helger.servlet.ServletHelper;
 
-import eu.toop.connector.api.as4.IMEIncomingHandler;
-import eu.toop.connector.api.as4.IMERoutingInformation;
-import eu.toop.connector.api.as4.IMessageExchangeSPI;
-import eu.toop.connector.api.as4.MEException;
-import eu.toop.connector.api.as4.MEMessage;
-import eu.toop.connector.api.as4.MEPayload;
 import eu.toop.connector.api.http.TCHttpClientSettings;
+import eu.toop.connector.api.me.IMessageExchangeSPI;
+import eu.toop.connector.api.me.in.IMEIncomingHandler;
+import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.model.MEPayload;
+import eu.toop.connector.api.me.out.IMERoutingInformation;
+import eu.toop.connector.api.me.out.MEOutgoingException;
 import eu.toop.connector.mem.phase4.config.TOOPPMode;
 import eu.toop.connector.mem.phase4.servlet.AS4MessageProcessorSPI;
 import eu.toop.edm.error.EToopErrorCode;
@@ -100,7 +101,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
   }
 
   public void registerIncomingHandler (@Nonnull final ServletContext aServletContext,
-                                       @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEException
+                                       @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEIncomingException
   {
     ValueEnforcer.notNull (aServletContext, "ServletContext");
     ValueEnforcer.notNull (aIncomingHandler, "IncomingHandler");
@@ -123,11 +124,11 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     {
       final KeyStore aOurKS = m_aCF.getKeyStore ();
       if (aOurKS == null)
-        throw new InitializationException ("Failed to load configured phase4 keystore (crypto.properties)");
+        throw new MEIncomingException ("Failed to load configured phase4 keystore (crypto.properties)");
 
       final PrivateKeyEntry aOurKey = m_aCF.getPrivateKeyEntry ();
       if (aOurKey == null)
-        throw new InitializationException ("Failed to load configured phase4 key (crypto.properties)");
+        throw new MEIncomingException ("Failed to load configured phase4 key (crypto.properties)");
     }
 
     // Register server once
@@ -155,7 +156,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
 
   private void _sendOutgoing (@Nonnull final IAS4CryptoFactory aCF,
                               @Nonnull final IMERoutingInformation aRoutingInfo,
-                              @Nonnull final MEMessage aMessage) throws MEException
+                              @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
     final StopWatch aSW = StopWatch.createdStarted ();
 
@@ -208,7 +209,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
         }
         catch (final IOException ex)
         {
-          throw new MEException (EToopErrorCode.ME_001, ex);
+          throw new MEOutgoingException (EToopErrorCode.ME_001, ex);
         }
       }
 
@@ -257,18 +258,20 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     catch (final Exception ex)
     {
       LOGGER.error ("[phase4] Error sending message", ex);
-      throw new MEException (EToopErrorCode.ME_001, ex);
+      throw new MEOutgoingException (EToopErrorCode.ME_001, ex);
     }
   }
 
-  public void sendDCOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEException
+  public void sendDCOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
+                              @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
     LOGGER.info ("[phase4] sendDCOutgoing");
     // No difference
     _sendOutgoing (m_aCF, aRoutingInfo, aMessage);
   }
 
-  public void sendDPOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEException
+  public void sendDPOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
+                              @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
     LOGGER.info ("[phase4] sendDPOutgoing");
     // No difference

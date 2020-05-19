@@ -32,6 +32,7 @@ import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.mime.CMimeType;
 
+import eu.toop.connector.api.me.in.MEIncomingException;
 import eu.toop.connector.mem.external.EBMSUtils;
 import eu.toop.connector.mem.external.MEMConstants;
 import eu.toop.connector.mem.external.MEMDelegate;
@@ -78,7 +79,7 @@ public class AS4InterfaceServlet extends HttpServlet {
 
       // get the action from the soap message
       final String action = SoapXPathUtil.getSingleNodeTextContent(receivedMessage.getSOAPHeader(),
-          "//:CollaborationInfo/:Action");
+                                                                   "//:CollaborationInfo/:Action");
 
       switch (action) {
       case MEMConstants.ACTION_DELIVER:
@@ -139,7 +140,13 @@ public class AS4InterfaceServlet extends HttpServlet {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Create fault");
     }
-    final byte[] fault = EBMSUtils.createFault(receivedMessage, th.getMessage());
+    byte[] fault;
+    try {
+      fault = EBMSUtils.createFault(receivedMessage, th.getMessage());
+    } catch (final MEIncomingException ex) {
+      LOG.error("Error in creating fault to send back", ex);
+      fault = null;
+    }
     if (LOG.isDebugEnabled()) {
       LOG.debug("Write fault to the stream");
     }
@@ -148,7 +155,7 @@ public class AS4InterfaceServlet extends HttpServlet {
     resp.getOutputStream().flush();
   }
 
-  protected void processSubmissionResult(final SOAPMessage submissionResult) {
+  protected void processSubmissionResult(final SOAPMessage submissionResult) throws MEIncomingException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("------->> Received SubmissionResult <<-------");
       LOG.debug("Dispatch SubmissionResult");
@@ -158,7 +165,7 @@ public class AS4InterfaceServlet extends HttpServlet {
     MEMDelegate.getInstance().dispatchSubmissionResult(submissionResult);
   }
 
-  protected void processRelayResult(final SOAPMessage notification) {
+  protected void processRelayResult(final SOAPMessage notification) throws MEIncomingException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("------->> Received RelayResult <<-------");
       LOG.debug("Dispatch notification");
@@ -168,7 +175,7 @@ public class AS4InterfaceServlet extends HttpServlet {
     MEMDelegate.getInstance().dispatchRelayResult(notification);
   }
 
-  protected void processDelivery(final SOAPMessage receivedMessage) {
+  protected void processDelivery(final SOAPMessage receivedMessage) throws MEIncomingException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("------->> Received Delivery <<-------");
       LOG.debug("Dispatch inbound message");

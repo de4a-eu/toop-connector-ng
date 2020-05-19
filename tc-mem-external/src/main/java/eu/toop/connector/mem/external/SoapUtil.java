@@ -39,9 +39,10 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Node;
 
 import com.helger.commons.error.level.EErrorLevel;
+import com.helger.commons.exception.InitializationException;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 
-import eu.toop.connector.api.as4.MEException;
+import eu.toop.connector.api.me.out.MEOutgoingException;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.kafkaclient.ToopKafkaClient;
 
@@ -64,7 +65,7 @@ public class SoapUtil {
       serializer.setOutputProperty(OutputKeys.INDENT, "yes");
       serializer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
     } catch (final Exception e) {
-      throw new MEException("Failed to initialize factories", e);
+      throw new InitializationException("Failed to initialize factories", e);
     }
     factory.setNamespaceAware(true);
   }
@@ -79,49 +80,55 @@ public class SoapUtil {
    * A utility method to create a SOAP1.2 With Attachments message
    *
    * @return new {@link SOAPMessage}.
+   * @throws MEOutgoingException in case of error
    */
-  public static SOAPMessage createEmptyMessage() {
+  public static SOAPMessage createEmptyMessage() throws MEOutgoingException {
     try {
       return messageFactory.createMessage();
     } catch (final SOAPException e) {
-      throw new MEException(e);
+      throw new MEOutgoingException("Failed to create new SOAP message", e);
     }
   }
 
   /**
    * This method sends a SOAP1.2 message to the given url.
    *
-   * @param message message to be send
+   * @param message  message to be send
    * @param endpoint endpoint to send the message to
    * @return The response message
+   * @throws MEOutgoingException in case of error
    */
-  public static SOAPMessage sendSOAPMessage(final SOAPMessage message, final URL endpoint) {
+  public static SOAPMessage sendSOAPMessage(final SOAPMessage message, final URL endpoint) throws MEOutgoingException {
     ToopKafkaClient.send(EErrorLevel.INFO, () -> "Sending AS4 SOAP message to " + endpoint.toExternalForm());
     try {
       final SOAPConnection connection = soapConnectionFactory.createConnection();
       return connection.call(message, endpoint);
     } catch (final SOAPException e) {
-      throw new MEException(EToopErrorCode.ME_001, e);
+      throw new MEOutgoingException(EToopErrorCode.ME_001, e);
     }
   }
 
   /**
    * Create a SOAP message from the provided mime headers and an input stream
+   *
    * @param headers the MIME headers that will be used during the transportation
    *                as a HTTP package
-   * @param is the input stream that the soap message has been serialized to previously
+   * @param is      the input stream that the soap message has been serialized to
+   *                previously
    * @return message
-   * @throws IOException on IO error
+   * @throws IOException   on IO error
    * @throws SOAPException on SOAP error
    */
-  public static SOAPMessage createMessage(final MimeHeaders headers,
-                                          final InputStream is) throws IOException, SOAPException {
+  public static SOAPMessage createMessage(final MimeHeaders headers, final InputStream is)
+      throws IOException, SOAPException {
     return messageFactory.createMessage(headers, is);
   }
 
   /**
    * returns a String description of the provided soap message as XML appended to
-   * an enumeration of the attachments and provides info such as id, type and length
+   * an enumeration of the attachments and provides info such as id, type and
+   * length
+   *
    * @param message message
    * @return debug string
    */
@@ -138,23 +145,23 @@ public class SoapUtil {
 
     });
 
-    return prettyPrint(message.getSOAPPart()) + "\n\n" +
-        attSummary;
+    return prettyPrint(message.getSOAPPart()) + "\n\n" + attSummary;
   }
 
   /**
    * Print the given org.w3c.dom.Node object in an indented XML format
+   *
    * @param node the node to be serialized to XML
    * @return formatted XML
    */
   public static String prettyPrint(final Node node) {
-    try(final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ()) {
+    try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream()) {
       final Source xmlSource = new DOMSource(node);
 
       final StreamResult res = new StreamResult(aBAOS);
       serializer.transform(xmlSource, res);
       serializer.reset();
-      return aBAOS.getAsString (StandardCharsets.UTF_8);
+      return aBAOS.getAsString(StandardCharsets.UTF_8);
     } catch (final Exception e) {
       return node.getTextContent();
     }

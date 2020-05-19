@@ -13,13 +13,24 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.mem.external.notifications;
+package eu.toop.connector.api.me;
+
+import javax.annotation.Nullable;
 
 /**
- * Introduced in the TOOP AS4 gateway interface.
- * 
- * @author yerlibilgin
+ * Base exception for all ME exceptions.
+ *
+ * @author Philip Helger
  */
-public class SubmissionResult extends Notification {
+public class MEException extends Exception
+{
+  public MEException (@Nullable final String sMsg)
+  {
+    super (sMsg);
+  }
 
+  public MEException (@Nullable final String sMsg, @Nullable final Throwable aCause)
+  {
+    super (sMsg, aCause);
+  }
 }
