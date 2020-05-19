@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.r2d2;
+package eu.toop.connector.api.dsd;
 
 import javax.annotation.Nonnull;
 
@@ -22,26 +22,27 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
-import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 
+import eu.toop.connector.api.smp.ISMPErrorHandler;
+
 /**
- * This class implements the {@link IR2D2ParticipantIDProvider} interface using
- * a constant set of participant identifiers. This implementation is meant for
+ * This class implements the {@link IDSDParticipantIDProvider} interface using a
+ * constant set of participant identifiers. This implementation is meant for
  * testing purposes only. Don't use in production.
  *
  * @author Philip Helger
  */
-public class R2D2ParticipantIDProviderConstant implements IR2D2ParticipantIDProvider
+public class DSDParticipantIDProviderConstant implements IDSDParticipantIDProvider
 {
   private final ICommonsOrderedSet <IParticipantIdentifier> m_aSet = new CommonsLinkedHashSet <> ();
 
   /**
    * Constructor to return an empty participant identifier set.
    */
-  public R2D2ParticipantIDProviderConstant ()
+  public DSDParticipantIDProviderConstant ()
   {}
 
   /**
@@ -50,7 +51,7 @@ public class R2D2ParticipantIDProviderConstant implements IR2D2ParticipantIDProv
    * @param aPI
    *        The participant ID to return. May not be <code>null</code>.
    */
-  public R2D2ParticipantIDProviderConstant (@Nonnull final IParticipantIdentifier aPI)
+  public DSDParticipantIDProviderConstant (@Nonnull final IParticipantIdentifier aPI)
   {
     ValueEnforcer.notNull (aPI, "ParticipantID");
     m_aSet.add (aPI);
@@ -63,7 +64,7 @@ public class R2D2ParticipantIDProviderConstant implements IR2D2ParticipantIDProv
    *        The participant IDs to be returned. May not be <code>null</code> and
    *        may not contain <code>null</code> values.
    */
-  public R2D2ParticipantIDProviderConstant (@Nonnull final Iterable <? extends IParticipantIdentifier> aPIs)
+  public DSDParticipantIDProviderConstant (@Nonnull final Iterable <? extends IParticipantIdentifier> aPIs)
   {
     ValueEnforcer.notNullNoNullValue (aPIs, "ParticipantIDs");
     m_aSet.addAll (aPIs);
@@ -76,7 +77,7 @@ public class R2D2ParticipantIDProviderConstant implements IR2D2ParticipantIDProv
    *        The participant IDs to be returned. May not be <code>null</code> and
    *        may not contain <code>null</code> values.
    */
-  public R2D2ParticipantIDProviderConstant (@Nonnull final IParticipantIdentifier... aPIs)
+  public DSDParticipantIDProviderConstant (@Nonnull final IParticipantIdentifier... aPIs)
   {
     ValueEnforcer.notNullNoNullValue (aPIs, "ParticipantIDs");
     m_aSet.addAll (aPIs);
@@ -84,10 +85,10 @@ public class R2D2ParticipantIDProviderConstant implements IR2D2ParticipantIDProv
 
   @Nonnull
   @ReturnsMutableCopy
-  public ICommonsSet <IParticipantIdentifier> getAllParticipantIDs (@Nonnull final String sLogPrefix,
-                                                                    @Nonnull @Nonempty final String sCountryCode,
-                                                                    @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
-                                                                    @Nonnull final IR2D2ErrorHandler aErrorHandler)
+  public ICommonsOrderedSet <IParticipantIdentifier> getAllParticipantIDs (@Nonnull final String sLogPrefix,
+                                                                           @Nonnull @Nonempty final String sCountryCode,
+                                                                           @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
+                                                                           @Nonnull final ISMPErrorHandler aErrorHandler)
   {
     return m_aSet.getClone ();
   }

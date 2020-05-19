@@ -13,12 +13,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.r2d2;
+package eu.toop.connector.api.smp;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
@@ -29,8 +29,7 @@ import com.helger.peppolid.IProcessIdentifier;
  *
  * @author Philip Helger
  */
-@Deprecated
-public interface IR2D2EndpointProvider
+public interface ISMPEndpointProvider
 {
   /**
    * Get a list of all endpoints that match the specified requirements. This is
@@ -56,11 +55,11 @@ public interface IR2D2EndpointProvider
    * @return A non-<code>null</code> but maybe empty list of all matching
    *         endpoints.
    */
-  @Nonnull
-  ICommonsList <IR2D2Endpoint> getEndpoints (@Nonnull String sLogPrefix,
-                                             @Nonnull IParticipantIdentifier aRecipientID,
-                                             @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
-                                             @Nonnull IProcessIdentifier aProcessID,
-                                             @Nonnull @Nonempty String sTransportProfileID,
-                                             @Nonnull IR2D2ErrorHandler aErrorHandler);
+  @Nullable
+  ISMPEndpoint getEndpoint (@Nonnull String sLogPrefix,
+                             @Nonnull IParticipantIdentifier aRecipientID,
+                             @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
+                             @Nonnull IProcessIdentifier aProcessID,
+                             @Nonnull @Nonempty String sTransportProfileID,
+                             @Nonnull ISMPErrorHandler aErrorHandler);
 }

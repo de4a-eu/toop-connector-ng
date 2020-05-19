@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.r2d2;
+package eu.toop.connector.api.smp;
 
 import java.security.cert.X509Certificate;
 
@@ -25,12 +25,12 @@ import com.helger.peppolid.IParticipantIdentifier;
 
 /**
  * Read-only base interface for a single result endpoint. See
- * {@link R2D2Endpoint} for the default implementation.
+ * {@link SMPEndpoint} for the default implementation.
  *
  * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
-public interface IR2D2Endpoint
+public interface ISMPEndpoint
 {
   /**
    * @return The participant or service group. Never <code>null</code>.

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.r2d2;
+package eu.toop.connector.api.smp;
 
 import java.security.cert.X509Certificate;
 
@@ -29,13 +29,13 @@ import com.helger.peppolid.IParticipantIdentifier;
 
 /**
  * This class contains a single result endpoint for an R2D2 query. Default
- * implementation of {@link IR2D2Endpoint}.
+ * implementation of {@link ISMPEndpoint}.
  *
  * @author Philip Helger
  */
 @Immutable
 @MustImplementEqualsAndHashcode
-public class R2D2Endpoint implements IR2D2Endpoint
+public class SMPEndpoint implements ISMPEndpoint
 {
   private final IParticipantIdentifier m_aParticipantID;
   private final String m_sTransportProtocol;
@@ -57,7 +57,7 @@ public class R2D2Endpoint implements IR2D2Endpoint
    *        The encoded certificate from the SMP endpoint. May not be
    *        <code>null</code>.
    */
-  public R2D2Endpoint (@Nonnull final IParticipantIdentifier aParticipantID,
+  public SMPEndpoint (@Nonnull final IParticipantIdentifier aParticipantID,
                        @Nonnull @Nonempty final String sTransportProtocol,
                        @Nonnull @Nonempty final String sEndpointURL,
                        @Nonnull final X509Certificate aCert)
@@ -105,7 +105,7 @@ public class R2D2Endpoint implements IR2D2Endpoint
       return true;
     if (o == null || !getClass ().equals (o.getClass ()))
       return false;
-    final R2D2Endpoint rhs = (R2D2Endpoint) o;
+    final SMPEndpoint rhs = (SMPEndpoint) o;
     return m_aParticipantID.equals (rhs.m_aParticipantID) &&
            m_sTransportProtocol.equals (rhs.m_sTransportProtocol) &&
            m_sEndpointURL.equals (rhs.m_sEndpointURL) &&

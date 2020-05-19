@@ -31,7 +31,7 @@ import eu.toop.connector.mem.external.SoapXPathUtil;
 /**
  * @author myildiz
  */
-public class DummyEBMSUtils {
+final class DummyEBMSUtils {
   private static boolean failOnSubmissionResult;
   private static boolean failOnRelayResult;
   private static String relayEbmsError;

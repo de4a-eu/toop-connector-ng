@@ -17,6 +17,7 @@ package eu.toop.connector.api;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import org.junit.Test;
 
@@ -32,5 +33,6 @@ public final class TCConfigTest
   {
     assertEquals ("http://directory.central.toop/pd", TCConfig.R2D2.getR2D2DirectoryBaseUrl ());
     assertFalse (TCConfig.R2D2.isR2D2UseDNS ());
+    assertNotNull (TCConfig.getIdentifierFactory ());
   }
 }

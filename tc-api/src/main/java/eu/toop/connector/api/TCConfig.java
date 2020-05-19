@@ -38,6 +38,7 @@ import com.helger.config.IConfig;
 import com.helger.peppol.sml.ESML;
 import com.helger.peppol.sml.ISMLInfo;
 import com.helger.peppol.sml.SMLInfo;
+import com.helger.peppolid.factory.IIdentifierFactory;
 
 import eu.toop.connector.api.me.EMEProtocol;
 
@@ -90,6 +91,12 @@ public final class TCConfig
   public static void setDefaultConfig ()
   {
     setConfig (ConfigFactory.getDefaultConfig ());
+  }
+
+  @Nonnull
+  public static IIdentifierFactory getIdentifierFactory ()
+  {
+    return TCIdentifierFactory.INSTANCE_TC;
   }
 
   public static class Global

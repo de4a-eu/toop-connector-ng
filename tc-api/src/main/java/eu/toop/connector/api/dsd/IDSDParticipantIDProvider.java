@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.r2d2;
+package eu.toop.connector.api.dsd;
 
 import javax.annotation.Nonnull;
 
@@ -21,6 +21,8 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
+
+import eu.toop.connector.api.smp.ISMPErrorHandler;
 
 /**
  * Interface to resolve Country Code and Document Type ID to a set of matching
@@ -30,8 +32,7 @@ import com.helger.peppolid.IParticipantIdentifier;
  *
  * @author Philip Helger
  */
-@Deprecated
-public interface IR2D2ParticipantIDProvider
+public interface IDSDParticipantIDProvider
 {
   /**
    * Get all participant IDs that match the provided country code and document
@@ -52,5 +53,5 @@ public interface IR2D2ParticipantIDProvider
   ICommonsSet <IParticipantIdentifier> getAllParticipantIDs (@Nonnull String sLogPrefix,
                                                              @Nonnull @Nonempty String sCountryCode,
                                                              @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
-                                                             @Nonnull IR2D2ErrorHandler aErrorHandler);
+                                                             @Nonnull ISMPErrorHandler aErrorHandler);
 }

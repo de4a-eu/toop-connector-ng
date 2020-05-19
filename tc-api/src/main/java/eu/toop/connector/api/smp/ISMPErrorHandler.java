@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.r2d2;
+package eu.toop.connector.api.smp;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ import eu.toop.edm.error.IToopErrorCode;
  *
  * @author Philip Helger
  */
-public interface IR2D2ErrorHandler
+public interface ISMPErrorHandler
 {
   /**
    * The main error handler method to be implemented
