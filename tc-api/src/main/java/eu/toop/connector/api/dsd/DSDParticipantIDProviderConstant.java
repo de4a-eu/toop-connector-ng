@@ -16,9 +16,9 @@
 package eu.toop.connector.api.dsd;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsLinkedHashSet;
 import com.helger.commons.collection.impl.ICommonsOrderedSet;
@@ -86,7 +86,8 @@ public class DSDParticipantIDProviderConstant implements IDSDParticipantIDProvid
   @Nonnull
   @ReturnsMutableCopy
   public ICommonsOrderedSet <IParticipantIdentifier> getAllParticipantIDs (@Nonnull final String sLogPrefix,
-                                                                           @Nonnull @Nonempty final String sCountryCode,
+                                                                           @Nonnull final String sDatasetType,
+                                                                           @Nullable final String sCountryCode,
                                                                            @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
                                                                            @Nonnull final ISMPErrorHandler aErrorHandler)
   {

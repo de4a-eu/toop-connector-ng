@@ -16,8 +16,8 @@
 package eu.toop.connector.api.dsd;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
-import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
@@ -40,8 +40,10 @@ public interface IDSDParticipantIDProvider
    *
    * @param sLogPrefix
    *        The logging prefix to be used. May not be <code>null</code>.
+   * @param sDatasetType
+   *        Dataset Type to query. May not be <code>null</code>.
    * @param sCountryCode
-   *        Country code to use. Must be a 2-digit string. May not be
+   *        Country code to use. Must be a 2-digit string. May be
    *        <code>null</code>.
    * @param aDocumentTypeID
    *        Document type ID to query. May not be <code>null</code>.
@@ -51,7 +53,8 @@ public interface IDSDParticipantIDProvider
    */
   @Nonnull
   ICommonsSet <IParticipantIdentifier> getAllParticipantIDs (@Nonnull String sLogPrefix,
-                                                             @Nonnull @Nonempty String sCountryCode,
+                                                             @Nonnull String sDatasetType,
+                                                             @Nullable String sCountryCode,
                                                              @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
                                                              @Nonnull ISMPErrorHandler aErrorHandler);
 }

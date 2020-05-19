@@ -63,7 +63,6 @@
   
   <properties>
     <ph-xsds.version>2.2.6</ph-xsds.version>
-    <toop-commons-ng.version>2.0.0-beta3</toop-commons-ng.version>
   </properties>
 
   <dependencyManagement>
@@ -134,7 +133,7 @@
       <dependency>
         <groupId>com.helger</groupId>
         <artifactId>phase4-parent-pom</artifactId>
-        <version>0.9.14</version>
+        <version>0.9.15</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -156,28 +155,20 @@
         <version>1.2.2</version>
       </dependency>
 
-      <!-- The sub-projects of this project have a constant version -->
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-regrep</artifactId>
-        <version>${toop-commons-ng.version}</version>
+        <artifactId>toop-commons-ng-parent-pom</artifactId>
+        <version>2.0.0-beta3</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>toop-kafka-client</artifactId>
-        <version>${toop-commons-ng.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>eu.toop</groupId>
-        <artifactId>toop-edm</artifactId>
-        <version>${toop-commons-ng.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>eu.toop</groupId>
-        <artifactId>toop-commons</artifactId>
-        <version>${toop-commons-ng.version}</version>
+        <artifactId>dsd-client</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
       </dependency>
 
+      <!-- The sub-projects of this project have a constant version -->
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>tc-api</artifactId>
@@ -198,11 +189,6 @@
         <artifactId>tc-main</artifactId>
         <version>${project.version}</version>
       </dependency>
-      <dependency>
-        <groupId>eu.toop</groupId>
-        <artifactId>tc-webapp</artifactId>
-        <version>${project.version}</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
   
@@ -220,7 +206,7 @@
     <module>tc-api</module>
     <module>tc-mem-external</module>
     <module>tc-mem-phase4</module>
-<!--     <module>tc-main</module> -->
+    <module>tc-main</module>
   </modules>
 
   <build>
