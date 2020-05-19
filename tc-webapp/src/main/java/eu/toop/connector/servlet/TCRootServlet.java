@@ -87,6 +87,7 @@ public class TCRootServlet extends HttpServlet
     {
       aSB.append ("<h2>API information</h2>");
       aSB.append ("<div>/dsd/dp - <a href='/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE' target='_blank'>test me</a></div>");
+      aSB.append ("<div>/dsd/dp/by-country - <a href='/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE/by-country/SV' target='_blank'>test me</a></div>");
     }
 
     aSB.append ("</body></html>");

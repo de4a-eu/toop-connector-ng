@@ -8,6 +8,7 @@ import com.helger.photon.api.IAPIRegistry;
 import com.helger.photon.core.servlet.WebAppListener;
 
 import eu.toop.connector.api.ApiGetDsdDp;
+import eu.toop.connector.api.ApiGetDsdDpByCountry;
 import eu.toop.connector.app.TCInit;
 
 public class TCWebAppListener extends WebAppListener
@@ -22,6 +23,7 @@ public class TCWebAppListener extends WebAppListener
   protected void initAPI (final IAPIRegistry aAPIRegistry)
   {
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}"), ApiGetDsdDp.class));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}/by-country/{country}"), ApiGetDsdDpByCountry.class));
   }
 
   @Override
