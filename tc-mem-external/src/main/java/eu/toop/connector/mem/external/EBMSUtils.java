@@ -268,7 +268,7 @@ public final class EBMSUtils {
 		final IMicroElement ePayloadInfo = eUserMessage.appendElement(NS_EBMS, "PayloadInfo");
 		for (final MEPayload aPayload : meMessage.payloads()) {
 		    final IMicroElement ePartInfo = ePayloadInfo.appendElement(NS_EBMS, "PartInfo");
-		    ePartInfo.setAttribute("href", "cid:" + aPayload.getPayloadId());
+		    ePartInfo.setAttribute("href", "cid:" + aPayload.getContentID());
 
 		    final IMicroElement ePartProperties = ePartInfo.appendElement(NS_EBMS, "PartProperties");
 		    ePartProperties.appendChild(_property("MimeType", aPayload.getMimeTypeString()));
@@ -291,7 +291,7 @@ public final class EBMSUtils {
 
 	    meMessage.payloads().forEach(payload -> {
 		final AttachmentPart attachmentPart = message.createAttachmentPart();
-		attachmentPart.setContentId('<' + payload.getPayloadId() + '>');
+		attachmentPart.setContentId('<' + payload.getContentID() + '>');
 		try {
 		    attachmentPart.setRawContentBytes(payload.getData().bytes(), payload.getData().getOffset(),
 			    payload.getData().size(), payload.getMimeTypeString());
@@ -385,10 +385,10 @@ public final class EBMSUtils {
 		    throw new MEException(e);
 		}
 
-		final MEPayload payload = MEPayload.builder().mimeType(mimeType).payloadID(href).data(rawContentBytes)
+		final MEPayload payload = MEPayload.builder().mimeType(mimeType).contentID(href).data(rawContentBytes)
 			.build();
 		if (LOG.isDebugEnabled()) {
-		    LOG.debug("\tpayload.payloadId: " + payload.getPayloadId());
+		    LOG.debug("\tpayload.payloadId: " + payload.getContentID());
 		    LOG.debug("\tpayload.mimeType: " + payload.getMimeTypeString());
 		}
 

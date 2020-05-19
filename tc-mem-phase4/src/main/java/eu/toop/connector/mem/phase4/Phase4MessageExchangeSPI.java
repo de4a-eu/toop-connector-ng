@@ -200,7 +200,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                                                                .getContentType () == EMimeContentType.TEXT ? EAS4CompressionMode.GZIP
                                                                                                            : null;
           aClient.addAttachment (WSS4JAttachment.createOutgoingFileAttachment (aPayload.getData ().bytes (),
-                                                                               aPayload.getPayloadId (),
+                                                                               aPayload.getContentID (),
                                                                                sFilename,
                                                                                aPayload.getMimeType (),
                                                                                eCompressionMode,

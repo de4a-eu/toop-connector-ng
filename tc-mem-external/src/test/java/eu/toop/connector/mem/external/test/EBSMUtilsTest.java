@@ -45,7 +45,7 @@ public final class EBSMUtilsTest
     sd.conversationId = "EBSMUtilsTestConv";
     final MEMessage msg = MEMessage.builder ()
                                    .payload (x -> x.mimeType (CMimeType.APPLICATION_XML)
-                                                   .payloadID ("blafoo")
+                                                   .contentID ("blafoo")
                                                    .data ("<?xml version='1.0'?><root demo='true' />",
                                                           StandardCharsets.ISO_8859_1))
                                    .build ();

@@ -48,7 +48,7 @@ public final class MEPayload implements Serializable
   /**
    * Content-ID for the payload
    */
-  private final String m_sPayloadID;
+  private final String m_sContentID;
 
   /**
    * The actual payload content
@@ -56,15 +56,15 @@ public final class MEPayload implements Serializable
   private final ByteArrayWrapper m_aData;
 
   protected MEPayload (@Nonnull final IMimeType aMimeType,
-                       @Nonnull @Nonempty final String sPayloadID,
+                       @Nonnull @Nonempty final String sContentID,
                        @Nonnull final ByteArrayWrapper aData)
   {
     ValueEnforcer.notNull (aMimeType, "MimeType");
-    ValueEnforcer.notEmpty (sPayloadID, "PayloadID");
+    ValueEnforcer.notEmpty (sContentID, "ContentID");
     ValueEnforcer.notNull (aData, "Data");
 
     m_aMimeType = aMimeType;
-    m_sPayloadID = sPayloadID;
+    m_sContentID = sContentID;
     m_aData = aData;
   }
 
@@ -81,9 +81,9 @@ public final class MEPayload implements Serializable
   }
 
   @Nonnull
-  public String getPayloadId ()
+  public String getContentID ()
   {
-    return m_sPayloadID;
+    return m_sContentID;
   }
 
   @Nonnull
@@ -97,7 +97,7 @@ public final class MEPayload implements Serializable
   public String toString ()
   {
     return new ToStringGenerator (this).append ("MimeType", m_aMimeType)
-                                       .append ("PayloadID", m_sPayloadID)
+                                       .append ("ContentID", m_sContentID)
                                        .append ("Data", m_aData)
                                        .getToString ();
   }
@@ -110,13 +110,13 @@ public final class MEPayload implements Serializable
 
   /**
    * Builder class for {@link MEPayload}
-   * 
+   *
    * @author Philip Helger
    */
   public static class Builder
   {
     private IMimeType m_aMimeType;
-    private String m_sPayloadID;
+    private String m_sContentID;
     private ByteArrayWrapper m_aData;
 
     protected Builder ()
@@ -131,16 +131,16 @@ public final class MEPayload implements Serializable
 
     @Nonnull
     @Nonempty
-    public Builder randomPayloadID ()
+    public Builder randomContentID ()
     {
       // Must use RFC 2822 style
-      return payloadID (UUID.randomUUID ().toString () + "@mp.toop");
+      return contentID (UUID.randomUUID ().toString () + "@mp.toop");
     }
 
     @Nonnull
-    public Builder payloadID (@Nullable final String s)
+    public Builder contentID (@Nullable final String s)
     {
-      m_sPayloadID = s;
+      m_sContentID = s;
       return this;
     }
 
@@ -168,8 +168,8 @@ public final class MEPayload implements Serializable
     {
       if (m_aMimeType == null)
         throw new IllegalStateException ("MimeType MUST be present");
-      if (StringHelper.hasNoText (m_sPayloadID))
-        throw new IllegalStateException ("PayloadID MUST be present");
+      if (StringHelper.hasNoText (m_sContentID))
+        throw new IllegalStateException ("Content ID MUST be present");
       if (m_aData == null)
         throw new IllegalStateException ("Data MUST be present");
     }
@@ -178,7 +178,7 @@ public final class MEPayload implements Serializable
     public MEPayload build ()
     {
       checkConsistency ();
-      return new MEPayload (m_aMimeType, m_sPayloadID, m_aData);
+      return new MEPayload (m_aMimeType, m_sContentID, m_aData);
     }
   }
 }

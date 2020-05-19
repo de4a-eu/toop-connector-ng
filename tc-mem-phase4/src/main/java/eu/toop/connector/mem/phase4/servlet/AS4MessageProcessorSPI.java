@@ -26,9 +26,8 @@ import org.w3c.dom.Node;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.IsSPIImplementation;
-import com.helger.commons.collection.impl.CommonsLinkedHashMap;
+import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
-import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.http.HttpHeaderMap;
 import com.helger.commons.io.stream.StreamHelper;
@@ -47,6 +46,7 @@ import com.helger.phase4.servlet.spi.AS4SignalMessageProcessorResult;
 import com.helger.phase4.servlet.spi.IAS4ServletMessageProcessorSPI;
 import com.helger.xml.serialize.write.XMLWriter;
 
+import eu.toop.connector.api.as4.EDMResponseWithAttachments;
 import eu.toop.connector.api.as4.IMEIncomingHandler;
 import eu.toop.connector.api.as4.MEPayload;
 import eu.toop.connector.mem.phase4.Phase4Config;
@@ -132,16 +132,15 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
         else
           if (aTopLevel instanceof EDMResponse)
           {
-            final ICommonsOrderedMap <String, MEPayload> aAttachments = new CommonsLinkedHashMap <> ();
+            final ICommonsList <MEPayload> aAttachments = new CommonsArrayList <> ();
             for (final WSS4JAttachment aItem : aIncomingAttachments)
               if (aItem != aAttachment)
-                aAttachments.put (aItem.getId (),
-                                  MEPayload.builder ()
+                aAttachments.add (MEPayload.builder ()
                                            .mimeType (MimeTypeParser.safeParseMimeType (aItem.getMimeType ()))
-                                           .payloadID (aItem.getId ())
+                                           .contentID (aItem.getId ())
                                            .data (StreamHelper.getAllBytes (aItem.getSourceStream ()))
                                            .build ());
-            s_aIncomingHandler.handleIncomingResponse ((EDMResponse) aTopLevel, aAttachments);
+            s_aIncomingHandler.handleIncomingResponse (new EDMResponseWithAttachments ((EDMResponse) aTopLevel, aAttachments));
           }
           else
             if (aTopLevel instanceof EDMErrorResponse)

@@ -21,10 +21,11 @@ import javax.servlet.ServletContext;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.collection.impl.CommonsLinkedHashMap;
-import com.helger.commons.collection.impl.ICommonsOrderedMap;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.level.EErrorLevel;
 
+import eu.toop.connector.api.as4.EDMResponseWithAttachments;
 import eu.toop.connector.api.as4.IMEIncomingHandler;
 import eu.toop.connector.api.as4.IMERoutingInformation;
 import eu.toop.connector.api.as4.IMessageExchangeSPI;
@@ -48,99 +49,81 @@ import eu.toop.kafkaclient.ToopKafkaClient;
  * @author Philip Helger
  */
 @IsSPIImplementation
-public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI
-{
+public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
   private IMEIncomingHandler m_aIncomingHandler;
 
-  public DefaultMessageExchangeSPI ()
-  {}
+  public DefaultMessageExchangeSPI() {
+  }
 
   @Nonnull
   @Nonempty
-  public String getID ()
-  {
+  public String getID() {
     return "external";
   }
 
-  public void registerIncomingHandler (@Nonnull final ServletContext aServletContext,
-                                       @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEException
-  {
-    ValueEnforcer.notNull (aServletContext, "ServletContext");
-    ValueEnforcer.notNull (aIncomingHandler, "IncomingHandler");
+  public void registerIncomingHandler(@Nonnull final ServletContext aServletContext,
+      @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEException {
+    ValueEnforcer.notNull(aServletContext, "ServletContext");
+    ValueEnforcer.notNull(aIncomingHandler, "IncomingHandler");
     if (m_aIncomingHandler != null)
-      throw new IllegalStateException ("Another incoming handler was already registered!");
+      throw new IllegalStateException("Another incoming handler was already registered!");
     m_aIncomingHandler = aIncomingHandler;
 
-    final MEMDelegate aDelegate = MEMDelegate.getInstance ();
+    final MEMDelegate aDelegate = MEMDelegate.getInstance();
 
-    aDelegate.registerNotificationHandler (aRelayResult -> {
+    aDelegate.registerNotificationHandler(aRelayResult -> {
       // more to come
-      ToopKafkaClient.send (EErrorLevel.INFO,
-                            () -> "Notification[" +
-                                  aRelayResult.getErrorCode () +
-                                  "]: " +
-                                  aRelayResult.getDescription ());
+      ToopKafkaClient.send(EErrorLevel.INFO,
+          () -> "Notification[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
     });
 
-    aDelegate.registerSubmissionResultHandler (aRelayResult -> {
+    aDelegate.registerSubmissionResultHandler(aRelayResult -> {
       // more to come
-      ToopKafkaClient.send (EErrorLevel.INFO,
-                            () -> "SubmissionResult[" +
-                                  aRelayResult.getErrorCode () +
-                                  "]: " +
-                                  aRelayResult.getDescription ());
+      ToopKafkaClient.send(EErrorLevel.INFO,
+          () -> "SubmissionResult[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
     });
 
     // Register the AS4 handler needed
-    aDelegate.registerMessageHandler (aMEMessage -> {
-      final MEPayload aHead = aMEMessage.payloads ().getFirst ();
-      final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aHead.getData ().getInputStream ());
-      if (aTopLevel instanceof EDMRequest)
-      {
-        m_aIncomingHandler.handleIncomingRequest ((EDMRequest) aTopLevel);
+    aDelegate.registerMessageHandler(aMEMessage -> {
+      final MEPayload aHead = aMEMessage.payloads().getFirst();
+      final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind(aHead.getData().getInputStream());
+      if (aTopLevel instanceof EDMRequest) {
+        // Request
+        m_aIncomingHandler.handleIncomingRequest((EDMRequest) aTopLevel);
+      } else if (aTopLevel instanceof EDMResponse) {
+        // Response
+        final ICommonsList<MEPayload> aAttachments = new CommonsArrayList<>();
+        for (final MEPayload aItem : aMEMessage.payloads())
+          if (aItem != aHead)
+            aAttachments.add(aItem);
+        final EDMResponseWithAttachments aResponse = new EDMResponseWithAttachments((EDMResponse) aTopLevel,
+            aAttachments);
+        m_aIncomingHandler.handleIncomingResponse(aResponse);
+      } else if (aTopLevel instanceof EDMErrorResponse) {
+        // Error response
+        m_aIncomingHandler.handleIncomingErrorResponse((EDMErrorResponse) aTopLevel);
+      } else {
+        // Unknown
+        ToopKafkaClient.send(EErrorLevel.ERROR, () -> "Unsuspported Message: " + aTopLevel);
       }
-      else
-        if (aTopLevel instanceof EDMResponse)
-        {
-          final ICommonsOrderedMap <String, MEPayload> aAttachments = new CommonsLinkedHashMap <> ();
-          for (final MEPayload aItem : aMEMessage.payloads ())
-            if (aItem != aHead)
-              aAttachments.put (aItem.getPayloadId (), aItem);
-          m_aIncomingHandler.handleIncomingResponse ((EDMResponse) aTopLevel, aAttachments);
-        }
-        else
-          if (aTopLevel instanceof EDMErrorResponse)
-          {
-            m_aIncomingHandler.handleIncomingErrorResponse ((EDMErrorResponse) aTopLevel);
-          }
-          else
-            ToopKafkaClient.send (EErrorLevel.ERROR, () -> "Unsuspported Message: " + aTopLevel);
     });
   }
 
-  public void sendDCOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
-  {
-    final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata (aRoutingInfo.getSenderID ().getURIEncoded (),
-                                                                    aRoutingInfo.getDocumentTypeID ().getURIEncoded (),
-                                                                    aRoutingInfo.getProcessID ().getURIEncoded (),
-                                                                    aRoutingInfo.getEndpointURL (),
-                                                                    aRoutingInfo.getCertificate (),
-                                                                    EActingSide.DC);
-    MEMDelegate.getInstance ().sendMessage (aGRM, aMessage);
+  public void sendDCOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) {
+    final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
+        aRoutingInfo.getDocumentTypeID().getURIEncoded(), aRoutingInfo.getProcessID().getURIEncoded(),
+        aRoutingInfo.getEndpointURL(), aRoutingInfo.getCertificate(), EActingSide.DC);
+    MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
   }
 
-  public void sendDPOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
-                              @Nonnull final MEMessage aMessage) throws MEException
-  {
-    final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata (aRoutingInfo.getSenderID ().getURIEncoded (),
-                                                                    aRoutingInfo.getDocumentTypeID ().getURIEncoded (),
-                                                                    aRoutingInfo.getProcessID ().getURIEncoded (),
-                                                                    aRoutingInfo.getEndpointURL (),
-                                                                    aRoutingInfo.getCertificate (),
-                                                                    EActingSide.DP);
-    MEMDelegate.getInstance ().sendMessage (aGRM, aMessage);
+  public void sendDPOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
+      throws MEException {
+    final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
+        aRoutingInfo.getDocumentTypeID().getURIEncoded(), aRoutingInfo.getProcessID().getURIEncoded(),
+        aRoutingInfo.getEndpointURL(), aRoutingInfo.getCertificate(), EActingSide.DP);
+    MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
   }
 
-  public void shutdown (@Nonnull final ServletContext aServletContext)
-  {}
+  public void shutdown(@Nonnull final ServletContext aServletContext) {
+  }
 }

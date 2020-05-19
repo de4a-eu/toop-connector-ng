@@ -16,13 +16,11 @@
 package eu.toop.connector.api.as4;
 
 import java.io.Serializable;
-import java.util.Map;
 
 import javax.annotation.Nonnull;
 
 import eu.toop.edm.EDMErrorResponse;
 import eu.toop.edm.EDMRequest;
-import eu.toop.edm.EDMResponse;
 
 /**
  * The callback handler for incoming messages.
@@ -46,14 +44,10 @@ public interface IMEIncomingHandler extends Serializable
    *
    * @param aResponse
    *        The response to handle. Never <code>null</code>.
-   * @param aAttachments
-   *        A non-<code>null</code> but may be empty list of all attachments.
-   *        The key is the "Content-ID" field (which is the "getPayloadId"
-   *        method from MEPayload). The Map is in the order of reception.
    * @throws MEException
    *         In case of error.
    */
-  void handleIncomingResponse (@Nonnull EDMResponse aResponse, @Nonnull Map <String, MEPayload> aAttachments);
+  void handleIncomingResponse (@Nonnull EDMResponseWithAttachments aResponse);
 
   /**
    * Handle an incoming error response for step 4/4.

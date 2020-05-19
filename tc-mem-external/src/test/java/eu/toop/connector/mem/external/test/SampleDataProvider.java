@@ -103,7 +103,7 @@ public class SampleDataProvider
   {
     return MEMessage.builder ()
                     .payload (x -> x.mimeType (CMimeType.APPLICATION_XML)
-                                    .payloadID ("xmlpayload@dp")
+                                    .contentID ("xmlpayload@dp")
                                     .data ("<sample>that is a sample xml</sample>", StandardCharsets.ISO_8859_1))
                     .build ();
   }
