@@ -164,6 +164,8 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     try (final AS4ResourceHelper aResHelper = new AS4ResourceHelper ())
     {
       final AS4ClientUserMessage aClient = new AS4ClientUserMessage (aResHelper);
+      // Enforce the http settings from TOOP
+      aClient.setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()));
       aClient.setSoapVersion (ESoapVersion.SOAP_12);
       aClient.setAS4CryptoFactory (aCF);
 
