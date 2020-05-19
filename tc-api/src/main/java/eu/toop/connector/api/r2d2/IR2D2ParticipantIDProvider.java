@@ -30,7 +30,7 @@ import com.helger.peppolid.IParticipantIdentifier;
  *
  * @author Philip Helger
  */
-@FunctionalInterface
+@Deprecated
 public interface IR2D2ParticipantIDProvider
 {
   /**

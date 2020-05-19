@@ -28,7 +28,7 @@ import eu.toop.edm.EDMErrorResponse;
  *
  * @author Philip Helger
  */
-public class IncomingEDMErrorResponse
+public class IncomingEDMErrorResponse implements IIncomingEDMResponse
 {
   private final EDMErrorResponse m_aErrorResponse;
   private final IMEIncomingTransportMetadata m_aMetadata;

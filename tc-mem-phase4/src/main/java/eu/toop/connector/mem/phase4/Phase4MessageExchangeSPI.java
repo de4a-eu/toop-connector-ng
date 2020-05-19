@@ -66,7 +66,6 @@ import com.helger.servlet.ServletHelper;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
-import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
@@ -100,8 +99,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     return ID;
   }
 
-  public void registerIncomingHandler (@Nonnull final ServletContext aServletContext,
-                                       @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEIncomingException
+  public void registerIncomingHandler (@Nonnull final ServletContext aServletContext, @Nonnull final IMEIncomingHandler aIncomingHandler)
   {
     ValueEnforcer.notNull (aServletContext, "ServletContext");
     ValueEnforcer.notNull (aIncomingHandler, "IncomingHandler");
@@ -124,11 +122,11 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     {
       final KeyStore aOurKS = m_aCF.getKeyStore ();
       if (aOurKS == null)
-        throw new MEIncomingException ("Failed to load configured phase4 keystore (crypto.properties)");
+        throw new InitializationException ("Failed to load configured phase4 keystore (crypto.properties)");
 
       final PrivateKeyEntry aOurKey = m_aCF.getPrivateKeyEntry ();
       if (aOurKey == null)
-        throw new MEIncomingException ("Failed to load configured phase4 key (crypto.properties)");
+        throw new InitializationException ("Failed to load configured phase4 key (crypto.properties)");
     }
 
     // Register server once
@@ -169,8 +167,8 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       aClient.setAS4CryptoFactory (aCF);
 
       aClient.signingParams ()
-             .setAlgorithmSign (ECryptoAlgorithmSign.RSA_SHA_512)
-             .setAlgorithmSignDigest (ECryptoAlgorithmSignDigest.DIGEST_SHA_512);
+             .setAlgorithmSign (ECryptoAlgorithmSign.RSA_SHA_256)
+             .setAlgorithmSignDigest (ECryptoAlgorithmSignDigest.DIGEST_SHA_256);
 
       aClient.setAction ("RequestDocuments");
       aClient.setServiceType (null);

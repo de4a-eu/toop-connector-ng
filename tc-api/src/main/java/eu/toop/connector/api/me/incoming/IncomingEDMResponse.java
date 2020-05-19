@@ -35,7 +35,7 @@ import eu.toop.edm.EDMResponse;
  *
  * @author Philip Helger
  */
-public class IncomingEDMResponse
+public class IncomingEDMResponse implements IIncomingEDMResponse
 {
   private final EDMResponse m_aResponse;
   private final ICommonsOrderedMap <String, MEPayload> m_aAttachments = new CommonsLinkedHashMap <> ();

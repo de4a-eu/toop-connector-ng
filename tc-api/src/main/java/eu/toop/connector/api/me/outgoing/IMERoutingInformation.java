@@ -15,7 +15,6 @@
  */
 package eu.toop.connector.api.me.outgoing;
 
-import java.io.Serializable;
 import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
@@ -30,7 +29,7 @@ import com.helger.peppolid.IProcessIdentifier;
  *
  * @author Philip Helger
  */
-public interface IMERoutingInformation extends Serializable
+public interface IMERoutingInformation
 {
   /**
    * @return Sender participant ID. Never <code>null</code>.

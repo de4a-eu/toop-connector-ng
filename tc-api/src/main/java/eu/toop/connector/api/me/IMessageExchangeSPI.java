@@ -22,7 +22,6 @@ import com.helger.commons.annotation.IsSPIInterface;
 import com.helger.commons.annotation.Nonempty;
 
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
-import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
@@ -59,11 +58,8 @@ public interface IMessageExchangeSPI
    *        <code>null</code>.
    * @param aIncomingHandler
    *        The handler to use. May not be <code>null</code>.
-   * @throws MEIncomingException
-   *         In case of error.
    */
-  void registerIncomingHandler (@Nonnull ServletContext aServletContext,
-                                @Nonnull IMEIncomingHandler aIncomingHandler) throws MEIncomingException;
+  void registerIncomingHandler (@Nonnull ServletContext aServletContext, @Nonnull IMEIncomingHandler aIncomingHandler);
 
   /**
    * Trigger the message transmission in step 1/4. This method acts synchronous.

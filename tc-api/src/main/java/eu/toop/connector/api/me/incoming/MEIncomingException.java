@@ -35,5 +35,4 @@ public class MEIncomingException extends MEException
   {
     super (sMsg, aCause);
   }
-
 }

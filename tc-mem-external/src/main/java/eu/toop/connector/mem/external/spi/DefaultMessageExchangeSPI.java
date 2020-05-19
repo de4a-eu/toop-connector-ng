@@ -30,7 +30,6 @@ import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
 import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
 import eu.toop.connector.api.me.incoming.IncomingEDMResponse;
-import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.incoming.MEIncomingTransportMetadata;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
@@ -66,7 +65,7 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
   }
 
   public void registerIncomingHandler(@Nonnull final ServletContext aServletContext,
-      @Nonnull final IMEIncomingHandler aIncomingHandler) throws MEIncomingException {
+      @Nonnull final IMEIncomingHandler aIncomingHandler) {
     ValueEnforcer.notNull(aServletContext, "ServletContext");
     ValueEnforcer.notNull(aIncomingHandler, "IncomingHandler");
     if (m_aIncomingHandler != null)

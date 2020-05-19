@@ -29,6 +29,7 @@ import com.helger.peppolid.IProcessIdentifier;
  *
  * @author Philip Helger
  */
+@Deprecated
 public interface IR2D2EndpointProvider
 {
   /**

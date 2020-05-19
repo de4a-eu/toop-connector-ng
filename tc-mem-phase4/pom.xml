@@ -70,6 +70,10 @@
     </dependency>
     <dependency>
       <groupId>com.helger</groupId>
+      <artifactId>phase4-profile-cef</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.helger</groupId>
       <artifactId>phase4-servlet</artifactId>
     </dependency>
 

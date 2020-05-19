@@ -28,7 +28,7 @@ import eu.toop.edm.EDMRequest;
  *
  * @author Philip Helger
  */
-public class IncomingEDMRequest
+public class IncomingEDMRequest implements IIncomingEDMObject
 {
   private final EDMRequest m_aRequest;
   private final IMEIncomingTransportMetadata m_aMetadata;
