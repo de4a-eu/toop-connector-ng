@@ -65,6 +65,14 @@ public class TCHttpClientSettings extends HttpClientSettings
         {
           throw new InitializationException (ex);
         }
+
+      final int nConnectionTimeoutMS = TCConfig.HTTP.getConnectionTimeoutMS ();
+      if (nConnectionTimeoutMS >= 0)
+        setConnectionTimeoutMS (nConnectionTimeoutMS);
+
+      final int nReadTimeoutMS = TCConfig.HTTP.getReadTimeoutMS ();
+      if (nReadTimeoutMS >= 0)
+        setSocketTimeoutMS (nReadTimeoutMS);
     }
   }
 }

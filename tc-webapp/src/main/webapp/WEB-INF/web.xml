@@ -19,7 +19,8 @@
 <web-app version="3.0"
          xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         metadata-complete="false">
   <display-name>TOOP Connector NG</display-name>
   <description>https://github.com/toop4eu/toop-connector-ng</description>
 
@@ -37,7 +38,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>PhotonAPIServlet</servlet-name>
-    <url-pattern>/api</url-pattern>
+    <url-pattern>/api/*</url-pattern>
   </servlet-mapping>
 </web-app>
 

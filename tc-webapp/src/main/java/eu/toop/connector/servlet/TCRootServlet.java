@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.app.servlet;
+package eu.toop.connector.servlet;
 
 import java.io.IOException;
 import java.util.Map;
@@ -28,7 +28,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.http.CHttpHeader;
 import com.helger.commons.mime.CMimeType;
 
@@ -69,7 +68,7 @@ public class TCRootServlet extends HttpServlet
       }
     }
 
-    if (GlobalDebug.isDebugMode ())
+    // if (GlobalDebug.isDebugMode ())
     {
       aSB.append ("<h2>servlet information</h2>");
       for (final Map.Entry <String, ? extends ServletRegistration> aEntry : CollectionHelper.getSortedByKey (req.getServletContext ()
@@ -82,6 +81,12 @@ public class TCRootServlet extends HttpServlet
            .append (aEntry.getValue ().getMappings ())
            .append ("</div>");
       }
+    }
+
+    // APIs
+    {
+      aSB.append ("<h2>API information</h2>");
+      aSB.append ("<div>/dsd/dp - <a href='/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE' target='_blank'>test me</a></div>");
     }
 
     aSB.append ("</body></html>");

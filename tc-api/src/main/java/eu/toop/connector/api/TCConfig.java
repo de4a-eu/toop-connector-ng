@@ -549,6 +549,16 @@ public final class TCConfig
     {
       return getConfig ().getAsBoolean ("http.tls.trustall", false);
     }
+
+    public static int getConnectionTimeoutMS ()
+    {
+      return getConfig ().getAsInt ("http.connection-timeout", -1);
+    }
+
+    public static int getReadTimeoutMS ()
+    {
+      return getConfig ().getAsInt ("http.read-timeout", -1);
+    }
   }
 
   public static class WebApp
