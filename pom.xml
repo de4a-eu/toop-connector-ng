@@ -220,7 +220,7 @@
     <module>tc-api</module>
     <module>tc-mem-external</module>
     <module>tc-mem-phase4</module>
-    <module>tc-main</module>
+<!--     <module>tc-main</module> -->
   </modules>
 
   <build>
