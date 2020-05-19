@@ -63,7 +63,7 @@
   
   <properties>
     <ph-xsds.version>2.2.6</ph-xsds.version>
-    <toop-commons-ng.version>${project.version}</toop-commons-ng.version>
+    <toop-commons-ng.version>2.0.0-beta3</toop-commons-ng.version>
   </properties>
 
   <dependencyManagement>
@@ -241,7 +241,7 @@
           <excludes>
             <!-- uses Properties internally -->
             <exclude>**/MEMTest*Servlet*.class</exclude>
-            <exclude>eu/toop/connector/mem/def/test/*.class</exclude>
+            <exclude>eu/toop/connector/mem/external/test/*.class</exclude>
           </excludes>
         </configuration>
         <!-- local executions are ignored -->
