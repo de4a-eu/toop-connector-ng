@@ -46,8 +46,11 @@ import com.helger.phase4.servlet.spi.AS4SignalMessageProcessorResult;
 import com.helger.phase4.servlet.spi.IAS4ServletMessageProcessorSPI;
 import com.helger.xml.serialize.write.XMLWriter;
 
-import eu.toop.connector.api.me.in.IMEIncomingHandler;
-import eu.toop.connector.api.me.model.EDMResponseWithAttachments;
+import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
+import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
+import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
+import eu.toop.connector.api.me.incoming.IncomingEDMResponse;
+import eu.toop.connector.api.me.incoming.MEIncomingTransportMetadata;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.mem.phase4.Phase4Config;
 import eu.toop.edm.EDMErrorResponse;
@@ -60,7 +63,7 @@ import eu.toop.kafkaclient.ToopKafkaClient;
 /**
  * TOOP specific implementation of {@link IAS4ServletMessageProcessorSPI}. It
  * takes incoming AS4 messages and forwards it accordingly to the correct TOOP
- * {@link eu.toop.connector.api.me.in.IMEIncomingHandler}.
+ * {@link eu.toop.connector.api.me.incoming.IMEIncomingHandler}.
  *
  * @author Philip Helger
  */
@@ -121,31 +124,35 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
     if (aIncomingAttachments != null && aIncomingAttachments.isNotEmpty ())
     {
       // This is the ASIC
-      final WSS4JAttachment aAttachment = aIncomingAttachments.getFirst ();
+      final WSS4JAttachment aMainPayload = aIncomingAttachments.getFirst ();
       try
       {
-        final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aAttachment.getSourceStream ());
+        final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata ();
+        final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aMainPayload.getSourceStream ());
         if (aTopLevel instanceof EDMRequest)
         {
-          s_aIncomingHandler.handleIncomingRequest ((EDMRequest) aTopLevel);
+          // Request
+          s_aIncomingHandler.handleIncomingRequest (new IncomingEDMRequest ((EDMRequest) aTopLevel, aMetadata));
         }
         else
           if (aTopLevel instanceof EDMResponse)
           {
+            // Response
             final ICommonsList <MEPayload> aAttachments = new CommonsArrayList <> ();
             for (final WSS4JAttachment aItem : aIncomingAttachments)
-              if (aItem != aAttachment)
+              if (aItem != aMainPayload)
                 aAttachments.add (MEPayload.builder ()
                                            .mimeType (MimeTypeParser.safeParseMimeType (aItem.getMimeType ()))
                                            .contentID (aItem.getId ())
                                            .data (StreamHelper.getAllBytes (aItem.getSourceStream ()))
                                            .build ());
-            s_aIncomingHandler.handleIncomingResponse (new EDMResponseWithAttachments ((EDMResponse) aTopLevel, aAttachments));
+            s_aIncomingHandler.handleIncomingResponse (new IncomingEDMResponse ((EDMResponse) aTopLevel, aAttachments, aMetadata));
           }
           else
             if (aTopLevel instanceof EDMErrorResponse)
             {
-              s_aIncomingHandler.handleIncomingErrorResponse ((EDMErrorResponse) aTopLevel);
+              // Error Response
+              s_aIncomingHandler.handleIncomingErrorResponse (new IncomingEDMErrorResponse ((EDMErrorResponse) aTopLevel, aMetadata));
             }
             else
               ToopKafkaClient.send (EErrorLevel.ERROR, () -> "Unsuspported Message: " + aTopLevel);

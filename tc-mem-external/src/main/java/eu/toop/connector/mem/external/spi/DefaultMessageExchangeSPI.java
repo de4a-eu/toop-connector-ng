@@ -26,13 +26,16 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.level.EErrorLevel;
 
 import eu.toop.connector.api.me.IMessageExchangeSPI;
-import eu.toop.connector.api.me.in.IMEIncomingHandler;
-import eu.toop.connector.api.me.in.MEIncomingException;
-import eu.toop.connector.api.me.model.EDMResponseWithAttachments;
+import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
+import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
+import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
+import eu.toop.connector.api.me.incoming.IncomingEDMResponse;
+import eu.toop.connector.api.me.incoming.MEIncomingException;
+import eu.toop.connector.api.me.incoming.MEIncomingTransportMetadata;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
-import eu.toop.connector.api.me.out.IMERoutingInformation;
-import eu.toop.connector.api.me.out.MEOutgoingException;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
+import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.EActingSide;
 import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;
@@ -90,21 +93,23 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
     aDelegate.registerMessageHandler(aMEMessage -> {
       final MEPayload aHead = aMEMessage.payloads().getFirst();
       final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind(aHead.getData().getInputStream());
+      final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata();
       if (aTopLevel instanceof EDMRequest) {
         // Request
-        m_aIncomingHandler.handleIncomingRequest((EDMRequest) aTopLevel);
+        m_aIncomingHandler.handleIncomingRequest(new IncomingEDMRequest((EDMRequest) aTopLevel, aMetadata));
       } else if (aTopLevel instanceof EDMResponse) {
         // Response
         final ICommonsList<MEPayload> aAttachments = new CommonsArrayList<>();
         for (final MEPayload aItem : aMEMessage.payloads())
           if (aItem != aHead)
             aAttachments.add(aItem);
-        final EDMResponseWithAttachments aResponse = new EDMResponseWithAttachments((EDMResponse) aTopLevel,
-                                                                                    aAttachments);
-        m_aIncomingHandler.handleIncomingResponse(aResponse);
+        m_aIncomingHandler.handleIncomingResponse(new IncomingEDMResponse((EDMResponse) aTopLevel,
+                                                                          aAttachments,
+                                                                          aMetadata));
       } else if (aTopLevel instanceof EDMErrorResponse) {
         // Error response
-        m_aIncomingHandler.handleIncomingErrorResponse((EDMErrorResponse) aTopLevel);
+        m_aIncomingHandler.handleIncomingErrorResponse(new IncomingEDMErrorResponse((EDMErrorResponse) aTopLevel,
+                                                                                    aMetadata));
       } else {
         // Unknown
         ToopKafkaClient.send(EErrorLevel.ERROR, () -> "Unsuspported Message: " + aTopLevel);

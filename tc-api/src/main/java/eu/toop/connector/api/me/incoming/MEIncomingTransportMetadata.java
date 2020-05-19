@@ -1,4 +1,4 @@
-package eu.toop.connector.api.me.in;
+package eu.toop.connector.api.me.incoming;
 
 /**
  * Container for all relevant AS4 transport metadata that may be interesting to
@@ -6,7 +6,7 @@ package eu.toop.connector.api.me.in;
  *
  * @author Philip Helger
  */
-public class TransportMetadata
+public class MEIncomingTransportMetadata
 {
   // TODO
 }

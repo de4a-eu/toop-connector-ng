@@ -36,7 +36,7 @@ import com.helger.scope.mock.ScopeAwareTestSetup;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.model.MEMessage;
-import eu.toop.connector.api.me.out.MEOutgoingException;
+import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.EActingSide;
 import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;

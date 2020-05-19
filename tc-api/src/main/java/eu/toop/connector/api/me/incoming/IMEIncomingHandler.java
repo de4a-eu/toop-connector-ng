@@ -13,13 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.me.in;
+package eu.toop.connector.api.me.incoming;
 
 import javax.annotation.Nonnull;
-
-import eu.toop.connector.api.me.model.EDMResponseWithAttachments;
-import eu.toop.edm.EDMErrorResponse;
-import eu.toop.edm.EDMRequest;
 
 /**
  * The callback handler for incoming messages.
@@ -36,17 +32,18 @@ public interface IMEIncomingHandler
    * @throws MEIncomingException
    *         In case of error.
    */
-  void handleIncomingRequest (@Nonnull EDMRequest aRequest) throws MEIncomingException;
+  void handleIncomingRequest (@Nonnull IncomingEDMRequest aRequest) throws MEIncomingException;
 
   /**
    * Handle an incoming response for step 4/4.
    *
    * @param aResponse
-   *        The response to handle. Never <code>null</code>.
+   *        The response to handle. Contains attachments and metadata. Never
+   *        <code>null</code>.
    * @throws MEIncomingException
    *         In case of error.
    */
-  void handleIncomingResponse (@Nonnull EDMResponseWithAttachments aResponse) throws MEIncomingException;
+  void handleIncomingResponse (@Nonnull IncomingEDMResponse aResponse) throws MEIncomingException;
 
   /**
    * Handle an incoming error response for step 4/4.
@@ -56,5 +53,5 @@ public interface IMEIncomingHandler
    * @throws MEIncomingException
    *         In case of error.
    */
-  void handleIncomingErrorResponse (@Nonnull EDMErrorResponse aErrorResponse) throws MEIncomingException;
+  void handleIncomingErrorResponse (@Nonnull IncomingEDMErrorResponse aErrorResponse) throws MEIncomingException;
 }

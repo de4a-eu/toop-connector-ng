@@ -32,7 +32,7 @@ import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.mime.CMimeType;
 
-import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.mem.external.EBMSUtils;
 import eu.toop.connector.mem.external.MEMConstants;
 import eu.toop.connector.mem.external.MEMDelegate;

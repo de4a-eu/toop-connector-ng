@@ -65,10 +65,10 @@ import com.helger.xml.serialize.write.XMLWriterSettings;
 import com.helger.xml.transform.TransformSourceFactory;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
-import eu.toop.connector.api.me.out.MEOutgoingException;
+import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.notifications.RelayResult;
 import eu.toop.connector.mem.external.notifications.SubmissionResult;
 import eu.toop.edm.error.EToopErrorCode;

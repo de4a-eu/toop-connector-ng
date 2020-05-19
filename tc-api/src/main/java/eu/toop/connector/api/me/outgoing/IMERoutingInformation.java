@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.me.out;
+package eu.toop.connector.api.me.outgoing;
 
 import java.io.Serializable;
 import java.security.cert.X509Certificate;

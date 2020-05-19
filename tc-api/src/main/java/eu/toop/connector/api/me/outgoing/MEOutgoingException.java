@@ -1,4 +1,4 @@
-package eu.toop.connector.api.me.out;
+package eu.toop.connector.api.me.outgoing;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

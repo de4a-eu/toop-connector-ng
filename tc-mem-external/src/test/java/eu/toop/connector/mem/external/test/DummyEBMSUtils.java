@@ -21,7 +21,7 @@ import java.nio.charset.StandardCharsets;
 import javax.xml.soap.SOAPException;
 import javax.xml.soap.SOAPMessage;
 
-import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.mem.external.DateTimeUtils;
 import eu.toop.connector.mem.external.EBMSUtils;
 import eu.toop.connector.mem.external.MEMConstants;

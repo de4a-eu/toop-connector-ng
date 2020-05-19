@@ -65,12 +65,12 @@ import com.helger.servlet.ServletHelper;
 
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
-import eu.toop.connector.api.me.in.IMEIncomingHandler;
-import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
+import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
-import eu.toop.connector.api.me.out.IMERoutingInformation;
-import eu.toop.connector.api.me.out.MEOutgoingException;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
+import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.phase4.config.TOOPPMode;
 import eu.toop.connector.mem.phase4.servlet.AS4MessageProcessorSPI;
 import eu.toop.edm.error.EToopErrorCode;

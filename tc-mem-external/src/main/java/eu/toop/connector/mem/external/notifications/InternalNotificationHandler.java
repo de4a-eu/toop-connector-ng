@@ -26,7 +26,7 @@ import com.helger.commons.CGlobal;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.wrapper.Wrapper;
 
-import eu.toop.connector.api.me.out.MEOutgoingException;
+import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 
 /**
  * @author yerlibilgin

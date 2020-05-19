@@ -30,9 +30,9 @@ import com.helger.commons.url.URLHelper;
 import com.helger.scope.singleton.AbstractGlobalSingleton;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
-import eu.toop.connector.api.me.out.MEOutgoingException;
+import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.notifications.IMessageHandler;
 import eu.toop.connector.mem.external.notifications.IRelayResultHandler;
 import eu.toop.connector.mem.external.notifications.ISubmissionResultHandler;

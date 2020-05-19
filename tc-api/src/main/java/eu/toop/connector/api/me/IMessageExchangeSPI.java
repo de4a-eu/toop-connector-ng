@@ -21,11 +21,11 @@ import javax.servlet.ServletContext;
 import com.helger.commons.annotation.IsSPIInterface;
 import com.helger.commons.annotation.Nonempty;
 
-import eu.toop.connector.api.me.in.IMEIncomingHandler;
-import eu.toop.connector.api.me.in.MEIncomingException;
+import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
+import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
-import eu.toop.connector.api.me.out.IMERoutingInformation;
-import eu.toop.connector.api.me.out.MEOutgoingException;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
+import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 
 /**
  * Abstract API to be implemented for sending and receiving messages.
