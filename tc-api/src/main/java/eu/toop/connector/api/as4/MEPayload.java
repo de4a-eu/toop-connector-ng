@@ -108,6 +108,11 @@ public final class MEPayload implements Serializable
     return new Builder ();
   }
 
+  /**
+   * Builder class for {@link MEPayload}
+   * 
+   * @author Philip Helger
+   */
   public static class Builder
   {
     private IMimeType m_aMimeType;

@@ -15,20 +15,14 @@
  */
 package eu.toop.connector.api.as4;
 
-import java.io.InputStream;
 import java.io.Serializable;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.annotation.WillClose;
-
-import com.helger.commons.io.stream.StreamHelper;
 
 import eu.toop.edm.EDMErrorResponse;
 import eu.toop.edm.EDMRequest;
 import eu.toop.edm.EDMResponse;
-import eu.toop.edm.IEDMTopLevelObject;
 
 /**
  * The callback handler for incoming messages.
@@ -71,18 +65,4 @@ public interface IMEIncomingHandler extends Serializable
    *         In case of error.
    */
   void handleIncomingErrorResponse (@Nonnull EDMErrorResponse aErrorResponse) throws MEException;
-
-  @Nullable
-  static IEDMTopLevelObject parseAndFind (@Nonnull @WillClose final InputStream aIS)
-  {
-    try
-    {
-      // TODO
-      return null;
-    }
-    finally
-    {
-      StreamHelper.close (aIS);
-    }
-  }
 }

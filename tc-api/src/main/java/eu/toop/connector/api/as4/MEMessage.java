@@ -16,7 +16,6 @@
 package eu.toop.connector.api.as4;
 
 import java.io.Serializable;
-import java.util.List;
 import java.util.function.Consumer;
 
 import javax.annotation.Nonnull;
@@ -45,18 +44,9 @@ public class MEMessage implements Serializable
   }
 
   /**
-   * For ease of use, get the first payload
-   *
-   * @return the first payload
-   * @throws MEException
-   *         in case non is contained
+   * @return A non-<code>null</code>, non-empty list of payloads. The result
+   *         object is mutable and can change the content of this object.
    */
-  @Nonnull
-  public MEPayload head ()
-  {
-    return m_aPayloads.getFirst ();
-  }
-
   @Nonnull
   @Nonempty
   @ReturnsMutableObject
@@ -65,6 +55,10 @@ public class MEMessage implements Serializable
     return m_aPayloads;
   }
 
+  /**
+   * @return A non-<code>null</code>, non-empty list of payloads. The result
+   *         object is a cloned list.
+   */
   @Nonnull
   @Nonempty
   @ReturnsMutableCopy
@@ -74,18 +68,16 @@ public class MEMessage implements Serializable
   }
 
   @Nonnull
-  @ReturnsMutableObject
-  public List <MEPayload> payloadsWithoutHead ()
-  {
-    return m_aPayloads.subList (1, m_aPayloads.size ());
-  }
-
-  @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
   }
 
+  /**
+   * Builder class for {@link MEMessage}.
+   *
+   * @author Philip Helger
+   */
   public static class Builder
   {
     private final ICommonsList <MEPayload> m_aPayloads = new CommonsArrayList <> ();

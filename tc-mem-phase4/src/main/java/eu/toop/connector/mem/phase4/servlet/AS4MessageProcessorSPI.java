@@ -54,6 +54,7 @@ import eu.toop.edm.EDMErrorResponse;
 import eu.toop.edm.EDMRequest;
 import eu.toop.edm.EDMResponse;
 import eu.toop.edm.IEDMTopLevelObject;
+import eu.toop.edm.xml.EDMPayloadDeterminator;
 import eu.toop.kafkaclient.ToopKafkaClient;
 
 /**
@@ -124,7 +125,7 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
       final WSS4JAttachment aAttachment = aIncomingAttachments.getFirst ();
       try
       {
-        final IEDMTopLevelObject aTopLevel = IMEIncomingHandler.parseAndFind (aAttachment.getSourceStream ());
+        final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aAttachment.getSourceStream ());
         if (aTopLevel instanceof EDMRequest)
         {
           s_aIncomingHandler.handleIncomingRequest ((EDMRequest) aTopLevel);

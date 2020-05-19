@@ -15,8 +15,6 @@
  */
 package eu.toop.connector.mem.def.spi;
 
-import java.util.function.Function;
-
 import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 
@@ -40,6 +38,7 @@ import eu.toop.edm.EDMErrorResponse;
 import eu.toop.edm.EDMRequest;
 import eu.toop.edm.EDMResponse;
 import eu.toop.edm.IEDMTopLevelObject;
+import eu.toop.edm.xml.EDMPayloadDeterminator;
 import eu.toop.kafkaclient.ToopKafkaClient;
 
 /**
@@ -94,9 +93,8 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI
 
     // Register the AS4 handler needed
     aDelegate.registerMessageHandler (aMEMessage -> {
-      final IEDMTopLevelObject aTopLevel = IMEIncomingHandler.parseAndFind (aMEMessage.head ()
-                                                                                      .getData ()
-                                                                                      .getInputStream ());
+      final MEPayload aHead = aMEMessage.payloads ().getFirst ();
+      final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aHead.getData ().getInputStream ());
       if (aTopLevel instanceof EDMRequest)
       {
         m_aIncomingHandler.handleIncomingRequest ((EDMRequest) aTopLevel);
@@ -105,7 +103,9 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI
         if (aTopLevel instanceof EDMResponse)
         {
           final ICommonsOrderedMap <String, MEPayload> aAttachments = new CommonsLinkedHashMap <> ();
-          aAttachments.putAllMapped (aMEMessage.payloadsWithoutHead (), MEPayload::getPayloadId, Function.identity ());
+          for (final MEPayload aItem : aMEMessage.payloads ())
+            if (aItem != aHead)
+              aAttachments.put (aItem.getPayloadId (), aItem);
           m_aIncomingHandler.handleIncomingResponse ((EDMResponse) aTopLevel, aAttachments);
         }
         else
