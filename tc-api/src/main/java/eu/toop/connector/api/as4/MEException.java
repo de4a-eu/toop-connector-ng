@@ -26,23 +26,24 @@ import eu.toop.edm.error.EToopErrorCode;
  *
  * @author yerlibilgin
  */
-public class MEException extends IllegalStateException
+public class MEException extends RuntimeException
 {
-  private EToopErrorCode m_eToopErrorCode;
+  private final EToopErrorCode m_eToopErrorCode;
 
   public MEException (final String sMsg)
   {
-    super (sMsg);
+    this (sMsg, (Throwable) null);
   }
 
   public MEException (final Throwable aCause)
   {
-    super (aCause);
+    this ((String) null, aCause);
   }
 
   public MEException (final String sMsg, final Throwable aCause)
   {
     super (sMsg, aCause);
+    m_eToopErrorCode = null;
   }
 
   public MEException (@Nonnull final EToopErrorCode toopErrorCode)

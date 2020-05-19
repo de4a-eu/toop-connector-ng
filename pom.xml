@@ -24,10 +24,10 @@
     <version>1.11.1</version>
   </parent>
   <groupId>eu.toop</groupId>
-  <artifactId>toop-connector-ng-parent-pom</artifactId>
+  <artifactId>tc-parent-pom</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <name>toop-connector-ng-parent-pom</name>
+  <name>tc-parent-pom</name>
   <description>Base POM to build the TOOP Connector NG projects</description>
   <url>https://github.com/toop4eu/toop-connector-ng</url>
   <inceptionYear>2020</inceptionYear>
@@ -195,7 +195,7 @@
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
-        <artifactId>tc</artifactId>
+        <artifactId>tc-main</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -220,6 +220,7 @@
     <module>tc-api</module>
     <module>tc-mem-external</module>
     <module>tc-mem-phase4</module>
+    <module>tc-main</module>
   </modules>
 
   <build>

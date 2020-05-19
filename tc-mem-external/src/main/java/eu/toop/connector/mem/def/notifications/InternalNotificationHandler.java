@@ -88,8 +88,9 @@ public class InternalNotificationHandler {
    * @param submitMessageID the id of the submit message
    * @param timeout maximum amount to wait for the object. 0 means forever
    * @return the obtained {@link Notification}
+   * @throws MEException If waiting fails
    */
-  public Notification obtainNotification(final String submitMessageID, final long timeout) {
+  public Notification obtainNotification(final String submitMessageID, final long timeout) throws MEException {
     ValueEnforcer.isGE0(timeout, "timeout");
     ValueEnforcer.notNull(submitMessageID, "MessageId");
 

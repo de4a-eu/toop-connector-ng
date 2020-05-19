@@ -39,7 +39,7 @@ public interface IMEIncomingHandler extends Serializable
    * @throws MEException
    *         In case of error.
    */
-  void handleIncomingRequest (@Nonnull EDMRequest aRequest) throws MEException;
+  void handleIncomingRequest (@Nonnull EDMRequest aRequest);
 
   /**
    * Handle an incoming response for step 4/4.
@@ -53,8 +53,7 @@ public interface IMEIncomingHandler extends Serializable
    * @throws MEException
    *         In case of error.
    */
-  void handleIncomingResponse (@Nonnull EDMResponse aResponse,
-                               @Nonnull Map <String, MEPayload> aAttachments) throws MEException;
+  void handleIncomingResponse (@Nonnull EDMResponse aResponse, @Nonnull Map <String, MEPayload> aAttachments);
 
   /**
    * Handle an incoming error response for step 4/4.
@@ -64,5 +63,5 @@ public interface IMEIncomingHandler extends Serializable
    * @throws MEException
    *         In case of error.
    */
-  void handleIncomingErrorResponse (@Nonnull EDMErrorResponse aErrorResponse) throws MEException;
+  void handleIncomingErrorResponse (@Nonnull EDMErrorResponse aErrorResponse);
 }

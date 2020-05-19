@@ -19,8 +19,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.debug.GlobalDebug;
+import com.helger.config.IConfig;
 import com.helger.phase4.crypto.AS4CryptoFactoryPropertiesFile;
+import com.helger.phase4.crypto.AS4CryptoProperties;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
+import com.helger.security.keystore.EKeyStoreType;
 
 import eu.toop.connector.api.TCConfig;
 
@@ -34,10 +37,16 @@ public final class Phase4Config
   private Phase4Config ()
   {}
 
+  @Nonnull
+  public static IConfig getConfig ()
+  {
+    return TCConfig.getConfig ();
+  }
+
   @Nullable
   public static String getDataPath ()
   {
-    return TCConfig.getConfig ().getAsString ("toop.phase4.datapath");
+    return getConfig ().getAsString ("phase4.datapath");
   }
 
   @Nullable
@@ -48,24 +57,59 @@ public final class Phase4Config
 
   public static boolean isHttpDebugEnabled ()
   {
-    return TCConfig.getConfig ().getAsBoolean ("toop.phase4.debug.http", false);
+    return getConfig ().getAsBoolean ("phase4.debug.http", false);
   }
 
   public static boolean isDebugIncoming ()
   {
-    return TCConfig.getConfig ().getAsBoolean ("toop.phase4.debug.incoming", GlobalDebug.isDebugMode ());
+    return getConfig ().getAsBoolean ("phase4.debug.incoming", GlobalDebug.isDebugMode ());
   }
 
   @Nullable
   public static String getSendResponseFolderName ()
   {
     // Can be relative or absolute
-    return TCConfig.getConfig ().getAsString ("toop.phase4.send.response.folder");
+    return getConfig ().getAsString ("phase4.send.response.folder");
+  }
+
+  @Nonnull
+  public static EKeyStoreType getKeyStoreType ()
+  {
+    return EKeyStoreType.getFromIDCaseInsensitiveOrDefault (getConfig ().getAsString ("phase4.keystore.type"),
+                                                            EKeyStoreType.JKS);
+  }
+
+  @Nullable
+  public static String getKeyStorePath ()
+  {
+    return getConfig ().getAsString ("phase4.keystore.path");
+  }
+
+  @Nullable
+  public static String getKeyStorePassword ()
+  {
+    return getConfig ().getAsString ("phase4.keystore.password");
+  }
+
+  @Nullable
+  public static String getKeyStoreKeyAlias ()
+  {
+    return getConfig ().getAsString ("phase4.keystore.key.alias");
+  }
+
+  @Nullable
+  public static String getKeyStoreKeyPassword ()
+  {
+    return getConfig ().getAsString ("phase4.keystore.key.password");
   }
 
   @Nonnull
   public static IAS4CryptoFactory getCryptoFactory ()
   {
-    return AS4CryptoFactoryPropertiesFile.getDefaultInstance ();
+    return new AS4CryptoFactoryPropertiesFile (new AS4CryptoProperties ().setKeyStoreType (getKeyStoreType ())
+                                                                         .setKeyStorePath (getKeyStorePath ())
+                                                                         .setKeyStorePassword (getKeyStorePassword ())
+                                                                         .setKeyAlias (getKeyStoreKeyAlias ())
+                                                                         .setKeyPassword (getKeyStoreKeyPassword ()));
   }
 }

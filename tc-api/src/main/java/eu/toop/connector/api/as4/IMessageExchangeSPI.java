@@ -56,8 +56,7 @@ public interface IMessageExchangeSPI
    * @throws MEException
    *         In case of error.
    */
-  void registerIncomingHandler (@Nonnull ServletContext aServletContext,
-                                @Nonnull IMEIncomingHandler aIncomingHandler) throws MEException;
+  void registerIncomingHandler (@Nonnull ServletContext aServletContext, @Nonnull IMEIncomingHandler aIncomingHandler);
 
   /**
    * Trigger the message transmission in step 1/4. This method acts synchronous.
@@ -69,7 +68,7 @@ public interface IMessageExchangeSPI
    * @throws MEException
    *         In case of error.
    */
-  void sendDCOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEException;
+  void sendDCOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage);
 
   /**
    * Trigger the message transmission in step 3/4.
@@ -81,7 +80,7 @@ public interface IMessageExchangeSPI
    * @throws MEException
    *         In case of error.
    */
-  void sendDPOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEException;
+  void sendDPOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage);
 
   /**
    * Shutdown the Message Exchange.

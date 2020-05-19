@@ -522,4 +522,15 @@ public final class TCConfig
       return getConfig ().getAsBoolean ("http.tls.trustall", false);
     }
   }
+
+  public static class WebApp
+  {
+    private WebApp ()
+    {}
+
+    public static boolean isStatusEnabled ()
+    {
+      return getConfig ().getAsBoolean ("toop.webapp.status.enabled", true);
+    }
+  }
 }

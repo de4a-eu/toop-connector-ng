@@ -75,7 +75,7 @@ import eu.toop.connector.mem.phase4.servlet.AS4MessageProcessorSPI;
 import eu.toop.edm.error.EToopErrorCode;
 
 /**
- * TOOP {@link IMessageExchangeSPI} implementation using ph-as4.
+ * TOOP {@link IMessageExchangeSPI} implementation using phase4.
  *
  * @author Philip Helger
  */
