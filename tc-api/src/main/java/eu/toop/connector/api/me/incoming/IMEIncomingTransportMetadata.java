@@ -16,12 +16,11 @@
 package eu.toop.connector.api.me.incoming;
 
 /**
- * Container for all relevant AS4 transport metadata that may be interesting to
- * the recipient.
+ * Read-only interface for incoming transport metadata.
  *
  * @author Philip Helger
  */
-public class MEIncomingTransportMetadata implements IMEIncomingTransportMetadata
+public interface IMEIncomingTransportMetadata
 {
   // TODO
 }
