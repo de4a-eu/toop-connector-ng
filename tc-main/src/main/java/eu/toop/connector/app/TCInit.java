@@ -74,7 +74,7 @@ public class TCInit
   public static void initGlobally (@Nonnull final ServletContext aServletContext)
   {
     if (!INITED.compareAndSet (false, true))
-      throw new IllegalStateException ("TOOP Connector is already initialized");
+      throw new IllegalStateException ("TOOP Connector NG is already initialized");
 
     GlobalIDFactory.setPersistentStringIDFactory (new StringIDFromGlobalPersistentLongIDFactory ("toop-tc-"));
     GlobalDebug.setDebugModeDirect (TCConfig.Global.isGlobalDebug ());
@@ -170,7 +170,7 @@ public class TCInit
       }
     });
 
-    ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector started");
+    ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector NG started");
   }
 
   /**
@@ -198,7 +198,7 @@ public class TCInit
     if (!isInitialized ())
       throw new IllegalStateException ("TOOP Connector NG is not initialized");
 
-    ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector shutting down");
+    ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector NG shutting down");
 
     // Shutdown message exchange
     MessageExchangeManager.getConfiguredImplementation ().shutdown (aServletContext);

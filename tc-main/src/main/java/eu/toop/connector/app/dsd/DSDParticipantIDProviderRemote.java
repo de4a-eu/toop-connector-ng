@@ -82,7 +82,7 @@ public class DSDParticipantIDProviderRemote implements IDSDParticipantIDProvider
   public ICommonsSet <IParticipantIdentifier> getAllParticipantIDs (@Nonnull final String sLogPrefix,
                                                                     @Nonnull final String sDatasetType,
                                                                     @Nullable final String sCountryCode,
-                                                                    @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
+                                                                    @Nullable final IDocumentTypeIdentifier aDocumentTypeID,
                                                                     @Nonnull final ISMPErrorHandler aErrorHandler)
   {
     final ICommonsSet <IParticipantIdentifier> ret = new CommonsHashSet <> ();
@@ -97,9 +97,7 @@ public class DSDParticipantIDProviderRemote implements IDSDParticipantIDProvider
     }
     catch (final RuntimeException ex)
     {
-      // Ignore
-      if (aErrorHandler != null)
-        aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
+      aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
     }
 
     if (aMatches != null)

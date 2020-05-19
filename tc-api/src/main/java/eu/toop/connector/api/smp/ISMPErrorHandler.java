@@ -23,7 +23,7 @@ import com.helger.commons.error.level.EErrorLevel;
 import eu.toop.edm.error.IToopErrorCode;
 
 /**
- * Custom R2D2 error handler callback
+ * Custom SMP error handler callback
  *
  * @author Philip Helger
  */
@@ -41,10 +41,7 @@ public interface ISMPErrorHandler
    * @param eCode
    *        The TOOP specific error code. Never <code>null</code>.
    */
-  void onMessage (@Nonnull EErrorLevel eErrorLevel,
-                  @Nonnull String sMsg,
-                  @Nullable Throwable t,
-                  @Nonnull IToopErrorCode eCode);
+  void onMessage (@Nonnull EErrorLevel eErrorLevel, @Nonnull String sMsg, @Nullable Throwable t, @Nonnull IToopErrorCode eCode);
 
   default void onWarning (@Nonnull final String sMsg, @Nonnull final IToopErrorCode eCode)
   {

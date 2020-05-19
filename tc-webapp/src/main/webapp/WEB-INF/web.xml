@@ -26,4 +26,18 @@
   <session-config>
     <session-timeout>60</session-timeout>
   </session-config>
+  
+  <listener>
+    <listener-class>eu.toop.connector.servlet.TCWebAppListener</listener-class>
+  </listener>
+  
+  <servlet>
+    <servlet-name>PhotonAPIServlet</servlet-name>
+    <servlet-class>com.helger.photon.api.servlet.PhotonAPIServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>PhotonAPIServlet</servlet-name>
+    <url-pattern>/api</url-pattern>
+  </servlet-mapping>
 </web-app>
+
