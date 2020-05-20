@@ -32,7 +32,7 @@ import eu.toop.connector.webapi.validation.ApiPostValidateEdm;
 
 /**
  * Register all APIs
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -59,7 +59,6 @@ public final class TCAPIInit
                                                  new ApiPostValidateEdm (EValidationEdmType.ERROR_RESPONSE)));
 
     // AS4 stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/send/{pid}"), ApiPostSend.class));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/send"), ApiPostSend.class));
   }
-
 }

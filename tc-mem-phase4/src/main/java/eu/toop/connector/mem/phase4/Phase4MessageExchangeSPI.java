@@ -83,7 +83,7 @@ import eu.toop.edm.error.EToopErrorCode;
 @IsSPIImplementation
 public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
 {
-  public static final String ID = "mem-phase4";
+  public static final String ID = "phase4";
   private static final Logger LOGGER = LoggerFactory.getLogger (Phase4MessageExchangeSPI.class);
 
   private final IAS4CryptoFactory m_aCF;
