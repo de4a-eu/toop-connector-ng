@@ -20,6 +20,17 @@
            elementFormDefault="qualified" 
            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
            targetNamespace="urn:eu.toop/toop-simulator-ng/2020/discovery"
-           xmlns="urn:eu.toop/toop-simulator-ng/2020/discovery">
+           xmlns="urn:eu.toop/toop-simulator-ng/2020/discovery"
+           xmlns:bdxr="http://docs.oasis-open.org/bdxr/ns/SMP/2016/05">
+           
   <xs:import namespace="http://docs.oasis-open.org/bdxr/ns/SMP/2016/05" />
+  
+  <xs:complexType name="CountryAwareServiceMetadataType">
+    <xs:sequence>
+      <xs:element ref="bdxr:ServiceMetadata" minOccurs="0" maxOccurs="unbounded" />
+    </xs:sequence>
+    <xs:attribute name="countryCode" type="xs:string" />
+  </xs:complexType>
+  
+  <xs:element name="CountryAwareServiceMetadata" type="CountryAwareServiceMetadataType" />
 </xs:schema>
