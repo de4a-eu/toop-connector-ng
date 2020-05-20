@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.json.IJsonObject;
@@ -42,7 +41,7 @@ import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
 /**
  * Query all matching endpoints from an SMP
- * 
+ *
  * @author Philip Helger
  */
 public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
@@ -76,23 +75,15 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
     aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
     aJson.add (SMPJsonResponse.JSON_DOCUMENT_TYPE_ID, aDocTypeID.getURIEncoded ());
     CommonAPIInvoker.invoke (aJson, () -> {
-      try
+      // Main query
+      final ServiceMetadataType aSM = TCAPIConfig.getDDServiceMetadataProvider ().getServiceMetadata (aParticipantID, aDocTypeID);
+      if (aSM != null)
       {
-        // Main query
-        final ServiceMetadataType aSM = TCAPIConfig.getDDServiceMetadataProvider ().getServiceMetadata (aParticipantID, aDocTypeID);
-        if (aSM != null)
-        {
-          aJson.add ("success", true);
-          aJson.add ("response", SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM));
-        }
-        else
-          aJson.add ("success", false);
+        aJson.add ("success", true);
+        aJson.add ("response", SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM));
       }
-      catch (final RuntimeException ex)
-      {
+      else
         aJson.add ("success", false);
-        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
-      }
     });
 
     aUnifiedResponse.json (aJson);

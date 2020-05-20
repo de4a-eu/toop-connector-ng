@@ -26,10 +26,8 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
-import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.security.certificate.CertificateHelper;
 
-import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.rest.TCOutgoingMetadata;
 
 /**
@@ -37,15 +35,23 @@ import eu.toop.connector.api.rest.TCOutgoingMetadata;
  *
  * @author Philip Helger
  */
-public class MERoutingInformation implements IMERoutingInformation
+public class MERoutingInformation extends MERoutingInformationInput implements IMERoutingInformation
 {
-  private final IParticipantIdentifier m_aSenderID;
-  private final IParticipantIdentifier m_aReceiverID;
-  private final IDocumentTypeIdentifier m_aDocTypeID;
-  private final IProcessIdentifier m_aProcessID;
-  private final String m_sTransportProtocol;
   private final String m_sEndpointURL;
   private final X509Certificate m_aCert;
+
+  public MERoutingInformation (@Nonnull final MERoutingInformationInput aOther,
+                               @Nonnull @Nonempty final String sEndpointURL,
+                               @Nonnull final X509Certificate aCert)
+  {
+    this (aOther.getSenderID (),
+          aOther.getReceiverID (),
+          aOther.getDocumentTypeID (),
+          aOther.getProcessID (),
+          aOther.getTransportProtocol (),
+          sEndpointURL,
+          aCert);
+  }
 
   public MERoutingInformation (@Nonnull final IParticipantIdentifier aSenderID,
                                @Nonnull final IParticipantIdentifier aReceiverID,
@@ -55,52 +61,12 @@ public class MERoutingInformation implements IMERoutingInformation
                                @Nonnull @Nonempty final String sEndpointURL,
                                @Nonnull final X509Certificate aCert)
   {
-    ValueEnforcer.notNull (aSenderID, "SenderID");
-    ValueEnforcer.notNull (aReceiverID, "ReceiverID");
-    ValueEnforcer.notNull (aDocTypeID, "DocTypeID");
-    ValueEnforcer.notNull (aProcessID, "ProcessID");
-    ValueEnforcer.notEmpty (sTransportProtocol, "TransportProtocol");
+    super (aSenderID, aReceiverID, aDocTypeID, aProcessID, sTransportProtocol);
     ValueEnforcer.notEmpty (sEndpointURL, "EndpointURL");
     ValueEnforcer.notNull (aCert, "Cert");
 
-    m_aSenderID = aSenderID;
-    m_aReceiverID = aReceiverID;
-    m_aDocTypeID = aDocTypeID;
-    m_aProcessID = aProcessID;
-    m_sTransportProtocol = sTransportProtocol;
     m_sEndpointURL = sEndpointURL;
     m_aCert = aCert;
-  }
-
-  @Nonnull
-  public IParticipantIdentifier getSenderID ()
-  {
-    return m_aSenderID;
-  }
-
-  @Nonnull
-  public IParticipantIdentifier getReceiverID ()
-  {
-    return m_aReceiverID;
-  }
-
-  @Nonnull
-  public IDocumentTypeIdentifier getDocumentTypeID ()
-  {
-    return m_aDocTypeID;
-  }
-
-  @Nonnull
-  public IProcessIdentifier getProcessID ()
-  {
-    return m_aProcessID;
-  }
-
-  @Nonnull
-  @Nonempty
-  public String getTransportProtocol ()
-  {
-    return m_sTransportProtocol;
   }
 
   @Nonnull
@@ -119,30 +85,14 @@ public class MERoutingInformation implements IMERoutingInformation
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("SenderID", m_aSenderID)
-                                       .append ("ReceiverID", m_aReceiverID)
-                                       .append ("DocTypeID", m_aDocTypeID)
-                                       .append ("ProcID", m_aProcessID)
-                                       .append ("TransportProtocol", m_sTransportProtocol)
-                                       .append ("EndpointURL", m_sEndpointURL)
-                                       .append ("Cert", m_aCert)
-                                       .getToString ();
+    return ToStringGenerator.getDerived (super.toString ()).append ("EndpointURL", m_sEndpointURL).append ("Cert", m_aCert).getToString ();
   }
 
   @Nonnull
-  public static IMERoutingInformation createFrom (@Nonnull final TCOutgoingMetadata aMetadata) throws CertificateException
+  public static MERoutingInformation createFrom (@Nonnull final TCOutgoingMetadata aMetadata) throws CertificateException
   {
     ValueEnforcer.notNull (aMetadata, "Metadata");
-    final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
-    return new MERoutingInformation (aIF.createParticipantIdentifier (aMetadata.getSenderID ().getScheme (),
-                                                                      aMetadata.getSenderID ().getValue ()),
-                                     aIF.createParticipantIdentifier (aMetadata.getReceiverID ().getScheme (),
-                                                                      aMetadata.getReceiverID ().getValue ()),
-                                     aIF.createDocumentTypeIdentifier (aMetadata.getDocTypeID ().getScheme (),
-                                                                       aMetadata.getDocTypeID ().getValue ()),
-                                     aIF.createProcessIdentifier (aMetadata.getProcessID ().getScheme (),
-                                                                  aMetadata.getProcessID ().getValue ()),
-                                     aMetadata.getTransportProtocol (),
+    return new MERoutingInformation (MERoutingInformationInput.createForInput (aMetadata),
                                      aMetadata.getEndpointURL (),
                                      CertificateHelper.convertByteArrayToCertficateDirect (aMetadata.getReceiverCertificate ()));
   }

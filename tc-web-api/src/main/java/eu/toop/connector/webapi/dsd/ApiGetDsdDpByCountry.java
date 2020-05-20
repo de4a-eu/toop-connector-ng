@@ -19,7 +19,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -41,7 +40,7 @@ import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
 /**
  * Search DSD participants by dataset and country
- * 
+ *
  * @author Philip Helger
  */
 public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
@@ -63,41 +62,33 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
 
     final IJsonObject aJson = new JsonObject ();
     CommonAPIInvoker.invoke (aJson, () -> {
-      try
+      final ICommonsList <String> aErrorMsgs = new CommonsArrayList <> ();
+      final IDDErrorHandler aErrorHdl = (eErrorLevel, sMsg, t, eCode) -> {
+        if (eErrorLevel.isError ())
+          aErrorMsgs.add (sMsg);
+      };
+
+      // Query DSD
+      final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
+                                                                            .getAllParticipantIDs ("[api /dsd/dp/by-country]",
+                                                                                                   sDatasetType,
+                                                                                                   sCountryCode,
+                                                                                                   null,
+                                                                                                   aErrorHdl);
+
+      if (aErrorMsgs.isEmpty ())
       {
-        final ICommonsList <String> aErrorMsgs = new CommonsArrayList <> ();
-        final IDDErrorHandler aErrorHdl = (eErrorLevel, sMsg, t, eCode) -> {
-          if (eErrorLevel.isError ())
-            aErrorMsgs.add (sMsg);
-        };
+        aJson.add ("success", true);
 
-        // Query DSD
-        final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
-                                                                              .getAllParticipantIDs ("[api /dsd/dp/by-country]",
-                                                                                                     sDatasetType,
-                                                                                                     sCountryCode,
-                                                                                                     null,
-                                                                                                     aErrorHdl);
-
-        if (aErrorMsgs.isEmpty ())
-        {
-          aJson.add ("success", true);
-
-          final JsonArray aList = new JsonArray ();
-          for (final IParticipantIdentifier aPI : aParticipants)
-            aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
-          aJson.add ("participants", aList);
-        }
-        else
-        {
-          aJson.add ("success", false);
-          aJson.add ("errors", new JsonArray ().addAll (aErrorMsgs));
-        }
+        final JsonArray aList = new JsonArray ();
+        for (final IParticipantIdentifier aPI : aParticipants)
+          aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
+        aJson.add ("participants", aList);
       }
-      catch (final RuntimeException ex)
+      else
       {
         aJson.add ("success", false);
-        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
+        aJson.add ("errors", new JsonArray ().addAll (aErrorMsgs));
       }
     });
 

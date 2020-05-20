@@ -27,6 +27,7 @@ import eu.toop.connector.webapi.dsd.ApiGetDsdDp;
 import eu.toop.connector.webapi.dsd.ApiGetDsdDpByCountry;
 import eu.toop.connector.webapi.smp.ApiGetSmpDocTypes;
 import eu.toop.connector.webapi.smp.ApiGetSmpEndpoints;
+import eu.toop.connector.webapi.user.ApiPostUserSubmitEdm;
 import eu.toop.connector.webapi.validation.ApiPostValidateEdm;
 
 /**
@@ -57,5 +58,11 @@ public final class TCAPIInit
 
     // AS4 stuff
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/send"), ApiPostSend.class));
+
+    // User stuff
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/request"), new ApiPostUserSubmitEdm (ETCEdmType.REQUEST)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/response"), new ApiPostUserSubmitEdm (ETCEdmType.RESPONSE)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/error"),
+                                                 new ApiPostUserSubmitEdm (ETCEdmType.ERROR_RESPONSE)));
   }
 }

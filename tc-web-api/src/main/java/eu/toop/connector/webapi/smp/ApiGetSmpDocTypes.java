@@ -22,7 +22,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
@@ -41,7 +40,7 @@ import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
 /**
  * Query all document types of a participant
- * 
+ *
  * @author Philip Helger
  */
 public class ApiGetSmpDocTypes extends AbstractTCAPIInvoker
@@ -65,20 +64,12 @@ public class ApiGetSmpDocTypes extends AbstractTCAPIInvoker
     final IJsonObject aJson = new JsonObject ();
     aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
     CommonAPIInvoker.invoke (aJson, () -> {
-      try
-      {
-        // Query SMP
-        final ICommonsSortedMap <String, String> aSGHrefs = TCAPIConfig.getDDServiceGroupHrefProvider ()
-                                                                       .getAllServiceGroupHrefs (aParticipantID);
+      // Query SMP
+      final ICommonsSortedMap <String, String> aSGHrefs = TCAPIConfig.getDDServiceGroupHrefProvider ()
+                                                                     .getAllServiceGroupHrefs (aParticipantID);
 
-        aJson.add ("success", true);
-        aJson.add ("response", SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ()));
-      }
-      catch (final RuntimeException ex)
-      {
-        aJson.add ("success", false);
-        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
-      }
+      aJson.add ("success", true);
+      aJson.add ("response", SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ()));
     });
 
     aUnifiedResponse.json (aJson);

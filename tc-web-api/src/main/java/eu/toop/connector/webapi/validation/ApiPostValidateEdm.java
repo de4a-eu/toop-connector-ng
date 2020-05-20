@@ -44,7 +44,7 @@ import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
 /**
  * Perform validation via API
- * 
+ *
  * @author Philip Helger
  */
 public class ApiPostValidateEdm extends AbstractTCAPIInvoker
@@ -74,28 +74,20 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
 
     final IJsonObject aJson = new JsonObject ();
     CommonAPIInvoker.invoke (aJson, () -> {
-      try
-      {
-        // Main validation
-        final StopWatch aSW = StopWatch.createdStarted ();
-        final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ().validate (aVESID, aPayload, aDisplayLocale);
-        aSW.stop ();
+      // Main validation
+      final StopWatch aSW = StopWatch.createdStarted ();
+      final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ().validate (aVESID, aPayload, aDisplayLocale);
+      aSW.stop ();
 
-        // Build response
-        aJson.add ("success", true);
-        BDVEJsonHelper.applyValidationResultList (aJson,
-                                                  TCValidator.getVES (aVESID),
-                                                  aValidationResultList,
-                                                  aDisplayLocale,
-                                                  aSW.getMillis (),
-                                                  null,
-                                                  null);
-      }
-      catch (final RuntimeException ex)
-      {
-        aJson.add ("success", false);
-        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
-      }
+      // Build response
+      aJson.add ("success", true);
+      BDVEJsonHelper.applyValidationResultList (aJson,
+                                                TCValidator.getVES (aVESID),
+                                                aValidationResultList,
+                                                aDisplayLocale,
+                                                aSW.getMillis (),
+                                                null,
+                                                null);
     });
 
     aUnifiedResponse.json (aJson);

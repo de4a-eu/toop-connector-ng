@@ -21,8 +21,8 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.mime.MimeTypeParser;
 import com.helger.commons.string.StringHelper;
 import com.helger.json.IJsonObject;
@@ -36,7 +36,6 @@ import eu.toop.connector.api.me.MessageExchangeManager;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
-import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.api.me.outgoing.MERoutingInformation;
 import eu.toop.connector.api.rest.TCOutgoingMessage;
 import eu.toop.connector.api.rest.TCOutgoingPayload;
@@ -48,7 +47,7 @@ import eu.toop.connector.webapi.smp.SMPJsonResponse;
 
 /**
  * Send an outgoing AS4 message via the configured MEM gateway
- * 
+ *
  * @author Philip Helger
  */
 public class ApiPostSend extends AbstractTCAPIInvoker
@@ -65,7 +64,11 @@ public class ApiPostSend extends AbstractTCAPIInvoker
     if (aOutgoingMsg == null)
       throw new APIParamException ("Failed to interpret the message body as an 'OutgoingMessage'");
 
-    final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
+    // These fields are optional in the XSD but required here
+    if (StringHelper.hasNoText (aOutgoingMsg.getMetadata ().getEndpointURL ()))
+      throw new APIParamException ("The 'OutgoingMessage/Metadata/EndpointURL' element MUST be present and not empty");
+    if (ArrayHelper.isEmpty (aOutgoingMsg.getMetadata ().getReceiverCertificate ()))
+      throw new APIParamException ("The 'OutgoingMessage/Metadata/ReceiverCertificate' element MUST be present and not empty");
 
     // Convert metadata
     final IMERoutingInformation aRoutingInfo;
@@ -96,20 +99,12 @@ public class ApiPostSend extends AbstractTCAPIInvoker
       aJson.add (SMPJsonResponse.JSON_PROCESS_ID, aRoutingInfo.getProcessID ().getURIEncoded ());
       aJson.add (SMPJsonResponse.JSON_TRANSPORT_PROFILE, aRoutingInfo.getTransportProtocol ());
       aJson.add (SMPJsonResponse.JSON_ENDPOINT_REFERENCE, aRoutingInfo.getEndpointURL ());
-      aJson.add ("payloadCount", aOutgoingMsg.getPayload ().size ());
     }
 
     CommonAPIInvoker.invoke (aJson, () -> {
-      try
-      {
-        aMEM.sendOutgoing (aRoutingInfo, aMessage.build ());
-        aJson.add ("success", true);
-      }
-      catch (final MEOutgoingException ex)
-      {
-        aJson.add ("success", false);
-        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
-      }
+      final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
+      aMEM.sendOutgoing (aRoutingInfo, aMessage.build ());
+      aJson.add ("success", true);
     });
 
     aUnifiedResponse.json (aJson);
