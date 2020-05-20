@@ -22,7 +22,6 @@ import com.helger.photon.api.APIDescriptor;
 import com.helger.photon.api.APIPath;
 import com.helger.photon.api.IAPIRegistry;
 
-import eu.toop.connector.app.validation.EValidationEdmType;
 import eu.toop.connector.webapi.as4.ApiPostSend;
 import eu.toop.connector.webapi.dsd.ApiGetDsdDp;
 import eu.toop.connector.webapi.dsd.ApiGetDsdDpByCountry;
@@ -52,11 +51,9 @@ public final class TCAPIInit
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/endpoints/{pid}/{doctypeid}"), ApiGetSmpEndpoints.class));
 
     // Validation stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/request"), new ApiPostValidateEdm (EValidationEdmType.REQUEST)));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/response"),
-                                                 new ApiPostValidateEdm (EValidationEdmType.RESPONSE)));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/error"),
-                                                 new ApiPostValidateEdm (EValidationEdmType.ERROR_RESPONSE)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/request"), new ApiPostValidateEdm (ETCEdmType.REQUEST)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/response"), new ApiPostValidateEdm (ETCEdmType.RESPONSE)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/error"), new ApiPostValidateEdm (ETCEdmType.ERROR_RESPONSE)));
 
     // AS4 stuff
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/send"), ApiPostSend.class));

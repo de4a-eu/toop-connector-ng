@@ -36,19 +36,24 @@ import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.app.validation.EValidationEdmType;
 import eu.toop.connector.app.validation.TCValidator;
+import eu.toop.connector.webapi.ETCEdmType;
 import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
-import eu.toop.connector.webapi.helper.CommonInvoker;
+import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
+/**
+ * Perform validation via API
+ * 
+ * @author Philip Helger
+ */
 public class ApiPostValidateEdm extends AbstractTCAPIInvoker
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (ApiPostValidateEdm.class);
 
-  private final EValidationEdmType m_eType;
+  private final ETCEdmType m_eType;
 
-  public ApiPostValidateEdm (@Nonnull final EValidationEdmType eType)
+  public ApiPostValidateEdm (@Nonnull final ETCEdmType eType)
   {
     m_eType = eType;
   }
@@ -68,7 +73,7 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
     LOGGER.info ("API validating " + aPayload.length + " bytes using '" + aVESID.getAsSingleID () + "'");
 
     final IJsonObject aJson = new JsonObject ();
-    CommonInvoker.invoke (aJson, () -> {
+    CommonAPIInvoker.invoke (aJson, () -> {
       try
       {
         // Main validation

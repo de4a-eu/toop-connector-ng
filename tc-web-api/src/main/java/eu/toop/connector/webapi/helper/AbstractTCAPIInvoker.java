@@ -16,6 +16,11 @@ import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
+/**
+ * Abstract base invoker for TC REST API
+ *
+ * @author Philip Helger
+ */
 public abstract class AbstractTCAPIInvoker implements IAPIExecutor
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (AbstractTCAPIInvoker.class);

@@ -13,19 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.app.validation;
+package eu.toop.connector.webapi;
 
 import javax.annotation.Nonnull;
 
 import com.helger.bdve.executorset.VESID;
 import com.helger.commons.annotation.Nonempty;
 
+import eu.toop.connector.app.validation.TCValidationRules;
+
 /**
  * Contains the different top-level document types.
  *
  * @author Philip Helger
  */
-public enum EValidationEdmType
+public enum ETCEdmType
 {
   REQUEST ("req", TCValidationRules.VID_TOOP_EDM_REQUEST_200),
   RESPONSE ("resp", TCValidationRules.VID_TOOP_EDM_RESPONSE_200),
@@ -34,7 +36,7 @@ public enum EValidationEdmType
   private final String m_sID;
   private final VESID m_aVESID;
 
-  EValidationEdmType (@Nonnull @Nonempty final String sID, @Nonnull final VESID aVESID)
+  ETCEdmType (@Nonnull @Nonempty final String sID, @Nonnull final VESID aVESID)
   {
     m_sID = sID;
     m_aVESID = aVESID;

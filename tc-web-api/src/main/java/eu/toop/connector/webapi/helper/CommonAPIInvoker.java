@@ -9,9 +9,9 @@ import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 
-public class CommonInvoker
+public class CommonAPIInvoker
 {
-  private CommonInvoker ()
+  private CommonAPIInvoker ()
   {}
 
   public static void invoke (@Nonnull final IJsonObject aJson, @Nonnull final Runnable r)

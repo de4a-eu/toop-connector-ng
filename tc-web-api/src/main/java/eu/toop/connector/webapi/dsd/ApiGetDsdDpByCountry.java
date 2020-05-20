@@ -21,6 +21,8 @@ import javax.annotation.Nonnull;
 
 import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.collection.impl.CommonsArrayList;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.string.StringHelper;
 import com.helger.json.IJsonObject;
@@ -31,12 +33,17 @@ import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.api.dd.LoggingDDErrorHandler;
+import eu.toop.connector.api.dd.IDDErrorHandler;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
-import eu.toop.connector.webapi.helper.CommonInvoker;
+import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
+/**
+ * Search DSD participants by dataset and country
+ * 
+ * @author Philip Helger
+ */
 public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
 {
   @Override
@@ -55,23 +62,37 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
       throw new APIParamException ("Missing Country Code");
 
     final IJsonObject aJson = new JsonObject ();
-    CommonInvoker.invoke (aJson, () -> {
+    CommonAPIInvoker.invoke (aJson, () -> {
       try
       {
+        final ICommonsList <String> aErrorMsgs = new CommonsArrayList <> ();
+        final IDDErrorHandler aErrorHdl = (eErrorLevel, sMsg, t, eCode) -> {
+          if (eErrorLevel.isError ())
+            aErrorMsgs.add (sMsg);
+        };
+
         // Query DSD
         final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
                                                                               .getAllParticipantIDs ("[api /dsd/dp/by-country]",
                                                                                                      sDatasetType,
                                                                                                      sCountryCode,
                                                                                                      null,
-                                                                                                     LoggingDDErrorHandler.INSTANCE);
+                                                                                                     aErrorHdl);
 
-        aJson.add ("success", true);
+        if (aErrorMsgs.isEmpty ())
+        {
+          aJson.add ("success", true);
 
-        final JsonArray aList = new JsonArray ();
-        for (final IParticipantIdentifier aPI : aParticipants)
-          aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
-        aJson.add ("participants", aList);
+          final JsonArray aList = new JsonArray ();
+          for (final IParticipantIdentifier aPI : aParticipants)
+            aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
+          aJson.add ("participants", aList);
+        }
+        else
+        {
+          aJson.add ("success", false);
+          aJson.add ("errors", new JsonArray ().addAll (aErrorMsgs));
+        }
       }
       catch (final RuntimeException ex)
       {

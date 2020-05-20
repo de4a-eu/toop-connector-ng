@@ -43,9 +43,14 @@ import eu.toop.connector.api.rest.TCOutgoingPayload;
 import eu.toop.connector.api.rest.TCRestJAXB;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
-import eu.toop.connector.webapi.helper.CommonInvoker;
+import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 import eu.toop.connector.webapi.smp.SMPJsonResponse;
 
+/**
+ * Send an outgoing AS4 message via the configured MEM gateway
+ * 
+ * @author Philip Helger
+ */
 public class ApiPostSend extends AbstractTCAPIInvoker
 {
   @Override
@@ -94,7 +99,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
       aJson.add ("payloadCount", aOutgoingMsg.getPayload ().size ());
     }
 
-    CommonInvoker.invoke (aJson, () -> {
+    CommonAPIInvoker.invoke (aJson, () -> {
       try
       {
         aMEM.sendOutgoing (aRoutingInfo, aMessage.build ());

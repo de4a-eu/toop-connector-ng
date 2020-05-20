@@ -38,8 +38,13 @@ import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
-import eu.toop.connector.webapi.helper.CommonInvoker;
+import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
+/**
+ * Query all matching endpoints from an SMP
+ * 
+ * @author Philip Helger
+ */
 public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (ApiGetSmpEndpoints.class);
@@ -70,7 +75,7 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
     final IJsonObject aJson = new JsonObject ();
     aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
     aJson.add (SMPJsonResponse.JSON_DOCUMENT_TYPE_ID, aDocTypeID.getURIEncoded ());
-    CommonInvoker.invoke (aJson, () -> {
+    CommonAPIInvoker.invoke (aJson, () -> {
       try
       {
         // Main query

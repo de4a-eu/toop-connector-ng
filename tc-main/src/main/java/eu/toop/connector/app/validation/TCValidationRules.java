@@ -45,7 +45,7 @@ import eu.toop.regrep.RegRep4Reader;
  * @author Philip Helger
  */
 @Immutable
-final class TCValidationRules
+public final class TCValidationRules
 {
   public static final String GROUP_ID = "eu.toop";
 

@@ -37,8 +37,13 @@ import eu.toop.connector.api.dd.IDDErrorHandler;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
-import eu.toop.connector.webapi.helper.CommonInvoker;
+import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
+/**
+ * Search DSD participants by dataset only
+ *
+ * @author Philip Helger
+ */
 public class ApiGetDsdDp extends AbstractTCAPIInvoker
 {
   @Override
@@ -53,7 +58,7 @@ public class ApiGetDsdDp extends AbstractTCAPIInvoker
       throw new APIParamException ("Missing DatasetType");
 
     final IJsonObject aJson = new JsonObject ();
-    CommonInvoker.invoke (aJson, () -> {
+    CommonAPIInvoker.invoke (aJson, () -> {
       try
       {
         final ICommonsList <String> aErrorMsgs = new CommonsArrayList <> ();
