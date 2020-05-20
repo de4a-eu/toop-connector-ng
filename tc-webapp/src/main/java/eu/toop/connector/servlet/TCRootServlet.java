@@ -95,10 +95,18 @@ public class TCRootServlet extends HttpServlet
       aSB.append ("<div>GET /api/smp/doctypes - <a href='/api/smp/doctypes/iso6523-actorid-upis%3A%3A9915%3Atooptest' target='_blank'>test me</a></div>");
       aSB.append ("<div>GET /api/smp/endpoints - <a href='/api/smp/endpoints/iso6523-actorid-upis%3A%3A9915%3Atooptest/toop-doctypeid-qns%3A%3Aurn%3Aeu%3Atoop%3Ans%3Adataexchange-1p40%3A%3ARequest%23%23urn%3Aeu.toop.request.registeredorganization%3A%3A1.40' target='_blank'>test me</a></div>");
 
-      aSB.append ("<h3>validation</h3>");
+      aSB.append ("<h3>Validation</h3>");
       aSB.append ("<div>POST /api/validate/request</div>");
       aSB.append ("<div>POST /api/validate/response</div>");
       aSB.append ("<div>POST /api/validate/error</div>");
+
+      aSB.append ("<h3>AS4</h3>");
+      aSB.append ("<div>POST /api/send</div>");
+
+      aSB.append ("<h3>Utilities</h3>");
+      aSB.append ("<div>POST /api/user/submit/request</div>");
+      aSB.append ("<div>POST /api/user/submit/response</div>");
+      aSB.append ("<div>POST /api/user/submit/error</div>");
     }
 
     aSB.append ("</body></html>");

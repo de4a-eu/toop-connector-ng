@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.timing.StopWatch;
+import com.helger.json.serialize.JsonWriterSettings;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.api.IAPIExecutor;
 import com.helger.photon.app.PhotonUnifiedResponse;
@@ -54,7 +55,9 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
   {
     final StopWatch aSW = StopWatch.createdStarted ();
 
-    invokeAPI (aAPIDescriptor, sPath, aPathVariables, aRequestScope, (PhotonUnifiedResponse) aUnifiedResponse);
+    final PhotonUnifiedResponse aPUR = (PhotonUnifiedResponse) aUnifiedResponse;
+    aPUR.setJsonWriterSettings (new JsonWriterSettings ().setIndentEnabled (true));
+    invokeAPI (aAPIDescriptor, sPath, aPathVariables, aRequestScope, aPUR);
 
     aSW.stop ();
     LOGGER.info ("[API] Succesfully finished '" +
