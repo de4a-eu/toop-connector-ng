@@ -1,4 +1,3 @@
-/*.cer
-/*.jks
-/private-*.properties
-/crypto.properties
+*.cer
+*.jks
+private-*

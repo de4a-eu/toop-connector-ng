@@ -65,6 +65,9 @@ public final class Phase4Config
     return getConfig ().getAsBoolean ("phase4.debug.incoming", GlobalDebug.isDebugMode ());
   }
 
+  /**
+   * @return Optional folder where to store responses to
+   */
   @Nullable
   public static String getSendResponseFolderName ()
   {
@@ -75,8 +78,7 @@ public final class Phase4Config
   @Nonnull
   public static EKeyStoreType getKeyStoreType ()
   {
-    return EKeyStoreType.getFromIDCaseInsensitiveOrDefault (getConfig ().getAsString ("phase4.keystore.type"),
-                                                            EKeyStoreType.JKS);
+    return EKeyStoreType.getFromIDCaseInsensitiveOrDefault (getConfig ().getAsString ("phase4.keystore.type"), EKeyStoreType.JKS);
   }
 
   @Nullable
