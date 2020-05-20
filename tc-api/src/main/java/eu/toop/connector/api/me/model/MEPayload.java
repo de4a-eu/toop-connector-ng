@@ -27,6 +27,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.io.ByteArrayWrapper;
+import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.mime.IMimeType;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
@@ -129,6 +130,12 @@ public final class MEPayload implements Serializable
 
     protected Builder ()
     {}
+
+    @Nonnull
+    public Builder mimeTypeRegRep ()
+    {
+      return mimeType (EMimeContentType.APPLICATION.buildMimeType ("x-ebrs+xml"));
+    }
 
     @Nonnull
     public Builder mimeType (@Nullable final IMimeType a)

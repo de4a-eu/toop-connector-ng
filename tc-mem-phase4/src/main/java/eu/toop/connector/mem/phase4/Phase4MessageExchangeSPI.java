@@ -16,12 +16,12 @@
 package eu.toop.connector.mem.phase4;
 
 import java.io.File;
-import java.io.IOException;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
+import javax.naming.InvalidNameException;
 import javax.servlet.ServletContext;
 
 import org.slf4j.Logger;
@@ -31,27 +31,17 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.exception.InitializationException;
-import com.helger.commons.io.file.FilenameHelper;
-import com.helger.commons.io.file.SimpleFileIO;
 import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.string.StringHelper;
-import com.helger.commons.timing.StopWatch;
-import com.helger.datetime.util.PDTIOHelper;
 import com.helger.httpclient.HttpClientFactory;
-import com.helger.httpclient.response.ResponseHandlerByteArray;
 import com.helger.peppol.utils.PeppolCertificateHelper;
-import com.helger.phase4.CAS4;
+import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.phase4.attachment.EAS4CompressionMode;
-import com.helger.phase4.attachment.WSS4JAttachment;
+import com.helger.phase4.attachment.Phase4OutgoingAttachment;
+import com.helger.phase4.cef.Phase4CEFEndpointDetailProviderConstant;
 import com.helger.phase4.cef.Phase4CEFSender;
-import com.helger.phase4.client.AS4ClientSentMessage;
-import com.helger.phase4.client.AS4ClientUserMessage;
-import com.helger.phase4.client.IAS4ClientBuildMessageCallback;
-import com.helger.phase4.client.IAS4RetryCallback;
-import com.helger.phase4.crypto.ECryptoAlgorithmSign;
-import com.helger.phase4.crypto.ECryptoAlgorithmSignDigest;
+import com.helger.phase4.cef.Phase4CEFSender.Builder;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
-import com.helger.phase4.dump.IAS4OutgoingDumper;
 import com.helger.phase4.http.AS4HttpDebug;
 import com.helger.phase4.messaging.domain.MessageHelperMethods;
 import com.helger.phase4.mgr.MetaAS4Manager;
@@ -59,11 +49,11 @@ import com.helger.phase4.model.pmode.IPModeManager;
 import com.helger.phase4.model.pmode.PMode;
 import com.helger.phase4.model.pmode.PModePayloadService;
 import com.helger.phase4.servlet.AS4ServerInitializer;
-import com.helger.phase4.soap.ESoapVersion;
-import com.helger.phase4.util.AS4ResourceHelper;
+import com.helger.phase4.util.Phase4Exception;
 import com.helger.photon.app.io.WebFileIO;
 import com.helger.servlet.ServletHelper;
 
+import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
@@ -157,112 +147,63 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                               @Nonnull final IMERoutingInformation aRoutingInfo,
                               @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
-    final StopWatch aSW = StopWatch.createdStarted ();
-
-    final X509Certificate aTheirCert = aRoutingInfo.getCertificate ();
-
-    Phase4CEFSender.builder ()
-                   .setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
-                   .setCryptoFactory (aCF)
-                   .setSenderParticipantID (aRoutingInfo.getSenderID ())
-                   .setReceiverParticipantID (aRoutingInfo.getReceiverID ())
-                   .setDocumentTypeID (aRoutingInfo.getDocumentTypeID ())
-                   .setProcessID (aRoutingInfo.getProcessID ());
-
-    try (final AS4ResourceHelper aResHelper = new AS4ResourceHelper ())
+    try
     {
-      final AS4ClientUserMessage aClient = new AS4ClientUserMessage (aResHelper);
-      aClient.setSoapVersion (ESoapVersion.SOAP_12);
-      aClient.setAS4CryptoFactory (aCF);
+      final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
+      final X509Certificate aTheirCert = aRoutingInfo.getCertificate ();
 
-      aClient.signingParams ()
-             .setAlgorithmSign (ECryptoAlgorithmSign.RSA_SHA_256)
-             .setAlgorithmSignDigest (ECryptoAlgorithmSignDigest.DIGEST_SHA_256);
+      // See :
+      // http://wiki.ds.unipi.gr/display/TOOP/Routing+Information+Profile
+      // http://wiki.ds.unipi.gr/display/CCTF/TOOP+AS4+GW+Interface+specification
+      final Builder aBuilder = Phase4CEFSender.builder ()
+                                              .setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
+                                              .setCryptoFactory (aCF)
+                                              .setSenderParticipantID (aRoutingInfo.getSenderID ())
+                                              .setReceiverParticipantID (aRoutingInfo.getReceiverID ())
+                                              .setDocumentTypeID (aRoutingInfo.getDocumentTypeID ())
+                                              .setProcessID (aRoutingInfo.getProcessID ())
+                                              .setConversationID (MessageHelperMethods.createRandomConversationID ())
+                                              .setFromPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
+                                                                                                Phase4Config.getFromPartyID ()))
+                                              .setFromRole ("http://www.toop.eu/edelivery/gateway")
+                                              .setToPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
+                                                                                              PeppolCertificateHelper.getCN (aTheirCert.getSubjectDN ()
+                                                                                                                                       .getName ())))
+                                              .setToRole ("http://www.toop.eu/edelivery/gateway")
+                                              .setRawResponseConsumer (new RawResponseWriter ())
+                                              .setEndpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
+                                                                                                                       aRoutingInfo.getEndpointURL ()));
 
-      aClient.setAction ("RequestDocuments");
-      aClient.setServiceType (null);
-      aClient.setServiceValue ("TOOPDataProvisioning");
-      aClient.setConversationID (MessageHelperMethods.createRandomConversationID ());
-      aClient.setAgreementRefValue (null);
-
-      // Backend or gateway?
-      aClient.setFromRole ("http://www.toop.eu/edelivery/backend");
-      aClient.setFromPartyID (Phase4Config.getFromPartyID ());
-      aClient.setToRole ("http://www.toop.eu/edelivery/gateway");
-      aClient.setToPartyID (PeppolCertificateHelper.getCN (aTheirCert.getSubjectDN ().getName ()));
-      aClient.setPayload (null);
-
-      aClient.ebms3Properties ()
-             .setAll (MessageHelperMethods.createEbms3Property (CAS4.ORIGINAL_SENDER,
-                                                                "urn:oasis:names:tc:ebcore:partyid-type:unregistered:dc"),
-                      MessageHelperMethods.createEbms3Property (CAS4.FINAL_RECIPIENT,
-                                                                "urn:oasis:names:tc:ebcore:partyid-type:unregistered:dp"));
-
+      // Payload/attachments
+      int nPayloadIndex = 0;
       for (final MEPayload aPayload : aMessage.payloads ())
       {
-        try
-        {
-          final String sFilename = null;
-          // Compress only text
-          final EAS4CompressionMode eCompressionMode = aPayload.getMimeType ()
-                                                               .getContentType () == EMimeContentType.TEXT ? EAS4CompressionMode.GZIP
-                                                                                                           : null;
-          aClient.addAttachment (WSS4JAttachment.createOutgoingFileAttachment (aPayload.getData ().bytes (),
-                                                                               aPayload.getContentID (),
-                                                                               sFilename,
-                                                                               aPayload.getMimeType (),
-                                                                               eCompressionMode,
-                                                                               aResHelper));
-        }
-        catch (final IOException ex)
-        {
-          throw new MEOutgoingException (EToopErrorCode.ME_001, ex);
-        }
+        // Compress only text
+        final Phase4OutgoingAttachment aOA = Phase4OutgoingAttachment.builder ()
+                                                                     .data (aPayload.getData ())
+                                                                     .contentID (aPayload.getContentID ())
+                                                                     .mimeType (aPayload.getMimeType ())
+                                                                     .compression (aPayload.getMimeType ()
+                                                                                           .getContentType () == EMimeContentType.TEXT ? EAS4CompressionMode.GZIP
+                                                                                                                                       : null)
+                                                                     .build ();
+        if (nPayloadIndex == 0)
+          aBuilder.setPayload (aOA);
+        else
+          aBuilder.addAttachment (aOA);
+        nPayloadIndex++;
       }
 
-      // Enforce the http settings from TOOP
-      aClient.setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()));
-
-      // Main sending
-      final IAS4ClientBuildMessageCallback aCallback = null;
-      final IAS4OutgoingDumper aOutgoingDumper = null;
-      final AS4ClientSentMessage <byte []> aResponseEntity = aClient.sendMessageWithRetries (aRoutingInfo.getEndpointURL (),
-                                                                                             new ResponseHandlerByteArray (),
-                                                                                             aCallback,
-                                                                                             aOutgoingDumper,
-                                                                                             (IAS4RetryCallback) null);
-      if (LOGGER.isInfoEnabled ())
-        LOGGER.info ("[phase4] Successfully transmitted document with message ID '" +
-                     aResponseEntity.getMessageID () +
-                     "' for '" +
-                     aRoutingInfo.getReceiverID ().getURIEncoded () +
-                     "' to '" +
-                     aRoutingInfo.getEndpointURL () +
-                     "' in " +
-                     aSW.stopAndGetMillis () +
-                     " ms");
-
-      if (aResponseEntity.hasResponse () && aResponseEntity.getResponse ().length > 0)
+      if (aBuilder.sendMessage ().isSuccess ())
       {
-        final String sFolderName = Phase4Config.getSendResponseFolderName ();
-        if (StringHelper.hasText (sFolderName))
-        {
-          final String sMessageID = aResponseEntity.getMessageID ();
-          final String sFilename = PDTIOHelper.getCurrentLocalDateTimeForFilename () +
-                                   "-" +
-                                   FilenameHelper.getAsSecureValidASCIIFilename (sMessageID) +
-                                   "-response.xml";
-          final File aResponseFile = new File (sFolderName, sFilename);
-          if (SimpleFileIO.writeFile (aResponseFile, aResponseEntity.getResponse ()).isSuccess ())
-            LOGGER.info ("[phase4] Response file was written to '" + aResponseFile.getAbsolutePath () + "'");
-          else
-            LOGGER.error ("[phase4] Error writing response file to '" + aResponseFile.getAbsolutePath () + "'");
-        }
+        LOGGER.info ("[phase4] Sucessfully sent message");
       }
       else
-        LOGGER.info ("[phase4] ResponseEntity is empty");
+      {
+        LOGGER.error ("[phase4] Failed to send message");
+      }
     }
-    catch (final Exception ex)
+    catch (final Phase4Exception | InvalidNameException ex)
     {
       LOGGER.error ("[phase4] Error sending message", ex);
       throw new MEOutgoingException (EToopErrorCode.ME_001, ex);

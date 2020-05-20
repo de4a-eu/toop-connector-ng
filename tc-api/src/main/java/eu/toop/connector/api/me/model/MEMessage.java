@@ -39,8 +39,8 @@ public class MEMessage implements Serializable
 
   protected MEMessage (@Nonnull @Nonempty final ICommonsList <MEPayload> aPayloads)
   {
-    ValueEnforcer.notEmptyNoNullValue (aPayloads, "Paayloads");
-    m_aPayloads.addAll ();
+    ValueEnforcer.notEmptyNoNullValue (aPayloads, "Payloads");
+    m_aPayloads.addAll (aPayloads);
   }
 
   /**
