@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.simulator;
+package eu.toop.connector.api.rest;
 
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
 /**
- * Test class for class {@link TCSimulatorJAXB}.
+ * Test class for class {@link TCRestJAXB}.
  *
  * @author Philip Helger
  */
-public final class TCSimulatorJAXBTest
+public final class TCRestJAXBTest
 {
   @Test
   public void testBasic ()
   {
-    assertTrue (TCSimulatorJAXB.XSD_RES.exists ());
+    assertTrue (TCRestJAXB.XSD_RES.exists ());
   }
 }

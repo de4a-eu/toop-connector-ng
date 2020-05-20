@@ -37,16 +37,20 @@ import com.helger.xml.sax.WrappedCollectingSAXErrorHandler;
 import com.helger.xml.serialize.read.DOMReader;
 import com.helger.xml.serialize.read.DOMReaderSettings;
 
-public final class EdmValidator
+import eu.toop.connector.api.validation.IVSValidator;
+
+/**
+ * The default implementation of {@link IVSValidator}
+ * 
+ * @author Philip Helger
+ */
+public class TCValidator implements IVSValidator
 {
   private static final ValidationExecutorSetRegistry VER = new ValidationExecutorSetRegistry ();
   static
   {
-    ToopEdm2Validation.initToopEDM (VER);
+    TCValidationRules.initToopEDM (VER);
   }
-
-  private EdmValidator ()
-  {}
 
   @Nonnull
   public static IValidationExecutorSet getVES (@Nonnull final VESID aVESID)
@@ -57,10 +61,11 @@ public final class EdmValidator
     return aVES;
   }
 
+  public TCValidator ()
+  {}
+
   @Nonnull
-  public static ValidationResultList validate (@Nonnull final VESID aVESID,
-                                               @Nonnull final byte [] aPayload,
-                                               @Nonnull final Locale aDisplayLocale)
+  public ValidationResultList validate (@Nonnull final VESID aVESID, @Nonnull final byte [] aPayload, @Nonnull final Locale aDisplayLocale)
   {
     final ValidationExecutionManager aValidator = getVES (aVESID).createExecutionManager ();
     final ErrorList aXMLErrors = new ErrorList ();

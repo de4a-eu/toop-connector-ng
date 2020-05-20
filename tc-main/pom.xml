@@ -84,10 +84,6 @@
       <groupId>eu.toop</groupId>
       <artifactId>dsd-client</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-bdve</artifactId>
-    </dependency>
 
     <dependency>
       <groupId>javax.servlet</groupId>

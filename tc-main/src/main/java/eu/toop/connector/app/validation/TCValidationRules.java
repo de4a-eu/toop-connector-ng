@@ -45,7 +45,7 @@ import eu.toop.regrep.RegRep4Reader;
  * @author Philip Helger
  */
 @Immutable
-final class ToopEdm2Validation
+final class TCValidationRules
 {
   public static final String GROUP_ID = "eu.toop";
 
@@ -53,13 +53,13 @@ final class ToopEdm2Validation
   public static final VESID VID_TOOP_EDM_RESPONSE_200 = new VESID (GROUP_ID, "edm-response", "2.0.0");
   public static final VESID VID_TOOP_EDM_ERROR_RESPONSE_200 = new VESID (GROUP_ID, "edm-error-response", "2.0.0");
 
-  private ToopEdm2Validation ()
+  private TCValidationRules ()
   {}
 
   @Nonnull
   private static ClassLoader _getCL ()
   {
-    return ToopEdm2Validation.class.getClassLoader ();
+    return TCValidationRules.class.getClassLoader ();
   }
 
   @Nonnull

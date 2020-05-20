@@ -43,9 +43,9 @@ import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MERoutingInformation;
-import eu.toop.connector.api.shared.TCOutgoingMessage;
-import eu.toop.connector.api.shared.TCOutgoingPayload;
-import eu.toop.connector.api.shared.TCSharedJAXB;
+import eu.toop.connector.api.rest.TCOutgoingMessage;
+import eu.toop.connector.api.rest.TCOutgoingPayload;
+import eu.toop.connector.api.rest.TCRestJAXB;
 import eu.toop.connector.webapi.APIParamException;
 
 public class ApiPostSend implements IAPIExecutor
@@ -61,7 +61,7 @@ public class ApiPostSend implements IAPIExecutor
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
-    final TCOutgoingMessage aOutgoingMsg = TCSharedJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
+    final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
     if (aOutgoingMsg == null)
       throw new APIParamException ("Failed to interpret the message body as an 'OutgoingMessage'");
 

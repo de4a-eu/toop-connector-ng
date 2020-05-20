@@ -30,7 +30,7 @@ import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.security.certificate.CertificateHelper;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.shared.TCOutgoingMetadata;
+import eu.toop.connector.api.rest.TCOutgoingMetadata;
 
 /**
  * Default implementation of {@link IMERoutingInformation}.

@@ -41,7 +41,8 @@ import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.app.validation.EValidationEdmType;
-import eu.toop.connector.app.validation.EdmValidator;
+import eu.toop.connector.app.validation.TCValidator;
+import eu.toop.connector.webapi.TCAPIConfig;
 
 public class ApiPostValidateEdm implements IAPIExecutor
 {
@@ -70,7 +71,8 @@ public class ApiPostValidateEdm implements IAPIExecutor
 
     LOGGER.info ("API validating " + aPayload.length + " bytes using '" + aVESID.getAsSingleID () + "'");
 
-    final ValidationResultList aValidationResultList = EdmValidator.validate (aVESID, aPayload, aDisplayLocale);
+    // Main validation
+    final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ().validate (aVESID, aPayload, aDisplayLocale);
 
     aSW.stop ();
 
@@ -79,7 +81,7 @@ public class ApiPostValidateEdm implements IAPIExecutor
     // Build response
     final IJsonObject aJson = new JsonObject ();
     BDVEJsonHelper.applyValidationResultList (aJson,
-                                              EdmValidator.getVES (aVESID),
+                                              TCValidator.getVES (aVESID),
                                               aValidationResultList,
                                               aDisplayLocale,
                                               aSW.getMillis (),

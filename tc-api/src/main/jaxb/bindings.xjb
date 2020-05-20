@@ -23,9 +23,9 @@
           xmlns="http://java.sun.com/xml/ns/jaxb">
   <globalBindings typesafeEnumMaxMembers="2000" typesafeEnumMemberName="generateError">
   </globalBindings>
-  <bindings schemaLocation="../resources/schemas/tc-shared.xsd" node="/xs:schema">
+  <bindings schemaLocation="../resources/schemas/tc-rest.xsd" node="/xs:schema">
     <schemaBindings>
-      <package name="eu.toop.connector.api.shared" />
+      <package name="eu.toop.connector.api.rest" />
     </schemaBindings>
   </bindings>
   <bindings schemaLocation="../resources/schemas/tc-simulator.xsd" node="/xs:schema">

@@ -13,29 +13,33 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.dd;
+package eu.toop.connector.api.validation;
+
+import java.util.Locale;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
-import com.helger.peppolid.IDocumentTypeIdentifier;
-import com.helger.peppolid.IParticipantIdentifier;
-import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
+import com.helger.bdve.executorset.VESID;
+import com.helger.bdve.result.ValidationResultList;
 
 /**
- * Helper interface to be used by the REST API.
+ * TC Validation Service
  *
  * @author Philip Helger
  */
-public interface IDDServiceMetadataProvider
+public interface IVSValidator
 {
   /**
-   * @param aParticipantID
-   *        Participant ID to query. May not be <code>null</code>.
-   * @param aDocTypeID
-   *        Document type ID. May not be <code>null</code>.
-   * @return <code>null</code> if not found.
+   * Perform validation
+   * 
+   * @param aVESID
+   *        VESID to use.
+   * @param aPayload
+   *        Payload to validate.
+   * @param aDisplayLocale
+   *        Display locale for the error message.
+   * @return A non-<code>null</code> result list.
    */
-  @Nullable
-  ServiceMetadataType getServiceMetadata (@Nonnull IParticipantIdentifier aParticipantID, @Nonnull IDocumentTypeIdentifier aDocTypeID);
+  @Nonnull
+  ValidationResultList validate (@Nonnull final VESID aVESID, @Nonnull final byte [] aPayload, @Nonnull final Locale aDisplayLocale);
 }

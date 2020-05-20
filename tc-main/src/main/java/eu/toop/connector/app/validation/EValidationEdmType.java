@@ -20,11 +20,16 @@ import javax.annotation.Nonnull;
 import com.helger.bdve.executorset.VESID;
 import com.helger.commons.annotation.Nonempty;
 
+/**
+ * Contains the different top-level document types.
+ *
+ * @author Philip Helger
+ */
 public enum EValidationEdmType
 {
-  REQUEST ("req", ToopEdm2Validation.VID_TOOP_EDM_REQUEST_200),
-  RESPONSE ("resp", ToopEdm2Validation.VID_TOOP_EDM_RESPONSE_200),
-  ERROR_RESPONSE ("errresp", ToopEdm2Validation.VID_TOOP_EDM_ERROR_RESPONSE_200);
+  REQUEST ("req", TCValidationRules.VID_TOOP_EDM_REQUEST_200),
+  RESPONSE ("resp", TCValidationRules.VID_TOOP_EDM_RESPONSE_200),
+  ERROR_RESPONSE ("errresp", TCValidationRules.VID_TOOP_EDM_ERROR_RESPONSE_200);
 
   private final String m_sID;
   private final VESID m_aVESID;
@@ -42,6 +47,9 @@ public enum EValidationEdmType
     return m_sID;
   }
 
+  /**
+   * @return The validation key to be used for validating this top-level type.
+   */
   @Nonnull
   public VESID getVESID ()
   {

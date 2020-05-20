@@ -24,9 +24,11 @@ import com.helger.commons.concurrent.SimpleReadWriteLock;
 import eu.toop.connector.api.dd.IDDServiceGroupHrefProvider;
 import eu.toop.connector.api.dd.IDDServiceMetadataProvider;
 import eu.toop.connector.api.dsd.IDSDParticipantIDProvider;
+import eu.toop.connector.api.validation.IVSValidator;
 import eu.toop.connector.app.dd.DDServiceGroupHrefProviderSMP;
 import eu.toop.connector.app.dd.DDServiceMetadataProviderSMP;
 import eu.toop.connector.app.dsd.DSDParticipantIDProviderRemote;
+import eu.toop.connector.app.validation.TCValidator;
 
 /**
  * Global TOOP Connector NG API configuration.<br>
@@ -43,7 +45,10 @@ public final class TCAPIConfig
   private static IDSDParticipantIDProvider s_aDSDPartyIDProvider = new DSDParticipantIDProviderRemote ();
   @GuardedBy ("s_aRWLock")
   private static IDDServiceGroupHrefProvider s_aDDSGHrefProvider = new DDServiceGroupHrefProviderSMP ();
+  @GuardedBy ("s_aRWLock")
   private static IDDServiceMetadataProvider s_aDDSMProvider = new DDServiceMetadataProviderSMP ();
+  @GuardedBy ("s_aRWLock")
+  private static IVSValidator s_aValidator = new TCValidator ();
 
   private TCAPIConfig ()
   {}
@@ -66,7 +71,7 @@ public final class TCAPIConfig
     return s_aRWLock.readLockedGet ( () -> s_aDDSGHrefProvider);
   }
 
-  public static void gstDDServiceGroupHrefProvider (@Nonnull final IDDServiceGroupHrefProvider aDDSGHrefProvider)
+  public static void setDDServiceGroupHrefProvider (@Nonnull final IDDServiceGroupHrefProvider aDDSGHrefProvider)
   {
     ValueEnforcer.notNull (aDDSGHrefProvider, "DDServiceGroupHrefProvider");
     s_aRWLock.writeLockedGet ( () -> s_aDDSGHrefProvider = aDDSGHrefProvider);
@@ -78,9 +83,21 @@ public final class TCAPIConfig
     return s_aRWLock.readLockedGet ( () -> s_aDDSMProvider);
   }
 
-  public static void gstDDServiceMetadataProvider (@Nonnull final IDDServiceMetadataProvider aDDSMProvider)
+  public static void setDDServiceMetadataProvider (@Nonnull final IDDServiceMetadataProvider aDDSMProvider)
   {
     ValueEnforcer.notNull (aDDSMProvider, "DDServiceMetadataProvider");
     s_aRWLock.writeLockedGet ( () -> s_aDDSMProvider = aDDSMProvider);
+  }
+
+  @Nonnull
+  public static IVSValidator getVSValidator ()
+  {
+    return s_aRWLock.readLockedGet ( () -> s_aValidator);
+  }
+
+  public static void setVSValidator (@Nonnull final IVSValidator aValidator)
+  {
+    ValueEnforcer.notNull (aValidator, "VSValidator");
+    s_aRWLock.writeLockedGet ( () -> s_aValidator = aValidator);
   }
 }
