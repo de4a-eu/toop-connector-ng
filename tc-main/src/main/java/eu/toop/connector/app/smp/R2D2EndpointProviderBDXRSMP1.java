@@ -31,7 +31,6 @@
 package eu.toop.connector.app.smp;
 
 import java.security.cert.CertificateException;
-import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
@@ -42,17 +41,13 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.error.level.EErrorLevel;
-import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
 import com.helger.peppolid.simple.process.SimpleProcessIdentifier;
-import com.helger.security.certificate.CertificateHelper;
-import com.helger.smpclient.bdxr1.BDXRClient;
 import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
-import com.helger.smpclient.bdxr1.IBDXRServiceMetadataProvider;
 import com.helger.smpclient.exception.SMPClientException;
 import com.helger.smpclient.url.BDXLURLProvider;
 import com.helger.smpclient.url.PeppolDNSResolutionException;
@@ -82,6 +77,18 @@ public class R2D2EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
   public R2D2EndpointProviderBDXRSMP1 ()
   {}
 
+  @Nonnull
+  public static BDXRClientReadOnly getSMPClient (@Nonnull final IParticipantIdentifier aRecipientID) throws PeppolDNSResolutionException
+  {
+    if (TCConfig.R2D2.isR2D2UseDNS ())
+    {
+      // Use dynamic lookup via DNS - can throw exception
+      return new BDXRClientReadOnly (BDXLURLProvider.INSTANCE, aRecipientID, TCConfig.R2D2.getR2D2SML ());
+    }
+    // Use a constant SMP URL
+    return new BDXRClientReadOnly (TCConfig.R2D2.getR2D2SMPUrl ());
+  }
+
   @Nullable
   public ISMPEndpoint getEndpoint (@Nonnull final String sLogPrefix,
                                    @Nonnull final IParticipantIdentifier aRecipientID,
@@ -110,17 +117,7 @@ public class R2D2EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
 
     try
     {
-      final IBDXRServiceMetadataProvider aSMPClient;
-      if (TCConfig.R2D2.isR2D2UseDNS ())
-      {
-        // Use dynamic lookup via DNS - can throw exception
-        aSMPClient = new BDXRClient (BDXLURLProvider.INSTANCE, aRecipientID, TCConfig.R2D2.getR2D2SML ());
-      }
-      else
-      {
-        // Use a constant SMP URL
-        aSMPClient = new BDXRClient (TCConfig.R2D2.getR2D2SMPUrl ());
-      }
+      final BDXRClientReadOnly aSMPClient = getSMPClient (aRecipientID);
 
       // Query SMP
       final SignedServiceMetadataType aSG = aSMPClient.getServiceMetadataOrNull (aRecipientID, aDocumentTypeID);
@@ -138,14 +135,7 @@ public class R2D2EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
             if (sTransportProfileID.equals (aEP.getTransportProfile ()))
             {
               // Convert String to X509Certificate
-              X509Certificate aCert;
-              if (true)
-              {
-                final CertificateFactory aCertificateFactory = CertificateHelper.getX509CertificateFactory ();
-                aCert = (X509Certificate) aCertificateFactory.generateCertificate (new NonBlockingByteArrayInputStream (aEP.getCertificate ()));
-              }
-              else
-                aCert = BDXRClientReadOnly.getEndpointCertificate (aEP);
+              final X509Certificate aCert = BDXRClientReadOnly.getEndpointCertificate (aEP);
 
               if (StringHelper.hasNoText (aEP.getEndpointURI ()))
               {

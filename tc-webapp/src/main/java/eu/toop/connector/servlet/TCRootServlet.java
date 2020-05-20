@@ -86,8 +86,14 @@ public class TCRootServlet extends HttpServlet
     // APIs
     {
       aSB.append ("<h2>API information</h2>");
+
+      aSB.append ("<h3>DSD</h3>");
       aSB.append ("<div>/dsd/dp - <a href='/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE' target='_blank'>test me</a></div>");
       aSB.append ("<div>/dsd/dp/by-country - <a href='/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE/by-country/SV' target='_blank'>test me</a></div>");
+
+      aSB.append ("<h3>SMP</h3>");
+      aSB.append ("<div>/smp/doctypes - <a href='/api/smp/doctypes/iso6523-actorid-upis%3A%3A9915%3Atooptest' target='_blank'>test me</a></div>");
+      aSB.append ("<div>/smp/endpoints - <a href='/api/smp/endpoints/iso6523-actorid-upis%3A%3A9915%3Atooptest/toop-doctypeid-qns%3A%3Aurn%3Aeu%3Atoop%3Ans%3Adataexchange-1p40%3A%3ARequest%23%23urn%3Aeu.toop.request.registeredorganization%3A%3A1.40' target='_blank'>test me</a></div>");
     }
 
     aSB.append ("</body></html>");

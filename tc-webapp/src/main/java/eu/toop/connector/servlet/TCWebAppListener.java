@@ -22,8 +22,10 @@ import com.helger.photon.api.APIPath;
 import com.helger.photon.api.IAPIRegistry;
 import com.helger.photon.core.servlet.WebAppListener;
 
-import eu.toop.connector.api.ApiGetDsdDp;
-import eu.toop.connector.api.ApiGetDsdDpByCountry;
+import eu.toop.connector.api.dsd.ApiGetDsdDp;
+import eu.toop.connector.api.dsd.ApiGetDsdDpByCountry;
+import eu.toop.connector.api.smp.ApiGetSmpDocTypes;
+import eu.toop.connector.api.smp.ApiGetSmpEndpoints;
 import eu.toop.connector.app.TCInit;
 
 public class TCWebAppListener extends WebAppListener
@@ -37,8 +39,13 @@ public class TCWebAppListener extends WebAppListener
   @Override
   protected void initAPI (final IAPIRegistry aAPIRegistry)
   {
+    // DSD stuff
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}"), ApiGetDsdDp.class));
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}/by-country/{country}"), ApiGetDsdDpByCountry.class));
+
+    // SMP stuff
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/doctypes/{pid}"), ApiGetSmpDocTypes.class));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/endpoints/{pid}/{doctypeid}"), ApiGetSmpEndpoints.class));
   }
 
   @Override

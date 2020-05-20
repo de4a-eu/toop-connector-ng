@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api;
+package eu.toop.connector.api.smp;
 
 import java.security.cert.X509Certificate;
 import java.time.LocalDateTime;
@@ -29,6 +29,7 @@ import javax.naming.ldap.LdapName;
 import javax.naming.ldap.Rdn;
 import javax.security.auth.x500.X500Principal;
 
+import com.helger.commons.base64.Base64;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.datetime.util.PDTXMLConverter;
 import com.helger.json.IJsonArray;
@@ -46,45 +47,45 @@ import com.helger.smpclient.bdxr1.utils.BDXR1ExtensionConverter;
 @Immutable
 public final class SMPJsonResponse
 {
-  private static final String JSON_SMPTYPE = "smptype";
-  private static final String JSON_PARTICIPANT_ID = "participantID";
-  private static final String JSON_HREF = "href";
-  private static final String JSON_DOCUMENT_TYPE_ID = "documentTypeID";
-  private static final String JSON_NICE_NAME = "niceName";
-  private static final String JSON_IS_DEPRECATED = "isDeprecated";
-  private static final String JSON_ERROR = "error";
-  private static final String JSON_URLS = "urls";
+  public static final String JSON_SMPTYPE = "smptype";
+  public static final String JSON_PARTICIPANT_ID = "participantID";
+  public static final String JSON_HREF = "href";
+  public static final String JSON_DOCUMENT_TYPE_ID = "documentTypeID";
+  @SuppressWarnings ("unused")
+  public static final String JSON_NICE_NAME = "niceName";
+  @SuppressWarnings ("unused")
+  public static final String JSON_IS_DEPRECATED = "isDeprecated";
+  public static final String JSON_ERROR = "error";
+  public static final String JSON_URLS = "urls";
 
-  private static final String JSON_CERTIFICATE_UID = "certificateUID";
-  private static final String JSON_REDIRECT = "redirect";
-  private static final String JSON_PROCESS_ID = "processID";
-  private static final String JSON_TRANSPORT_PROFILE = "transportProfile";
-  private static final String JSON_ENDPOINT_REFERENCE = "endpointReference";
-  private static final String JSON_REQUIRE_BUSINESS_LEVEL_SIGNATURE = "requireBusinessLevelSignature";
-  private static final String JSON_MINIMUM_AUTHENTICATION_LEVEL = "minimumAuthenticationLevel";
-  private static final String JSON_SERVICE_ACTIVATION_DATE = "serviceActivationDate";
-  private static final String JSON_SERVICE_EXPIRATION_DATE = "serviceExpirationDate";
-  private static final String JSON_CERTIFICATE = "certificate";
-  private static final String JSON_CERTIFICATE_DETAILS = "certificateDetails";
-  private static final String JSON_SERVICE_DESCRIPTION = "serviceDescription";
-  private static final String JSON_TECHNICAL_CONTACT_URL = "technicalContactUrl";
-  private static final String JSON_TECHNICAL_INFORMATION_URL = "technicalInformationUrl";
-  private static final String JSON_ENDPOINTS = "endpoints";
-  private static final String JSON_PROCESSES = "processes";
-  private static final String JSON_EXTENSION = "extension";
-  private static final String JSON_SERVICEINFO = "serviceinfo";
+  public static final String JSON_CERTIFICATE_UID = "certificateUID";
+  public static final String JSON_REDIRECT = "redirect";
+  public static final String JSON_PROCESS_ID = "processID";
+  public static final String JSON_TRANSPORT_PROFILE = "transportProfile";
+  public static final String JSON_ENDPOINT_REFERENCE = "endpointReference";
+  public static final String JSON_REQUIRE_BUSINESS_LEVEL_SIGNATURE = "requireBusinessLevelSignature";
+  public static final String JSON_MINIMUM_AUTHENTICATION_LEVEL = "minimumAuthenticationLevel";
+  public static final String JSON_SERVICE_ACTIVATION_DATE = "serviceActivationDate";
+  public static final String JSON_SERVICE_EXPIRATION_DATE = "serviceExpirationDate";
+  public static final String JSON_CERTIFICATE = "certificate";
+  public static final String JSON_CERTIFICATE_DETAILS = "certificateDetails";
+  public static final String JSON_SERVICE_DESCRIPTION = "serviceDescription";
+  public static final String JSON_TECHNICAL_CONTACT_URL = "technicalContactUrl";
+  public static final String JSON_TECHNICAL_INFORMATION_URL = "technicalInformationUrl";
+  public static final String JSON_ENDPOINTS = "endpoints";
+  public static final String JSON_PROCESSES = "processes";
+  public static final String JSON_EXTENSION = "extension";
+  public static final String JSON_SERVICEINFO = "serviceinfo";
 
   private SMPJsonResponse ()
   {}
 
   @Nonnull
-  public static IJsonObject convert (@Nonnull final ESMPAPIType eSMPAPIType,
-                                     @Nonnull final IParticipantIdentifier aParticipantID,
+  public static IJsonObject convert (@Nonnull final IParticipantIdentifier aParticipantID,
                                      @Nonnull final Map <String, String> aSGHrefs,
                                      @Nonnull final IIdentifierFactory aIF)
   {
     final IJsonObject aJson = new JsonObject ();
-    aJson.add (JSON_SMPTYPE, eSMPAPIType.getID ());
     aJson.add (JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
 
     final String sPathStart = "/" + aParticipantID.getURIEncoded () + "/services/";
@@ -214,19 +215,19 @@ public final class SMPJsonResponse
                                         _getLDT (PDTXMLConverter.getLocalDateTime (aEndpoint.getServiceActivationDate ())));
                   aJsonEP.addIfNotNull (JSON_SERVICE_EXPIRATION_DATE,
                                         _getLDT (PDTXMLConverter.getLocalDateTime (aEndpoint.getServiceExpirationDate ())));
-                  _convertCertificate (aJsonEP, new String (aEndpoint.getCertificate (), CertificateHelper.CERT_CHARSET));
+                  _convertCertificate (aJsonEP, Base64.encodeBytes (aEndpoint.getCertificate ()));
                   aJsonEP.add (JSON_SERVICE_DESCRIPTION, aEndpoint.getServiceDescription ())
                          .add (JSON_TECHNICAL_CONTACT_URL, aEndpoint.getTechnicalContactUrl ())
                          .add (JSON_TECHNICAL_INFORMATION_URL, aEndpoint.getTechnicalInformationUrl ())
-                         .add (JSON_EXTENSION, BDXR1ExtensionConverter.convertToJson (aEndpoint.getExtension ()));
+                         .addIfNotNull (JSON_EXTENSION, BDXR1ExtensionConverter.convertToJson (aEndpoint.getExtension ()));
 
                   aJsonEPs.add (aJsonEP);
                 }
               aJsonProc.add (JSON_ENDPOINTS, aJsonEPs)
-                       .add (JSON_EXTENSION, BDXR1ExtensionConverter.convertToJson (aProcess.getExtension ()));
+                       .addIfNotNull (JSON_EXTENSION, BDXR1ExtensionConverter.convertToJson (aProcess.getExtension ()));
               aJsonProcs.add (aJsonProc);
             }
-        aJsonSI.add (JSON_PROCESSES, aJsonProcs).add (JSON_EXTENSION, BDXR1ExtensionConverter.convertToJson (aSI.getExtension ()));
+        aJsonSI.add (JSON_PROCESSES, aJsonProcs).addIfNotNull (JSON_EXTENSION, BDXR1ExtensionConverter.convertToJson (aSI.getExtension ()));
       }
       ret.add (JSON_SERVICEINFO, aJsonSI);
     }
