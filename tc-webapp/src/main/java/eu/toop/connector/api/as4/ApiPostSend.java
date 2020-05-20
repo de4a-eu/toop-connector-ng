@@ -28,6 +28,7 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.mime.CMimeType;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
@@ -40,6 +41,7 @@ import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
 import eu.toop.connector.api.me.MessageExchangeManager;
 import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MERoutingInformation;
 
@@ -61,8 +63,14 @@ public class ApiPostSend implements IAPIExecutor
     final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
 
     final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
+    // TODO
     final IMERoutingInformation aRoutingInfo = new MERoutingInformation (null, null, null, null, null, null, null);
-    final MEMessage aMessage = MEMessage.builder ().build ();
+    final MEMessage aMessage = MEMessage.builder ()
+                                        .addPayload (MEPayload.builder ()
+                                                              .mimeType (CMimeType.APPLICATION_XML)
+                                                              .randomContentID ()
+                                                              .data ((byte []) null))
+                                        .build ();
     aMEM.sendOutgoing (aRoutingInfo, aMessage);
 
     aSW.stop ();

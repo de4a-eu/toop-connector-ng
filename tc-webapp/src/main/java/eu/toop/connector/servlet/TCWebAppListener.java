@@ -27,7 +27,7 @@ import eu.toop.connector.api.dsd.ApiGetDsdDp;
 import eu.toop.connector.api.dsd.ApiGetDsdDpByCountry;
 import eu.toop.connector.api.smp.ApiGetSmpDocTypes;
 import eu.toop.connector.api.smp.ApiGetSmpEndpoints;
-import eu.toop.connector.api.validate.ApiPostValidateEdm;
+import eu.toop.connector.api.validation.ApiPostValidateEdm;
 import eu.toop.connector.app.TCInit;
 import eu.toop.connector.app.validation.EValidationEdmType;
 
