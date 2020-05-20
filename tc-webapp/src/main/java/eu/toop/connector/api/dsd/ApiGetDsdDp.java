@@ -61,6 +61,8 @@ public class ApiGetDsdDp implements IAPIExecutor
                                                                                                                            null,
                                                                                                                            LoggingSMPErrorHandler.INSTANCE);
 
+    aSW.stop ();
+
     final IJsonObject aJson = new JsonObject ();
     final JsonArray aList = new JsonArray ();
     for (final IParticipantIdentifier aPI : aParticipants)
