@@ -17,7 +17,6 @@ package eu.toop.connector.webapi.as4;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -27,8 +26,8 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.io.stream.StreamHelper;
-import com.helger.commons.mime.CMimeType;
+import com.helger.commons.mime.MimeTypeParser;
+import com.helger.commons.string.StringHelper;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
@@ -44,6 +43,10 @@ import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MERoutingInformation;
+import eu.toop.connector.api.shared.TCOutgoingMessage;
+import eu.toop.connector.api.shared.TCOutgoingPayload;
+import eu.toop.connector.api.shared.TCSharedJAXB;
+import eu.toop.connector.webapi.APIParamException;
 
 public class ApiPostSend implements IAPIExecutor
 {
@@ -55,25 +58,28 @@ public class ApiPostSend implements IAPIExecutor
                          @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
                          @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
   {
-    final Locale aDisplayLocale = Locale.UK;
-
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
-    final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
+    final TCOutgoingMessage aOutgoingMsg = TCSharedJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
+    if (aOutgoingMsg == null)
+      throw new APIParamException ("Failed to interpret the message body as an 'OutgoingMessage'");
 
     final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
-    // TODO
-    final IMERoutingInformation aRoutingInfo = new MERoutingInformation (null, null, null, null, null, null, null);
-    final String sContentID = MEPayload.createRandomContentID ();
-    final byte [] aData = null;
-    final MEMessage aMessage = MEMessage.builder ()
-                                        .addPayload (MEPayload.builder ()
-                                                              .mimeType (CMimeType.APPLICATION_XML)
-                                                              .contentID (sContentID)
-                                                              .data (aData))
-                                        .build ();
-    aMEM.sendOutgoing (aRoutingInfo, aMessage);
+
+    // Convert metadata
+    final IMERoutingInformation aRoutingInfo = MERoutingInformation.createFrom (aOutgoingMsg.getMetadata ());
+
+    // Add payloads
+    final MEMessage.Builder aMessage = MEMessage.builder ();
+    for (final TCOutgoingPayload aPayload : aOutgoingMsg.getPayload ())
+    {
+      aMessage.addPayload (MEPayload.builder ()
+                                    .mimeType (MimeTypeParser.parseMimeType (aPayload.getMimeType ()))
+                                    .contentID (StringHelper.getNotEmpty (aPayload.getContentID (), MEPayload.createRandomContentID ()))
+                                    .data (aPayload.getValue ()));
+    }
+    aMEM.sendOutgoing (aRoutingInfo, aMessage.build ());
 
     aSW.stop ();
 

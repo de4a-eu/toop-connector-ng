@@ -15,6 +15,7 @@
  */
 package eu.toop.connector.api.me.outgoing;
 
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 
 import javax.annotation.Nonnull;
@@ -25,6 +26,11 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
+import com.helger.peppolid.factory.IIdentifierFactory;
+import com.helger.security.certificate.CertificateHelper;
+
+import eu.toop.connector.api.TCConfig;
+import eu.toop.connector.api.shared.TCOutgoingMetadata;
 
 /**
  * Default implementation of {@link IMERoutingInformation}.
@@ -121,5 +127,23 @@ public class MERoutingInformation implements IMERoutingInformation
                                        .append ("EndpointURL", m_sEndpointURL)
                                        .append ("Cert", m_aCert)
                                        .getToString ();
+  }
+
+  @Nonnull
+  public static IMERoutingInformation createFrom (@Nonnull final TCOutgoingMetadata aMetadata) throws CertificateException
+  {
+    ValueEnforcer.notNull (aMetadata, "Metadata");
+    final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
+    return new MERoutingInformation (aIF.createParticipantIdentifier (aMetadata.getSenderID ().getScheme (),
+                                                                      aMetadata.getSenderID ().getValue ()),
+                                     aIF.createParticipantIdentifier (aMetadata.getReceiverID ().getScheme (),
+                                                                      aMetadata.getReceiverID ().getValue ()),
+                                     aIF.createDocumentTypeIdentifier (aMetadata.getDocTypeID ().getScheme (),
+                                                                       aMetadata.getDocTypeID ().getValue ()),
+                                     aIF.createProcessIdentifier (aMetadata.getProcessID ().getScheme (),
+                                                                  aMetadata.getProcessID ().getValue ()),
+                                     aMetadata.getTransportProtocol (),
+                                     aMetadata.getEndpointURL (),
+                                     CertificateHelper.convertByteArrayToCertficateDirect (aMetadata.getReceiverCertificate ()));
   }
 }
