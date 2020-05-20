@@ -67,8 +67,8 @@
   
   <xs:complexType name="TCOutgoingMessage">
     <xs:sequence>
-      <xs:element name="metadata" type="TCOutgoingMetadata" />
-      <xs:element name="payload" type="TCOutgoingPayload" maxOccurs="unbounded"/>
+      <xs:element name="Metadata" type="TCOutgoingMetadata" />
+      <xs:element name="Payload" type="TCOutgoingPayload" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
   

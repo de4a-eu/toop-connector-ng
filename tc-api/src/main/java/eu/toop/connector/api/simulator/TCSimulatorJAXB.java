@@ -26,7 +26,7 @@ import com.helger.xsds.bdxr.smp1.CBDXRSMP1;
 
 /**
  * JAXB helper for Simulator classes
- * 
+ *
  * @author Philip Helger
  */
 @Immutable
@@ -34,6 +34,7 @@ public final class TCSimulatorJAXB
 {
   public static final ClassPathResource XSD_RES = new ClassPathResource ("/schemas/tc-simulator.xsd",
                                                                          TCSimulatorJAXB.class.getClassLoader ());
+  public static final String NS_URI = "urn:eu.toop/toop-simulator-ng/2020/05/discovery";
 
   private TCSimulatorJAXB ()
   {}
@@ -50,8 +51,11 @@ public final class TCSimulatorJAXB
   @Nonnull
   public static GenericJAXBMarshaller <CountryAwareServiceMetadataType> countryAwareServiceMetadata ()
   {
-    return new GenericJAXBMarshaller <> (CountryAwareServiceMetadataType.class,
-                                         getAllXSDResources (),
-                                         new ObjectFactory ()::createCountryAwareServiceMetadata);
+    final GenericJAXBMarshaller <CountryAwareServiceMetadataType> ret = new GenericJAXBMarshaller <> (CountryAwareServiceMetadataType.class,
+                                                                                                      getAllXSDResources (),
+                                                                                                      new ObjectFactory ()::createCountryAwareServiceMetadata);
+    ret.setFormattedOutput (true);
+    ret.setNamespaceContext (TCSimulatorNamespaceContext.getInstance ());
+    return ret;
   }
 }

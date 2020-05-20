@@ -23,16 +23,18 @@ import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.jaxb.GenericJAXBMarshaller;
+import com.helger.peppolid.IIdentifier;
 
 /**
- * JAXB helper for shared TC NG classes
+ * JAXB helper for TC NG REST classes
  *
  * @author Philip Helger
  */
 @Immutable
 public final class TCRestJAXB
 {
-  public static final ClassPathResource XSD_RES = new ClassPathResource ("/schemas/tc-shared.xsd", TCRestJAXB.class.getClassLoader ());
+  public static final ClassPathResource XSD_RES = new ClassPathResource ("/schemas/tc-rest.xsd", TCRestJAXB.class.getClassLoader ());
+  public static final String NS_URI = "urn:eu.toop/toop-connector-ng/2020/05/";
 
   private TCRestJAXB ()
   {}
@@ -49,6 +51,26 @@ public final class TCRestJAXB
   @Nonnull
   public static GenericJAXBMarshaller <TCOutgoingMessage> outgoingMessage ()
   {
-    return new GenericJAXBMarshaller <> (TCOutgoingMessage.class, getAllXSDResources (), new ObjectFactory ()::createOutgoingMessage);
+    final GenericJAXBMarshaller <TCOutgoingMessage> ret = new GenericJAXBMarshaller <> (TCOutgoingMessage.class,
+                                                                                        getAllXSDResources (),
+                                                                                        new ObjectFactory ()::createOutgoingMessage);
+    ret.setFormattedOutput (true);
+    ret.setNamespaceContext (TCRestNamespaceContext.getInstance ());
+    return ret;
+  }
+
+  @Nonnull
+  public static TCIdentifierType createTCID (@Nonnull final IIdentifier aID)
+  {
+    return createTCID (aID.getScheme (), aID.getValue ());
+  }
+
+  @Nonnull
+  public static TCIdentifierType createTCID (@Nonnull final String sScheme, @Nonnull final String sValue)
+  {
+    final TCIdentifierType ret = new TCIdentifierType ();
+    ret.setScheme (sScheme);
+    ret.setValue (sValue);
+    return ret;
   }
 }
