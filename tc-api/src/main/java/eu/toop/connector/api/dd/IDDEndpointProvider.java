@@ -57,9 +57,9 @@ public interface IDDEndpointProvider
    */
   @Nullable
   IDDEndpoint getEndpoint (@Nonnull String sLogPrefix,
-                             @Nonnull IParticipantIdentifier aRecipientID,
-                             @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
-                             @Nonnull IProcessIdentifier aProcessID,
-                             @Nonnull @Nonempty String sTransportProfileID,
-                             @Nonnull IDDErrorHandler aErrorHandler);
+                           @Nonnull IParticipantIdentifier aRecipientID,
+                           @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
+                           @Nonnull IProcessIdentifier aProcessID,
+                           @Nonnull @Nonempty String sTransportProfileID,
+                           @Nonnull IDDErrorHandler aErrorHandler);
 }

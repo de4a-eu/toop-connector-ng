@@ -59,6 +59,7 @@ public class ApiGetDsdDpByCountry implements IAPIExecutor
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
+    // Query DSD
     final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
                                                                           .getAllParticipantIDs ("[api /dsd/dp/by-country]",
                                                                                                  sDatasetType,

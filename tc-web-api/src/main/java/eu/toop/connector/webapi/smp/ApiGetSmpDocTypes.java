@@ -70,8 +70,11 @@ public final class ApiGetSmpDocTypes implements IAPIExecutor
     IJsonObject aJson = null;
     try
     {
+      // Query SMP
       final ICommonsSortedMap <String, String> aSGHrefs = TCAPIConfig.getDDServiceGroupHrefProvider ()
                                                                      .getAllServiceGroupHrefs (aParticipantID);
+
+      // Convert to JSON
       aJson = SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ());
     }
     catch (final RuntimeException ex)

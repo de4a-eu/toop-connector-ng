@@ -27,9 +27,9 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
   @Nonnull
   public ICommonsSortedMap <String, String> getAllServiceGroupHrefs (@Nonnull final IParticipantIdentifier aParticipantID)
   {
-    final ICommonsSortedMap <String, String> ret = new CommonsTreeMap <> ();
     try
     {
+      final ICommonsSortedMap <String, String> ret = new CommonsTreeMap <> ();
       final BDXRClientReadOnly aClient = DDEndpointProviderSMP.getSMPClient (aParticipantID);
 
       // Get all HRefs and sort them by decoded URL
@@ -46,11 +46,11 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
             LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
         }
       }
+      return ret;
     }
     catch (final PeppolDNSResolutionException | SMPClientException ex)
     {
       throw new IllegalStateException (ex);
     }
-    return ret;
   }
 }

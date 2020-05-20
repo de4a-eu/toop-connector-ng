@@ -22,8 +22,10 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.concurrent.SimpleReadWriteLock;
 
 import eu.toop.connector.api.dd.IDDServiceGroupHrefProvider;
+import eu.toop.connector.api.dd.IDDServiceMetadataProvider;
 import eu.toop.connector.api.dsd.IDSDParticipantIDProvider;
 import eu.toop.connector.app.dd.DDServiceGroupHrefProviderSMP;
+import eu.toop.connector.app.dd.DDServiceMetadataProviderSMP;
 import eu.toop.connector.app.dsd.DSDParticipantIDProviderRemote;
 
 /**
@@ -39,6 +41,7 @@ public final class TCAPIConfig
   private static IDSDParticipantIDProvider s_aDSDPartyIDProvider = new DSDParticipantIDProviderRemote ();
   @GuardedBy ("s_aRWLock")
   private static IDDServiceGroupHrefProvider s_aDDSGHrefProvider = new DDServiceGroupHrefProviderSMP ();
+  private static IDDServiceMetadataProvider s_aDDSMProvider = new DDServiceMetadataProviderSMP ();
 
   private TCAPIConfig ()
   {}
@@ -65,5 +68,17 @@ public final class TCAPIConfig
   {
     ValueEnforcer.notNull (aDDSGHrefProvider, "DDServiceGroupHrefProvider");
     s_aRWLock.writeLockedGet ( () -> s_aDDSGHrefProvider = aDDSGHrefProvider);
+  }
+
+  @Nonnull
+  public static IDDServiceMetadataProvider getDDServiceMetadataProvider ()
+  {
+    return s_aRWLock.readLockedGet ( () -> s_aDDSMProvider);
+  }
+
+  public static void gstDDServiceMetadataProvider (@Nonnull final IDDServiceMetadataProvider aDDSMProvider)
+  {
+    ValueEnforcer.notNull (aDDSMProvider, "DDServiceMetadataProvider");
+    s_aRWLock.writeLockedGet ( () -> s_aDDSMProvider = aDDSMProvider);
   }
 }

@@ -15,7 +15,6 @@
  */
 package eu.toop.connector.api;
 
-import java.io.File;
 import java.net.URI;
 
 import javax.annotation.CheckForSigned;
@@ -24,14 +23,10 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.concurrent.SimpleReadWriteLock;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.id.factory.GlobalIDFactory;
-import com.helger.commons.string.StringHelper;
 import com.helger.commons.url.URLHelper;
 import com.helger.config.ConfigFactory;
 import com.helger.config.IConfig;
@@ -50,7 +45,6 @@ import eu.toop.connector.api.me.EMEProtocol;
 @ThreadSafe
 public final class TCConfig
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (TCConfig.class);
   private static final SimpleReadWriteLock s_aRWLock = new SimpleReadWriteLock ();
 
   @GuardedBy ("s_aRWLock")
@@ -287,226 +281,6 @@ public final class TCConfig
     public static long getGatewayNotificationWaitTimeout ()
     {
       return getConfig ().getAsLong ("toop.mem.as4.notificationWaitTimeout", 20000);
-    }
-  }
-
-  public static class MP
-  {
-    @GuardedBy ("s_aRWLock")
-    private static String s_sMPToopInterfaceDPOverrideUrl;
-    @GuardedBy ("s_aRWLock")
-    private static String s_sMPToopInterfaceDCOverrideUrl;
-
-    private MP ()
-    {}
-
-    /**
-     * @return <code>true</code> if Schematron validation is enabled,
-     *         <code>false</code> if not. Default is true.
-     */
-    public static boolean isMPSchematronValidationEnabled ()
-    {
-      return getConfig ().getAsBoolean ("toop.mp.schematron.enabled", true);
-    }
-
-    /**
-     * Override the toop-interface DP URL with the custom URL. This URL has
-     * precedence over the value in the configuration file.
-     *
-     * @param sMPToopInterfaceDPOverrideUrl
-     *        The new override URL to set. May be <code>null</code>.
-     */
-    public static void setMPToopInterfaceDPOverrideUrl (@Nullable final String sMPToopInterfaceDPOverrideUrl)
-    {
-      if (LOGGER.isWarnEnabled ())
-        LOGGER.warn ("Overriding the MP Toop Interface DP URL with '" + sMPToopInterfaceDPOverrideUrl + "'");
-      s_aRWLock.writeLockedGet ( () -> s_sMPToopInterfaceDPOverrideUrl = sMPToopInterfaceDPOverrideUrl);
-    }
-
-    /**
-     * @return The override URL for the toop-interface DP side. May be
-     *         <code>null</code>. Default is <code>null</code>.
-     */
-    @Nullable
-    public static String getMPToopInterfaceDPOverrideUrl ()
-    {
-      return s_aRWLock.readLockedGet ( () -> s_sMPToopInterfaceDPOverrideUrl);
-    }
-
-    /**
-     * @return The URL of the DP backend for steps 2/4 and 3/4. May be
-     *         <code>null</code>.
-     * @see #getMPToopInterfaceDPOverrideUrl()
-     * @see #setMPToopInterfaceDPOverrideUrl(String)
-     */
-    @Nullable
-    public static String getMPToopInterfaceDPUrl ()
-    {
-      String ret = getMPToopInterfaceDPOverrideUrl ();
-      if (StringHelper.hasNoText (ret))
-        ret = getConfig ().getAsString ("toop.mp.dp.url");
-      return ret;
-    }
-
-    /**
-     * Override the toop-interface DC URL with the custom URL. This URL has
-     * precedence over the value in the configuration file.
-     *
-     * @param sMPToopInterfaceDCOverrideUrl
-     *        The new override URL to set. May be <code>null</code>.
-     */
-    public static void setMPToopInterfaceDCOverrideUrl (@Nullable final String sMPToopInterfaceDCOverrideUrl)
-    {
-      if (LOGGER.isWarnEnabled ())
-        LOGGER.warn ("Overriding the MP Toop Interface DC URL with '" + sMPToopInterfaceDCOverrideUrl + "'");
-      s_aRWLock.writeLockedGet ( () -> s_sMPToopInterfaceDCOverrideUrl = sMPToopInterfaceDCOverrideUrl);
-    }
-
-    /**
-     * @return The override URL for the toop-interface DC side. May be
-     *         <code>null</code>. Default is <code>null</code>.
-     */
-    @Nullable
-    public static String getMPToopInterfaceDCOverrideUrl ()
-    {
-      return s_aRWLock.readLockedGet ( () -> s_sMPToopInterfaceDCOverrideUrl);
-    }
-
-    /**
-     * @return The URL of the DC backend for step 4/4. May be <code>null</code>.
-     * @see #getMPToopInterfaceDCOverrideUrl()
-     * @see #setMPToopInterfaceDCOverrideUrl(String)
-     */
-    @Nullable
-    public static String getMPToopInterfaceDCUrl ()
-    {
-      String ret = getMPToopInterfaceDCOverrideUrl ();
-      if (StringHelper.hasNoText (ret))
-        ret = getConfig ().getAsString ("toop.mp.dc.url");
-      return ret;
-    }
-
-    /**
-     * @return The value of automatically created responses element
-     *         <code>RoutingInformation/DataProviderElectronicAddressIdentifier</code>
-     */
-    @Nonnull
-    public static String getMPAutoResponseDPAddressID ()
-    {
-      return getConfig ().getAsString ("toop.mp.autoresponse.dpaddressid", "error@toop-connector.toop.eu");
-    }
-
-    /**
-     * @return The ID scheme for the DP in case of automatic responses
-     */
-    @Nonnull
-    public static String getMPAutoResponseDPIDScheme ()
-    {
-      return getConfig ().getAsString ("toop.mp.autoresponse.dpidscheme");
-    }
-
-    /**
-     * @return The ID value for the DP in case of automatic responses
-     */
-    @Nonnull
-    public static String getMPAutoResponseDPIDValue ()
-    {
-      return getConfig ().getAsString ("toop.mp.autoresponse.dpidvalue");
-    }
-
-    /**
-     * @return The name for the DP in case of automatic responses
-     */
-    @Nonnull
-    public static String getMPAutoResponseDPName ()
-    {
-      return getConfig ().getAsString ("toop.mp.autoresponse.dpname", "Error@ToopConnector");
-    }
-  }
-
-  public static class Debug
-  {
-    private Debug ()
-    {}
-
-    // Servlet "/from-dc", step 1/4:
-
-    public static boolean isDebugFromDCDumpEnabled ()
-    {
-      return getConfig ().getAsBoolean ("toop.debug.from-dc.dump.enabled", false);
-    }
-
-    @Nullable
-    public static File getDebugFromDCDumpPath ()
-    {
-      final String sPath = getConfig ().getAsString ("toop.debug.from-dc.dump.path");
-      return sPath == null ? null : new File (sPath);
-    }
-
-    @Nullable
-    public static File getDebugFromDCDumpPathIfEnabled ()
-    {
-      return isDebugFromDCDumpEnabled () ? getDebugFromDCDumpPath () : null;
-    }
-
-    // Servlet "/from-dp", step 3/4:
-
-    public static boolean isDebugFromDPDumpEnabled ()
-    {
-      return getConfig ().getAsBoolean ("toop.debug.from-dp.dump.enabled", false);
-    }
-
-    @Nullable
-    public static File getDebugFromDPDumpPath ()
-    {
-      final String sPath = getConfig ().getAsString ("toop.debug.from-dp.dump.path");
-      return sPath == null ? null : new File (sPath);
-    }
-
-    @Nullable
-    public static File getDebugFromDPDumpPathIfEnabled ()
-    {
-      return isDebugFromDPDumpEnabled () ? getDebugFromDPDumpPath () : null;
-    }
-
-    // MessageProcessorDPOutgoingPerformer, step 3/4
-
-    public static boolean isDebugToDCDumpEnabled ()
-    {
-      return getConfig ().getAsBoolean ("toop.debug.to-dc.dump.enabled", false);
-    }
-
-    @Nullable
-    public static File getDebugToDCDumpPath ()
-    {
-      final String sPath = getConfig ().getAsString ("toop.debug.to-dc.dump.path");
-      return sPath == null ? null : new File (sPath);
-    }
-
-    @Nullable
-    public static File getDebugToDCDumpPathIfEnabled ()
-    {
-      return isDebugToDCDumpEnabled () ? getDebugToDCDumpPath () : null;
-    }
-
-    // MessageProcessorDCOutgoingPerformer, step 1/4
-
-    public static boolean isDebugToDPDumpEnabled ()
-    {
-      return getConfig ().getAsBoolean ("toop.debug.to-dp.dump.enabled", false);
-    }
-
-    @Nullable
-    public static File getDebugToDPDumpPath ()
-    {
-      final String sPath = getConfig ().getAsString ("toop.debug.to-dp.dump.path");
-      return sPath == null ? null : new File (sPath);
-    }
-
-    @Nullable
-    public static File getDebugToDPDumpPathIfEnabled ()
-    {
-      return isDebugToDPDumpEnabled () ? getDebugToDPDumpPath () : null;
     }
   }
 

@@ -25,6 +25,7 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.datetime.PDTFactory;
@@ -32,6 +33,7 @@ import com.helger.commons.http.CHttp;
 import com.helger.commons.mime.CMimeType;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
+import com.helger.json.JsonObject;
 import com.helger.json.serialize.JsonWriter;
 import com.helger.json.serialize.JsonWriterSettings;
 import com.helger.peppolid.IDocumentTypeIdentifier;
@@ -39,14 +41,12 @@ import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.api.IAPIExecutor;
 import com.helger.servlet.response.UnifiedResponse;
-import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
-import com.helger.xsds.bdxr.smp1.SignedServiceMetadataType;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.app.dd.DDEndpointProviderSMP;
 import eu.toop.connector.webapi.APIParamException;
+import eu.toop.connector.webapi.TCAPIConfig;
 
 public final class ApiGetSmpEndpoints implements IAPIExecutor
 {
@@ -77,14 +77,21 @@ public final class ApiGetSmpEndpoints implements IAPIExecutor
                  aDocTypeID.getURIEncoded () +
                  "'");
 
-    final BDXRClientReadOnly aBDXR1Client = DDEndpointProviderSMP.getSMPClient (aParticipantID);
-
-    final SignedServiceMetadataType aSSM = aBDXR1Client.getServiceMetadataOrNull (aParticipantID, aDocTypeID);
     IJsonObject aJson = null;
-    if (aSSM != null)
+
+    try
     {
-      final ServiceMetadataType aSM = aSSM.getServiceMetadata ();
-      aJson = SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM);
+      // Main query
+      final ServiceMetadataType aSM = TCAPIConfig.getDDServiceMetadataProvider ().getServiceMetadata (aParticipantID, aDocTypeID);
+      if (aSM != null)
+        aJson = SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM);
+    }
+    catch (final RuntimeException ex)
+    {
+      aJson = new JsonObject ();
+      aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
+      aJson.add (SMPJsonResponse.JSON_DOCUMENT_TYPE_ID, aDocTypeID.getURIEncoded ());
+      aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
     }
 
     aSW.stop ();
