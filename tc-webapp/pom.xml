@@ -53,22 +53,7 @@
   <dependencies>
     <dependency>
       <groupId>eu.toop</groupId>
-      <artifactId>tc-main</artifactId>
-    </dependency>
-    <!-- Default MEM module -->
-    <dependency>
-      <groupId>eu.toop</groupId>
-      <artifactId>tc-mem-external</artifactId>
-    </dependency>
-    <!-- ph-as4 MEM module -->
-    <dependency>
-      <groupId>eu.toop</groupId>
-      <artifactId>tc-mem-phase4</artifactId>
-    </dependency>
-    <!-- For the truststore -->
-    <dependency>
-      <groupId>eu.toop</groupId>
-      <artifactId>toop-commons</artifactId>
+      <artifactId>tc-web-api</artifactId>
     </dependency>
 
     <!-- Logging -->

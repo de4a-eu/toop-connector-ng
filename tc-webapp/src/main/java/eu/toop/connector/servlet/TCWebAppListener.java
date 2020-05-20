@@ -15,22 +15,20 @@
  */
 package eu.toop.connector.servlet;
 
+import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 
-import com.helger.photon.api.APIDescriptor;
-import com.helger.photon.api.APIPath;
 import com.helger.photon.api.IAPIRegistry;
 import com.helger.photon.core.servlet.WebAppListener;
 
-import eu.toop.connector.api.as4.ApiPostSend;
-import eu.toop.connector.api.dsd.ApiGetDsdDp;
-import eu.toop.connector.api.dsd.ApiGetDsdDpByCountry;
-import eu.toop.connector.api.smp.ApiGetSmpDocTypes;
-import eu.toop.connector.api.smp.ApiGetSmpEndpoints;
-import eu.toop.connector.api.validation.ApiPostValidateEdm;
 import eu.toop.connector.app.TCInit;
-import eu.toop.connector.app.validation.EValidationEdmType;
+import eu.toop.connector.webapi.TCAPIInit;
 
+/**
+ * Global startup etc. listener.
+ * 
+ * @author Philip Helger
+ */
 public class TCWebAppListener extends WebAppListener
 {
   @Override
@@ -40,25 +38,9 @@ public class TCWebAppListener extends WebAppListener
   }
 
   @Override
-  protected void initAPI (final IAPIRegistry aAPIRegistry)
+  protected void initAPI (@Nonnull final IAPIRegistry aAPIRegistry)
   {
-    // DSD stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}"), ApiGetDsdDp.class));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}/by-country/{country}"), ApiGetDsdDpByCountry.class));
-
-    // SMP stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/doctypes/{pid}"), ApiGetSmpDocTypes.class));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/endpoints/{pid}/{doctypeid}"), ApiGetSmpEndpoints.class));
-
-    // Validation stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/request"), new ApiPostValidateEdm (EValidationEdmType.REQUEST)));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/response"),
-                                                 new ApiPostValidateEdm (EValidationEdmType.RESPONSE)));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/error"),
-                                                 new ApiPostValidateEdm (EValidationEdmType.ERROR_RESPONSE)));
-
-    // AS4 stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/send/{pid}"), ApiPostSend.class));
+    TCAPIInit.initAPI (aAPIRegistry);
   }
 
   @Override

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.smp;
+package eu.toop.connector.webapi.smp;
 
 import java.nio.charset.StandardCharsets;
 import java.time.ZonedDateTime;
@@ -49,9 +49,9 @@ import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 import com.helger.xsds.bdxr.smp1.ServiceGroupType;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataReferenceType;
 
-import eu.toop.connector.api.APIParamException;
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.app.smp.EndpointProviderBDXRSMP1;
+import eu.toop.connector.webapi.APIParamException;
 
 public final class ApiGetSmpDocTypes implements IAPIExecutor
 {

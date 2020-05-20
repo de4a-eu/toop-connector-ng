@@ -39,7 +39,7 @@ import eu.toop.edm.error.EToopErrorCode;
 
 /**
  * This class implements the {@link IDSDParticipantIDProvider} interface using a
- * remote query to TOOP Directory.
+ * remote query to DSD.
  *
  * @author Philip Helger
  */

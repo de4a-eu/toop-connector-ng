@@ -23,11 +23,11 @@
     <artifactId>tc-parent-pom</artifactId>
     <version>2.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>tc-api</artifactId>
+  <artifactId>tc-web-api</artifactId>
   <packaging>bundle</packaging>
-  <name>tc-api</name>
-  <description>Contains the TOOP Connector shared API</description>
-  <url>https://github.com/toop4eu/toop-connector-ng/tc-api</url>
+  <name>tc-web-api</name>
+  <description>Contains the TOOP Connector REST API implementations</description>
+  <url>https://github.com/toop4eu/toop-connector-ng/tc-web-api</url>
   <inceptionYear>2020</inceptionYear>
   
   <licenses>
@@ -54,27 +54,30 @@
   <dependencies>
     <dependency>
       <groupId>com.helger</groupId>
-      <artifactId>ph-commons</artifactId>
+      <artifactId>ph-oton-api</artifactId>
     </dependency>
     <dependency>
       <groupId>eu.toop</groupId>
-      <artifactId>toop-edm</artifactId>
+      <artifactId>tc-api</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-config</artifactId>
+      <groupId>eu.toop</groupId>
+      <artifactId>tc-main</artifactId>
     </dependency>
+    <!-- Default MEM module -->
     <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-httpclient</artifactId>
+      <groupId>eu.toop</groupId>
+      <artifactId>tc-mem-external</artifactId>
     </dependency>
+    <!-- ph-as4 MEM module -->
     <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>peppol-commons</artifactId>
+      <groupId>eu.toop</groupId>
+      <artifactId>tc-mem-phase4</artifactId>
     </dependency>
+    <!-- For the truststore -->
     <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-xsds-bdxr-smp1</artifactId>
+      <groupId>eu.toop</groupId>
+      <artifactId>toop-commons</artifactId>
     </dependency>
     
     <dependency>
@@ -98,11 +101,9 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <configuration>
           <instructions>
-            <Automatic-Module-Name>eu.toop.connector.api</Automatic-Module-Name>
-            <Export-Package>eu.toop.connector.api.*</Export-Package>
+            <Automatic-Module-Name>eu.toop.connector.webapi</Automatic-Module-Name>
+            <Export-Package>eu.toop.connector.webapi.*</Export-Package>
             <Import-Package>!javax.annotation.*,*</Import-Package>
-            <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.processor)",
-osgi.serviceloader; filter:="(osgi.serviceloader=eu.toop.connector.api.as4.IMessageExchangeSPI)"; cardinality:=multiple; resolution:=optional</Require-Capability>
           </instructions>
         </configuration>
       </plugin>

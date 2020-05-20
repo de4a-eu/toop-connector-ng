@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema attributeFormDefault="qualified" 
+           elementFormDefault="qualified" 
+           xmlns:xs="http://www.w3.org/2001/XMLSchema" 
+           targetNamespace="urn:eu.toop/toop-simulator-ng/2020/discovery"
+           xmlns="urn:eu.toop/toop-simulator-ng/2020/discovery">
+  <xs:import namespace="http://docs.oasis-open.org/bdxr/ns/SMP/2016/05" />
+</xs:schema>

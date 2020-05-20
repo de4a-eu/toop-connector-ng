@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.dsd;
+package eu.toop.connector.webapi.dsd;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -36,9 +36,9 @@ import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.api.APIParamException;
 import eu.toop.connector.api.smp.LoggingSMPErrorHandler;
 import eu.toop.connector.app.dsd.DSDParticipantIDProviderRemote;
+import eu.toop.connector.webapi.APIParamException;
 
 public class ApiGetDsdDpByCountry implements IAPIExecutor
 {

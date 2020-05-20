@@ -13,80 +13,63 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.validation;
+package eu.toop.connector.webapi.dsd;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.helger.bdve.executorset.VESID;
-import com.helger.bdve.json.BDVEJsonHelper;
-import com.helger.bdve.result.ValidationResultList;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.io.stream.StreamHelper;
+import com.helger.commons.string.StringHelper;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
+import com.helger.json.JsonArray;
 import com.helger.json.JsonObject;
+import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.api.IAPIExecutor;
 import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.app.validation.EValidationEdmType;
-import eu.toop.connector.app.validation.EdmValidator;
+import eu.toop.connector.api.smp.LoggingSMPErrorHandler;
+import eu.toop.connector.app.dsd.DSDParticipantIDProviderRemote;
+import eu.toop.connector.webapi.APIParamException;
 
-public class ApiPostValidateEdm implements IAPIExecutor
+public class ApiGetDsdDp implements IAPIExecutor
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (ApiPostValidateEdm.class);
-
-  private final EValidationEdmType m_eType;
-
-  public ApiPostValidateEdm (@Nonnull final EValidationEdmType eType)
-  {
-    m_eType = eType;
-  }
-
   public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
                          @Nonnull @Nonempty final String sPath,
                          @Nonnull final Map <String, String> aPathVariables,
                          @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
                          @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
   {
-    final Locale aDisplayLocale = Locale.UK;
+    final String sDatasetType = aPathVariables.get ("dataset");
+    if (StringHelper.hasNoText (sDatasetType))
+      throw new APIParamException ("Missing DatasetType");
 
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
-    final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
-    final VESID aVESID = m_eType.getVESID ();
-
-    LOGGER.info ("API validating " + aPayload.length + " bytes using '" + aVESID.getAsSingleID () + "'");
-
-    final ValidationResultList aValidationResultList = EdmValidator.validate (aVESID, aPayload, aDisplayLocale);
+    final ICommonsSet <IParticipantIdentifier> aParticipants = new DSDParticipantIDProviderRemote ().getAllParticipantIDs ("[api /dsd/dp]",
+                                                                                                                           sDatasetType,
+                                                                                                                           null,
+                                                                                                                           null,
+                                                                                                                           LoggingSMPErrorHandler.INSTANCE);
 
     aSW.stop ();
 
-    LOGGER.info ("API validation finished after " + aSW.getMillis () + " millis");
-
-    // Build response
     final IJsonObject aJson = new JsonObject ();
-    BDVEJsonHelper.applyValidationResultList (aJson,
-                                              EdmValidator.getVES (aVESID),
-                                              aValidationResultList,
-                                              aDisplayLocale,
-                                              aSW.getMillis (),
-                                              null,
-                                              null);
-
-    aJson.add ("validationDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
+    final JsonArray aList = new JsonArray ();
+    for (final IParticipantIdentifier aPI : aParticipants)
+      aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
+    aJson.add ("participants", aList);
+    aJson.add ("queryDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
+    aJson.add ("queryDurationMillis", aSW.getMillis ());
 
     ((PhotonUnifiedResponse) aUnifiedResponse).json (aJson);
   }

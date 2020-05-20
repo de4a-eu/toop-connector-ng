@@ -43,6 +43,7 @@ import com.helger.peppol.utils.PeppolCertificateHelper;
 import com.helger.phase4.CAS4;
 import com.helger.phase4.attachment.EAS4CompressionMode;
 import com.helger.phase4.attachment.WSS4JAttachment;
+import com.helger.phase4.cef.Phase4CEFSender;
 import com.helger.phase4.client.AS4ClientSentMessage;
 import com.helger.phase4.client.AS4ClientUserMessage;
 import com.helger.phase4.client.IAS4ClientBuildMessageCallback;
@@ -159,6 +160,14 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     final StopWatch aSW = StopWatch.createdStarted ();
 
     final X509Certificate aTheirCert = aRoutingInfo.getCertificate ();
+
+    Phase4CEFSender.builder ()
+                   .setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
+                   .setCryptoFactory (aCF)
+                   .setSenderParticipantID (aRoutingInfo.getSenderID ())
+                   .setReceiverParticipantID (aRoutingInfo.getReceiverID ())
+                   .setDocumentTypeID (aRoutingInfo.getDocumentTypeID ())
+                   .setProcessID (aRoutingInfo.getProcessID ());
 
     try (final AS4ResourceHelper aResHelper = new AS4ResourceHelper ())
     {
