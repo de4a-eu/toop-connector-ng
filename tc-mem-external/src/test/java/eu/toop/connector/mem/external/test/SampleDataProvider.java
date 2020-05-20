@@ -69,17 +69,16 @@ public class SampleDataProvider {
   public static GatewayRoutingMetadata createGatewayRoutingMetadata(final EActingSide actingSide,
       final String receivingGWURL) {
     final X509Certificate aCert = readCert(actingSide);
-    return createGatewayRoutingMetadata(actingSide, receivingGWURL, aCert);
+    return createGatewayRoutingMetadata(receivingGWURL, aCert);
   }
 
-  public static GatewayRoutingMetadata createGatewayRoutingMetadata(final EActingSide actingSide,
-      final String targetURL, final X509Certificate targetCert) {
+  public static GatewayRoutingMetadata createGatewayRoutingMetadata(final String targetURL,
+      final X509Certificate targetCert) {
     final GatewayRoutingMetadata metadata = new GatewayRoutingMetadata("iso6523-actorid-upis::0088:123456",
                                                                        EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST.getURIEncoded(),
                                                                        EPredefinedProcessIdentifier.DATAREQUESTRESPONSE.getURIEncoded(),
                                                                        targetURL,
-                                                                       targetCert,
-                                                                       actingSide);
+                                                                       targetCert);
 
     return metadata;
   }

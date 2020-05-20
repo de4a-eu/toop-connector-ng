@@ -37,6 +37,12 @@ import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
+import eu.toop.connector.api.me.IMessageExchangeSPI;
+import eu.toop.connector.api.me.MessageExchangeManager;
+import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
+import eu.toop.connector.api.me.outgoing.MERoutingInformation;
+
 public class ApiPostSend implements IAPIExecutor
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (ApiPostSend.class);
@@ -54,7 +60,10 @@ public class ApiPostSend implements IAPIExecutor
 
     final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
 
-    // TODO
+    final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
+    final IMERoutingInformation aRoutingInfo = new MERoutingInformation (null, null, null, null, null, null, null);
+    final MEMessage aMessage = MEMessage.builder ().build ();
+    aMEM.sendOutgoing (aRoutingInfo, aMessage);
 
     aSW.stop ();
 

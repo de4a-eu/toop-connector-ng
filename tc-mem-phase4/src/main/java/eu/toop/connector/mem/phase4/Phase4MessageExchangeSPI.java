@@ -260,18 +260,9 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     }
   }
 
-  public void sendDCOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
-                              @Nonnull final MEMessage aMessage) throws MEOutgoingException
+  public void sendOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
-    LOGGER.info ("[phase4] sendDCOutgoing");
-    // No difference
-    _sendOutgoing (m_aCF, aRoutingInfo, aMessage);
-  }
-
-  public void sendDPOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
-                              @Nonnull final MEMessage aMessage) throws MEOutgoingException
-  {
-    LOGGER.info ("[phase4] sendDPOutgoing");
+    LOGGER.info ("[phase4] sendOutgoing");
     // No difference
     _sendOutgoing (m_aCF, aRoutingInfo, aMessage);
   }

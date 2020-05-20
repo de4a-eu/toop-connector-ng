@@ -35,7 +35,6 @@ import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
-import eu.toop.connector.mem.external.EActingSide;
 import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;
 import eu.toop.edm.EDMErrorResponse;
@@ -116,25 +115,13 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
     });
   }
 
-  public void sendDCOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
+  public void sendOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
       throws MEOutgoingException {
     final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
                                                                    aRoutingInfo.getDocumentTypeID().getURIEncoded(),
                                                                    aRoutingInfo.getProcessID().getURIEncoded(),
                                                                    aRoutingInfo.getEndpointURL(),
-                                                                   aRoutingInfo.getCertificate(),
-                                                                   EActingSide.DC);
-    MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
-  }
-
-  public void sendDPOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
-      throws MEOutgoingException {
-    final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
-                                                                   aRoutingInfo.getDocumentTypeID().getURIEncoded(),
-                                                                   aRoutingInfo.getProcessID().getURIEncoded(),
-                                                                   aRoutingInfo.getEndpointURL(),
-                                                                   aRoutingInfo.getCertificate(),
-                                                                   EActingSide.DP);
+                                                                   aRoutingInfo.getCertificate());
     MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
   }
 

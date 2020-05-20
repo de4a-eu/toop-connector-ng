@@ -49,9 +49,8 @@ public interface IMessageExchangeSPI
    * implementation. This method is only called once for the chosen
    * implementation, so the implementation can act as an "init" method and
    * perform further implementation activities. If this method is not called, it
-   * is ensured that {@link #sendDCOutgoing(IMERoutingInformation, MEMessage)}
-   * and {@link #sendDPOutgoing(IMERoutingInformation, MEMessage)} of this
-   * implementation are also never called.
+   * is ensured that {@link #sendOutgoing(IMERoutingInformation, MEMessage)} of
+   * this implementation are also never called.
    *
    * @param aServletContext
    *        The servlet context in which the handler should be registered. Never
@@ -62,7 +61,7 @@ public interface IMessageExchangeSPI
   void registerIncomingHandler (@Nonnull ServletContext aServletContext, @Nonnull IMEIncomingHandler aIncomingHandler);
 
   /**
-   * Trigger the message transmission in step 1/4. This method acts synchronous.
+   * Trigger the message transmission in step 1/4 and 3/4.
    *
    * @param aRoutingInfo
    *        Routing information. May not be <code>null</code>.
@@ -71,19 +70,7 @@ public interface IMessageExchangeSPI
    * @throws MEOutgoingException
    *         In case of error.
    */
-  void sendDCOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEOutgoingException;
-
-  /**
-   * Trigger the message transmission in step 3/4.
-   *
-   * @param aRoutingInfo
-   *        Routing information. May not be <code>null</code>.
-   * @param aMessage
-   *        The message to be exchanged. May not be <code>null</code>.
-   * @throws MEOutgoingException
-   *         In case of error.
-   */
-  void sendDPOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEOutgoingException;
+  void sendOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEOutgoingException;
 
   /**
    * Shutdown the Message Exchange.
