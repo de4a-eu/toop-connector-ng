@@ -15,8 +15,7 @@
  */
 package eu.toop.connector.webapi.validation;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 
@@ -29,22 +28,21 @@ import com.helger.bdve.executorset.VESID;
 import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.bdve.result.ValidationResultList;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.photon.api.IAPIExecutor;
 import com.helger.photon.app.PhotonUnifiedResponse;
-import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.app.validation.EValidationEdmType;
 import eu.toop.connector.app.validation.TCValidator;
 import eu.toop.connector.webapi.TCAPIConfig;
+import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
+import eu.toop.connector.webapi.helper.CommonInvoker;
 
-public class ApiPostValidateEdm implements IAPIExecutor
+public class ApiPostValidateEdm extends AbstractTCAPIInvoker
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (ApiPostValidateEdm.class);
 
@@ -55,41 +53,46 @@ public class ApiPostValidateEdm implements IAPIExecutor
     m_eType = eType;
   }
 
+  @Override
   public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
                          @Nonnull @Nonempty final String sPath,
                          @Nonnull final Map <String, String> aPathVariables,
                          @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+                         @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws IOException
   {
     final Locale aDisplayLocale = Locale.UK;
-
-    final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
-    final StopWatch aSW = StopWatch.createdStarted ();
 
     final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
     final VESID aVESID = m_eType.getVESID ();
 
     LOGGER.info ("API validating " + aPayload.length + " bytes using '" + aVESID.getAsSingleID () + "'");
 
-    // Main validation
-    final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ().validate (aVESID, aPayload, aDisplayLocale);
-
-    aSW.stop ();
-
-    LOGGER.info ("API validation finished after " + aSW.getMillis () + " millis");
-
-    // Build response
     final IJsonObject aJson = new JsonObject ();
-    BDVEJsonHelper.applyValidationResultList (aJson,
-                                              TCValidator.getVES (aVESID),
-                                              aValidationResultList,
-                                              aDisplayLocale,
-                                              aSW.getMillis (),
-                                              null,
-                                              null);
+    CommonInvoker.invoke (aJson, () -> {
+      try
+      {
+        // Main validation
+        final StopWatch aSW = StopWatch.createdStarted ();
+        final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ().validate (aVESID, aPayload, aDisplayLocale);
+        aSW.stop ();
 
-    aJson.add ("validationDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
+        // Build response
+        aJson.add ("success", true);
+        BDVEJsonHelper.applyValidationResultList (aJson,
+                                                  TCValidator.getVES (aVESID),
+                                                  aValidationResultList,
+                                                  aDisplayLocale,
+                                                  aSW.getMillis (),
+                                                  null,
+                                                  null);
+      }
+      catch (final RuntimeException ex)
+      {
+        aJson.add ("success", false);
+        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
+      }
+    });
 
-    ((PhotonUnifiedResponse) aUnifiedResponse).json (aJson);
+    aUnifiedResponse.json (aJson);
   }
 }

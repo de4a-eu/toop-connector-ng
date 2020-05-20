@@ -113,11 +113,13 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     {
       final KeyStore aOurKS = m_aCF.getKeyStore ();
       if (aOurKS == null)
-        throw new InitializationException ("Failed to load configured phase4 keystore (crypto.properties)");
+        throw new InitializationException ("Failed to load configured phase4 keystore");
 
       final PrivateKeyEntry aOurKey = m_aCF.getPrivateKeyEntry ();
       if (aOurKey == null)
-        throw new InitializationException ("Failed to load configured phase4 key (crypto.properties)");
+        throw new InitializationException ("Failed to load configured phase4 key");
+
+      LOGGER.info ("Verified that the phase4 keystore configuration can be loaded");
     }
 
     // Register server once

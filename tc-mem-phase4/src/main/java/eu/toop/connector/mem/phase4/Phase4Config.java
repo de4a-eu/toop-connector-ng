@@ -75,6 +75,7 @@ public final class Phase4Config
     return getConfig ().getAsString ("phase4.send.response.folder");
   }
 
+  // Keystore stuff
   @Nonnull
   public static EKeyStoreType getKeyStoreType ()
   {
@@ -96,13 +97,32 @@ public final class Phase4Config
   @Nullable
   public static String getKeyStoreKeyAlias ()
   {
-    return getConfig ().getAsString ("phase4.keystore.key.alias");
+    return getConfig ().getAsString ("phase4.keystore.key-alias");
   }
 
   @Nullable
   public static String getKeyStoreKeyPassword ()
   {
-    return getConfig ().getAsString ("phase4.keystore.key.password");
+    return getConfig ().getAsString ("phase4.keystore.key-password");
+  }
+
+  // Truststore stuff
+  @Nonnull
+  public static EKeyStoreType getTrustStoreType ()
+  {
+    return EKeyStoreType.getFromIDCaseInsensitiveOrDefault (getConfig ().getAsString ("phase4.truststore.type"), EKeyStoreType.JKS);
+  }
+
+  @Nullable
+  public static String getTrustStorePath ()
+  {
+    return getConfig ().getAsString ("phase4.truststore.path");
+  }
+
+  @Nullable
+  public static String getTrustStorePassword ()
+  {
+    return getConfig ().getAsString ("phase4.truststore.password");
   }
 
   @Nonnull
@@ -112,6 +132,9 @@ public final class Phase4Config
                                                                          .setKeyStorePath (getKeyStorePath ())
                                                                          .setKeyStorePassword (getKeyStorePassword ())
                                                                          .setKeyAlias (getKeyStoreKeyAlias ())
-                                                                         .setKeyPassword (getKeyStoreKeyPassword ()));
+                                                                         .setKeyPassword (getKeyStoreKeyPassword ())
+                                                                         .setTrustStoreType (getTrustStoreType ())
+                                                                         .setTrustStorePath (getTrustStorePath ())
+                                                                         .setTrustStorePassword (getTrustStorePassword ()));
   }
 }

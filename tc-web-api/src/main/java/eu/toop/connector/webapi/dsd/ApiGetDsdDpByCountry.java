@@ -15,38 +15,36 @@
  */
 package eu.toop.connector.webapi.dsd;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSet;
-import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.string.StringHelper;
-import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonArray;
 import com.helger.json.JsonObject;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.photon.api.IAPIExecutor;
 import com.helger.photon.app.PhotonUnifiedResponse;
-import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.dd.LoggingDDErrorHandler;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.TCAPIConfig;
+import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
+import eu.toop.connector.webapi.helper.CommonInvoker;
 
-public class ApiGetDsdDpByCountry implements IAPIExecutor
+public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
 {
+  @Override
   public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
                          @Nonnull @Nonempty final String sPath,
                          @Nonnull final Map <String, String> aPathVariables,
                          @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+                         @Nonnull final PhotonUnifiedResponse aUnifiedResponse)
   {
     final String sDatasetType = aPathVariables.get ("dataset");
     if (StringHelper.hasNoText (sDatasetType))
@@ -56,27 +54,32 @@ public class ApiGetDsdDpByCountry implements IAPIExecutor
     if (StringHelper.hasNoText (sCountryCode))
       throw new APIParamException ("Missing Country Code");
 
-    final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
-    final StopWatch aSW = StopWatch.createdStarted ();
-
-    // Query DSD
-    final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
-                                                                          .getAllParticipantIDs ("[api /dsd/dp/by-country]",
-                                                                                                 sDatasetType,
-                                                                                                 sCountryCode,
-                                                                                                 null,
-                                                                                                 LoggingDDErrorHandler.INSTANCE);
-
-    aSW.stop ();
-
     final IJsonObject aJson = new JsonObject ();
-    final JsonArray aList = new JsonArray ();
-    for (final IParticipantIdentifier aPI : aParticipants)
-      aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
-    aJson.add ("participants", aList);
-    aJson.add ("queryDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
-    aJson.add ("queryDurationMillis", aSW.getMillis ());
+    CommonInvoker.invoke (aJson, () -> {
+      try
+      {
+        // Query DSD
+        final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
+                                                                              .getAllParticipantIDs ("[api /dsd/dp/by-country]",
+                                                                                                     sDatasetType,
+                                                                                                     sCountryCode,
+                                                                                                     null,
+                                                                                                     LoggingDDErrorHandler.INSTANCE);
 
-    ((PhotonUnifiedResponse) aUnifiedResponse).json (aJson);
+        aJson.add ("success", true);
+
+        final JsonArray aList = new JsonArray ();
+        for (final IParticipantIdentifier aPI : aParticipants)
+          aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
+        aJson.add ("participants", aList);
+      }
+      catch (final RuntimeException ex)
+      {
+        aJson.add ("success", false);
+        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
+      }
+    });
+
+    aUnifiedResponse.json (aJson);
   }
 }

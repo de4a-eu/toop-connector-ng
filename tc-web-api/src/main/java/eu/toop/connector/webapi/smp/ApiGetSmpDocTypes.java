@@ -15,9 +15,6 @@
  */
 package eu.toop.connector.webapi.smp;
 
-import java.nio.charset.StandardCharsets;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -29,79 +26,57 @@ import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
-import com.helger.commons.datetime.PDTFactory;
-import com.helger.commons.http.CHttp;
-import com.helger.commons.mime.CMimeType;
-import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
-import com.helger.json.serialize.JsonWriter;
-import com.helger.json.serialize.JsonWriterSettings;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.photon.api.IAPIExecutor;
-import com.helger.servlet.response.UnifiedResponse;
+import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.TCAPIConfig;
+import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
+import eu.toop.connector.webapi.helper.CommonInvoker;
 
-public final class ApiGetSmpDocTypes implements IAPIExecutor
+public class ApiGetSmpDocTypes extends AbstractTCAPIInvoker
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (ApiGetSmpDocTypes.class);
 
+  @Override
   public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
                          @Nonnull @Nonempty final String sPath,
                          @Nonnull final Map <String, String> aPathVariables,
                          @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final UnifiedResponse aUnifiedResponse) throws Exception
+                         @Nonnull final PhotonUnifiedResponse aUnifiedResponse)
   {
     final String sParticipantID = aPathVariables.get ("pid");
     final IParticipantIdentifier aParticipantID = TCConfig.getIdentifierFactory ().parseParticipantIdentifier (sParticipantID);
     if (aParticipantID == null)
       throw new APIParamException ("Invalid participant ID '" + sParticipantID + "' provided.");
 
-    final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
-    final StopWatch aSW = StopWatch.createdStarted ();
-
     LOGGER.info ("[API] Document types of '" + aParticipantID.getURIEncoded () + "' are queried");
 
-    IJsonObject aJson = null;
-    try
-    {
-      // Query SMP
-      final ICommonsSortedMap <String, String> aSGHrefs = TCAPIConfig.getDDServiceGroupHrefProvider ()
-                                                                     .getAllServiceGroupHrefs (aParticipantID);
+    final IJsonObject aJson = new JsonObject ();
+    aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
+    CommonInvoker.invoke (aJson, () -> {
+      try
+      {
+        // Query SMP
+        final ICommonsSortedMap <String, String> aSGHrefs = TCAPIConfig.getDDServiceGroupHrefProvider ()
+                                                                       .getAllServiceGroupHrefs (aParticipantID);
 
-      // Convert to JSON
-      aJson = SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ());
-    }
-    catch (final RuntimeException ex)
-    {
-      aJson = new JsonObject ();
-      aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
-      aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
-    }
+        aJson.add ("success", true);
+        aJson.add ("response", SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ()));
+      }
+      catch (final RuntimeException ex)
+      {
+        aJson.add ("success", false);
+        aJson.add ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
+      }
+    });
 
-    aSW.stop ();
-
-    if (aJson == null)
-    {
-      LOGGER.error ("[API] Failed to perform the SMP lookup");
-      aUnifiedResponse.setStatus (CHttp.HTTP_NOT_FOUND);
-    }
-    else
-    {
-      LOGGER.info ("[API] Succesfully finished lookup lookup after " + aSW.getMillis () + " milliseconds");
-
-      aJson.add ("queryDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
-      aJson.add ("queryDurationMillis", aSW.getMillis ());
-
-      final String sRet = new JsonWriter (new JsonWriterSettings ().setIndentEnabled (true)).writeAsString (aJson);
-      aUnifiedResponse.setContentAndCharset (sRet, StandardCharsets.UTF_8)
-                      .setMimeType (CMimeType.APPLICATION_JSON)
-                      .enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
-    }
+    aUnifiedResponse.json (aJson);
+    aUnifiedResponse.enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
   }
 }
