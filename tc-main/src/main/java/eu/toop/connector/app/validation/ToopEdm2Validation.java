@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.validate;
+package eu.toop.connector.app.validation;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -45,7 +45,7 @@ import eu.toop.regrep.RegRep4Reader;
  * @author Philip Helger
  */
 @Immutable
-public final class ToopEdm2Validation
+final class ToopEdm2Validation
 {
   public static final String GROUP_ID = "eu.toop";
 

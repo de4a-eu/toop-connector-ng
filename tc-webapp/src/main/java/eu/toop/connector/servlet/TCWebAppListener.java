@@ -22,13 +22,14 @@ import com.helger.photon.api.APIPath;
 import com.helger.photon.api.IAPIRegistry;
 import com.helger.photon.core.servlet.WebAppListener;
 
+import eu.toop.connector.api.as4.ApiPostSend;
 import eu.toop.connector.api.dsd.ApiGetDsdDp;
 import eu.toop.connector.api.dsd.ApiGetDsdDpByCountry;
 import eu.toop.connector.api.smp.ApiGetSmpDocTypes;
 import eu.toop.connector.api.smp.ApiGetSmpEndpoints;
 import eu.toop.connector.api.validate.ApiPostValidateEdm;
-import eu.toop.connector.api.validate.EValidationEdmType;
 import eu.toop.connector.app.TCInit;
+import eu.toop.connector.app.validation.EValidationEdmType;
 
 public class TCWebAppListener extends WebAppListener
 {
@@ -50,12 +51,14 @@ public class TCWebAppListener extends WebAppListener
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/endpoints/{pid}/{doctypeid}"), ApiGetSmpEndpoints.class));
 
     // Validation stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/request"),
-                                                 new ApiPostValidateEdm (EValidationEdmType.REQUEST)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/request"), new ApiPostValidateEdm (EValidationEdmType.REQUEST)));
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/response"),
                                                  new ApiPostValidateEdm (EValidationEdmType.RESPONSE)));
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/error"),
                                                  new ApiPostValidateEdm (EValidationEdmType.ERROR_RESPONSE)));
+
+    // AS4 stuff
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/send/{pid}"), ApiPostSend.class));
   }
 
   @Override

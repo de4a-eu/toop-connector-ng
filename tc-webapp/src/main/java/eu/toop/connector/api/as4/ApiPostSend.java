@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.validate;
+package eu.toop.connector.api.as4;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,9 +25,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.bdve.executorset.VESID;
-import com.helger.bdve.json.BDVEJsonHelper;
-import com.helger.bdve.result.ValidationResultList;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.io.stream.StreamHelper;
@@ -40,19 +37,9 @@ import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.app.validation.EValidationEdmType;
-import eu.toop.connector.app.validation.EdmValidator;
-
-public class ApiPostValidateEdm implements IAPIExecutor
+public class ApiPostSend implements IAPIExecutor
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (ApiPostValidateEdm.class);
-
-  private final EValidationEdmType m_eType;
-
-  public ApiPostValidateEdm (@Nonnull final EValidationEdmType eType)
-  {
-    m_eType = eType;
-  }
+  private static final Logger LOGGER = LoggerFactory.getLogger (ApiPostSend.class);
 
   public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
                          @Nonnull @Nonempty final String sPath,
@@ -66,11 +53,8 @@ public class ApiPostValidateEdm implements IAPIExecutor
     final StopWatch aSW = StopWatch.createdStarted ();
 
     final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
-    final VESID aVESID = m_eType.getVESID ();
 
-    LOGGER.info ("API validating " + aPayload.length + " bytes using '" + aVESID.getAsSingleID () + "'");
-
-    final ValidationResultList aValidationResultList = EdmValidator.validate (aVESID, aPayload, aDisplayLocale);
+    // TODO
 
     aSW.stop ();
 
@@ -78,15 +62,8 @@ public class ApiPostValidateEdm implements IAPIExecutor
 
     // Build response
     final IJsonObject aJson = new JsonObject ();
-    BDVEJsonHelper.applyValidationResultList (aJson,
-                                              EdmValidator.getVES (aVESID),
-                                              aValidationResultList,
-                                              aDisplayLocale,
-                                              aSW.getMillis (),
-                                              null,
-                                              null);
-
-    aJson.add ("validationDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
+    // TODO
+    aJson.add ("sendDateTime", DateTimeFormatter.ISO_ZONED_DATE_TIME.format (aQueryDT));
 
     ((PhotonUnifiedResponse) aUnifiedResponse).json (aJson);
   }

@@ -46,7 +46,7 @@ import com.helger.xsds.bdxr.smp1.SignedServiceMetadataType;
 
 import eu.toop.connector.api.APIParamException;
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.app.smp.R2D2EndpointProviderBDXRSMP1;
+import eu.toop.connector.app.smp.EndpointProviderBDXRSMP1;
 
 public final class ApiGetSmpEndpoints implements IAPIExecutor
 {
@@ -83,7 +83,7 @@ public final class ApiGetSmpEndpoints implements IAPIExecutor
                  "; signature verification=" +
                  bVerifySignature);
 
-    final BDXRClientReadOnly aBDXR1Client = R2D2EndpointProviderBDXRSMP1.getSMPClient (aParticipantID);
+    final BDXRClientReadOnly aBDXR1Client = EndpointProviderBDXRSMP1.getSMPClient (aParticipantID);
     aBDXR1Client.setXMLSchemaValidation (bXMLSchemaValidation);
     aBDXR1Client.setVerifySignature (bVerifySignature);
 

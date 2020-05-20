@@ -72,9 +72,9 @@ import eu.toop.kafkaclient.ToopKafkaClient;
  * @author Philip Helger
  */
 @Immutable
-public class R2D2EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
+public class EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
 {
-  public R2D2EndpointProviderBDXRSMP1 ()
+  public EndpointProviderBDXRSMP1 ()
   {}
 
   @Nonnull

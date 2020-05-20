@@ -1,0 +1,72 @@
+package eu.toop.connector.app.validation;
+
+import java.util.Locale;
+
+import javax.annotation.Nonnull;
+
+import org.w3c.dom.Document;
+
+import com.helger.bdve.EValidationType;
+import com.helger.bdve.artefact.ValidationArtefact;
+import com.helger.bdve.execute.ValidationExecutionManager;
+import com.helger.bdve.executorset.IValidationExecutorSet;
+import com.helger.bdve.executorset.VESID;
+import com.helger.bdve.executorset.ValidationExecutorSetRegistry;
+import com.helger.bdve.result.ValidationResult;
+import com.helger.bdve.result.ValidationResultList;
+import com.helger.bdve.source.ValidationSource;
+import com.helger.commons.error.list.ErrorList;
+import com.helger.commons.io.resource.inmemory.ReadableResourceByteArray;
+import com.helger.xml.EXMLParserFeature;
+import com.helger.xml.sax.WrappedCollectingSAXErrorHandler;
+import com.helger.xml.serialize.read.DOMReader;
+import com.helger.xml.serialize.read.DOMReaderSettings;
+
+public final class EdmValidator
+{
+  private static final ValidationExecutorSetRegistry VER = new ValidationExecutorSetRegistry ();
+  static
+  {
+    ToopEdm2Validation.initToopEDM (VER);
+  }
+
+  private EdmValidator ()
+  {}
+
+  @Nonnull
+  public static IValidationExecutorSet getVES (@Nonnull final VESID aVESID)
+  {
+    final IValidationExecutorSet aVES = VER.getOfID (aVESID);
+    if (aVES == null)
+      throw new IllegalStateException ("Unexpected VESID " + aVESID.getAsSingleID ());
+    return aVES;
+  }
+
+  @Nonnull
+  public static ValidationResultList validate (@Nonnull final VESID aVESID,
+                                               @Nonnull final byte [] aPayload,
+                                               @Nonnull final Locale aDisplayLocale)
+  {
+    final ValidationExecutionManager aValidator = getVES (aVESID).createExecutionManager ();
+    final ErrorList aXMLErrors = new ErrorList ();
+    final ValidationResultList aValidationResultList = new ValidationResultList ();
+
+    final ReadableResourceByteArray aXMLRes = new ReadableResourceByteArray (aPayload);
+    final Document aDoc = DOMReader.readXMLDOM (aXMLRes,
+                                                new DOMReaderSettings ().setErrorHandler (new WrappedCollectingSAXErrorHandler (aXMLErrors))
+                                                                        .setLocale (aDisplayLocale)
+                                                                        .setFeatureValues (EXMLParserFeature.AVOID_XML_ATTACKS));
+    if (aDoc != null)
+    {
+      // What to validate?
+      final ValidationSource aValidationSource = new ValidationSource ("uploaded content", () -> DOMReader.readXMLDOM (aPayload), false);
+      // Start validation
+      aValidator.executeValidation (aValidationSource, aValidationResultList, aDisplayLocale);
+    }
+
+    // Add all XML parsing stuff - always first item
+    // Also add if no error is present to have it shown in the list
+    aValidationResultList.add (0, new ValidationResult (new ValidationArtefact (EValidationType.XML, null, aXMLRes), aXMLErrors));
+    return aValidationResultList;
+  }
+}

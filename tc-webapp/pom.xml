@@ -70,10 +70,6 @@
       <groupId>eu.toop</groupId>
       <artifactId>toop-commons</artifactId>
     </dependency>
-    <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-bdve</artifactId>
-    </dependency>
 
     <!-- Logging -->
     <dependency>
