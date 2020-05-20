@@ -24,9 +24,13 @@ hs_err_pid*
 
 bin/
 target/
+
 .classpath
 .project
 .settings/
+
 .idea/
 *.iml
+
 zz
+tc-webapp/conf
