@@ -31,9 +31,9 @@ import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 
 import eu.toop.connector.api.TCConfig;
+import eu.toop.connector.api.dd.IDDErrorHandler;
 import eu.toop.connector.api.dsd.IDSDParticipantIDProvider;
 import eu.toop.connector.api.http.TCHttpClientSettings;
-import eu.toop.connector.api.smp.ISMPErrorHandler;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
 
@@ -83,7 +83,7 @@ public class DSDParticipantIDProviderRemote implements IDSDParticipantIDProvider
                                                                     @Nonnull final String sDatasetType,
                                                                     @Nullable final String sCountryCode,
                                                                     @Nullable final IDocumentTypeIdentifier aDocumentTypeID,
-                                                                    @Nonnull final ISMPErrorHandler aErrorHandler)
+                                                                    @Nonnull final IDDErrorHandler aErrorHandler)
   {
     final ICommonsSet <IParticipantIdentifier> ret = new CommonsHashSet <> ();
 

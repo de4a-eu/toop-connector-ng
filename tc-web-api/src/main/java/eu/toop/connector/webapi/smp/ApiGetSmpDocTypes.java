@@ -28,7 +28,6 @@ import org.slf4j.LoggerFactory;
 import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.collection.impl.CommonsTreeMap;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.http.CHttp;
@@ -38,20 +37,15 @@ import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
 import com.helger.json.serialize.JsonWriter;
 import com.helger.json.serialize.JsonWriterSettings;
-import com.helger.peppolid.CIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.api.IAPIExecutor;
 import com.helger.servlet.response.UnifiedResponse;
-import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
-import com.helger.smpclient.url.PeppolDNSResolutionException;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
-import com.helger.xsds.bdxr.smp1.ServiceGroupType;
-import com.helger.xsds.bdxr.smp1.ServiceMetadataReferenceType;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.app.smp.EndpointProviderBDXRSMP1;
 import eu.toop.connector.webapi.APIParamException;
+import eu.toop.connector.webapi.TCAPIConfig;
 
 public final class ApiGetSmpDocTypes implements IAPIExecutor
 {
@@ -68,44 +62,19 @@ public final class ApiGetSmpDocTypes implements IAPIExecutor
     if (aParticipantID == null)
       throw new APIParamException ("Invalid participant ID '" + sParticipantID + "' provided.");
 
-    final boolean bXMLSchemaValidation = aRequestScope.params ().getAsBoolean ("xmlSchemaValidation", true);
-    final boolean bVerifySignature = aRequestScope.params ().getAsBoolean ("verifySignature", true);
-
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
-    LOGGER.info ("[API] Document types of '" +
-                 aParticipantID.getURIEncoded () +
-                 "' are queried; XSD validation=" +
-                 bXMLSchemaValidation +
-                 "; signature verification=" +
-                 bVerifySignature);
+    LOGGER.info ("[API] Document types of '" + aParticipantID.getURIEncoded () + "' are queried");
 
-    final ICommonsSortedMap <String, String> aSGHrefs = new CommonsTreeMap <> ();
     IJsonObject aJson = null;
     try
     {
-      final BDXRClientReadOnly aBDXR1Client = EndpointProviderBDXRSMP1.getSMPClient (aParticipantID);
-      aBDXR1Client.setXMLSchemaValidation (bXMLSchemaValidation);
-      aBDXR1Client.setVerifySignature (bVerifySignature);
-
-      // Get all HRefs and sort them by decoded URL
-      final ServiceGroupType aSG = aBDXR1Client.getServiceGroupOrNull (aParticipantID);
-      // Map from cleaned URL to original URL
-      if (aSG != null && aSG.getServiceMetadataReferenceCollection () != null)
-      {
-        for (final ServiceMetadataReferenceType aSMR : aSG.getServiceMetadataReferenceCollection ().getServiceMetadataReference ())
-        {
-          // Decoded href is important for unification
-          final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
-          if (aSGHrefs.put (sHref, aSMR.getHref ()) != null)
-            LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
-        }
-      }
-
+      final ICommonsSortedMap <String, String> aSGHrefs = TCAPIConfig.getDDServiceGroupHrefProvider ()
+                                                                     .getAllServiceGroupHrefs (aParticipantID);
       aJson = SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ());
     }
-    catch (final PeppolDNSResolutionException ex)
+    catch (final RuntimeException ex)
     {
       aJson = new JsonObject ();
       aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());

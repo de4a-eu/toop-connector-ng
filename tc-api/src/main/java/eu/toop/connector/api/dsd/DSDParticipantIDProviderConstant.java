@@ -26,7 +26,7 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 
-import eu.toop.connector.api.smp.ISMPErrorHandler;
+import eu.toop.connector.api.dd.IDDErrorHandler;
 
 /**
  * This class implements the {@link IDSDParticipantIDProvider} interface using a
@@ -89,7 +89,7 @@ public class DSDParticipantIDProviderConstant implements IDSDParticipantIDProvid
                                                                            @Nonnull final String sDatasetType,
                                                                            @Nullable final String sCountryCode,
                                                                            @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
-                                                                           @Nonnull final ISMPErrorHandler aErrorHandler)
+                                                                           @Nonnull final IDDErrorHandler aErrorHandler)
   {
     return m_aSet.getClone ();
   }

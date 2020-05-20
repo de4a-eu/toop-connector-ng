@@ -28,7 +28,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.app.smp;
+package eu.toop.connector.app.dd;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -57,24 +57,24 @@ import com.helger.xsds.bdxr.smp1.ServiceInformationType;
 import com.helger.xsds.bdxr.smp1.SignedServiceMetadataType;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.smp.ISMPEndpoint;
-import eu.toop.connector.api.smp.ISMPEndpointProvider;
-import eu.toop.connector.api.smp.ISMPErrorHandler;
-import eu.toop.connector.api.smp.SMPEndpoint;
+import eu.toop.connector.api.dd.IDDEndpoint;
+import eu.toop.connector.api.dd.IDDEndpointProvider;
+import eu.toop.connector.api.dd.IDDErrorHandler;
+import eu.toop.connector.api.dd.DDEndpoint;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.kafkaclient.ToopKafkaClient;
 
 /**
- * The default implementation of {@link ISMPEndpointProvider} using the OASIS
+ * The default implementation of {@link IDDEndpointProvider} using the OASIS
  * BDXR SMP v1 lookup. It performs the query every time and does not cache
  * results!
  *
  * @author Philip Helger
  */
 @Immutable
-public class EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
+public class DDEndpointProviderSMP implements IDDEndpointProvider
 {
-  public EndpointProviderBDXRSMP1 ()
+  public DDEndpointProviderSMP ()
   {}
 
   @Nonnull
@@ -90,12 +90,12 @@ public class EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
   }
 
   @Nullable
-  public ISMPEndpoint getEndpoint (@Nonnull final String sLogPrefix,
+  public IDDEndpoint getEndpoint (@Nonnull final String sLogPrefix,
                                    @Nonnull final IParticipantIdentifier aRecipientID,
                                    @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
                                    @Nonnull final IProcessIdentifier aProcessID,
                                    @Nonnull @Nonempty final String sTransportProfileID,
-                                   @Nonnull final ISMPErrorHandler aErrorHandler)
+                                   @Nonnull final IDDErrorHandler aErrorHandler)
   {
     ValueEnforcer.notNull (aRecipientID, "Recipient");
     ValueEnforcer.notNull (aDocumentTypeID, "DocumentTypeID");
@@ -144,7 +144,7 @@ public class EndpointProviderBDXRSMP1 implements ISMPEndpointProvider
               }
 
               // Convert to our data structure
-              final SMPEndpoint aDestEP = new SMPEndpoint (aRecipientID, aEP.getTransportProfile (), aEP.getEndpointURI (), aCert);
+              final DDEndpoint aDestEP = new DDEndpoint (aRecipientID, aEP.getTransportProfile (), aEP.getEndpointURI (), aCert);
 
               ToopKafkaClient.send (EErrorLevel.INFO,
                                     () -> sLogPrefix + "SMP lookup result: " + aEP.getTransportProfile () + ", " + aEP.getEndpointURI ());

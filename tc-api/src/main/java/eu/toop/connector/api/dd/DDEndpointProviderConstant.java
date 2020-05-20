@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.smp;
+package eu.toop.connector.api.dd;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -25,15 +25,15 @@ import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
 
 /**
- * This class implements the {@link ISMPEndpointProvider} interface using a
+ * This class implements the {@link IDDEndpointProvider} interface using a
  * constant endpoint. This implementation is meant for testing purposes only.
  * Don't use in production.
  *
  * @author Philip Helger
  */
-public class SMPEndpointProviderConstant implements ISMPEndpointProvider
+public class DDEndpointProviderConstant implements IDDEndpointProvider
 {
-  private final ISMPEndpoint m_aEndpoint;
+  private final IDDEndpoint m_aEndpoint;
 
   /**
    * Constructor with a single endpoint.
@@ -41,18 +41,18 @@ public class SMPEndpointProviderConstant implements ISMPEndpointProvider
    * @param aEndpoint
    *        The participant ID to return. May be <code>null</code>.
    */
-  public SMPEndpointProviderConstant (@Nullable final ISMPEndpoint aEndpoint)
+  public DDEndpointProviderConstant (@Nullable final IDDEndpoint aEndpoint)
   {
     m_aEndpoint = aEndpoint;
   }
 
   @Nullable
-  public ISMPEndpoint getEndpoint (@Nonnull final String sLogPrefix,
+  public IDDEndpoint getEndpoint (@Nonnull final String sLogPrefix,
                                     @Nonnull final IParticipantIdentifier aRecipientID,
                                     @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
                                     @Nonnull final IProcessIdentifier aProcessID,
                                     @Nonnull @Nonempty final String sTransportProfileID,
-                                    @Nonnull final ISMPErrorHandler aErrorHandler)
+                                    @Nonnull final IDDErrorHandler aErrorHandler)
   {
     return m_aEndpoint;
   }

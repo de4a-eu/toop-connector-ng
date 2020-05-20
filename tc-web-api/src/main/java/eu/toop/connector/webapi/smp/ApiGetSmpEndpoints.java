@@ -45,7 +45,7 @@ import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 import com.helger.xsds.bdxr.smp1.SignedServiceMetadataType;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.app.smp.EndpointProviderBDXRSMP1;
+import eu.toop.connector.app.dd.DDEndpointProviderSMP;
 import eu.toop.connector.webapi.APIParamException;
 
 public final class ApiGetSmpEndpoints implements IAPIExecutor
@@ -68,9 +68,6 @@ public final class ApiGetSmpEndpoints implements IAPIExecutor
     if (aDocTypeID == null)
       throw new APIParamException ("Invalid document type ID '" + sDocTypeID + "' provided.");
 
-    final boolean bXMLSchemaValidation = aRequestScope.params ().getAsBoolean ("xmlSchemaValidation", true);
-    final boolean bVerifySignature = aRequestScope.params ().getAsBoolean ("verifySignature", true);
-
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
@@ -78,14 +75,9 @@ public final class ApiGetSmpEndpoints implements IAPIExecutor
                  aParticipantID.getURIEncoded () +
                  "' is queried for document type '" +
                  aDocTypeID.getURIEncoded () +
-                 "'; XSD validation=" +
-                 bXMLSchemaValidation +
-                 "; signature verification=" +
-                 bVerifySignature);
+                 "'");
 
-    final BDXRClientReadOnly aBDXR1Client = EndpointProviderBDXRSMP1.getSMPClient (aParticipantID);
-    aBDXR1Client.setXMLSchemaValidation (bXMLSchemaValidation);
-    aBDXR1Client.setVerifySignature (bVerifySignature);
+    final BDXRClientReadOnly aBDXR1Client = DDEndpointProviderSMP.getSMPClient (aParticipantID);
 
     final SignedServiceMetadataType aSSM = aBDXR1Client.getServiceMetadataOrNull (aParticipantID, aDocTypeID);
     IJsonObject aJson = null;

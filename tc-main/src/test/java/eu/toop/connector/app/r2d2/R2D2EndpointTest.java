@@ -30,10 +30,10 @@ import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.security.certificate.CertificateHelper;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.smp.SMPEndpoint;
+import eu.toop.connector.api.dd.DDEndpoint;
 
 /**
- * Test class for class {@link SMPEndpoint}.
+ * Test class for class {@link DDEndpoint}.
  *
  * @author Philip Helger
  */
@@ -133,7 +133,7 @@ public final class R2D2EndpointTest
     final IParticipantIdentifier aPI = TCConfig.getIdentifierFactory ().createParticipantIdentifierWithDefaultScheme ("1234:test");
     final String sTransportProtocol = "AS4";
     final String sEndpointURL = "http://example.org/as4";
-    final SMPEndpoint aEP = new SMPEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT);
+    final DDEndpoint aEP = new DDEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT);
     assertEquals (aPI, aEP.getParticipantID ());
     assertEquals (sTransportProtocol, aEP.getTransportProtocol ());
     assertEquals (sEndpointURL, aEP.getEndpointURL ());
@@ -153,17 +153,17 @@ public final class R2D2EndpointTest
     final String sEndpointURL2 = "http://example.org/as2";
     assertNotEquals (sEndpointURL, sEndpointURL2);
 
-    final SMPEndpoint aEP = new SMPEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT);
+    final DDEndpoint aEP = new DDEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT);
     assertEquals (aEP, aEP);
-    assertEquals (aEP, new SMPEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT));
-    assertNotEquals (aEP, new SMPEndpoint (aPI2, sTransportProtocol, sEndpointURL, TEST_CERT));
-    assertNotEquals (aEP, new SMPEndpoint (aPI, sTransportProtocol2, sEndpointURL, TEST_CERT));
-    assertNotEquals (aEP, new SMPEndpoint (aPI, sTransportProtocol, sEndpointURL2, TEST_CERT));
-    assertNotEquals (aEP, new SMPEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT2));
+    assertEquals (aEP, new DDEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT));
+    assertNotEquals (aEP, new DDEndpoint (aPI2, sTransportProtocol, sEndpointURL, TEST_CERT));
+    assertNotEquals (aEP, new DDEndpoint (aPI, sTransportProtocol2, sEndpointURL, TEST_CERT));
+    assertNotEquals (aEP, new DDEndpoint (aPI, sTransportProtocol, sEndpointURL2, TEST_CERT));
+    assertNotEquals (aEP, new DDEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT2));
     assertNotEquals (aEP, null);
     assertNotEquals (aEP, "bla");
     assertEquals (aEP.hashCode (), aEP.hashCode ());
     CommonsTestHelper.testDefaultImplementationWithEqualContentObject (aEP,
-                                                                       new SMPEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT));
+                                                                       new DDEndpoint (aPI, sTransportProtocol, sEndpointURL, TEST_CERT));
   }
 }

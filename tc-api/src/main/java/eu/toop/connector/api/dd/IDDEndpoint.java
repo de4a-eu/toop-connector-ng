@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.smp;
+package eu.toop.connector.api.dd;
 
 import java.security.cert.X509Certificate;
 
@@ -25,12 +25,12 @@ import com.helger.peppolid.IParticipantIdentifier;
 
 /**
  * Read-only base interface for a single result endpoint. See
- * {@link SMPEndpoint} for the default implementation.
+ * {@link DDEndpoint} for the default implementation.
  *
  * @author Philip Helger
  */
 @MustImplementEqualsAndHashcode
-public interface ISMPEndpoint
+public interface IDDEndpoint
 {
   /**
    * @return The participant or service group. Never <code>null</code>.

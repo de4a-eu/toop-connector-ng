@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.smp;
+package eu.toop.connector.api.dd;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,7 +27,7 @@ import eu.toop.edm.error.IToopErrorCode;
  *
  * @author Philip Helger
  */
-public interface ISMPErrorHandler
+public interface IDDErrorHandler
 {
   /**
    * The main error handler method to be implemented

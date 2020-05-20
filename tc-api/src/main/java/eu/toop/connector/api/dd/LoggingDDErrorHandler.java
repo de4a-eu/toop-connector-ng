@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.smp;
+package eu.toop.connector.api.dd;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +23,10 @@ import com.helger.commons.log.LogHelper;
 
 import eu.toop.edm.error.IToopErrorCode;
 
-public class LoggingSMPErrorHandler implements ISMPErrorHandler
+public class LoggingDDErrorHandler implements IDDErrorHandler
 {
-  public static final LoggingSMPErrorHandler INSTANCE = new LoggingSMPErrorHandler ();
-  private static final Logger LOGGER = LoggerFactory.getLogger (LoggingSMPErrorHandler.class);
+  public static final LoggingDDErrorHandler INSTANCE = new LoggingDDErrorHandler ();
+  private static final Logger LOGGER = LoggerFactory.getLogger (LoggingDDErrorHandler.class);
 
   public void onMessage (final EErrorLevel eErrorLevel, final String sMsg, final Throwable t, final IToopErrorCode eCode)
   {

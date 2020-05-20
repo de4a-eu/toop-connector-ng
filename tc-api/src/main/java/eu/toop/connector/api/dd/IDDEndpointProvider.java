@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.smp;
+package eu.toop.connector.api.dd;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -29,7 +29,7 @@ import com.helger.peppolid.IProcessIdentifier;
  *
  * @author Philip Helger
  */
-public interface ISMPEndpointProvider
+public interface IDDEndpointProvider
 {
   /**
    * Get a list of all endpoints that match the specified requirements. This is
@@ -56,10 +56,10 @@ public interface ISMPEndpointProvider
    *         endpoints.
    */
   @Nullable
-  ISMPEndpoint getEndpoint (@Nonnull String sLogPrefix,
+  IDDEndpoint getEndpoint (@Nonnull String sLogPrefix,
                              @Nonnull IParticipantIdentifier aRecipientID,
                              @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
                              @Nonnull IProcessIdentifier aProcessID,
                              @Nonnull @Nonempty String sTransportProfileID,
-                             @Nonnull ISMPErrorHandler aErrorHandler);
+                             @Nonnull IDDErrorHandler aErrorHandler);
 }

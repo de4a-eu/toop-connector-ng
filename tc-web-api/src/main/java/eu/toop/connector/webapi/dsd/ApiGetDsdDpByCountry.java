@@ -36,9 +36,9 @@ import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.api.smp.LoggingSMPErrorHandler;
-import eu.toop.connector.app.dsd.DSDParticipantIDProviderRemote;
+import eu.toop.connector.api.dd.LoggingDDErrorHandler;
 import eu.toop.connector.webapi.APIParamException;
+import eu.toop.connector.webapi.TCAPIConfig;
 
 public class ApiGetDsdDpByCountry implements IAPIExecutor
 {
@@ -59,11 +59,12 @@ public class ApiGetDsdDpByCountry implements IAPIExecutor
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
 
-    final ICommonsSet <IParticipantIdentifier> aParticipants = new DSDParticipantIDProviderRemote ().getAllParticipantIDs ("[api /dsd/dp/by-country]",
-                                                                                                                           sDatasetType,
-                                                                                                                           sCountryCode,
-                                                                                                                           null,
-                                                                                                                           LoggingSMPErrorHandler.INSTANCE);
+    final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
+                                                                          .getAllParticipantIDs ("[api /dsd/dp/by-country]",
+                                                                                                 sDatasetType,
+                                                                                                 sCountryCode,
+                                                                                                 null,
+                                                                                                 LoggingDDErrorHandler.INSTANCE);
 
     aSW.stop ();
 

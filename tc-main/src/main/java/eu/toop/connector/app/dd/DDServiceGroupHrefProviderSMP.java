@@ -1,0 +1,56 @@
+package eu.toop.connector.app.dd;
+
+import javax.annotation.Nonnull;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.helger.commons.collection.impl.CommonsTreeMap;
+import com.helger.commons.collection.impl.ICommonsSortedMap;
+import com.helger.peppolid.CIdentifier;
+import com.helger.peppolid.IParticipantIdentifier;
+import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
+import com.helger.smpclient.exception.SMPClientException;
+import com.helger.smpclient.url.PeppolDNSResolutionException;
+import com.helger.xsds.bdxr.smp1.ServiceGroupType;
+import com.helger.xsds.bdxr.smp1.ServiceMetadataReferenceType;
+
+import eu.toop.connector.api.dd.IDDServiceGroupHrefProvider;
+
+public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvider
+{
+  private static final Logger LOGGER = LoggerFactory.getLogger (DDServiceGroupHrefProviderSMP.class);
+
+  public DDServiceGroupHrefProviderSMP ()
+  {}
+
+  @Nonnull
+  public ICommonsSortedMap <String, String> getAllServiceGroupHrefs (@Nonnull final IParticipantIdentifier aParticipantID)
+  {
+    final ICommonsSortedMap <String, String> ret = new CommonsTreeMap <> ();
+    try
+    {
+      final BDXRClientReadOnly aClient = DDEndpointProviderSMP.getSMPClient (aParticipantID);
+
+      // Get all HRefs and sort them by decoded URL
+      final ServiceGroupType aSG = aClient.getServiceGroupOrNull (aParticipantID);
+
+      // Map from cleaned URL to original URL
+      if (aSG != null && aSG.getServiceMetadataReferenceCollection () != null)
+      {
+        for (final ServiceMetadataReferenceType aSMR : aSG.getServiceMetadataReferenceCollection ().getServiceMetadataReference ())
+        {
+          // Decoded href is important for unification
+          final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
+          if (ret.put (sHref, aSMR.getHref ()) != null)
+            LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
+        }
+      }
+    }
+    catch (final PeppolDNSResolutionException | SMPClientException ex)
+    {
+      throw new IllegalStateException (ex);
+    }
+    return ret;
+  }
+}
