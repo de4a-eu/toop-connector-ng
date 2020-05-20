@@ -15,6 +15,12 @@
  */
 package eu.toop.connector.api.me.incoming;
 
+import javax.annotation.Nullable;
+
+import com.helger.peppolid.IDocumentTypeIdentifier;
+import com.helger.peppolid.IParticipantIdentifier;
+import com.helger.peppolid.IProcessIdentifier;
+
 /**
  * Read-only interface for incoming transport metadata.
  *
@@ -22,5 +28,27 @@ package eu.toop.connector.api.me.incoming;
  */
 public interface IMEIncomingTransportMetadata
 {
-  // TODO
+  /**
+   * @return Sender participant ID. Never <code>null</code>.
+   */
+  @Nullable
+  IParticipantIdentifier getSenderID ();
+
+  /**
+   * @return Receiver participant ID. Never <code>null</code>.
+   */
+  @Nullable
+  IParticipantIdentifier getReceiverID ();
+
+  /**
+   * @return Document type ID. Never <code>null</code>.
+   */
+  @Nullable
+  IDocumentTypeIdentifier getDocumentTypeID ();
+
+  /**
+   * @return Process ID. Never <code>null</code>.
+   */
+  @Nullable
+  IProcessIdentifier getProcessID ();
 }

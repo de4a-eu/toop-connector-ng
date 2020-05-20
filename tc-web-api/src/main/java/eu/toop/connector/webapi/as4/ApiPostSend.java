@@ -55,6 +55,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
                          @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
                          @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws IOException
   {
+    // Read the payload as XML
     final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
     if (aOutgoingMsg == null)
       throw new APIParamException ("Failed to interpret the message body as an 'OutgoingMessage'");
@@ -90,7 +91,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
       aJson.add (SMPJsonResponse.JSON_PROCESS_ID, aRoutingInfo.getProcessID ().getURIEncoded ());
       aJson.add (SMPJsonResponse.JSON_TRANSPORT_PROFILE, aRoutingInfo.getTransportProtocol ());
       aJson.add (SMPJsonResponse.JSON_ENDPOINT_REFERENCE, aRoutingInfo.getEndpointURL ());
-      aJson.add ("payloads", aOutgoingMsg.getPayload ().size ());
+      aJson.add ("payloadCount", aOutgoingMsg.getPayload ().size ());
     }
 
     CommonInvoker.invoke (aJson, () -> {

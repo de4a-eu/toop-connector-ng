@@ -91,7 +91,8 @@ public final class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
     aDelegate.registerMessageHandler(aMEMessage -> {
       final MEPayload aHead = aMEMessage.payloads().getFirst();
       final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind(aHead.getData().getInputStream());
-      final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata();
+      // TODO get metadata in here
+      final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata(null, null, null, null);
       if (aTopLevel instanceof EDMRequest) {
         // Request
         m_aIncomingHandler.handleIncomingRequest(new IncomingEDMRequest((EDMRequest) aTopLevel, aMetadata));

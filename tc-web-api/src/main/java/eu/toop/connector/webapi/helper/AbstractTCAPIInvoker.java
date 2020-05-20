@@ -42,6 +42,5 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
                  "' after " +
                  aSW.getMillis () +
                  " milliseconds");
-
   }
 }

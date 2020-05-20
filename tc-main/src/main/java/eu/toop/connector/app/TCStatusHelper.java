@@ -15,16 +15,23 @@
  */
 package eu.toop.connector.app;
 
+import java.util.Map;
+
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
+import com.helger.commons.collection.impl.CommonsLinkedHashMap;
+import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.datetime.PDTWebDateHelper;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.system.SystemProperties;
+import com.helger.config.source.res.IConfigurationSourceResource;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
+
+import eu.toop.connector.api.TCConfig;
 
 /**
  * Helper to create the TOOP Connector status reachable via the "/tc-status/"
@@ -50,7 +57,30 @@ public final class TCStatusHelper
     aStatusData.add ("global.debug", GlobalDebug.isDebugMode ());
     aStatusData.add ("global.production", GlobalDebug.isProductionMode ());
 
-    // TODO add all configuration items to status (all except passwords)
+    // add all configuration items to status (all except passwords)
+    final ICommonsOrderedMap <String, String> aVals = new CommonsLinkedHashMap <> ();
+    TCConfig.getConfig ().forEachConfigurationValueProvider ( (aCVP, nPriority) -> {
+      if (aCVP instanceof IConfigurationSourceResource)
+      {
+        // TODO ph-commons 9.4.3 - getAllConfigEntries
+        final ICommonsOrderedMap <String, String> aAll = new CommonsLinkedHashMap <> ();
+        for (final Map.Entry <String, String> aEntry : aAll.entrySet ())
+        {
+          // Never override, because highest priority values come first
+          if (!aVals.containsKey (aEntry.getKey ()))
+            aVals.put (aEntry);
+        }
+      }
+    });
+
+    for (final Map.Entry <String, String> aEntry : aVals.entrySet ())
+    {
+      final String sKey = aEntry.getKey ();
+      if (sKey.contains ("password"))
+        aStatusData.add (aEntry.getKey (), "***");
+      else
+        aStatusData.add (aEntry.getKey (), aEntry.getValue ());
+    }
 
     return aStatusData;
   }

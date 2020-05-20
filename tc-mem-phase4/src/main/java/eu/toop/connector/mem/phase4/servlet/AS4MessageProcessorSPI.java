@@ -32,9 +32,12 @@ import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.http.HttpHeaderMap;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.mime.MimeTypeParser;
+import com.helger.peppolid.factory.IIdentifierFactory;
+import com.helger.phase4.CAS4;
 import com.helger.phase4.attachment.AS4DecompressException;
 import com.helger.phase4.attachment.WSS4JAttachment;
 import com.helger.phase4.ebms3header.Ebms3Error;
+import com.helger.phase4.ebms3header.Ebms3Property;
 import com.helger.phase4.ebms3header.Ebms3SignalMessage;
 import com.helger.phase4.ebms3header.Ebms3UserMessage;
 import com.helger.phase4.error.EEbmsError;
@@ -46,6 +49,7 @@ import com.helger.phase4.servlet.spi.AS4SignalMessageProcessorResult;
 import com.helger.phase4.servlet.spi.IAS4ServletMessageProcessorSPI;
 import com.helger.xml.serialize.write.XMLWriter;
 
+import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
 import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
@@ -127,7 +131,26 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
       final WSS4JAttachment aMainPayload = aIncomingAttachments.getFirst ();
       try
       {
-        final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata ();
+        final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
+        final ICommonsList <Ebms3Property> aProps = new CommonsArrayList <> (aUserMessage.getMessageProperties ().getProperty ());
+        final Ebms3Property aPropOS = aProps.findFirst (x -> x.getName ().equals (CAS4.ORIGINAL_SENDER));
+        final Ebms3Property aPropFR = aProps.findFirst (x -> x.getName ().equals (CAS4.FINAL_RECIPIENT));
+
+        final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata (aPropOS == null ? null
+                                                                                                       : aIF.createParticipantIdentifier (aPropOS.getType (),
+                                                                                                                                          aPropOS.getValue ()),
+                                                                                       aPropFR == null ? null
+                                                                                                       : aIF.createParticipantIdentifier (aPropFR.getType (),
+                                                                                                                                          aPropFR.getValue ()),
+                                                                                       aIF.parseDocumentTypeIdentifier (aUserMessage.getCollaborationInfo ()
+                                                                                                                                    .getAction ()),
+                                                                                       aIF.createProcessIdentifier (aUserMessage.getCollaborationInfo ()
+                                                                                                                                .getService ()
+                                                                                                                                .getType (),
+                                                                                                                    aUserMessage.getCollaborationInfo ()
+                                                                                                                                .getService ()
+                                                                                                                                .getValue ()));
+
         final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aMainPayload.getSourceStream ());
         if (aTopLevel instanceof EDMRequest)
         {
