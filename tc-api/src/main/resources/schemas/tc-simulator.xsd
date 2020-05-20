@@ -29,7 +29,7 @@
     <xs:sequence>
       <xs:element ref="bdxr:ServiceMetadata" minOccurs="0" maxOccurs="unbounded" />
     </xs:sequence>
-    <xs:attribute name="countryCode" type="xs:string" />
+    <xs:attribute name="countryCode" type="xs:string" use="required"/>
   </xs:complexType>
   
   <xs:element name="CountryAwareServiceMetadata" type="CountryAwareServiceMetadataType" />

@@ -19,16 +19,32 @@
 <xs:schema attributeFormDefault="qualified" 
            elementFormDefault="qualified" 
            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
-           targetNamespace="urn:eu.toop/toop-connector-ng/2020/"
-           xmlns="urn:eu.toop/toop-connector-ng/2020/">
+           targetNamespace="urn:eu.toop/toop-connector-ng/2020/05/"
+           xmlns="urn:eu.toop/toop-connector-ng/2020/05/">
+  <xs:annotation>
+    <xs:documentation>
+      TOOP Connector NG shared XML Schema
+      
+      Version: 2020-05-20
+      
+      Author: Philip Helger
+      
+      Contents:
+      * Types used for input to the REST API
+      * Types used for output of the REST API
+    </xs:documentation>
+  </xs:annotation>         
            
   <xs:complexType name="TCIdentifierType">
+    <xs:annotation>
+      <xs:documentation>Generic 2-part identifier for participants, document types and processes</xs:documentation>
+    </xs:annotation>
     <!-- attributes only -->
     <xs:attribute name="scheme" type="xs:string" use="required" />
     <xs:attribute name="value" type="xs:string" use="required" />
   </xs:complexType>
   
-  <xs:complexType name="TCRoutingMetadata">
+  <xs:complexType name="TCOutgoingMetadata">
     <xs:sequence>
       <xs:element name="SenderID" type="TCIdentifierType" />
       <xs:element name="ReceiverID" type="TCIdentifierType" />
@@ -39,4 +55,26 @@
       <xs:element name="ReceiverCertificate" type="xs:base64Binary" />
     </xs:sequence>
   </xs:complexType>
+  
+  <xs:complexType name="TCOutgoingPayload">
+    <xs:simpleContent>
+      <xs:extension base="xs:base64Binary">
+        <xs:attribute name="ContentID" type="xs:string" use="optional" />
+        <xs:attribute name="MimeType" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  
+  <xs:complexType name="TCOutgoingMessage">
+    <xs:sequence>
+      <xs:element name="metadata" type="TCOutgoingMetadata" />
+      <xs:element name="payload" type="TCOutgoingPayload" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:element name="OutgoingMessage" type="TCOutgoingMessage">
+    <xs:annotation>
+      <xs:documentation>Element to be used for sending an AS4 message</xs:documentation>
+    </xs:annotation>
+  </xs:element>
 </xs:schema>
