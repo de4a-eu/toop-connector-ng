@@ -29,7 +29,9 @@ import eu.toop.connector.app.dd.DDServiceMetadataProviderSMP;
 import eu.toop.connector.app.dsd.DSDParticipantIDProviderRemote;
 
 /**
- * Global TOOP Connector NG API configuration.
+ * Global TOOP Connector NG API configuration.<br>
+ * This configuration is e.g. changed by the TOOP Simulator to install "mock"
+ * handler.
  *
  * @author Philip Helger
  */

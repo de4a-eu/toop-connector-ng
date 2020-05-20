@@ -65,11 +65,13 @@ public class ApiPostSend implements IAPIExecutor
     final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
     // TODO
     final IMERoutingInformation aRoutingInfo = new MERoutingInformation (null, null, null, null, null, null, null);
+    final String sContentID = MEPayload.createRandomContentID ();
+    final byte [] aData = null;
     final MEMessage aMessage = MEMessage.builder ()
                                         .addPayload (MEPayload.builder ()
                                                               .mimeType (CMimeType.APPLICATION_XML)
-                                                              .randomContentID ()
-                                                              .data ((byte []) null))
+                                                              .contentID (sContentID)
+                                                              .data (aData))
                                         .build ();
     aMEM.sendOutgoing (aRoutingInfo, aMessage);
 

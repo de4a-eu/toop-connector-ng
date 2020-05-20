@@ -21,4 +21,22 @@
            xmlns:xs="http://www.w3.org/2001/XMLSchema" 
            targetNamespace="urn:eu.toop/toop-connector-ng/2020/"
            xmlns="urn:eu.toop/toop-connector-ng/2020/">
+           
+  <xs:complexType name="TCIdentifierType">
+    <!-- attributes only -->
+    <xs:attribute name="scheme" type="xs:string" use="required" />
+    <xs:attribute name="value" type="xs:string" use="required" />
+  </xs:complexType>
+  
+  <xs:complexType name="TCRoutingMetadata">
+    <xs:sequence>
+      <xs:element name="SenderID" type="TCIdentifierType" />
+      <xs:element name="ReceiverID" type="TCIdentifierType" />
+      <xs:element name="DocTypeID" type="TCIdentifierType" />
+      <xs:element name="ProcessID" type="TCIdentifierType" />
+      <xs:element name="TransportProtocol" type="xs:string" />
+      <xs:element name="EndpointURL" type="xs:string" />
+      <xs:element name="ReceiverCertificate" type="xs:base64Binary" />
+    </xs:sequence>
+  </xs:complexType>
 </xs:schema>

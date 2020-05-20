@@ -108,6 +108,14 @@ public final class MEPayload implements Serializable
     return new Builder ();
   }
 
+  @Nonnull
+  @Nonempty
+  public static String createRandomContentID ()
+  {
+    // Must use RFC 2822 style
+    return UUID.randomUUID ().toString () + "@tc-ng.toop";
+  }
+
   /**
    * Builder class for {@link MEPayload}
    *
@@ -130,11 +138,9 @@ public final class MEPayload implements Serializable
     }
 
     @Nonnull
-    @Nonempty
     public Builder randomContentID ()
     {
-      // Must use RFC 2822 style
-      return contentID (UUID.randomUUID ().toString () + "@mp.toop");
+      return contentID (createRandomContentID ());
     }
 
     @Nonnull
