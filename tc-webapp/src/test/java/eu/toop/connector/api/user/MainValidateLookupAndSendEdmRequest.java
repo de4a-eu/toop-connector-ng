@@ -34,7 +34,7 @@ import com.helger.json.serialize.JsonWriterSettings;
 import eu.toop.connector.api.me.EMEProtocol;
 import eu.toop.connector.api.rest.TCOutgoingMessage;
 import eu.toop.connector.api.rest.TCOutgoingMetadata;
-import eu.toop.connector.api.rest.TCOutgoingPayload;
+import eu.toop.connector.api.rest.TCPayload;
 import eu.toop.connector.api.rest.TCRestJAXB;
 
 public class MainValidateLookupAndSendEdmRequest
@@ -55,7 +55,7 @@ public class MainValidateLookupAndSendEdmRequest
       aOM.setMetadata (aMetadata);
     }
     {
-      final TCOutgoingPayload aPayload = new TCOutgoingPayload ();
+      final TCPayload aPayload = new TCPayload ();
       aPayload.setValue (StreamHelper.getAllBytes (new ClassPathResource ("edm/Concept Request_LP.xml")));
       aPayload.setMimeType (CMimeType.APPLICATION_XML.getAsString ());
       aPayload.setContentID ("mock-request@toop");
