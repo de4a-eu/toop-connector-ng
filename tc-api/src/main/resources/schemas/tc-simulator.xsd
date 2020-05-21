@@ -31,6 +31,15 @@
     </xs:sequence>
     <xs:attribute name="countryCode" type="xs:string" use="required"/>
   </xs:complexType>
+
+
+  <xs:complexType name="CountryAwareServiceMetadataListType">
+    <xs:sequence>
+      <xs:element name="CountryAwareServiceMetadata" type="CountryAwareServiceMetadataType" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
   
-  <xs:element name="CountryAwareServiceMetadata" type="CountryAwareServiceMetadataType" />
+  <xs:element name="CountryAwareServiceMetadataList" type="CountryAwareServiceMetadataListType"/>
+
 </xs:schema>

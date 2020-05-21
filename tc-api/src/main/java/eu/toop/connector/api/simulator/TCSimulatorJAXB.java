@@ -49,11 +49,11 @@ public final class TCSimulatorJAXB
   }
 
   @Nonnull
-  public static GenericJAXBMarshaller <CountryAwareServiceMetadataType> countryAwareServiceMetadata ()
+  public static GenericJAXBMarshaller <CountryAwareServiceMetadataListType> countryAwareServiceMetadata ()
   {
-    final GenericJAXBMarshaller <CountryAwareServiceMetadataType> ret = new GenericJAXBMarshaller <> (CountryAwareServiceMetadataType.class,
+    final GenericJAXBMarshaller<CountryAwareServiceMetadataListType> ret = new GenericJAXBMarshaller <> (CountryAwareServiceMetadataListType.class,
                                                                                                       getAllXSDResources (),
-                                                                                                      new ObjectFactory ()::createCountryAwareServiceMetadata);
+                                                                                                      new ObjectFactory ()::createCountryAwareServiceMetadataList);
     ret.setFormattedOutput (true);
     ret.setNamespaceContext (TCSimulatorNamespaceContext.getInstance ());
     return ret;
