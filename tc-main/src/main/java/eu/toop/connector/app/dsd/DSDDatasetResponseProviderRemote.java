@@ -15,27 +15,23 @@
  */
 package eu.toop.connector.app.dsd;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsHashSet;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.pd.searchapi.v1.IDType;
-import com.helger.pd.searchapi.v1.MatchType;
-import com.helger.peppolid.IDocumentTypeIdentifier;
-import com.helger.peppolid.IParticipantIdentifier;
-
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.dd.IDDErrorHandler;
+import eu.toop.connector.api.dsd.IDSDDatasetResponseProvider;
 import eu.toop.connector.api.dsd.IDSDParticipantIDProvider;
+import eu.toop.connector.api.dsd.model.DatasetResponse;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
+import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import java.util.List;
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 /**
  * This class implements the {@link IDSDParticipantIDProvider} interface using a
@@ -43,14 +39,14 @@ import eu.toop.edm.error.EToopErrorCode;
  *
  * @author Philip Helger
  */
-public class DSDParticipantIDProviderRemote implements IDSDParticipantIDProvider
+public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProvider
 {
   private final String m_sBaseURL;
 
   /**
    * Constructor using the TOOP Directory URL from the configuration file.
    */
-  public DSDParticipantIDProviderRemote ()
+  public DSDDatasetResponseProviderRemote()
   {
     this (TCConfig.DSD.getR2D2DirectoryBaseUrl ());
   }
@@ -61,7 +57,7 @@ public class DSDParticipantIDProviderRemote implements IDSDParticipantIDProvider
    * @param sBaseURL
    *        The base URL to be used. May neither be <code>null</code> nor empty.
    */
-  public DSDParticipantIDProviderRemote (@Nonnull final String sBaseURL)
+  public DSDDatasetResponseProviderRemote(@Nonnull final String sBaseURL)
   {
     ValueEnforcer.notEmpty (sBaseURL, "BaseURL");
     m_sBaseURL = sBaseURL;
@@ -79,50 +75,39 @@ public class DSDParticipantIDProviderRemote implements IDSDParticipantIDProvider
   }
 
   @Nonnull
-  public ICommonsSet <IParticipantIdentifier> getAllParticipantIDs (@Nonnull final String sLogPrefix,
+  public ICommonsSet <DatasetResponse> getAllDatasetResponses (@Nonnull final String sLogPrefix,
                                                                     @Nonnull final String sDatasetType,
                                                                     @Nullable final String sCountryCode,
-                                                                    @Nullable final IDocumentTypeIdentifier aDocumentTypeID,
                                                                     @Nonnull final IDDErrorHandler aErrorHandler)
   {
-    final ICommonsSet <IParticipantIdentifier> ret = new CommonsHashSet <> ();
+    final ICommonsSet <DatasetResponse> ret = new CommonsHashSet <> ();
 
     final DSDClient aDSDClient = new DSDClient (m_sBaseURL);
     aDSDClient.setHttpClientSettings (new TCHttpClientSettings ());
 
-    List <MatchType> aMatches = null;
+    List <DCatAPDatasetType> datasetTypesList = null;
     try
     {
-      aMatches = aDSDClient.queryDatasetAsMatchTypes(sDatasetType, sCountryCode);
+      datasetTypesList = aDSDClient.queryDataset (sDatasetType, sCountryCode);
+      datasetTypesList.forEach(
+          d -> {
+            d.getDistribution().forEach(
+                    dist -> {
+                      DatasetResponse resp = new DatasetResponse();
+                      // Access Service Conforms To
+                      if (dist.getAccessService().getConformsToCount() > 0) {
+                        resp.setAccessServiceConforms(dist.getAccessService().getConformsToAtIndex(0).getValue());
+                      }
+
+                      // Access Service Identifier, used as Document Type ID
+                  //    resp.setDocumentTypeIdentifier(new Siantdist.getAccessService().getIdentifier()
+                    });
+          });
     }
     catch (final RuntimeException ex)
     {
       aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
     }
-
-    if (aMatches != null)
-      for (final MatchType aMatch : aMatches)
-      {
-        boolean bCanUse = false;
-        if (aDocumentTypeID == null)
-        {
-          // No doc type filter
-          bCanUse = true;
-        }
-        else
-          for (final IDType aDocTypeID : aMatch.getDocTypeID ())
-            if (aDocumentTypeID.hasScheme (aDocTypeID.getScheme ()) && aDocumentTypeID.hasValue (aDocTypeID.getValue ()))
-            {
-              bCanUse = true;
-              break;
-            }
-
-        if (bCanUse)
-        {
-          ret.add (TCConfig.getIdentifierFactory ()
-                           .createParticipantIdentifier (aMatch.getParticipantID ().getScheme (), aMatch.getParticipantID ().getValue ()));
-        }
-      }
 
     return ret;
   }
