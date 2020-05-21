@@ -16,6 +16,7 @@
 package eu.toop.connector.api.rest;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -60,13 +61,24 @@ public final class TCRestJAXB
   }
 
   @Nonnull
+  public static GenericJAXBMarshaller <TCIncomingMessage> incomingMessage ()
+  {
+    final GenericJAXBMarshaller <TCIncomingMessage> ret = new GenericJAXBMarshaller <> (TCIncomingMessage.class,
+                                                                                        getAllXSDResources (),
+                                                                                        new ObjectFactory ()::createIncomingMessage);
+    ret.setFormattedOutput (true);
+    ret.setNamespaceContext (TCRestNamespaceContext.getInstance ());
+    return ret;
+  }
+
+  @Nonnull
   public static TCIdentifierType createTCID (@Nonnull final IIdentifier aID)
   {
     return createTCID (aID.getScheme (), aID.getValue ());
   }
 
   @Nonnull
-  public static TCIdentifierType createTCID (@Nonnull final String sScheme, @Nonnull final String sValue)
+  public static TCIdentifierType createTCID (@Nullable final String sScheme, @Nonnull final String sValue)
   {
     final TCIdentifierType ret = new TCIdentifierType ();
     ret.setScheme (sScheme);

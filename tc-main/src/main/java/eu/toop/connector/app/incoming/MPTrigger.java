@@ -3,19 +3,35 @@ package eu.toop.connector.app.incoming;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.mime.IMimeType;
-import com.helger.peppolid.IIdentifier;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ByteArrayEntity;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.error.level.EErrorLevel;
+import com.helger.commons.mime.IMimeType;
+import com.helger.commons.state.ESuccess;
+import com.helger.commons.string.StringHelper;
+import com.helger.commons.url.IURLProtocol;
+import com.helger.commons.url.URLProtocolRegistry;
+import com.helger.httpclient.HttpClientManager;
+import com.helger.httpclient.response.ResponseHandlerByteArray;
+
+import eu.toop.connector.api.TCConfig;
+import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.incoming.IMEIncomingTransportMetadata;
 import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
 import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
 import eu.toop.connector.api.me.incoming.IncomingEDMResponse;
 import eu.toop.connector.api.me.model.MEPayload;
-import eu.toop.connector.api.rest.TCIdentifierType;
 import eu.toop.connector.api.rest.TCIncomingMessage;
 import eu.toop.connector.api.rest.TCIncomingMetadata;
 import eu.toop.connector.api.rest.TCPayload;
 import eu.toop.connector.api.rest.TCPayloadType;
+import eu.toop.connector.api.rest.TCRestJAXB;
+import eu.toop.kafkaclient.ToopKafkaClient;
+import eu.toop.regrep.CRegRep4;
 
 /**
  * Push incoming messages to DC/DP
@@ -24,21 +40,45 @@ import eu.toop.connector.api.rest.TCPayloadType;
  */
 public final class MPTrigger
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (MPTrigger.class);
+
   private MPTrigger ()
   {}
 
-  private static void _forwardMessage (@Nonnull final TCIncomingMessage aMsg)
-  {
-    // TODO
-  }
-
   @Nonnull
-  private static TCIdentifierType _createID (@Nonnull final IIdentifier aID)
+  private static ESuccess _forwardMessage (@Nonnull final TCIncomingMessage aMsg)
   {
-    final TCIdentifierType ret = new TCIdentifierType ();
-    ret.setScheme (aID.getScheme ());
-    ret.setValue (aID.getValue ());
-    return ret;
+    ValueEnforcer.notNull (aMsg, "Msg");
+
+    final String sDestURL = TCConfig.MEM.getMEMIncomingURL ();
+    if (StringHelper.hasNoText (sDestURL))
+      throw new IllegalStateException ("No URL for handling inbound messages is defined.");
+    final IURLProtocol aProtocol = URLProtocolRegistry.getInstance ().getProtocol (sDestURL);
+    if (aProtocol == null)
+      throw new IllegalStateException ("The URL for handling inbound messages is invalid.");
+
+    // Convert XML to bytes
+    final byte [] aPayload = TCRestJAXB.incomingMessage ().getAsBytes (aMsg);
+    if (aPayload == null)
+      throw new IllegalStateException ();
+
+    ToopKafkaClient.send (EErrorLevel.INFO, () -> "Sending inbound message to '" + sDestURL + "' with " + aPayload.length + " bytes");
+
+    // Main sending
+    try (final HttpClientManager aHCM = HttpClientManager.create (new TCHttpClientSettings ()))
+    {
+      final HttpPost aPost = new HttpPost (sDestURL);
+      aPost.setEntity (new ByteArrayEntity (aPayload));
+      final byte [] aResult = aHCM.execute (aPost, new ResponseHandlerByteArray ());
+
+      ToopKafkaClient.send (EErrorLevel.INFO, () -> "Sending inbound message was successful");
+      return ESuccess.SUCCESS;
+    }
+    catch (final Exception ex)
+    {
+      ToopKafkaClient.send (EErrorLevel.ERROR, () -> "Sending inbound message to '" + sDestURL + "' failed", ex);
+      return ESuccess.FAILURE;
+    }
   }
 
   @Nonnull
@@ -46,10 +86,10 @@ public final class MPTrigger
                                                      @Nonnull final TCPayloadType ePayloadType)
   {
     final TCIncomingMetadata ret = new TCIncomingMetadata ();
-    ret.setSenderID (_createID (aMD.getSenderID ()));
-    ret.setReceiverID (_createID (aMD.getReceiverID ()));
-    ret.setDocTypeID (_createID (aMD.getDocumentTypeID ()));
-    ret.setProcessID (_createID (aMD.getProcessID ()));
+    ret.setSenderID (TCRestJAXB.createTCID (aMD.getSenderID ()));
+    ret.setReceiverID (TCRestJAXB.createTCID (aMD.getReceiverID ()));
+    ret.setDocTypeID (TCRestJAXB.createTCID (aMD.getDocumentTypeID ()));
+    ret.setProcessID (TCRestJAXB.createTCID (aMD.getProcessID ()));
     ret.setPayloadType (ePayloadType);
     return ret;
   }
@@ -66,30 +106,33 @@ public final class MPTrigger
     return ret;
   }
 
-  public static void forwardMessage (@Nonnull final IncomingEDMRequest aRequest)
+  @Nonnull
+  public static ESuccess forwardMessage (@Nonnull final IncomingEDMRequest aRequest)
   {
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aRequest.getMetadata (), TCPayloadType.REQUEST));
-    aMsg.addPayload (_createPayload (aRequest.getRequest ().getWriter ().getAsBytes (), null, MEPayload.MIME_TYPE_REG_REP));
-    _forwardMessage (aMsg);
+    aMsg.addPayload (_createPayload (aRequest.getRequest ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
+    return _forwardMessage (aMsg);
   }
 
-  public static void forwardMessage (@Nonnull final IncomingEDMResponse aResponse)
+  @Nonnull
+  public static ESuccess forwardMessage (@Nonnull final IncomingEDMResponse aResponse)
   {
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aResponse.getMetadata (), TCPayloadType.RESPONSE));
-    aMsg.addPayload (_createPayload (aResponse.getResponse ().getWriter ().getAsBytes (), null, MEPayload.MIME_TYPE_REG_REP));
+    aMsg.addPayload (_createPayload (aResponse.getResponse ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
     // Add all attachments
     for (final MEPayload aPayload : aResponse.attachments ().values ())
       aMsg.addPayload (_createPayload (aPayload.getData ().bytes (), aPayload.getContentID (), aPayload.getMimeType ()));
-    _forwardMessage (aMsg);
+    return _forwardMessage (aMsg);
   }
 
-  public static void forwardMessage (@Nonnull final IncomingEDMErrorResponse aErrorResponse)
+  @Nonnull
+  public static ESuccess forwardMessage (@Nonnull final IncomingEDMErrorResponse aErrorResponse)
   {
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aErrorResponse.getMetadata (), TCPayloadType.ERROR_RESPONSE));
-    aMsg.addPayload (_createPayload (aErrorResponse.getErrorResponse ().getWriter ().getAsBytes (), null, MEPayload.MIME_TYPE_REG_REP));
-    _forwardMessage (aMsg);
+    aMsg.addPayload (_createPayload (aErrorResponse.getErrorResponse ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
+    return _forwardMessage (aMsg);
   }
 }

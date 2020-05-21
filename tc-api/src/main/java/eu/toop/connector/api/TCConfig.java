@@ -273,6 +273,7 @@ public final class TCConfig
       return getConfig ().getAsString ("toop.mem.as4.gw.partyid");
     }
 
+    @Nullable
     public static String getMEMAS4TcPartyid ()
     {
       return getConfig ().getAsString ("toop.mem.as4.tc.partyid");
@@ -281,6 +282,15 @@ public final class TCConfig
     public static long getGatewayNotificationWaitTimeout ()
     {
       return getConfig ().getAsLong ("toop.mem.as4.notificationWaitTimeout", 20000);
+    }
+
+    /**
+     * @return The URL where incoming AS4 messages are forwarded to
+     */
+    @Nullable
+    public static String getMEMIncomingURL ()
+    {
+      return getConfig ().getAsString ("toop.mem.incoming.url");
     }
   }
 
