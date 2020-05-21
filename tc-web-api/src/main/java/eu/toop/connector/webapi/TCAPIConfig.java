@@ -23,11 +23,11 @@ import com.helger.commons.concurrent.SimpleReadWriteLock;
 
 import eu.toop.connector.api.dd.IDDServiceGroupHrefProvider;
 import eu.toop.connector.api.dd.IDDServiceMetadataProvider;
-import eu.toop.connector.api.dsd.IDSDParticipantIDProvider;
+import eu.toop.connector.api.dsd.IDSDDatasetResponseProvider;
 import eu.toop.connector.api.validation.IVSValidator;
 import eu.toop.connector.app.dd.DDServiceGroupHrefProviderSMP;
 import eu.toop.connector.app.dd.DDServiceMetadataProviderSMP;
-import eu.toop.connector.app.dsd.DSDParticipantIDProviderRemote;
+import eu.toop.connector.app.dsd.DSDDatasetResponseProviderRemote;
 import eu.toop.connector.app.validation.TCValidator;
 
 /**
@@ -42,7 +42,7 @@ public final class TCAPIConfig
   private static final SimpleReadWriteLock s_aRWLock = new SimpleReadWriteLock ();
 
   @GuardedBy ("s_aRWLock")
-  private static IDSDParticipantIDProvider s_aDSDPartyIDProvider = new DSDParticipantIDProviderRemote ();
+  private static IDSDDatasetResponseProvider s_aDSDPartyIDProvider = new DSDDatasetResponseProviderRemote ();
   @GuardedBy ("s_aRWLock")
   private static IDDServiceGroupHrefProvider s_aDDSGHrefProvider = new DDServiceGroupHrefProviderSMP ();
   @GuardedBy ("s_aRWLock")
@@ -54,15 +54,15 @@ public final class TCAPIConfig
   {}
 
   @Nonnull
-  public static IDSDParticipantIDProvider getDSDPartyIDIdentifier ()
+  public static IDSDDatasetResponseProvider getDSDDatasetResponseProvider ()
   {
     return s_aRWLock.readLockedGet ( () -> s_aDSDPartyIDProvider);
   }
 
-  public static void setDSDPartyIDIdentifier (@Nonnull final IDSDParticipantIDProvider aIDProvider)
+  public static void setDSDDatasetResponseProvider (@Nonnull final IDSDDatasetResponseProvider aProvider)
   {
-    ValueEnforcer.notNull (aIDProvider, "DSDParticipantIDProvider");
-    s_aRWLock.writeLockedGet ( () -> s_aDSDPartyIDProvider = aIDProvider);
+    ValueEnforcer.notNull (aProvider, "IDSDDatasetResponseProvider");
+    s_aRWLock.writeLockedGet ( () -> s_aDSDPartyIDProvider = aProvider);
   }
 
   @Nonnull
@@ -71,10 +71,10 @@ public final class TCAPIConfig
     return s_aRWLock.readLockedGet ( () -> s_aDDSGHrefProvider);
   }
 
-  public static void setDDServiceGroupHrefProvider (@Nonnull final IDDServiceGroupHrefProvider aDDSGHrefProvider)
+  public static void setDDServiceGroupHrefProvider (@Nonnull final IDDServiceGroupHrefProvider aProvider)
   {
-    ValueEnforcer.notNull (aDDSGHrefProvider, "DDServiceGroupHrefProvider");
-    s_aRWLock.writeLockedGet ( () -> s_aDDSGHrefProvider = aDDSGHrefProvider);
+    ValueEnforcer.notNull (aProvider, "IDDServiceGroupHrefProvider");
+    s_aRWLock.writeLockedGet ( () -> s_aDDSGHrefProvider = aProvider);
   }
 
   @Nonnull
@@ -83,10 +83,10 @@ public final class TCAPIConfig
     return s_aRWLock.readLockedGet ( () -> s_aDDSMProvider);
   }
 
-  public static void setDDServiceMetadataProvider (@Nonnull final IDDServiceMetadataProvider aDDSMProvider)
+  public static void setDDServiceMetadataProvider (@Nonnull final IDDServiceMetadataProvider aProvider)
   {
-    ValueEnforcer.notNull (aDDSMProvider, "DDServiceMetadataProvider");
-    s_aRWLock.writeLockedGet ( () -> s_aDDSMProvider = aDDSMProvider);
+    ValueEnforcer.notNull (aProvider, "IDDServiceMetadataProvider");
+    s_aRWLock.writeLockedGet ( () -> s_aDDSMProvider = aProvider);
   }
 
   @Nonnull
@@ -97,7 +97,7 @@ public final class TCAPIConfig
 
   public static void setVSValidator (@Nonnull final IVSValidator aValidator)
   {
-    ValueEnforcer.notNull (aValidator, "VSValidator");
+    ValueEnforcer.notNull (aValidator, "IVSValidator");
     s_aRWLock.writeLockedGet ( () -> s_aValidator = aValidator);
   }
 }

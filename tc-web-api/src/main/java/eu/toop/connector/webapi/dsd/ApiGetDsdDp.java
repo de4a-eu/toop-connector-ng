@@ -27,12 +27,12 @@ import com.helger.commons.string.StringHelper;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonArray;
 import com.helger.json.JsonObject;
-import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.dd.IDDErrorHandler;
+import eu.toop.connector.api.dsd.DSDDatasetResponse;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
@@ -64,21 +64,20 @@ public class ApiGetDsdDp extends AbstractTCAPIInvoker
           aErrorMsgs.add (sMsg);
       };
       // Query DSD
-      final ICommonsSet <IParticipantIdentifier> aParticipants = TCAPIConfig.getDSDPartyIDIdentifier ()
-                                                                            .getAllParticipantIDs ("[api /dsd/dp]",
-                                                                                                   sDatasetType,
-                                                                                                   null,
-                                                                                                   null,
-                                                                                                   aErrorHdl);
+      final ICommonsSet <DSDDatasetResponse> aResponses = TCAPIConfig.getDSDDatasetResponseProvider ()
+                                                                     .getAllDatasetResponses ("[api /dsd/dp]",
+                                                                                              sDatasetType,
+                                                                                              null,
+                                                                                              aErrorHdl);
 
       if (aErrorMsgs.isEmpty ())
       {
         aJson.add ("success", true);
 
         final JsonArray aList = new JsonArray ();
-        for (final IParticipantIdentifier aPI : aParticipants)
-          aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
-        aJson.addJson ("participants", aList);
+        for (final DSDDatasetResponse aResponse : aResponses)
+          aList.add (aResponse.getAsJson ());
+        aJson.addJson ("dataset-responses", aList);
       }
       else
       {

@@ -3,6 +3,8 @@ package eu.toop.connector.api.dsd;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.json.IJsonObject;
+import com.helger.json.JsonObject;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 
@@ -117,5 +119,28 @@ public class DSDDatasetResponse
   {
     m_aDocumentTypeIdentifier = aDocumentTypeIdentifier;
     return this;
+  }
+
+  @Nonnull
+  public IJsonObject getAsJson ()
+  {
+    final IJsonObject ret = new JsonObject ();
+    if (m_aDPIdentifier != null)
+      ret.addJson ("participant-id",
+                   new JsonObject ().add ("scheme", m_aDPIdentifier.getScheme ()).add ("value", m_aDPIdentifier.getValue ()));
+
+    ret.addIfNotNull ("dataset-id", m_sDatasetIdentifier);
+
+    ret.addIfNotNull ("distribution-format", m_sDistributionFormat);
+    ret.addIfNotNull ("distribution-conforms", m_sDistributionConforms);
+    ret.addIfNotNull ("distribution-mediatype", m_sDistributionMediaType);
+
+    ret.addIfNotNull ("accessservice-conforms", m_sAccessServiceConforms);
+
+    if (m_aDocumentTypeIdentifier != null)
+      ret.addJson ("doctype-id",
+                   new JsonObject ().add ("scheme", m_aDocumentTypeIdentifier.getScheme ())
+                                    .add ("value", m_aDocumentTypeIdentifier.getValue ()));
+    return ret;
   }
 }

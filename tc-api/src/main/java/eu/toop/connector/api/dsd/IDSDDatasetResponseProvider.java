@@ -15,21 +15,21 @@
  */
 package eu.toop.connector.api.dsd;
 
-import com.helger.commons.collection.impl.ICommonsSet;
-import eu.toop.connector.api.dd.IDDErrorHandler;
-
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+
+import com.helger.commons.collection.impl.ICommonsSet;
+
+import eu.toop.connector.api.dd.IDDErrorHandler;
 
 /**
  * Interface to resolve Country Code and Dataset Type ID to a set of matching
  * DSD Dataset Responses.<br>
- * Am implementation of this class e.g. queries the DSD for the
- * respective participants.
+ * Am implementation of this class e.g. queries the DSD for the respective
+ * participants.
  *
  * @author jerouris
  */
-
 public interface IDSDDatasetResponseProvider
 {
   /**
@@ -49,7 +49,7 @@ public interface IDSDDatasetResponseProvider
    */
   @Nonnull
   ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull String sLogPrefix,
-                                                             @Nonnull String sDatasetType,
-                                                             @Nullable String sCountryCode,
-                                                             @Nonnull IDDErrorHandler aErrorHandler);
+                                                           @Nonnull String sDatasetType,
+                                                           @Nullable String sCountryCode,
+                                                           @Nonnull IDDErrorHandler aErrorHandler);
 }
