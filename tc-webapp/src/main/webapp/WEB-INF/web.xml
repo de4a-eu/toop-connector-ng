@@ -36,6 +36,7 @@
     <servlet-name>PhotonAPIServlet</servlet-name>
     <servlet-class>com.helger.photon.api.servlet.PhotonAPIServlet</servlet-class>
   </servlet>
+
   <servlet-mapping>
     <servlet-name>PhotonAPIServlet</servlet-name>
     <url-pattern>/api/*</url-pattern>
