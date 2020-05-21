@@ -15,6 +15,11 @@
  */
 package eu.toop.connector.app.dsd;
 
+import com.helger.commons.string.StringHelper;
+import com.helger.peppolid.simple.doctype.SimpleDocumentTypeIdentifier;
+import eu.toop.connector.api.TCIdentifierFactory;
+import eu.toop.edm.jaxb.cv.agent.AgentType;
+import eu.toop.edm.jaxb.cv.agent.PublicOrganizationType;
 import java.util.List;
 
 import javax.annotation.Nonnull;
@@ -34,6 +39,8 @@ import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class implements the {@link IDSDDatasetResponseProvider} interface using
@@ -44,6 +51,7 @@ import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
 public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProvider
 {
   private final String m_sBaseURL;
+  private static final Logger logger = LoggerFactory.getLogger(DSDDatasetResponseProviderRemote.class);
 
   /**
    * Constructor using the TOOP Directory URL from the configuration file.
@@ -98,15 +106,29 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
           {
             resp.setAccessServiceConforms (dist.getAccessService ().getConformsToAtIndex (0).getValue ());
           }
+          // DP Identifier
+          resp.setDPIdentifier(TCIdentifierFactory.INSTANCE.createParticipantIdentifier(
+              ((PublicOrganizationType)d.getPublisherAtIndex(0)).getIdAtIndex(0).getSchemeName(),
+              ((PublicOrganizationType)d.getPublisherAtIndex(0)).getIdAtIndex(0).getValue()));
 
           // Access Service Identifier, used as Document Type ID
-          // resp.setDocumentTypeIdentifier(new
-          // Siantdist.getAccessService().getIdentifier()
+          // TODO: Find a way to split string using Helgerized APIs (String::split is forbidden) ....
+          resp.setDocumentTypeIdentifier(new SimpleDocumentTypeIdentifier(
+              dist.getAccessService().getIdentifier().substring(0,dist.getAccessService().getIdentifier().indexOf("::")),
+              dist.getAccessService().getIdentifier().substring(dist.getAccessService().getIdentifier().indexOf("::")+2)));
+
+          resp.setDatasetIdentifier(d.getIdentifierAtIndex(0));
+          if (dist.getConformsToCount() > 0)
+            resp.setDistributionConforms(dist.getConformsToAtIndex(0).getValue());
+
+          resp.setDistributionFormat(dist.getFormat().getContentAtIndex(0).toString());
+          ret.add(resp);
         });
       });
     }
     catch (final RuntimeException ex)
     {
+      logger.error(ex.getMessage(), ex);
       aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
     }
 
