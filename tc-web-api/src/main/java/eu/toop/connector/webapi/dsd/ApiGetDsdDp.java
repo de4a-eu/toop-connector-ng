@@ -78,12 +78,12 @@ public class ApiGetDsdDp extends AbstractTCAPIInvoker
         final JsonArray aList = new JsonArray ();
         for (final IParticipantIdentifier aPI : aParticipants)
           aList.add (new JsonObject ().add ("scheme", aPI.getScheme ()).add ("value", aPI.getValue ()));
-        aJson.add ("participants", aList);
+        aJson.addJson ("participants", aList);
       }
       else
       {
         aJson.add ("success", false);
-        aJson.add ("errors", new JsonArray ().addAll (aErrorMsgs));
+        aJson.addJson ("errors", new JsonArray ().addAll (aErrorMsgs));
       }
     });
 

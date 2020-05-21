@@ -125,7 +125,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
                                                   aSW.getMillis (),
                                                   null,
                                                   null);
-        aJson.add ("validation-results", aJsonVR);
+        aJson.addJson ("validation-results", aJsonVR);
 
         bValidationOK = aValidationResultList.containsNoError ();
       }
@@ -140,7 +140,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         if (aSM != null)
         {
           aJsonSMP.add ("success", true);
-          aJsonSMP.add ("response", SMPJsonResponse.convert (aRoutingInfo.getReceiverID (), aRoutingInfo.getDocumentTypeID (), aSM));
+          aJsonSMP.addJson ("response", SMPJsonResponse.convert (aRoutingInfo.getReceiverID (), aRoutingInfo.getDocumentTypeID (), aSM));
 
           final ServiceInformationType aSI = aSM.getServiceInformation ();
           if (aSI != null)
@@ -165,7 +165,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         }
         else
           aJsonSMP.add ("success", false);
-        aJson.add ("lookup-results", aJsonSMP);
+        aJson.addJson ("lookup-results", aJsonSMP);
 
         // Read for sending?
         if (aRoutingInfoFinal != null)
@@ -186,7 +186,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
           aMEM.sendOutgoing (aRoutingInfoFinal, aMessage.build ());
           aJsonSending.add ("success", true);
 
-          aJson.add ("sending-results", aJsonSending);
+          aJson.addJson ("sending-results", aJsonSending);
         }
       }
     });

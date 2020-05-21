@@ -80,7 +80,7 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
       if (aSM != null)
       {
         aJson.add ("success", true);
-        aJson.add ("response", SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM));
+        aJson.addJson ("response", SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM));
       }
       else
         aJson.add ("success", false);

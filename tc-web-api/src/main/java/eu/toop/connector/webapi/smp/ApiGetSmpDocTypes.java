@@ -69,7 +69,7 @@ public class ApiGetSmpDocTypes extends AbstractTCAPIInvoker
                                                                      .getAllServiceGroupHrefs (aParticipantID);
 
       aJson.add ("success", true);
-      aJson.add ("response", SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ()));
+      aJson.addJson ("response", SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ()));
     });
 
     aUnifiedResponse.json (aJson);
