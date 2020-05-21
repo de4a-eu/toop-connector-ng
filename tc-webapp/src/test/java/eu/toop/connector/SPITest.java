@@ -20,6 +20,8 @@ import org.junit.Test;
 import com.helger.commons.mock.SPITestHelper;
 import com.helger.photon.core.mock.PhotonCoreValidator;
 
+import eu.toop.connector.api.TCConfig;
+
 /**
  * Test SPI definitions and web.xml
  *
@@ -32,5 +34,12 @@ public final class SPITest
   {
     SPITestHelper.testIfAllSPIImplementationsAreValid ();
     PhotonCoreValidator.validateExternalResources ();
+  }
+
+  @Test
+  public void testConfig () throws Exception
+  {
+    // Required to test the ph-config bug when building on the commandline
+    TCConfig.Tracker.isToopTrackerEnabled ();
   }
 }

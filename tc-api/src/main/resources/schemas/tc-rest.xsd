@@ -25,9 +25,9 @@
     <xs:documentation>
       TOOP Connector NG shared XML Schema
       
-      Version: 2020-05-20
+      Version: 2020-05-22
       
-      Author: Philip Helger
+      Author: Philip Helger, Jerry Dimitriou
       
       Contents:
       * Types used for input to the REST API
@@ -76,12 +76,12 @@
   
   <xs:element name="OutgoingMessage" type="TCOutgoingMessage">
     <xs:annotation>
-      <xs:documentation>Element to be used for sending an AS4 message</xs:documentation>
+      <xs:documentation>Element to be used for sending an AS4 message from DC/DP</xs:documentation>
     </xs:annotation>
   </xs:element>
 
 
-  <!-- Incoming Message Currently a copied profile of outgoing message -->
+  <!-- Incoming Message currently a copied profile of outgoing message -->
   <xs:simpleType name="TCPayloadType" final="restriction" >
     <xs:restriction base="xs:string">
       <xs:enumeration value="Request" />
@@ -109,7 +109,7 @@
 
   <xs:element name="IncomingMessage" type="TCIncomingMessage">
     <xs:annotation>
-      <xs:documentation>Element to be used for sending an AS4 message</xs:documentation>
+      <xs:documentation>Element to be used for receiving an AS4 message at DC/DP</xs:documentation>
     </xs:annotation>
   </xs:element>
 
