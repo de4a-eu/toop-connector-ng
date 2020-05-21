@@ -17,7 +17,7 @@ package eu.toop.connector.api.dsd;
 
 import com.helger.commons.collection.impl.ICommonsSet;
 import eu.toop.connector.api.dd.IDDErrorHandler;
-import eu.toop.connector.api.dsd.model.DatasetResponse;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -48,7 +48,7 @@ public interface IDSDDatasetResponseProvider
    * @return A non-<code>null</code> but maybe empty set of Participant IDs.
    */
   @Nonnull
-  ICommonsSet <DatasetResponse> getAllDatasetResponses (@Nonnull String sLogPrefix,
+  ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull String sLogPrefix,
                                                              @Nonnull String sDatasetType,
                                                              @Nullable String sCountryCode,
                                                              @Nonnull IDDErrorHandler aErrorHandler);

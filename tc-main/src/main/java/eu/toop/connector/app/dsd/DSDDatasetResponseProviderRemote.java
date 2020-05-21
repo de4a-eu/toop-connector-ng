@@ -15,27 +15,29 @@
  */
 package eu.toop.connector.app.dsd;
 
+import java.util.List;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsHashSet;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.string.ToStringGenerator;
+
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.dd.IDDErrorHandler;
+import eu.toop.connector.api.dsd.DSDDatasetResponse;
 import eu.toop.connector.api.dsd.IDSDDatasetResponseProvider;
-import eu.toop.connector.api.dsd.IDSDParticipantIDProvider;
-import eu.toop.connector.api.dsd.model.DatasetResponse;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
-import java.util.List;
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 /**
- * This class implements the {@link IDSDParticipantIDProvider} interface using a
- * remote query to DSD.
+ * This class implements the {@link IDSDDatasetResponseProvider} interface using
+ * a remote query to DSD.
  *
  * @author Philip Helger
  */
@@ -46,7 +48,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
   /**
    * Constructor using the TOOP Directory URL from the configuration file.
    */
-  public DSDDatasetResponseProviderRemote()
+  public DSDDatasetResponseProviderRemote ()
   {
     this (TCConfig.DSD.getR2D2DirectoryBaseUrl ());
   }
@@ -57,7 +59,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
    * @param sBaseURL
    *        The base URL to be used. May neither be <code>null</code> nor empty.
    */
-  public DSDDatasetResponseProviderRemote(@Nonnull final String sBaseURL)
+  public DSDDatasetResponseProviderRemote (@Nonnull final String sBaseURL)
   {
     ValueEnforcer.notEmpty (sBaseURL, "BaseURL");
     m_sBaseURL = sBaseURL;
@@ -75,34 +77,33 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
   }
 
   @Nonnull
-  public ICommonsSet <DatasetResponse> getAllDatasetResponses (@Nonnull final String sLogPrefix,
-                                                                    @Nonnull final String sDatasetType,
-                                                                    @Nullable final String sCountryCode,
-                                                                    @Nonnull final IDDErrorHandler aErrorHandler)
+  public ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull final String sLogPrefix,
+                                                                  @Nonnull final String sDatasetType,
+                                                                  @Nullable final String sCountryCode,
+                                                                  @Nonnull final IDDErrorHandler aErrorHandler)
   {
-    final ICommonsSet <DatasetResponse> ret = new CommonsHashSet <> ();
+    final ICommonsSet <DSDDatasetResponse> ret = new CommonsHashSet <> ();
 
     final DSDClient aDSDClient = new DSDClient (m_sBaseURL);
     aDSDClient.setHttpClientSettings (new TCHttpClientSettings ());
 
-    List <DCatAPDatasetType> datasetTypesList = null;
     try
     {
-      datasetTypesList = aDSDClient.queryDataset (sDatasetType, sCountryCode);
-      datasetTypesList.forEach(
-          d -> {
-            d.getDistribution().forEach(
-                    dist -> {
-                      DatasetResponse resp = new DatasetResponse();
-                      // Access Service Conforms To
-                      if (dist.getAccessService().getConformsToCount() > 0) {
-                        resp.setAccessServiceConforms(dist.getAccessService().getConformsToAtIndex(0).getValue());
-                      }
+      final List <DCatAPDatasetType> datasetTypesList = aDSDClient.queryDataset (sDatasetType, sCountryCode);
+      datasetTypesList.forEach (d -> {
+        d.getDistribution ().forEach (dist -> {
+          final DSDDatasetResponse resp = new DSDDatasetResponse ();
+          // Access Service Conforms To
+          if (dist.getAccessService ().hasConformsToEntries ())
+          {
+            resp.setAccessServiceConforms (dist.getAccessService ().getConformsToAtIndex (0).getValue ());
+          }
 
-                      // Access Service Identifier, used as Document Type ID
-                  //    resp.setDocumentTypeIdentifier(new Siantdist.getAccessService().getIdentifier()
-                    });
-          });
+          // Access Service Identifier, used as Document Type ID
+          // resp.setDocumentTypeIdentifier(new
+          // Siantdist.getAccessService().getIdentifier()
+        });
+      });
     }
     catch (final RuntimeException ex)
     {
