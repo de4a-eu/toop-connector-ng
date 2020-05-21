@@ -27,10 +27,11 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.io.ByteArrayWrapper;
-import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.mime.IMimeType;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
+
+import eu.toop.regrep.CRegRep4;
 
 /**
  * A single payload of an AS4 message. Used inside {@link MEMessage}
@@ -41,9 +42,6 @@ import com.helger.commons.string.ToStringGenerator;
 @Immutable
 public final class MEPayload implements Serializable
 {
-  // TODO replace with CRegRep4 constant
-  public static final IMimeType MIME_TYPE_REG_REP = EMimeContentType.APPLICATION.buildMimeType ("x-ebrs+xml");
-
   /**
    * Type of the payload
    */
@@ -137,7 +135,7 @@ public final class MEPayload implements Serializable
     @Nonnull
     public Builder mimeTypeRegRep ()
     {
-      return mimeType (MIME_TYPE_REG_REP);
+      return mimeType (CRegRep4.MIME_TYPE_EBRS_XML);
     }
 
     @Nonnull

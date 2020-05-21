@@ -70,11 +70,8 @@ public final class TCValidationRules
                                              UBL21NamespaceContext.getInstance ());
   }
 
-  // TODO replace in beta4
-  private static final ClassPathResource TOOP_BUSINESS_RULES_XSLT = new ClassPathResource ("200/TOOP_BUSINESS_RULES.xslt",
-                                                                                           SchematronBusinessRules2Validator.class.getClassLoader ());
-  private static final ClassPathResource TOOP_EDM2_XSLT = new ClassPathResource ("200/TOOP_EDM.xslt",
-                                                                                 SchematronEDM2Validator.class.getClassLoader ());
+  private static final ClassPathResource TOOP_BUSINESS_RULES_XSLT = SchematronBusinessRules2Validator.TOOP_BUSINESS_RULES_XSLT;
+  private static final ClassPathResource TOOP_EDM2_XSLT = SchematronEDM2Validator.TOOP_EDM2_XSLT;
 
   /**
    * Register all standard TOOP EDM v2 validation execution sets to the provided
