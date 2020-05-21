@@ -55,8 +55,10 @@
       <xs:element name="ReceiverCertificate" type="xs:base64Binary" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
-  
-  <xs:complexType name="TCOutgoingPayload">
+
+
+
+  <xs:complexType name="TCPayload">
     <xs:simpleContent>
       <xs:extension base="xs:base64Binary">
         <xs:attribute name="ContentID" type="xs:string" use="optional" />
@@ -68,7 +70,7 @@
   <xs:complexType name="TCOutgoingMessage">
     <xs:sequence>
       <xs:element name="Metadata" type="TCOutgoingMetadata" />
-      <xs:element name="Payload" type="TCOutgoingPayload" maxOccurs="unbounded"/>
+      <xs:element name="Payload" type="TCPayload" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
   
@@ -77,4 +79,42 @@
       <xs:documentation>Element to be used for sending an AS4 message</xs:documentation>
     </xs:annotation>
   </xs:element>
+
+
+  <!-- Incoming Message Currently a copied profile of outgoing message -->
+  <xs:simpleType name="TCPayloadType" final="restriction" >
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Request" />
+      <xs:enumeration value="Response" />
+      <xs:enumeration value="ErrorResponse" />
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="TCIncomingMetadata">
+    <xs:sequence>
+      <xs:element name="SenderID" type="TCIdentifierType" />
+      <xs:element name="ReceiverID" type="TCIdentifierType" />
+      <xs:element name="DocTypeID" type="TCIdentifierType" />
+      <xs:element name="ProcessID" type="TCIdentifierType" />
+      <xs:element name="PayloadType" type="TCPayloadType" />
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:complexType name="TCIncomingMessage">
+    <xs:sequence>
+      <xs:element name="Metadata" type="TCIncomingMetadata" />
+      <xs:element name="Payload" type="TCPayload" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:element name="IncomingMessage" type="TCIncomingMessage">
+    <xs:annotation>
+      <xs:documentation>Element to be used for sending an AS4 message</xs:documentation>
+    </xs:annotation>
+  </xs:element>
+
 </xs:schema>
+
+
+
+

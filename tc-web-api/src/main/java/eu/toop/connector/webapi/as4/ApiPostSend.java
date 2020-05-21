@@ -38,7 +38,7 @@ import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MERoutingInformation;
 import eu.toop.connector.api.rest.TCOutgoingMessage;
-import eu.toop.connector.api.rest.TCOutgoingPayload;
+import eu.toop.connector.api.rest.TCPayload;
 import eu.toop.connector.api.rest.TCRestJAXB;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
@@ -83,7 +83,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
 
     // Add payloads
     final MEMessage.Builder aMessage = MEMessage.builder ();
-    for (final TCOutgoingPayload aPayload : aOutgoingMsg.getPayload ())
+    for (final TCPayload aPayload : aOutgoingMsg.getPayload ())
     {
       aMessage.addPayload (MEPayload.builder ()
                                     .mimeType (MimeTypeParser.parseMimeType (aPayload.getMimeType ()))
