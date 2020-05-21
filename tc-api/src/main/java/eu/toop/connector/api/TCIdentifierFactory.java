@@ -30,23 +30,21 @@ import com.helger.peppolid.simple.process.SimpleProcessIdentifier;
  */
 public class TCIdentifierFactory extends SimpleIdentifierFactory
 {
-  public static final TCIdentifierFactory INSTANCE_TC = new TCIdentifierFactory ();
+  static final TCIdentifierFactory INSTANCE_TC = new TCIdentifierFactory ();
 
   private TCIdentifierFactory ()
   {}
 
   @Override
   @Nullable
-  public SimpleDocumentTypeIdentifier createDocumentTypeIdentifier (@Nullable final String sScheme,
-                                                                    @Nullable final String sValue)
+  public SimpleDocumentTypeIdentifier createDocumentTypeIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
     return super.createDocumentTypeIdentifier (StringHelper.trim (sScheme), StringHelper.trim (sValue));
   }
 
   @Override
   @Nullable
-  public SimpleParticipantIdentifier createParticipantIdentifier (@Nullable final String sScheme,
-                                                                  @Nullable final String sValue)
+  public SimpleParticipantIdentifier createParticipantIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
     return super.createParticipantIdentifier (StringHelper.trim (sScheme), StringHelper.trim (sValue));
   }
