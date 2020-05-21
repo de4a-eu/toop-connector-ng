@@ -42,6 +42,7 @@ import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
 import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
 import eu.toop.connector.api.me.incoming.IncomingEDMResponse;
 import eu.toop.connector.api.me.incoming.MEIncomingException;
+import eu.toop.connector.app.incoming.MPTrigger;
 import eu.toop.kafkaclient.ToopKafkaClient;
 import eu.toop.kafkaclient.ToopKafkaSettings;
 
@@ -147,8 +148,7 @@ public class TCInit
       public void handleIncomingRequest (@Nonnull final IncomingEDMRequest aRequest) throws MEIncomingException
       {
         ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TC got DP incoming MEM request (2/4)");
-        // TODO implement me
-        // MPTrigger.incomingGatewayDP_2_of_4 (aRequest);
+        MPTrigger.forwardMessage (aRequest);
       }
 
       public void handleIncomingResponse (@Nonnull final IncomingEDMResponse aResponse) throws MEIncomingException
@@ -158,15 +158,13 @@ public class TCInit
                                     "TC got DC incoming MEM request (4/4) with " +
                                     aResponse.attachments ().size () +
                                     " attachments");
-        // TODO implement me
-        // MPTrigger.incomingGatewayDC_4_of_4 (aResponse);
+        MPTrigger.forwardMessage (aResponse);
       }
 
       public void handleIncomingErrorResponse (@Nonnull final IncomingEDMErrorResponse aErrorResponse) throws MEIncomingException
       {
-        ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TC got DC incoming MEM request (4/4) with ERRORS");
-        // TODO implement me
-        // MPTrigger.incomingGatewayDC_4_of_4 (aErrorResponse);
+        ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TC got DC incoming MEM request (4/4) with ERRORs");
+        MPTrigger.forwardMessage (aErrorResponse);
       }
     });
 

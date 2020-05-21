@@ -20,6 +20,7 @@ import javax.annotation.Nonnull;
 import com.helger.bdve.executorset.VESID;
 import com.helger.commons.annotation.Nonempty;
 
+import eu.toop.connector.api.rest.TCPayloadType;
 import eu.toop.connector.app.validation.TCValidationRules;
 
 /**
@@ -29,17 +30,19 @@ import eu.toop.connector.app.validation.TCValidationRules;
  */
 public enum ETCEdmType
 {
-  REQUEST ("req", TCValidationRules.VID_TOOP_EDM_REQUEST_200),
-  RESPONSE ("resp", TCValidationRules.VID_TOOP_EDM_RESPONSE_200),
-  ERROR_RESPONSE ("errresp", TCValidationRules.VID_TOOP_EDM_ERROR_RESPONSE_200);
+  REQUEST ("req", TCValidationRules.VID_TOOP_EDM_REQUEST_200, TCPayloadType.REQUEST),
+  RESPONSE ("resp", TCValidationRules.VID_TOOP_EDM_RESPONSE_200, TCPayloadType.RESPONSE),
+  ERROR_RESPONSE ("errresp", TCValidationRules.VID_TOOP_EDM_ERROR_RESPONSE_200, TCPayloadType.ERROR_RESPONSE);
 
   private final String m_sID;
   private final VESID m_aVESID;
+  private final TCPayloadType m_ePayloadType;
 
-  ETCEdmType (@Nonnull @Nonempty final String sID, @Nonnull final VESID aVESID)
+  ETCEdmType (@Nonnull @Nonempty final String sID, @Nonnull final VESID aVESID, @Nonnull final TCPayloadType ePayloadType)
   {
     m_sID = sID;
     m_aVESID = aVESID;
+    m_ePayloadType = ePayloadType;
   }
 
   @Nonnull
@@ -56,5 +59,11 @@ public enum ETCEdmType
   public VESID getVESID ()
   {
     return m_aVESID;
+  }
+
+  @Nonnull
+  public TCPayloadType getPayloadType ()
+  {
+    return m_ePayloadType;
   }
 }

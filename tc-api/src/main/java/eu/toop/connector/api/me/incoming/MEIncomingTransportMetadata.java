@@ -15,12 +15,17 @@
  */
 package eu.toop.connector.api.me.incoming;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
+import com.helger.peppolid.factory.IIdentifierFactory;
+
+import eu.toop.connector.api.TCConfig;
+import eu.toop.connector.api.rest.TCIncomingMetadata;
 
 /**
  * Container for all relevant AS4 transport metadata that may be interesting to
@@ -78,5 +83,19 @@ public class MEIncomingTransportMetadata implements IMEIncomingTransportMetadata
                                        .append ("DocTypeID", m_aDocTypeID)
                                        .append ("ProcID", m_aProcessID)
                                        .getToString ();
+  }
+
+  @Nonnull
+  public static MEIncomingTransportMetadata create (@Nonnull final TCIncomingMetadata aIM)
+  {
+    final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
+    final IParticipantIdentifier aSenderID = aIF.createParticipantIdentifier (aIM.getSenderID ().getScheme (),
+                                                                              aIM.getSenderID ().getValue ());
+    final IParticipantIdentifier aReceiverID = aIF.createParticipantIdentifier (aIM.getReceiverID ().getScheme (),
+                                                                                aIM.getReceiverID ().getValue ());
+    final IDocumentTypeIdentifier aDocTypeID = aIF.createDocumentTypeIdentifier (aIM.getDocTypeID ().getScheme (),
+                                                                                 aIM.getDocTypeID ().getValue ());
+    final IProcessIdentifier aProcessID = aIF.createProcessIdentifier (aIM.getProcessID ().getScheme (), aIM.getProcessID ().getValue ());
+    return new MEIncomingTransportMetadata (aSenderID, aReceiverID, aDocTypeID, aProcessID);
   }
 }

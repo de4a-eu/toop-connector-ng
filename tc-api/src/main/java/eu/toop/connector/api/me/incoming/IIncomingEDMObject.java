@@ -15,12 +15,18 @@
  */
 package eu.toop.connector.api.me.incoming;
 
+import javax.annotation.Nonnull;
+
 /**
  * Marker interface for incoming EDM objects.
- * 
+ *
  * @author Philip Helger
  */
 public interface IIncomingEDMObject
 {
-  /* empty */
+  /**
+   * @return The incoming metadata associated with this request.
+   */
+  @Nonnull
+  IMEIncomingTransportMetadata getMetadata ();
 }

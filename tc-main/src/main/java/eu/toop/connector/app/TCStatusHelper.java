@@ -62,8 +62,7 @@ public final class TCStatusHelper
     TCConfig.getConfig ().forEachConfigurationValueProvider ( (aCVP, nPriority) -> {
       if (aCVP instanceof IConfigurationSourceResource)
       {
-        // TODO ph-commons 9.4.3 - getAllConfigEntries
-        final ICommonsOrderedMap <String, String> aAll = new CommonsLinkedHashMap <> ();
+        final ICommonsOrderedMap <String, String> aAll = ((IConfigurationSourceResource) aCVP).getAllConfigItems ();
         for (final Map.Entry <String, String> aEntry : aAll.entrySet ())
         {
           // Never override, because highest priority values come first

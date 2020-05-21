@@ -25,7 +25,7 @@
     <xs:documentation>
       TOOP Connector NG shared XML Schema
       
-      Version: 2020-05-22
+      Version: 2020-05-21
       
       Author: Philip Helger, Jerry Dimitriou
       
@@ -33,16 +33,29 @@
       * Types used for input to the REST API
       * Types used for output of the REST API
     </xs:documentation>
-  </xs:annotation>         
+  </xs:annotation>
+  
+  <!-- generic stuff -->
            
   <xs:complexType name="TCIdentifierType">
     <xs:annotation>
       <xs:documentation>Generic 2-part identifier for participants, document types and processes</xs:documentation>
     </xs:annotation>
     <!-- attributes only -->
-    <xs:attribute name="scheme" type="xs:string" use="required" />
+    <xs:attribute name="scheme" type="xs:string" use="optional" />
     <xs:attribute name="value" type="xs:string" use="required" />
   </xs:complexType>
+
+  <xs:complexType name="TCPayload">
+    <xs:simpleContent>
+      <xs:extension base="xs:base64Binary">
+        <xs:attribute name="ContentID" type="xs:string" use="optional" />
+        <xs:attribute name="MimeType" type="xs:string" use="required" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+  
+  <!-- outgoing (from DC/DP) stuff -->
   
   <xs:complexType name="TCOutgoingMetadata">
     <xs:sequence>
@@ -54,17 +67,6 @@
       <xs:element name="EndpointURL" type="xs:string" minOccurs="0"/>
       <xs:element name="ReceiverCertificate" type="xs:base64Binary" minOccurs="0"/>
     </xs:sequence>
-  </xs:complexType>
-
-
-
-  <xs:complexType name="TCPayload">
-    <xs:simpleContent>
-      <xs:extension base="xs:base64Binary">
-        <xs:attribute name="ContentID" type="xs:string" use="optional" />
-        <xs:attribute name="MimeType" type="xs:string" use="required" />
-      </xs:extension>
-    </xs:simpleContent>
   </xs:complexType>
   
   <xs:complexType name="TCOutgoingMessage">
@@ -80,9 +82,9 @@
     </xs:annotation>
   </xs:element>
 
+  <!-- incoming (to DC/DP) stuff -->
 
-  <!-- Incoming Message currently a copied profile of outgoing message -->
-  <xs:simpleType name="TCPayloadType" final="restriction" >
+  <xs:simpleType name="TCPayloadType" final="restriction">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Request" />
       <xs:enumeration value="Response" />
@@ -112,9 +114,4 @@
       <xs:documentation>Element to be used for receiving an AS4 message at DC/DP</xs:documentation>
     </xs:annotation>
   </xs:element>
-
 </xs:schema>
-
-
-
-

@@ -41,6 +41,9 @@ import com.helger.commons.string.ToStringGenerator;
 @Immutable
 public final class MEPayload implements Serializable
 {
+  // TODO replace with CRegRep4 constant
+  public static final IMimeType MIME_TYPE_REG_REP = EMimeContentType.APPLICATION.buildMimeType ("x-ebrs+xml");
+
   /**
    * Type of the payload
    */
@@ -134,7 +137,7 @@ public final class MEPayload implements Serializable
     @Nonnull
     public Builder mimeTypeRegRep ()
     {
-      return mimeType (EMimeContentType.APPLICATION.buildMimeType ("x-ebrs+xml"));
+      return mimeType (MIME_TYPE_REG_REP);
     }
 
     @Nonnull
