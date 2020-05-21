@@ -289,11 +289,6 @@ public final class TCConfig
     private HTTP ()
     {}
 
-    public static boolean isUseHttpSystemProperties ()
-    {
-      return getConfig ().getAsBoolean ("http.usesysprops", false);
-    }
-
     public static boolean isProxyServerEnabled ()
     {
       return getConfig ().getAsBoolean ("http.proxy.enabled", false);

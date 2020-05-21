@@ -18,8 +18,6 @@ package eu.toop.connector.api.http;
 import java.security.GeneralSecurityException;
 
 import org.apache.http.HttpHost;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.exception.InitializationException;
 import com.helger.httpclient.HttpClientSettings;
@@ -27,52 +25,41 @@ import com.helger.httpclient.HttpClientSettings;
 import eu.toop.connector.api.TCConfig;
 
 /**
- * Common TOOP Connector HTTPClient factory
+ * Common TOOP Connector HTTPClient settings
  *
  * @author Philip Helger
  */
 public class TCHttpClientSettings extends HttpClientSettings
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (TCHttpClientSettings.class);
-
   public TCHttpClientSettings ()
   {
-    if (TCConfig.HTTP.isUseHttpSystemProperties ())
+    // Add settings from configuration file here centrally
+    if (TCConfig.HTTP.isProxyServerEnabled ())
     {
-      // For proxy etc
-      setUseSystemProperties (true);
-      LOGGER.info ("Using predefined System properties to configure HTTP connection. All manually configured values for HTTP connections are not used.");
-    }
-    else
-    {
-      // Add settings from configuration file here centrally
-      if (TCConfig.HTTP.isProxyServerEnabled ())
-      {
-        setProxyHost (new HttpHost (TCConfig.HTTP.getProxyServerAddress (), TCConfig.HTTP.getProxyServerPort ()));
+      setProxyHost (new HttpHost (TCConfig.HTTP.getProxyServerAddress (), TCConfig.HTTP.getProxyServerPort ()));
 
-        // Non-proxy hosts
-        addNonProxyHostsFromPipeString (TCConfig.HTTP.getProxyServerNonProxyHosts ());
+      // Non-proxy hosts
+      addNonProxyHostsFromPipeString (TCConfig.HTTP.getProxyServerNonProxyHosts ());
+    }
+
+    // Disable SSL checks?
+    if (TCConfig.HTTP.isTLSTrustAll ())
+      try
+      {
+        setSSLContextTrustAll ();
+        setHostnameVerifierVerifyAll ();
+      }
+      catch (final GeneralSecurityException ex)
+      {
+        throw new InitializationException (ex);
       }
 
-      // Disable SSL checks?
-      if (TCConfig.HTTP.isTLSTrustAll ())
-        try
-        {
-          setSSLContextTrustAll ();
-          setHostnameVerifierVerifyAll ();
-        }
-        catch (final GeneralSecurityException ex)
-        {
-          throw new InitializationException (ex);
-        }
+    final int nConnectionTimeoutMS = TCConfig.HTTP.getConnectionTimeoutMS ();
+    if (nConnectionTimeoutMS >= 0)
+      setConnectionTimeoutMS (nConnectionTimeoutMS);
 
-      final int nConnectionTimeoutMS = TCConfig.HTTP.getConnectionTimeoutMS ();
-      if (nConnectionTimeoutMS >= 0)
-        setConnectionTimeoutMS (nConnectionTimeoutMS);
-
-      final int nReadTimeoutMS = TCConfig.HTTP.getReadTimeoutMS ();
-      if (nReadTimeoutMS >= 0)
-        setSocketTimeoutMS (nReadTimeoutMS);
-    }
+    final int nReadTimeoutMS = TCConfig.HTTP.getReadTimeoutMS ();
+    if (nReadTimeoutMS >= 0)
+      setSocketTimeoutMS (nReadTimeoutMS);
   }
 }
