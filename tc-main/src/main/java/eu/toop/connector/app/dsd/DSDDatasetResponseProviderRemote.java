@@ -15,20 +15,20 @@
  */
 package eu.toop.connector.app.dsd;
 
-import com.helger.commons.string.StringHelper;
-import com.helger.peppolid.simple.doctype.SimpleDocumentTypeIdentifier;
-import eu.toop.connector.api.TCIdentifierFactory;
-import eu.toop.edm.jaxb.cv.agent.AgentType;
-import eu.toop.edm.jaxb.cv.agent.PublicOrganizationType;
 import java.util.List;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsHashSet;
+import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsSet;
+import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.connector.api.TCConfig;
@@ -38,9 +38,9 @@ import eu.toop.connector.api.dsd.IDSDDatasetResponseProvider;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
+import eu.toop.edm.jaxb.cv.agent.PublicOrganizationType;
+import eu.toop.edm.jaxb.cv.cbc.IDType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * This class implements the {@link IDSDDatasetResponseProvider} interface using
@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
 public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProvider
 {
   private final String m_sBaseURL;
-  private static final Logger logger = LoggerFactory.getLogger(DSDDatasetResponseProviderRemote.class);
+  private static final Logger logger = LoggerFactory.getLogger (DSDDatasetResponseProviderRemote.class);
 
   /**
    * Constructor using the TOOP Directory URL from the configuration file.
@@ -103,32 +103,30 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
           final DSDDatasetResponse resp = new DSDDatasetResponse ();
           // Access Service Conforms To
           if (dist.getAccessService ().hasConformsToEntries ())
-          {
             resp.setAccessServiceConforms (dist.getAccessService ().getConformsToAtIndex (0).getValue ());
-          }
+
           // DP Identifier
-          resp.setDPIdentifier(TCIdentifierFactory.INSTANCE.createParticipantIdentifier(
-              ((PublicOrganizationType)d.getPublisherAtIndex(0)).getIdAtIndex(0).getSchemeName(),
-              ((PublicOrganizationType)d.getPublisherAtIndex(0)).getIdAtIndex(0).getValue()));
+          final IDType aDPID = ((PublicOrganizationType) d.getPublisherAtIndex (0)).getIdAtIndex (0);
+          resp.setDPIdentifier (TCConfig.getIdentifierFactory ().createParticipantIdentifier (aDPID.getSchemeName (), aDPID.getValue ()));
 
           // Access Service Identifier, used as Document Type ID
-          // TODO: Find a way to split string using Helgerized APIs (String::split is forbidden) ....
-          resp.setDocumentTypeIdentifier(new SimpleDocumentTypeIdentifier(
-              dist.getAccessService().getIdentifier().substring(0,dist.getAccessService().getIdentifier().indexOf("::")),
-              dist.getAccessService().getIdentifier().substring(dist.getAccessService().getIdentifier().indexOf("::")+2)));
+          final ICommonsList <String> aDTParts = StringHelper.getExploded ("::", dist.getAccessService ().getIdentifier (), 2);
+          if (aDTParts.size () == 2)
+            resp.setDocumentTypeIdentifier (TCConfig.getIdentifierFactory ()
+                                                    .createDocumentTypeIdentifier (aDTParts.get (0), aDTParts.get (1)));
 
-          resp.setDatasetIdentifier(d.getIdentifierAtIndex(0));
-          if (dist.getConformsToCount() > 0)
-            resp.setDistributionConforms(dist.getConformsToAtIndex(0).getValue());
+          resp.setDatasetIdentifier (d.getIdentifierAtIndex (0));
+          if (dist.hasConformsToEntries ())
+            resp.setDistributionConforms (dist.getConformsToAtIndex (0).getValue ());
 
-          resp.setDistributionFormat(dist.getFormat().getContentAtIndex(0).toString());
-          ret.add(resp);
+          resp.setDistributionFormat (dist.getFormat ().getContentAtIndex (0).toString ());
+          ret.add (resp);
         });
       });
     }
     catch (final RuntimeException ex)
     {
-      logger.error(ex.getMessage(), ex);
+      logger.error (ex.getMessage (), ex);
       aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
     }
 

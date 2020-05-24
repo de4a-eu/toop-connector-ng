@@ -2,13 +2,13 @@ package eu.toop.connector.app.incoming;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.ByteArrayEntity;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.mime.IMimeType;
 import com.helger.commons.state.ESuccess;
@@ -38,10 +38,9 @@ import eu.toop.regrep.CRegRep4;
  *
  * @author Philip Helger
  */
+@Immutable
 public final class MPTrigger
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (MPTrigger.class);
-
   private MPTrigger ()
   {}
 
@@ -71,7 +70,8 @@ public final class MPTrigger
       aPost.setEntity (new ByteArrayEntity (aPayload));
       final byte [] aResult = aHCM.execute (aPost, new ResponseHandlerByteArray ());
 
-      ToopKafkaClient.send (EErrorLevel.INFO, () -> "Sending inbound message was successful");
+      ToopKafkaClient.send (EErrorLevel.INFO,
+                            () -> "Sending inbound message was successful. Got " + ArrayHelper.getSize (aResult) + " bytes back");
       return ESuccess.SUCCESS;
     }
     catch (final Exception ex)
