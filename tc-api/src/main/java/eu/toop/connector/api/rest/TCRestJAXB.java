@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
@@ -74,6 +75,7 @@ public final class TCRestJAXB
   @Nonnull
   public static TCIdentifierType createTCID (@Nonnull final IIdentifier aID)
   {
+    ValueEnforcer.notNull(aID, "aID");
     return createTCID (aID.getScheme (), aID.getValue ());
   }
 
