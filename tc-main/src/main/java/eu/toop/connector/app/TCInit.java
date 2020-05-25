@@ -34,6 +34,7 @@ import com.helger.commons.id.factory.StringIDFromGlobalPersistentLongIDFactory;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.url.IURLProtocol;
 import com.helger.commons.url.URLProtocolRegistry;
+import com.helger.xservlet.requesttrack.RequestTracker;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.MessageExchangeManager;
@@ -104,6 +105,10 @@ public class TCInit
       sLogPrefix += " ";
     }
     s_sLogPrefix = sLogPrefix;
+
+    // Disable RequestTracker
+    RequestTracker.getInstance ().getRequestTrackingMgr ().setLongRunningCheckEnabled (false);
+    RequestTracker.getInstance ().getRequestTrackingMgr ().setParallelRunningRequestCheckEnabled (false);
 
     {
       // Init tracker client
