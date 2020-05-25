@@ -231,6 +231,12 @@ public final class TCConfig
 
   public static class MEM
   {
+    /**
+     * Used in cases where the MEM incoming URL needs to be updated
+     * programmatically
+     */
+    private static String overriddenMemIncomingURL;
+
     private MEM ()
     {}
 
@@ -290,7 +296,19 @@ public final class TCConfig
     @Nullable
     public static String getMEMIncomingURL ()
     {
+      if (overriddenMemIncomingURL != null)
+        return overriddenMemIncomingURL;
+
       return getConfig ().getAsString ("toop.mem.incoming.url");
+    }
+
+    /**
+     * Updates the overriddenMemIncomingURL to override the return value of
+     * {@link MEM#getMEMIncomingURL()}
+     * @param overriddenMemIncomingURL the new value of toop.mem.incoming.url
+     */
+    public static void setOverriddenMemIncomingURL(String overriddenMemIncomingURL) {
+      MEM.overriddenMemIncomingURL = overriddenMemIncomingURL;
     }
   }
 

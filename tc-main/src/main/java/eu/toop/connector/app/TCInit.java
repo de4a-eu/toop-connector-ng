@@ -155,7 +155,7 @@ public class TCInit
       {
         ToopKafkaClient.send (EErrorLevel.INFO,
                               () -> s_sLogPrefix +
-                                    "TC got DC incoming MEM request (4/4) with " +
+                                    "TC got DC incoming MEM response (4/4) with " +
                                     aResponse.attachments ().size () +
                                     " attachments");
         MPTrigger.forwardMessage (aResponse);
@@ -163,7 +163,7 @@ public class TCInit
 
       public void handleIncomingErrorResponse (@Nonnull final IncomingEDMErrorResponse aErrorResponse) throws MEIncomingException
       {
-        ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TC got DC incoming MEM request (4/4) with ERRORs");
+        ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TC got DC incoming MEM response (4/4) with ERRORs");
         MPTrigger.forwardMessage (aErrorResponse);
       }
     });
