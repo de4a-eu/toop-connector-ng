@@ -60,10 +60,6 @@
       <url>http://www.helger.com</url>
     </developer>
   </developers>
-  
-  <properties>
-    <ph-xsds.version>2.2.6</ph-xsds.version>
-  </properties>
 
   <dependencyManagement>
     <dependencies>
@@ -78,13 +74,6 @@
         <groupId>com.helger</groupId>
         <artifactId>ph-commons-parent-pom</artifactId>
         <version>9.4.4</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.helger</groupId>
-        <artifactId>ph-xsds-parent-pom</artifactId>
-        <version>${ph-xsds.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
