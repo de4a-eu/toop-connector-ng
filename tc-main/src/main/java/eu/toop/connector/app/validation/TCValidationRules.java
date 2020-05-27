@@ -65,7 +65,7 @@ public final class TCValidationRules
   @Nonnull
   private static IValidationExecutor _createXSLT (@Nonnull final IReadableResource aRes)
   {
-    return new ValidationExecutorSchematron (new ValidationArtefact (EValidationType.SCHEMATRON_XSLT, _getCL (), aRes),
+    return new ValidationExecutorSchematron (new ValidationArtefact (EValidationType.SCHEMATRON_XSLT, aRes),
                                              null,
                                              UBL21NamespaceContext.getInstance ());
   }
@@ -93,7 +93,6 @@ public final class TCValidationRules
                                                                              "TOOP EDM Request 2.0.0",
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
-                                                                                                                                _getCL (),
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
                                                                                                         () -> aDT.getSchema ()),
                                                                              _createXSLT (TOOP_EDM2_XSLT),
@@ -107,7 +106,6 @@ public final class TCValidationRules
                                                                              "TOOP EDM Response 2.0.0",
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
-                                                                                                                                _getCL (),
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
                                                                                                         () -> aDT.getSchema ()),
                                                                              _createXSLT (TOOP_EDM2_XSLT),
@@ -121,7 +119,6 @@ public final class TCValidationRules
                                                                              "TOOP EDM Error Response 2.0.0",
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
-                                                                                                                                _getCL (),
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
                                                                                                         () -> aDT.getSchema ()),
                                                                              _createXSLT (TOOP_EDM2_XSLT),

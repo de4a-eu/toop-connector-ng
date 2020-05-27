@@ -65,16 +65,16 @@
       <artifactId>ph-config</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.web</groupId>
       <artifactId>ph-httpclient</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
+      <groupId>com.helger.peppol</groupId>
       <artifactId>peppol-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger</groupId>
-      <artifactId>ph-bdve</artifactId>
+      <groupId>com.helger.bdve</groupId>
+      <artifactId>ph-bdve-engine</artifactId>
     </dependency>
     
     <dependency>
@@ -141,11 +141,11 @@ osgi.serviceloader; filter:="(osgi.serviceloader=eu.toop.connector.api.as4.IMess
           </args>
           <episodes>
             <episode>
-              <groupId>com.helger</groupId>
+              <groupId>com.helger.xsd</groupId>
               <artifactId>ph-xsds-xmldsig</artifactId>
             </episode>
             <episode>
-              <groupId>com.helger</groupId>
+              <groupId>com.helger.xsd</groupId>
               <artifactId>ph-xsds-bdxr-smp1</artifactId>
             </episode>
           </episodes>

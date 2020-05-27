@@ -41,7 +41,7 @@ import eu.toop.connector.api.validation.IVSValidator;
 
 /**
  * The default implementation of {@link IVSValidator}
- * 
+ *
  * @author Philip Helger
  */
 public class TCValidator implements IVSValidator
@@ -86,7 +86,7 @@ public class TCValidator implements IVSValidator
 
     // Add all XML parsing stuff - always first item
     // Also add if no error is present to have it shown in the list
-    aValidationResultList.add (0, new ValidationResult (new ValidationArtefact (EValidationType.XML, null, aXMLRes), aXMLErrors));
+    aValidationResultList.add (0, new ValidationResult (new ValidationArtefact (EValidationType.XML, aXMLRes), aXMLErrors));
     return aValidationResultList;
   }
 }
