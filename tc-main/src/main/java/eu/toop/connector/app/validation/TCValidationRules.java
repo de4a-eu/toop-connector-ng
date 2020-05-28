@@ -20,20 +20,17 @@ import javax.annotation.concurrent.Immutable;
 
 import com.helger.bdve.EValidationType;
 import com.helger.bdve.artefact.ValidationArtefact;
-import com.helger.bdve.execute.IValidationExecutor;
 import com.helger.bdve.execute.ValidationExecutorSchematron;
 import com.helger.bdve.execute.ValidationExecutorXSD;
 import com.helger.bdve.executorset.VESID;
 import com.helger.bdve.executorset.ValidationExecutorSet;
 import com.helger.bdve.executorset.ValidationExecutorSetRegistry;
 import com.helger.commons.ValueEnforcer;
-import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.resource.IReadableResource;
 import com.helger.jaxb.builder.IJAXBDocumentType;
 import com.helger.ubl21.UBL21NamespaceContext;
 
-import eu.toop.edm.schematron.SchematronBusinessRules2Validator;
-import eu.toop.edm.schematron.SchematronEDM2Validator;
+import eu.toop.edm.schematron.CEDMSchematron;
 import eu.toop.edm.xml.cagv.CCAGV;
 import eu.toop.edm.xml.cccev.CCCEV;
 import eu.toop.regrep.CRegRep4;
@@ -63,15 +60,12 @@ public final class TCValidationRules
   }
 
   @Nonnull
-  private static IValidationExecutor _createXSLT (@Nonnull final IReadableResource aRes)
+  private static ValidationExecutorSchematron _createXSLT (@Nonnull final IReadableResource aRes)
   {
     return new ValidationExecutorSchematron (new ValidationArtefact (EValidationType.SCHEMATRON_XSLT, aRes),
                                              null,
                                              UBL21NamespaceContext.getInstance ());
   }
-
-  private static final ClassPathResource TOOP_BUSINESS_RULES_XSLT = SchematronBusinessRules2Validator.TOOP_BUSINESS_RULES_XSLT;
-  private static final ClassPathResource TOOP_EDM2_XSLT = SchematronEDM2Validator.TOOP_EDM2_XSLT;
 
   /**
    * Register all standard TOOP EDM v2 validation execution sets to the provided
@@ -95,8 +89,9 @@ public final class TCValidationRules
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
                                                                                                         () -> aDT.getSchema ()),
-                                                                             _createXSLT (TOOP_EDM2_XSLT),
-                                                                             _createXSLT (TOOP_BUSINESS_RULES_XSLT)));
+                                                                             _createXSLT (CEDMSchematron.TOOP_IS_REQUEST).setStopValidationOnError (true),
+                                                                             _createXSLT (CEDMSchematron.TOOP_EDM2_XSLT),
+                                                                             _createXSLT (CEDMSchematron.TOOP_BUSINESS_RULES_XSLT)));
     }
 
     // Response
@@ -108,8 +103,9 @@ public final class TCValidationRules
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
                                                                                                         () -> aDT.getSchema ()),
-                                                                             _createXSLT (TOOP_EDM2_XSLT),
-                                                                             _createXSLT (TOOP_BUSINESS_RULES_XSLT)));
+                                                                             _createXSLT (CEDMSchematron.TOOP_IS_RESPONSE).setStopValidationOnError (true),
+                                                                             _createXSLT (CEDMSchematron.TOOP_EDM2_XSLT),
+                                                                             _createXSLT (CEDMSchematron.TOOP_BUSINESS_RULES_XSLT)));
     }
 
     // Error Response
@@ -121,8 +117,9 @@ public final class TCValidationRules
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
                                                                                                         () -> aDT.getSchema ()),
-                                                                             _createXSLT (TOOP_EDM2_XSLT),
-                                                                             _createXSLT (TOOP_BUSINESS_RULES_XSLT)));
+                                                                             _createXSLT (CEDMSchematron.TOOP_IS_ERROR_RESPONSE).setStopValidationOnError (true),
+                                                                             _createXSLT (CEDMSchematron.TOOP_EDM2_XSLT),
+                                                                             _createXSLT (CEDMSchematron.TOOP_BUSINESS_RULES_XSLT)));
     }
   }
 }

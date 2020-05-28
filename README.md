@@ -7,11 +7,20 @@ The TOOP Connector NG is a Java only solution. Other environments like .NET etc.
 
 It uses the shared components from:
 * https://github.com/TOOP4EU/toop-commons-ng
+* https://github.com/TOOP4EU/data-services-directory
 
 ## Status
 
-Work in progress
+Status on `2.0.0-beta5`
+* Improved the validation API to create less false positives
+* Note the changed Schematron rules in "toop-commons-ng" 2.0.0-beta5 
+
+2020-05-26: release of `2.0.0-beta4`
+* Initial version of TOOP Connector that can exchange files
 * For dependency management reasons, the TOOP shared libraries are now available in https://github.com/TOOP4EU/toop-commons-ng
+
+2020-05-21: release of `2.0.0-beta3`
+* First proof of concept release that cannot yet send documents
 
 ## Maven coordinates
 
