@@ -137,7 +137,9 @@ osgi.serviceloader; filter:="(osgi.serviceloader=eu.toop.connector.api.as4.IMess
             <arg>-Xph-list-extension</arg>
             <arg>-Xph-csu</arg>
             <arg>-Xph-cloneable2</arg>
+            <!-- 
             <arg>-Xph-value-extender</arg>
+             -->
           </args>
           <episodes>
             <episode>
