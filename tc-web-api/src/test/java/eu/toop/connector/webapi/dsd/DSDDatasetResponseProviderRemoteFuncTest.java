@@ -1,4 +1,4 @@
-package eu.toop.connector.app.dsd;
+package eu.toop.connector.webapi.dsd;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -8,13 +8,14 @@ import com.helger.commons.collection.impl.ICommonsSet;
 
 import eu.toop.connector.api.dd.LoggingDDErrorHandler;
 import eu.toop.connector.api.dsd.DSDDatasetResponse;
+import eu.toop.connector.app.dsd.DSDDatasetResponseProviderRemote;
 
 /**
- * Test class of class {@link DSDDatasetResponseProviderRemote}.
- * 
+ * Test {@link DSDDatasetResponseProviderRemote} in tc-web-api as well
+ *
  * @author Philip Helger
  */
-public final class DSDDatasetResponseProviderRemoteTest
+public class DSDDatasetResponseProviderRemoteFuncTest
 {
   @Test
   public void testSimple ()
