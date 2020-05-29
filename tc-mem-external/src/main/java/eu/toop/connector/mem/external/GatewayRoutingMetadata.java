@@ -52,10 +52,15 @@ public class GatewayRoutingMetadata implements Serializable {
 
   private final X509Certificate cert;
 
+  private final String sReceiverParticipantId;
+
   public GatewayRoutingMetadata(@Nonnull @Nonempty final String sSenderParticipantId,
+                                @Nonnull @Nonempty final String sReceiverParticipantId,
       @Nonnull @Nonempty final String sDocumentTypeId, @Nonnull @Nonempty final String sProcessId,
       @Nonnull @Nonempty final String sEndpointUrl, @Nonnull final X509Certificate aCert) {
+    this.sReceiverParticipantId = sReceiverParticipantId;
     ValueEnforcer.notEmpty(sSenderParticipantId, "SenderParticipantID");
+    ValueEnforcer.notEmpty(sReceiverParticipantId, "sReceiverParticipantId");
     ValueEnforcer.notEmpty(sDocumentTypeId, "DocumentTypeID");
     ValueEnforcer.notEmpty(sProcessId, "ProcessID");
     ValueEnforcer.notEmpty(sEndpointUrl, "EndpointURL");
@@ -94,5 +99,9 @@ public class GatewayRoutingMetadata implements Serializable {
   @Nonnull
   public X509Certificate getCertificate() {
     return cert;
+  }
+
+  public String getsReceiverParticipantId() {
+    return sReceiverParticipantId;
   }
 }

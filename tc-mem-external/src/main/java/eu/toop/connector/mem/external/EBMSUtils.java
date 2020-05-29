@@ -254,8 +254,8 @@ public final class EBMSUtils {
         eMessageProperties.appendChild(_property("ToPartyId", metadata.toPartyId));
         eMessageProperties.appendChild(_property("ToPartyIdType", metadata.toPartyIdType));
         eMessageProperties.appendChild(_property("ToPartyRole", metadata.toPartyRole));
-        eMessageProperties.appendChild(_property("originalSender", "sender"));
-        eMessageProperties.appendChild(_property("finalRecipient", "receiver"));
+        eMessageProperties.appendChild(_property("originalSender", metadata.senderId));
+        eMessageProperties.appendChild(_property("finalRecipient", metadata.receiverId));
         // NOTE: ToPartyCertificate is the DER+BASE64 encoded X509 certificate.
         // First decode as byte array, then parse it using
         // CertificateFactory.getInstance("X509", "BC")
@@ -571,6 +571,9 @@ public final class EBMSUtils {
     submissionData.toPartyRole = MEMConstants.GW_PARTY_ROLE;
 
     submissionData.targetURL = gatewayRoutingMetadata.getEndpointUrl();
+
+    submissionData.senderId = gatewayRoutingMetadata.getSenderParticipantId();
+    submissionData.receiverId = gatewayRoutingMetadata.getsReceiverParticipantId();
 
     try {
       // DER encoded X509 certificate

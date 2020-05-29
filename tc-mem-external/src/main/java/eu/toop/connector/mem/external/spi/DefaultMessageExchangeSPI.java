@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2018-2020 toop.eu
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -69,7 +69,7 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
   }
 
   public void registerIncomingHandler(@Nonnull final ServletContext aServletContext,
-      @Nonnull final IMEIncomingHandler aIncomingHandler) {
+                                      @Nonnull final IMEIncomingHandler aIncomingHandler) {
     ValueEnforcer.notNull(aServletContext, "ServletContext");
     ValueEnforcer.notNull(aIncomingHandler, "IncomingHandler");
     if (m_aIncomingHandler != null)
@@ -81,15 +81,15 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
     aDelegate.registerNotificationHandler(aRelayResult -> {
       // more to come
       ToopKafkaClient.send(EErrorLevel.INFO,
-                           () -> "Notification[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
+          () -> "Notification[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
     });
 
     aDelegate.registerSubmissionResultHandler(aRelayResult -> {
       // more to come
       ToopKafkaClient.send(EErrorLevel.INFO,
-                           () -> "SubmissionResult[" + aRelayResult.getErrorCode() +
-                                 "]: " +
-                                 aRelayResult.getDescription());
+          () -> "SubmissionResult[" + aRelayResult.getErrorCode() +
+              "]: " +
+              aRelayResult.getDescription());
     });
 
     // Register the AS4 handler needed
@@ -116,12 +116,12 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
           if (aItem != aHead)
             aAttachments.add(aItem);
         m_aIncomingHandler.handleIncomingResponse(new IncomingEDMResponse((EDMResponse) aTopLevel,
-                                                                          aAttachments,
-                                                                          aMetadata));
+            aAttachments,
+            aMetadata));
       } else if (aTopLevel instanceof EDMErrorResponse) {
         // Error response
         m_aIncomingHandler.handleIncomingErrorResponse(new IncomingEDMErrorResponse((EDMErrorResponse) aTopLevel,
-                                                                                    aMetadata));
+            aMetadata));
       } else {
         // Unknown
         ToopKafkaClient.send(EErrorLevel.ERROR, () -> "Unsuspported Message: " + aTopLevel);
@@ -132,10 +132,11 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
   public void sendOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
       throws MEOutgoingException {
     final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
-                                                                   aRoutingInfo.getDocumentTypeID().getURIEncoded(),
-                                                                   aRoutingInfo.getProcessID().getURIEncoded(),
-                                                                   aRoutingInfo.getEndpointURL(),
-                                                                   aRoutingInfo.getCertificate());
+        aRoutingInfo.getReceiverID().getURIEncoded(),
+        aRoutingInfo.getDocumentTypeID().getURIEncoded(),
+        aRoutingInfo.getProcessID().getURIEncoded(),
+        aRoutingInfo.getEndpointURL(),
+        aRoutingInfo.getCertificate());
     MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
   }
 

@@ -86,4 +86,14 @@ public class SubmissionMessageProperties {
    */
   @Nonnull
   public String targetURL;
+
+  /**
+   * The participant identifier of the sender
+   */
+  public String senderId;
+
+  /**
+   * The participant identifier of the receiver
+   */
+  public String receiverId;
 }

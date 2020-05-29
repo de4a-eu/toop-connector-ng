@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2018-2020 toop.eu
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -44,7 +44,7 @@ public class SampleDataProvider {
         // multithread initialiation danger... yes no big deal.
         domibusKeystore = KeyStore.getInstance("JKS");
         domibusKeystore.load(SampleDataProvider.class.getResourceAsStream("/dev-gw-jks/domibus-toop-keys.jks"),
-                             "test123".toCharArray());
+            "test123".toCharArray());
       }
 
       return (X509Certificate) domibusKeystore.getCertificate(alias);
@@ -60,25 +60,26 @@ public class SampleDataProvider {
       // If I am DC, use dp certificate or vice versa
       final String certName = actingSide == EActingSide.DC ? "/freedonia.crt" : "/elonia.crt";
       return (X509Certificate) CertificateFactory.getInstance("X509")
-                                                 .generateCertificate(SampleDataProvider.class.getResourceAsStream(certName));
+          .generateCertificate(SampleDataProvider.class.getResourceAsStream(certName));
     } catch (final CertificateException e) {
       throw new IllegalStateException(e);
     }
   }
 
   public static GatewayRoutingMetadata createGatewayRoutingMetadata(final EActingSide actingSide,
-      final String receivingGWURL) {
+                                                                    final String receivingGWURL) {
     final X509Certificate aCert = readCert(actingSide);
     return createGatewayRoutingMetadata(receivingGWURL, aCert);
   }
 
   public static GatewayRoutingMetadata createGatewayRoutingMetadata(final String targetURL,
-      final X509Certificate targetCert) {
+                                                                    final X509Certificate targetCert) {
     final GatewayRoutingMetadata metadata = new GatewayRoutingMetadata("iso6523-actorid-upis::0088:123456",
-                                                                       EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST.getURIEncoded(),
-                                                                       EPredefinedProcessIdentifier.DATAREQUESTRESPONSE.getURIEncoded(),
-                                                                       targetURL,
-                                                                       targetCert);
+        "iso6523-actorid-upis::0099:123456",
+        EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST.getURIEncoded(),
+        EPredefinedProcessIdentifier.DATAREQUESTRESPONSE.getURIEncoded(),
+        targetURL,
+        targetCert);
 
     return metadata;
   }
@@ -86,9 +87,9 @@ public class SampleDataProvider {
   @Nonnull
   public static MEMessage createSampleMessage() {
     return MEMessage.builder()
-                    .payload(x -> x.mimeType(CMimeType.APPLICATION_XML)
-                                   .contentID("xmlpayload@dp")
-                                   .data("<sample>that is a sample xml</sample>", StandardCharsets.ISO_8859_1))
-                    .build();
+        .payload(x -> x.mimeType(CMimeType.APPLICATION_XML)
+            .contentID("xmlpayload@dp")
+            .data("<sample>that is a sample xml</sample>", StandardCharsets.ISO_8859_1))
+        .build();
   }
 }
