@@ -21,6 +21,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.helger.bdve.executorset.VESID;
 import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.bdve.result.ValidationResultList;
@@ -66,6 +69,8 @@ import eu.toop.connector.webapi.smp.SMPJsonResponse;
  */
 public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (ApiPostUserSubmitEdm.class);
+
   private final ETCEdmType m_eType;
 
   public ApiPostUserSubmitEdm (@Nonnull final ETCEdmType eType)
@@ -139,7 +144,6 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
                                                    .getServiceMetadata (aRoutingInfo.getReceiverID (), aRoutingInfo.getDocumentTypeID ());
         if (aSM != null)
         {
-          aJsonSMP.add ("success", true);
           aJsonSMP.addJson ("response", SMPJsonResponse.convert (aRoutingInfo.getReceiverID (), aRoutingInfo.getDocumentTypeID (), aSM));
 
           final ServiceInformationType aSI = aSM.getServiceInformation ();
@@ -162,6 +166,21 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
               }
             }
           }
+          if (aRoutingInfoFinal == null)
+          {
+            LOGGER.warn ("[API] The SMP lookup for '" +
+                         aRoutingInfo.getReceiverID ().getURIEncoded () +
+                         "' and '" +
+                         aRoutingInfo.getDocumentTypeID ().getURIEncoded () +
+                         "' succeeded, but no endpoint matching '" +
+                         aRoutingInfo.getProcessID ().getURIEncoded () +
+                         "' and '" +
+                         aRoutingInfo.getTransportProtocol () +
+                         "' was found.");
+          }
+
+          // Only if a match was found
+          aJsonSMP.add ("success", aRoutingInfoFinal != null);
         }
         else
           aJsonSMP.add ("success", false);

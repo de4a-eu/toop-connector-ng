@@ -19,6 +19,7 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.Immutable;
 
 import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.callback.IThrowingRunnable;
@@ -26,14 +27,14 @@ import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 
-public class CommonAPIInvoker
+@Immutable
+public final class CommonAPIInvoker
 {
   private CommonAPIInvoker ()
   {}
 
   public static void invoke (@Nonnull final IJsonObject aJson, @Nonnull final IThrowingRunnable <Exception> r)
   {
-
     final ZonedDateTime aQueryDT = PDTFactory.getCurrentZonedDateTimeUTC ();
     final StopWatch aSW = StopWatch.createdStarted ();
     try
