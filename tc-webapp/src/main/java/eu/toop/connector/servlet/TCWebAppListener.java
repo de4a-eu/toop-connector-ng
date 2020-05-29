@@ -26,11 +26,16 @@ import eu.toop.connector.webapi.TCAPIInit;
 
 /**
  * Global startup etc. listener.
- * 
+ *
  * @author Philip Helger
  */
 public class TCWebAppListener extends WebAppListener
 {
+  public TCWebAppListener ()
+  {
+    setHandleStatisticsOnEnd (false);
+  }
+
   @Override
   protected void afterContextInitialized (final ServletContext aSC)
   {
