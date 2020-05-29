@@ -32,6 +32,7 @@ import javax.xml.XMLConstants;
 import javax.xml.bind.DatatypeConverter;
 import javax.xml.soap.AttachmentPart;
 import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPHeader;
 import javax.xml.soap.SOAPMessage;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerException;
@@ -331,6 +332,15 @@ public final class EBMSUtils {
     }
 
     final MEMessage.Builder meMessage = MEMessage.builder();
+
+    //load the message properties
+    final SOAPHeader soapHeader;
+    try {
+      soapHeader = message.getSOAPHeader();
+    } catch (SOAPException e) {
+      throw new MEIncomingException(e.getMessage(), e);
+    }
+
     if (message.countAttachments() > 0) {
       // Read all attachments
       final Iterator<?> it = message.getAttachments();
@@ -341,7 +351,7 @@ public final class EBMSUtils {
         Node partInfo;
         try {
           // throws exception if part info does not exist
-          partInfo = SoapXPathUtil.safeFindSingleNode(message.getSOAPHeader(),
+          partInfo = SoapXPathUtil.safeFindSingleNode(soapHeader,
                                                       "//:PayloadInfo/:PartInfo[@href='cid:" + href + "']");
         } catch (final Exception ex) {
           throw new MEIncomingException("ContentId: " + href + " was not found in PartInfo");
@@ -396,7 +406,22 @@ public final class EBMSUtils {
         meMessage.addPayload(payload);
       }
     }
-    return meMessage.build();
+    final MEMessage builtMessage = meMessage.build();
+
+    final Node messagePropsNode = SoapXPathUtil.safeFindSingleNode(soapHeader, "//:MessageProperties");
+    final String sSenderId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
+        ".//:Property[@name='originalSender']/text()");
+    final String sReceiverId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
+        ".//:Property[@name='finalRecipient']/text()");
+    final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
+        ".//:Property[@name='Service']/text()");
+    final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
+        ".//:Property[@name='Action']/text()");
+
+    builtMessage.setSenderId(sSenderId);
+    builtMessage.setReceiverId(sReceiverId);
+    builtMessage.setProcessId(sProcid);
+    builtMessage.setDoctypeId(sDoctypeId);
   }
 
   public static RelayResult soap2RelayResult(final SOAPMessage sNotification) throws MEIncomingException {
