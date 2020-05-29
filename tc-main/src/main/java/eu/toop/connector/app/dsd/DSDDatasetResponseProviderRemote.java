@@ -58,7 +58,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
    */
   public DSDDatasetResponseProviderRemote ()
   {
-    this (TCConfig.DSD.getR2D2DirectoryBaseUrl ());
+    this (TCConfig.DSD.getDSDBaseUrl ());
   }
 
   /**

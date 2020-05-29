@@ -226,15 +226,13 @@ public final class TCConfig
     {}
 
     /**
-     * @return The TOOP Directory base URL for R2D2. Should never end with a
-     *         slash.
+     * @return The DSD base URL. Should never end with a slash.
      */
     @Nullable
-    public static String getR2D2DirectoryBaseUrl ()
+    public static String getDSDBaseUrl ()
     {
       return getConfig ().getAsString ("toop.dsd.service.baseurl");
     }
-
   }
 
   public static class R2D2

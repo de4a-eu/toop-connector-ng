@@ -133,7 +133,7 @@ public class TCInit
 
     {
       // Check R2D2 configuration
-      final String sDirectoryURL = TCConfig.DSD.getR2D2DirectoryBaseUrl ();
+      final String sDirectoryURL = TCConfig.DSD.getDSDBaseUrl ();
       if (StringHelper.hasNoText (sDirectoryURL))
         throw new InitializationException ("The URL of the DSD Service is missing in the configuration file!");
 

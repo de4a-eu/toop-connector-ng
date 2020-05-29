@@ -52,7 +52,7 @@ public class DSDParticipantIDProviderRemote implements IDSDParticipantIDProvider
    */
   public DSDParticipantIDProviderRemote ()
   {
-    this (TCConfig.DSD.getR2D2DirectoryBaseUrl ());
+    this (TCConfig.DSD.getDSDBaseUrl ());
   }
 
   /**
