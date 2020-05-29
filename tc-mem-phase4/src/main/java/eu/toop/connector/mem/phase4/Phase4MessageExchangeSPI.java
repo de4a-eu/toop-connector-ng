@@ -33,6 +33,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.exception.InitializationException;
 import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.system.SystemProperties;
 import com.helger.httpclient.HttpClientFactory;
 import com.helger.peppol.utils.PeppolCertificateHelper;
 import com.helger.peppolid.factory.IIdentifierFactory;
@@ -75,6 +76,11 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
 {
   public static final String ID = "phase4";
   private static final Logger LOGGER = LoggerFactory.getLogger (Phase4MessageExchangeSPI.class);
+
+  static
+  {
+    SystemProperties.setPropertyValue (MetaAS4Manager.SYSTEM_PROPERTY_PHASE4_MANAGER_INMEMORY, true);
+  }
 
   private final IAS4CryptoFactory m_aCF;
 
