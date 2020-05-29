@@ -422,6 +422,8 @@ public final class EBMSUtils {
     builtMessage.setReceiverId(sReceiverId);
     builtMessage.setProcessId(sProcid);
     builtMessage.setDoctypeId(sDoctypeId);
+
+    return builtMessage;
   }
 
   public static RelayResult soap2RelayResult(final SOAPMessage sNotification) throws MEIncomingException {
