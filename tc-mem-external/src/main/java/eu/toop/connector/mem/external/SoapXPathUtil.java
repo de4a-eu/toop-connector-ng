@@ -42,7 +42,7 @@ public final class SoapXPathUtil {
 
   @Nonnull
   @ReturnsMutableCopy
-  private static XPath _createXPath() {
+  private static XPath createXPath() {
     // XPath instances are not thread safe!
     final XPath ret = XPathHelper.createNewXPath();
     final MapBasedNamespaceContext aNamespaceCtx = new MapBasedNamespaceContext();
@@ -62,7 +62,7 @@ public final class SoapXPathUtil {
   @Nullable
   public static Node findSingleNode(@Nonnull final Node node, @Nonnull final String xpath) {
     try {
-      return (Node) _createXPath().evaluate(xpath, node, XPathConstants.NODE);
+      return (Node) createXPath().evaluate(xpath, node, XPathConstants.NODE);
     } catch (final XPathExpressionException e) {
       throw new IllegalArgumentException(e);
     }
@@ -92,10 +92,16 @@ public final class SoapXPathUtil {
     return null;
   }
 
+  /**
+   * Find the children of the node that match the xpath
+   * @param node the node
+   * @param xpath the expression
+   * @return list of children
+   */
   @Nonnull
   public static List<Node> listNodes(@Nonnull final Node node, @Nonnull final String xpath) {
     try {
-      final NodeList o = (NodeList) _createXPath().evaluate(xpath, node, XPathConstants.NODESET);
+      final NodeList o = (NodeList) createXPath().evaluate(xpath, node, XPathConstants.NODESET);
       if (o == null)
         throw new IllegalArgumentException("No match for [" + xpath + "]");
 

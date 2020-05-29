@@ -37,6 +37,16 @@ public class MEMessage implements Serializable
 {
   private final ICommonsList <MEPayload> m_aPayloads = new CommonsArrayList <> ();
 
+  private String senderId;
+  private String receiverId;
+  private String processId;
+  private String doctypeId;
+
+  /**
+   * Instantiates a new Me message.
+   *
+   * @param aPayloads the a payloads
+   */
   protected MEMessage (@Nonnull @Nonempty final ICommonsList <MEPayload> aPayloads)
   {
     ValueEnforcer.notEmptyNoNullValue (aPayloads, "Payloads");
@@ -67,10 +77,87 @@ public class MEMessage implements Serializable
     return m_aPayloads.getClone ();
   }
 
+  /**
+   * Builder builder.
+   *
+   * @return the builder
+   */
   @Nonnull
   public static Builder builder ()
   {
     return new Builder ();
+  }
+
+  /**
+   * Sets sender id.
+   *
+   * @param senderId the sender id
+   */
+  public void setSenderId(String senderId) {
+    this.senderId = senderId;
+  }
+
+  /**
+   * Gets sender id.
+   *
+   * @return the sender id
+   */
+  public String getSenderId() {
+    return senderId;
+  }
+
+  /**
+   * Sets receiver id.
+   *
+   * @param receiverId the receiver id
+   */
+  public void setReceiverId(String receiverId) {
+    this.receiverId = receiverId;
+  }
+
+  /**
+   * Gets receiver id.
+   *
+   * @return the receiver id
+   */
+  public String getReceiverId() {
+    return receiverId;
+  }
+
+  /**
+   * Sets process id.
+   *
+   * @param processId the process id
+   */
+  public void setProcessId(String processId) {
+    this.processId = processId;
+  }
+
+  /**
+   * Gets process id.
+   *
+   * @return the process id
+   */
+  public String getProcessId() {
+    return processId;
+  }
+
+  /**
+   * Sets doctype id.
+   *
+   * @param doctypeId the doctype id
+   */
+  public void setDoctypeId(String doctypeId) {
+    this.doctypeId = doctypeId;
+  }
+
+  /**
+   * Gets doctype id.
+   *
+   * @return the doctype id
+   */
+  public String getDoctypeId() {
+    return doctypeId;
   }
 
   /**
@@ -82,9 +169,18 @@ public class MEMessage implements Serializable
   {
     private final ICommonsList <MEPayload> m_aPayloads = new CommonsArrayList <> ();
 
+    /**
+     * Instantiates a new Builder.
+     */
     protected Builder ()
     {}
 
+    /**
+     * Add payload builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder addPayload (@Nullable final Consumer <? super MEPayload.Builder> a)
     {
@@ -97,12 +193,24 @@ public class MEMessage implements Serializable
       return this;
     }
 
+    /**
+     * Add payload builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder addPayload (@Nullable final MEPayload.Builder a)
     {
       return addPayload (a == null ? null : a.build ());
     }
 
+    /**
+     * Add payload builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder addPayload (@Nullable final MEPayload a)
     {
@@ -111,6 +219,12 @@ public class MEMessage implements Serializable
       return this;
     }
 
+    /**
+     * Payload builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder payload (@Nullable final Consumer <? super MEPayload.Builder> a)
     {
@@ -123,12 +237,24 @@ public class MEMessage implements Serializable
       return this;
     }
 
+    /**
+     * Payload builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder payload (@Nullable final MEPayload.Builder a)
     {
       return payload (a == null ? null : a.build ());
     }
 
+    /**
+     * Payload builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder payload (@Nullable final MEPayload a)
     {
@@ -139,6 +265,12 @@ public class MEMessage implements Serializable
       return this;
     }
 
+    /**
+     * Payloads builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder payloads (@Nullable final MEPayload... a)
     {
@@ -146,6 +278,12 @@ public class MEMessage implements Serializable
       return this;
     }
 
+    /**
+     * Payloads builder.
+     *
+     * @param a the a
+     * @return the builder
+     */
     @Nonnull
     public Builder payloads (@Nullable final Iterable <MEPayload> a)
     {
@@ -153,12 +291,20 @@ public class MEMessage implements Serializable
       return this;
     }
 
+    /**
+     * Check consistency.
+     */
     public void checkConsistency ()
     {
       if (m_aPayloads.isEmpty ())
         throw new IllegalStateException ("At least one payload MUST be present");
     }
 
+    /**
+     * Build me message.
+     *
+     * @return the me message
+     */
     @Nonnull
     public MEMessage build ()
     {

@@ -34,3 +34,6 @@ target/
 
 zz
 tc-webapp/conf
+.factorypath
+.project
+.project
