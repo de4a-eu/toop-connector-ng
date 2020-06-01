@@ -13,7 +13,8 @@ It uses the shared components from:
 
 Status on `2.0.0-beta5`
 * Improved the validation API to create less false positives
-* Note the changed Schematron rules in "toop-commons-ng" 2.0.0-beta5 
+* Note the changed Schematron rules in "toop-commons-ng" 2.0.0-beta5
+* Improved response of `/user/submit/...` if the SMP lookup failed
 
 2020-05-26: release of `2.0.0-beta4`
 * Initial version of TOOP Connector that can exchange files
