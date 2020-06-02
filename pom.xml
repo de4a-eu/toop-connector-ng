@@ -197,6 +197,12 @@
         <artifactId>tc-web-api</artifactId>
         <version>${project.version}</version>
       </dependency>
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>tc-webapp</artifactId>
+        <version>${project.version}</version>
+        <classifier>classes</classifier>
+      </dependency>
     </dependencies>
   </dependencyManagement>
   
