@@ -31,6 +31,7 @@ import com.helger.json.IJson;
 import com.helger.json.serialize.JsonWriter;
 import com.helger.json.serialize.JsonWriterSettings;
 
+import eu.toop.connector.api.TCIdentifierFactory;
 import eu.toop.connector.api.me.EMEProtocol;
 import eu.toop.connector.api.rest.TCOutgoingMessage;
 import eu.toop.connector.api.rest.TCOutgoingMetadata;
@@ -46,11 +47,11 @@ public class MainValidateLookupAndSendEdmRequest
     final TCOutgoingMessage aOM = new TCOutgoingMessage ();
     {
       final TCOutgoingMetadata aMetadata = new TCOutgoingMetadata ();
-      aMetadata.setSenderID (TCRestJAXB.createTCID ("iso6523-actorid-upis", "9914:tc-ng-test-sender"));
-      aMetadata.setReceiverID (TCRestJAXB.createTCID ("iso6523-actorid-upis", "9915:tooptest"));
-      aMetadata.setDocTypeID (TCRestJAXB.createTCID ("toop-doctypeid-qns",
+      aMetadata.setSenderID (TCRestJAXB.createTCID (TCIdentifierFactory.PARTICIPANT_SCHEME, "9914:tc-ng-test-sender"));
+      aMetadata.setReceiverID (TCRestJAXB.createTCID (TCIdentifierFactory.PARTICIPANT_SCHEME, "9915:tooptest"));
+      aMetadata.setDocTypeID (TCRestJAXB.createTCID (TCIdentifierFactory.DOCTYPE_SCHEME,
                                                      "urn:eu:toop:ns:dataexchange-1p40::Response##urn:eu.toop.response.registeredorganization::1.40"));
-      aMetadata.setProcessID (TCRestJAXB.createTCID ("toop-procid-agreement", "urn:eu.toop.process.datarequestresponse"));
+      aMetadata.setProcessID (TCRestJAXB.createTCID (TCIdentifierFactory.PROCESS_SCHEME, "urn:eu.toop.process.datarequestresponse"));
       aMetadata.setTransportProtocol (EMEProtocol.AS4.getTransportProfileID ());
       aOM.setMetadata (aMetadata);
     }

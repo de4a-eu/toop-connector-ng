@@ -15,44 +15,94 @@
  */
 package eu.toop.connector.api;
 
+import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.string.StringHelper;
-import com.helger.peppolid.factory.SimpleIdentifierFactory;
+import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.peppolid.simple.doctype.SimpleDocumentTypeIdentifier;
 import com.helger.peppolid.simple.participant.SimpleParticipantIdentifier;
 import com.helger.peppolid.simple.process.SimpleProcessIdentifier;
 
 /**
- * A special {@link TCIdentifierFactory} that trims values.
+ * A special {@link IIdentifierFactory} for TOOP.
  *
  * @author Philip Helger
  */
-public class TCIdentifierFactory extends SimpleIdentifierFactory
+public final class TCIdentifierFactory implements IIdentifierFactory
 {
+  public static final String DOCTYPE_SCHEME = "toop-doctypeid-qns";
+  public static final String PARTICIPANT_SCHEME = "iso6523-actorid-upis";
+  public static final String PROCESS_SCHEME = "toop-procid-agreement";
+
   static final TCIdentifierFactory INSTANCE_TC = new TCIdentifierFactory ();
 
   private TCIdentifierFactory ()
   {}
 
+  @Nullable
+  private static String _nullNotEmptyTrimmed (@Nullable final String s)
+  {
+    if (s == null)
+      return null;
+    final String ret = s.trim ();
+    return ret.length () == 0 ? null : ret;
+  }
+
+  public boolean isDocumentTypeIdentifierSchemeMandatory ()
+  {
+    return true;
+  }
+
+  @Nonnull
+  public String getDefaultDocumentTypeIdentifierScheme ()
+  {
+    return DOCTYPE_SCHEME;
+  }
+
   @Override
   @Nullable
   public SimpleDocumentTypeIdentifier createDocumentTypeIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
-    return super.createDocumentTypeIdentifier (StringHelper.trim (sScheme), StringHelper.trim (sValue));
+    final String sRealValue = isDocumentTypeIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue;
+    return new SimpleDocumentTypeIdentifier (_nullNotEmptyTrimmed (sScheme), _nullNotEmptyTrimmed (sRealValue));
+  }
+
+  public boolean isParticipantIdentifierSchemeMandatory ()
+  {
+    return true;
+  }
+
+  @Nonnull
+  public String getDefaultParticipantIdentifierScheme ()
+  {
+    return PARTICIPANT_SCHEME;
   }
 
   @Override
   @Nullable
   public SimpleParticipantIdentifier createParticipantIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
-    return super.createParticipantIdentifier (StringHelper.trim (sScheme), StringHelper.trim (sValue));
+    final String sRealValue = isParticipantIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue;
+    return new SimpleParticipantIdentifier (_nullNotEmptyTrimmed (sScheme), _nullNotEmptyTrimmed (sRealValue));
+  }
+
+  @Override
+  public boolean isProcessIdentifierSchemeMandatory ()
+  {
+    return true;
+  }
+
+  @Nonnull
+  public String getDefaultProcessIdentifierScheme ()
+  {
+    return PROCESS_SCHEME;
   }
 
   @Override
   @Nullable
   public SimpleProcessIdentifier createProcessIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
-    return super.createProcessIdentifier (StringHelper.trim (sScheme), StringHelper.trim (sValue));
+    final String sRealValue = isProcessIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue;
+    return new SimpleProcessIdentifier (_nullNotEmptyTrimmed (sScheme), _nullNotEmptyTrimmed (sRealValue));
   }
 }
