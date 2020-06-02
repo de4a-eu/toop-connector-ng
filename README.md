@@ -11,6 +11,9 @@ It uses the shared components from:
 
 ## Status
 
+Status of `2.0.0-rc1`
+* Integrated the standalone version `tc-jetty` into this repository
+
 2020-06-01: release of `2.0.0-beta5`
 * Improved the validation API to create no more false positives
 * Improved response of `/user/submit/...` if the SMP lookup failed
@@ -26,7 +29,16 @@ It uses the shared components from:
 
 ## Maven coordinates
 
-Only the TOOP Commons NG have some yet.
+```xml
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>tc-webapp</artifactId>
+        <version>2.0.0-beta5</version>
+        <type>war</type>
+      </dependency>
+```
+
+or download directly from Maven Central: https://repo1.maven.org/maven2/eu/toop/tc-webapp/
 
 ## Design considerations
 

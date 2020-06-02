@@ -150,6 +150,11 @@
         <artifactId>jakarta.activation</artifactId>
         <version>1.2.2</version>
       </dependency>
+      <dependency>
+        <groupId>info.picocli</groupId>
+        <artifactId>picocli</artifactId>
+        <version>4.3.2</version>
+      </dependency>
 
       <dependency>
         <groupId>eu.toop</groupId>
@@ -212,6 +217,7 @@
     <module>tc-main</module>
     <module>tc-web-api</module>
     <module>tc-webapp</module>
+    <module>tc-jetty</module>
   </modules>
 
   <build>
