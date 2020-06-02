@@ -9,7 +9,7 @@ It uses the shared components from:
 * https://github.com/TOOP4EU/toop-commons-ng
 * https://github.com/TOOP4EU/data-services-directory
 
-## Status
+# News and Noteworthy
 
 Status of `2.0.0-rc1`
 * Integrated the standalone version `tc-jetty` into this repository
@@ -27,7 +27,7 @@ Status of `2.0.0-rc1`
 2020-05-21: release of `2.0.0-beta3`
 * First proof of concept release that cannot yet send documents
 
-## Maven coordinates
+# Maven coordinates
 
 ```xml
       <dependency>
@@ -40,11 +40,50 @@ Status of `2.0.0-rc1`
 
 or download directly from Maven Central: https://repo1.maven.org/maven2/eu/toop/tc-webapp/
 
-## Design considerations
+# Running
+
+The `tc-webapp` module is a web application that can be deployed in arbitrary application servers supporting the Servlet specification 3.1 and onwards.
+
+**Note** there are classloader issues running TOOP Connector NG in Tomcat - we suggest to use Jetty until we have figured out how to resolve it. 
+
+## tc-jetty
+
+Standalone version of TOOP Connector NG (integrated since 2.0.0-rc1)
+
+Usage:
+
+```
+Usage: tc-jetty [-hV] [-p Port] [-s Stop Port] command
+Standalone TOOP Connector NG
+      command                What to do. Options are start, stop
+  -h, --help                 Show this help message and exit.
+  -p, --port Port            Port to run the TOOP Connector on (default: 8080)
+  -s, --stopPort Stop Port   Internal port to watch for the shutdown command
+                               (default: 8079)
+  -V, --version              Print version information and exit.
+```
+
+Start via `start` and shut it down with `stop`.
+
+How to run it: invoke the following command, replacing `x.y.z` with the effective version number
+
+```
+java -jar tc-jetty-x.y.z-full.jar start
+```
+
+to add a custom configuration file add the propert "config.file" like this:
+
+```
+java -Dconfig.file=/path/to/your/file.properties -jar tc-jetty-x.y.z-full.jar start
+```
+
+Binary versions of the TOOP Connector are available at https://repo1.maven.org/maven2/eu/toop/tc-jetty/
+
+# Design considerations
 
 Compared to the old design, certain architectural decisions changed which lead to a new architecture of the TOOP Connector.
 Previously the application was designed to be a separate web application that was deployed between the DC/DP and the AS4 Gateway.
-The TOOP Connector NG is a both a library and a standalone solution that helps you do common stuff on the DC and the DP side.
+The TOOP Connector NG is both a library and a standalone solution that helps you do common stuff on the DC and the DP side.
 
 Major changes compared to the old TOOP Connector:
 * The semantic mapping service invocation was removed. The old solution was not satisfying.
@@ -52,6 +91,7 @@ Major changes compared to the old TOOP Connector:
 * The TOOP Directory was replaced by the DSD (Data Service Directory)
 * No more usage of ASIC
 * The content previously contained in "toop-commons" is now included in this project. The "toop-interface" project is no longer needed."
+* The TOOP Connector is now stateless
 
 What is now contained in the TOOP Connector NG:
 * Support for performing dynamic discovery lookups (as before)
@@ -59,11 +99,11 @@ What is now contained in the TOOP Connector NG:
 * Support for querying the DSD (new - was previously the TOOP Directory)
 * Support for communicating with the AS4 gateway (as before)
 
-## Building
+# Building
 
 Requires at least
 
 * Java 1.8 or later
 * Apache Maven for building
 
-Do an initial `mvn clean install` on the command line.
+Do a simple `mvn clean install` on the command line.
