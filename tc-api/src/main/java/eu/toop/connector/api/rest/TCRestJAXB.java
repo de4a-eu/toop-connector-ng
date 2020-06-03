@@ -75,13 +75,14 @@ public final class TCRestJAXB
   @Nonnull
   public static TCIdentifierType createTCID (@Nonnull final IIdentifier aID)
   {
-    ValueEnforcer.notNull(aID, "aID");
+    ValueEnforcer.notNull (aID, "ID");
     return createTCID (aID.getScheme (), aID.getValue ());
   }
 
   @Nonnull
   public static TCIdentifierType createTCID (@Nullable final String sScheme, @Nonnull final String sValue)
   {
+    ValueEnforcer.notNull (sValue, "Value");
     final TCIdentifierType ret = new TCIdentifierType ();
     ret.setScheme (sScheme);
     ret.setValue (sValue);

@@ -49,7 +49,14 @@ public class TCValidator implements IVSValidator
   private static final ValidationExecutorSetRegistry VER = new ValidationExecutorSetRegistry ();
   static
   {
+    // Init all TOOP rules
     TCValidationRules.initToopEDM (VER);
+  }
+
+  @Nonnull
+  public static ValidationExecutorSetRegistry internalGetRegistry ()
+  {
+    return VER;
   }
 
   @Nonnull
@@ -57,7 +64,7 @@ public class TCValidator implements IVSValidator
   {
     final IValidationExecutorSet aVES = VER.getOfID (aVESID);
     if (aVES == null)
-      throw new IllegalStateException ("Unexpected VESID " + aVESID.getAsSingleID ());
+      throw new IllegalStateException ("Unexpected VESID '" + aVESID.getAsSingleID () + "'");
     return aVES;
   }
 
