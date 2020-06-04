@@ -18,6 +18,7 @@ package eu.toop.connector.api.rest;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.nio.charset.StandardCharsets;
 
 import org.junit.Test;
@@ -25,6 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 
+import com.helger.commons.io.resource.FileSystemResource;
 import com.helger.commons.mime.CMimeType;
 import com.helger.commons.mock.CommonsTestHelper;
 
@@ -81,6 +83,11 @@ public final class TCRestJAXBTest
     assertNotNull (m2);
 
     CommonsTestHelper.testDefaultImplementationWithEqualContentObject (m, m2);
+
+    // Read
+    final TCOutgoingMessage m3 = TCRestJAXB.outgoingMessage ()
+                                           .read (new FileSystemResource (new File ("src/test/resources/xml/jonas1.xml")));
+    assertNotNull (m3);
   }
 
   @Test
