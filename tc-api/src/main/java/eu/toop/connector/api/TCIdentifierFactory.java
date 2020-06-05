@@ -63,8 +63,10 @@ public final class TCIdentifierFactory implements IIdentifierFactory
   @Nullable
   public SimpleDocumentTypeIdentifier createDocumentTypeIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
-    final String sRealValue = isDocumentTypeIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue;
-    return new SimpleDocumentTypeIdentifier (_nullNotEmptyTrimmed (sScheme), _nullNotEmptyTrimmed (sRealValue));
+    final String sRealValue = _nullNotEmptyTrimmed (isDocumentTypeIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue);
+    if (sRealValue == null)
+      return null;
+    return new SimpleDocumentTypeIdentifier (_nullNotEmptyTrimmed (sScheme), sRealValue);
   }
 
   public boolean isParticipantIdentifierSchemeMandatory ()
@@ -82,8 +84,10 @@ public final class TCIdentifierFactory implements IIdentifierFactory
   @Nullable
   public SimpleParticipantIdentifier createParticipantIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
-    final String sRealValue = isParticipantIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue;
-    return new SimpleParticipantIdentifier (_nullNotEmptyTrimmed (sScheme), _nullNotEmptyTrimmed (sRealValue));
+    final String sRealValue = _nullNotEmptyTrimmed (isParticipantIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue);
+    if (sRealValue == null)
+      return null;
+    return new SimpleParticipantIdentifier (_nullNotEmptyTrimmed (sScheme), sRealValue);
   }
 
   @Override
@@ -102,7 +106,9 @@ public final class TCIdentifierFactory implements IIdentifierFactory
   @Nullable
   public SimpleProcessIdentifier createProcessIdentifier (@Nullable final String sScheme, @Nullable final String sValue)
   {
-    final String sRealValue = isProcessIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue;
-    return new SimpleProcessIdentifier (_nullNotEmptyTrimmed (sScheme), _nullNotEmptyTrimmed (sRealValue));
+    final String sRealValue = _nullNotEmptyTrimmed (isProcessIdentifierCaseInsensitive (sScheme) ? getUnifiedValue (sValue) : sValue);
+    if (sRealValue == null)
+      return null;
+    return new SimpleProcessIdentifier (_nullNotEmptyTrimmed (sScheme), sRealValue);
   }
 }
