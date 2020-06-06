@@ -15,33 +15,26 @@
  */
 package eu.toop.connector.app.dsd;
 
-import java.util.List;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-
-import eu.toop.connector.api.dsd.DSDDatasetHelper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsHashSet;
-import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsSet;
-import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.dd.IDDErrorHandler;
+import eu.toop.connector.api.dsd.DSDDatasetHelper;
 import eu.toop.connector.api.dsd.DSDDatasetResponse;
 import eu.toop.connector.api.dsd.IDSDDatasetResponseProvider;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
-import eu.toop.edm.jaxb.cv.agent.PublicOrganizationType;
-import eu.toop.edm.jaxb.cv.cbc.IDType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import java.util.List;
 
 /**
  * This class implements the {@link IDSDDatasetResponseProvider} interface using
