@@ -61,10 +61,6 @@
     </developer>
   </developers>
 
-  <properties>
-    <toop.version>2.0.0-SNAPSHOT</toop.version>
-  </properties>
-
   <dependencyManagement>
     <dependencies>
       <!-- Import all BOMs -->
@@ -163,14 +159,14 @@
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>toop-commons-ng-parent-pom</artifactId>
-        <version>${toop.version}</version>
+        <version>2.0.0-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>data-services-directory</artifactId>
-        <version>${toop.version}</version>
+        <version>2.0.0-SNAPSHOT</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
