@@ -24,11 +24,10 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.level.EErrorLevel;
-
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
-import com.helger.peppolid.simple.participant.SimpleParticipantIdentifier;
+
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
@@ -69,7 +68,7 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
   }
 
   public void registerIncomingHandler(@Nonnull final ServletContext aServletContext,
-                                      @Nonnull final IMEIncomingHandler aIncomingHandler) {
+      @Nonnull final IMEIncomingHandler aIncomingHandler) {
     ValueEnforcer.notNull(aServletContext, "ServletContext");
     ValueEnforcer.notNull(aIncomingHandler, "IncomingHandler");
     if (m_aIncomingHandler != null)
@@ -81,15 +80,15 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
     aDelegate.registerNotificationHandler(aRelayResult -> {
       // more to come
       ToopKafkaClient.send(EErrorLevel.INFO,
-          () -> "Notification[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
+                           () -> "Notification[" + aRelayResult.getErrorCode() + "]: " + aRelayResult.getDescription());
     });
 
     aDelegate.registerSubmissionResultHandler(aRelayResult -> {
       // more to come
       ToopKafkaClient.send(EErrorLevel.INFO,
-          () -> "SubmissionResult[" + aRelayResult.getErrorCode() +
-              "]: " +
-              aRelayResult.getDescription());
+                           () -> "SubmissionResult[" + aRelayResult.getErrorCode() +
+                                 "]: " +
+                                 aRelayResult.getDescription());
     });
 
     // Register the AS4 handler needed
@@ -98,11 +97,14 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
       final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind(aHead.getData().getInputStream());
       // TODO get metadata in here
 
-
-      final IParticipantIdentifier sender = TCConfig.getIdentifierFactory().parseParticipantIdentifier(aMEMessage.getSenderId());
-      final IParticipantIdentifier receiver = TCConfig.getIdentifierFactory().parseParticipantIdentifier(aMEMessage.getReceiverId());
-      final IDocumentTypeIdentifier docid = TCConfig.getIdentifierFactory().parseDocumentTypeIdentifier(aMEMessage.getDoctypeId());
-      final IProcessIdentifier procid = TCConfig.getIdentifierFactory().parseProcessIdentifier(aMEMessage.getProcessId());
+      final IParticipantIdentifier sender = TCConfig.getIdentifierFactory()
+                                                    .parseParticipantIdentifier(aMEMessage.getSenderId());
+      final IParticipantIdentifier receiver = TCConfig.getIdentifierFactory()
+                                                      .parseParticipantIdentifier(aMEMessage.getReceiverId());
+      final IDocumentTypeIdentifier docid = TCConfig.getIdentifierFactory()
+                                                    .parseDocumentTypeIdentifier(aMEMessage.getDoctypeId());
+      final IProcessIdentifier procid = TCConfig.getIdentifierFactory()
+                                                .parseProcessIdentifier(aMEMessage.getProcessId());
 
       final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata(sender, receiver, docid, procid);
 
@@ -116,12 +118,12 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
           if (aItem != aHead)
             aAttachments.add(aItem);
         m_aIncomingHandler.handleIncomingResponse(new IncomingEDMResponse((EDMResponse) aTopLevel,
-            aAttachments,
-            aMetadata));
+                                                                          aAttachments,
+                                                                          aMetadata));
       } else if (aTopLevel instanceof EDMErrorResponse) {
         // Error response
         m_aIncomingHandler.handleIncomingErrorResponse(new IncomingEDMErrorResponse((EDMErrorResponse) aTopLevel,
-            aMetadata));
+                                                                                    aMetadata));
       } else {
         // Unknown
         ToopKafkaClient.send(EErrorLevel.ERROR, () -> "Unsuspported Message: " + aTopLevel);
@@ -132,11 +134,11 @@ public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
   public void sendOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
       throws MEOutgoingException {
     final GatewayRoutingMetadata aGRM = new GatewayRoutingMetadata(aRoutingInfo.getSenderID().getURIEncoded(),
-        aRoutingInfo.getReceiverID().getURIEncoded(),
-        aRoutingInfo.getDocumentTypeID().getURIEncoded(),
-        aRoutingInfo.getProcessID().getURIEncoded(),
-        aRoutingInfo.getEndpointURL(),
-        aRoutingInfo.getCertificate());
+                                                                   aRoutingInfo.getReceiverID().getURIEncoded(),
+                                                                   aRoutingInfo.getDocumentTypeID().getURIEncoded(),
+                                                                   aRoutingInfo.getProcessID().getURIEncoded(),
+                                                                   aRoutingInfo.getEndpointURL(),
+                                                                   aRoutingInfo.getCertificate());
     MEMDelegate.getInstance().sendMessage(aGRM, aMessage);
   }
 
