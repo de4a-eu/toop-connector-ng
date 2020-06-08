@@ -21,15 +21,16 @@ import javax.annotation.Nonnull;
 
 import org.w3c.dom.Document;
 
-import com.helger.bdve.EValidationType;
-import com.helger.bdve.artefact.ValidationArtefact;
-import com.helger.bdve.execute.ValidationExecutionManager;
-import com.helger.bdve.executorset.IValidationExecutorSet;
-import com.helger.bdve.executorset.VESID;
-import com.helger.bdve.executorset.ValidationExecutorSetRegistry;
-import com.helger.bdve.result.ValidationResult;
-import com.helger.bdve.result.ValidationResultList;
-import com.helger.bdve.source.ValidationSource;
+import com.helger.bdve.api.EValidationType;
+import com.helger.bdve.api.artefact.ValidationArtefact;
+import com.helger.bdve.api.execute.ValidationExecutionManager;
+import com.helger.bdve.api.executorset.IValidationExecutorSet;
+import com.helger.bdve.api.executorset.VESID;
+import com.helger.bdve.api.executorset.ValidationExecutorSetRegistry;
+import com.helger.bdve.api.result.ValidationResult;
+import com.helger.bdve.api.result.ValidationResultList;
+import com.helger.bdve.engine.source.IValidationSourceXML;
+import com.helger.bdve.engine.source.ValidationSourceXML;
 import com.helger.commons.error.list.ErrorList;
 import com.helger.commons.io.resource.inmemory.ReadableResourceByteArray;
 import com.helger.xml.EXMLParserFeature;
@@ -46,7 +47,7 @@ import eu.toop.connector.api.validation.IVSValidator;
  */
 public class TCValidator implements IVSValidator
 {
-  private static final ValidationExecutorSetRegistry VER = new ValidationExecutorSetRegistry ();
+  private static final ValidationExecutorSetRegistry <IValidationSourceXML> VER = new ValidationExecutorSetRegistry <> ();
   static
   {
     // Init all TOOP rules
@@ -54,15 +55,15 @@ public class TCValidator implements IVSValidator
   }
 
   @Nonnull
-  public static ValidationExecutorSetRegistry internalGetRegistry ()
+  public static ValidationExecutorSetRegistry <IValidationSourceXML> internalGetRegistry ()
   {
     return VER;
   }
 
   @Nonnull
-  public static IValidationExecutorSet getVES (@Nonnull final VESID aVESID)
+  public static IValidationExecutorSet <IValidationSourceXML> getVES (@Nonnull final VESID aVESID)
   {
-    final IValidationExecutorSet aVES = VER.getOfID (aVESID);
+    final IValidationExecutorSet <IValidationSourceXML> aVES = VER.getOfID (aVESID);
     if (aVES == null)
       throw new IllegalStateException ("Unexpected VESID '" + aVESID.getAsSingleID () + "'");
     return aVES;
@@ -74,7 +75,6 @@ public class TCValidator implements IVSValidator
   @Nonnull
   public ValidationResultList validate (@Nonnull final VESID aVESID, @Nonnull final byte [] aPayload, @Nonnull final Locale aDisplayLocale)
   {
-    final ValidationExecutionManager aValidator = getVES (aVESID).createExecutionManager ();
     final ErrorList aXMLErrors = new ErrorList ();
     final ValidationResultList aValidationResultList = new ValidationResultList ();
 
@@ -86,9 +86,9 @@ public class TCValidator implements IVSValidator
     if (aDoc != null)
     {
       // What to validate?
-      final ValidationSource aValidationSource = new ValidationSource ("uploaded content", () -> DOMReader.readXMLDOM (aPayload), false);
+      final IValidationSourceXML aValidationSource = ValidationSourceXML.create ("uploaded content", DOMReader.readXMLDOM (aPayload));
       // Start validation
-      aValidator.executeValidation (aValidationSource, aValidationResultList, aDisplayLocale);
+      ValidationExecutionManager.executeValidation (getVES (aVESID), aValidationSource, aValidationResultList, aDisplayLocale);
     }
 
     // Add all XML parsing stuff - always first item

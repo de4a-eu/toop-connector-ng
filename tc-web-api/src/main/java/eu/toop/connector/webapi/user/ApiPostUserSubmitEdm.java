@@ -24,9 +24,9 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.bdve.executorset.VESID;
+import com.helger.bdve.api.executorset.VESID;
+import com.helger.bdve.api.result.ValidationResultList;
 import com.helger.bdve.json.BDVEJsonHelper;
-import com.helger.bdve.result.ValidationResultList;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.collection.CollectionHelper;

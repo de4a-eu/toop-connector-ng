@@ -55,6 +55,10 @@
       <groupId>eu.toop</groupId>
       <artifactId>tc-web-api</artifactId>
     </dependency>
+    <dependency>
+      <groupId>com.helger.photon</groupId>
+      <artifactId>ph-oton-core</artifactId>
+    </dependency>
 
     <!-- Logging -->
     <dependency>

@@ -18,13 +18,14 @@ package eu.toop.connector.app.validation;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.bdve.EValidationType;
-import com.helger.bdve.artefact.ValidationArtefact;
-import com.helger.bdve.execute.ValidationExecutorSchematron;
-import com.helger.bdve.execute.ValidationExecutorXSD;
-import com.helger.bdve.executorset.VESID;
-import com.helger.bdve.executorset.ValidationExecutorSet;
-import com.helger.bdve.executorset.ValidationExecutorSetRegistry;
+import com.helger.bdve.api.EValidationType;
+import com.helger.bdve.api.artefact.ValidationArtefact;
+import com.helger.bdve.api.executorset.VESID;
+import com.helger.bdve.api.executorset.ValidationExecutorSet;
+import com.helger.bdve.api.executorset.ValidationExecutorSetRegistry;
+import com.helger.bdve.engine.schematron.ValidationExecutorSchematron;
+import com.helger.bdve.engine.source.IValidationSourceXML;
+import com.helger.bdve.engine.xsd.ValidationExecutorXSD;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.resource.IReadableResource;
 import com.helger.jaxb.builder.IJAXBDocumentType;
@@ -74,7 +75,7 @@ public final class TCValidationRules
    * @param aRegistry
    *        The registry to add the artefacts. May not be <code>null</code>.
    */
-  public static void initToopEDM (@Nonnull final ValidationExecutorSetRegistry aRegistry)
+  public static void initToopEDM (@Nonnull final ValidationExecutorSetRegistry <IValidationSourceXML> aRegistry)
   {
     ValueEnforcer.notNull (aRegistry, "Registry");
 

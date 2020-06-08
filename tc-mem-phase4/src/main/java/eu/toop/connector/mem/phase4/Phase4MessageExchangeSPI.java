@@ -164,23 +164,23 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       // http://wiki.ds.unipi.gr/display/TOOP/Routing+Information+Profile
       // http://wiki.ds.unipi.gr/display/CCTF/TOOP+AS4+GW+Interface+specification
       final Builder aBuilder = Phase4CEFSender.builder ()
-                                              .setHttpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
-                                              .setCryptoFactory (aCF)
-                                              .setSenderParticipantID (aRoutingInfo.getSenderID ())
-                                              .setReceiverParticipantID (aRoutingInfo.getReceiverID ())
-                                              .setDocumentTypeID (aRoutingInfo.getDocumentTypeID ())
-                                              .setProcessID (aRoutingInfo.getProcessID ())
-                                              .setConversationID (MessageHelperMethods.createRandomConversationID ())
-                                              .setFromPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
-                                                                                                Phase4Config.getFromPartyID ()))
-                                              .setFromRole ("http://www.toop.eu/edelivery/gateway")
-                                              .setToPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
-                                                                                              PeppolCertificateHelper.getCN (aTheirCert.getSubjectDN ()
-                                                                                                                                       .getName ())))
-                                              .setToRole ("http://www.toop.eu/edelivery/gateway")
-                                              .setRawResponseConsumer (new RawResponseWriter ())
-                                              .setEndpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
-                                                                                                                       aRoutingInfo.getEndpointURL ()));
+                                              .httpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
+                                              .cryptoFactory (aCF)
+                                              .senderParticipantID (aRoutingInfo.getSenderID ())
+                                              .receiverParticipantID (aRoutingInfo.getReceiverID ())
+                                              .documentTypeID (aRoutingInfo.getDocumentTypeID ())
+                                              .processID (aRoutingInfo.getProcessID ())
+                                              .conversationID (MessageHelperMethods.createRandomConversationID ())
+                                              .fromPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
+                                                                                             Phase4Config.getFromPartyID ()))
+                                              .fromRole ("http://www.toop.eu/edelivery/gateway")
+                                              .toPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
+                                                                                           PeppolCertificateHelper.getCN (aTheirCert.getSubjectDN ()
+                                                                                                                                    .getName ())))
+                                              .toRole ("http://www.toop.eu/edelivery/gateway")
+                                              .rawResponseConsumer (new RawResponseWriter ())
+                                              .endpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
+                                                                                                                    aRoutingInfo.getEndpointURL ()));
 
       // Payload/attachments
       int nPayloadIndex = 0;
@@ -196,7 +196,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                                                                                                                                        : null)
                                                                      .build ();
         if (nPayloadIndex == 0)
-          aBuilder.setPayload (aOA);
+          aBuilder.payload (aOA);
         else
           aBuilder.addAttachment (aOA);
         nPayloadIndex++;

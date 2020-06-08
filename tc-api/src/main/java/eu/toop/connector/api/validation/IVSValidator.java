@@ -19,8 +19,8 @@ import java.util.Locale;
 
 import javax.annotation.Nonnull;
 
-import com.helger.bdve.executorset.VESID;
-import com.helger.bdve.result.ValidationResultList;
+import com.helger.bdve.api.executorset.VESID;
+import com.helger.bdve.api.result.ValidationResultList;
 
 /**
  * TC Validation Service

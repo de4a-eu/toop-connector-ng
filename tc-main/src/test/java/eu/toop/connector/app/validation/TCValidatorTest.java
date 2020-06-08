@@ -23,8 +23,8 @@ import javax.annotation.Nonnull;
 
 import org.junit.Test;
 
-import com.helger.bdve.executorset.VESID;
-import com.helger.bdve.result.ValidationResultList;
+import com.helger.bdve.api.executorset.VESID;
+import com.helger.bdve.api.result.ValidationResultList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.stream.StreamHelper;
 
