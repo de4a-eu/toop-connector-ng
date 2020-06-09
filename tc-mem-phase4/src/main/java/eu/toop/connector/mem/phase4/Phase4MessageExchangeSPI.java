@@ -41,7 +41,7 @@ import com.helger.phase4.attachment.EAS4CompressionMode;
 import com.helger.phase4.attachment.Phase4OutgoingAttachment;
 import com.helger.phase4.cef.Phase4CEFEndpointDetailProviderConstant;
 import com.helger.phase4.cef.Phase4CEFSender;
-import com.helger.phase4.cef.Phase4CEFSender.Builder;
+import com.helger.phase4.cef.Phase4CEFSender.CEFUserMessageBuilder;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
 import com.helger.phase4.http.AS4HttpDebug;
 import com.helger.phase4.messaging.domain.MessageHelperMethods;
@@ -163,24 +163,24 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       // See :
       // http://wiki.ds.unipi.gr/display/TOOP/Routing+Information+Profile
       // http://wiki.ds.unipi.gr/display/CCTF/TOOP+AS4+GW+Interface+specification
-      final Builder aBuilder = Phase4CEFSender.builder ()
-                                              .httpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
-                                              .cryptoFactory (aCF)
-                                              .senderParticipantID (aRoutingInfo.getSenderID ())
-                                              .receiverParticipantID (aRoutingInfo.getReceiverID ())
-                                              .documentTypeID (aRoutingInfo.getDocumentTypeID ())
-                                              .processID (aRoutingInfo.getProcessID ())
-                                              .conversationID (MessageHelperMethods.createRandomConversationID ())
-                                              .fromPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
-                                                                                             Phase4Config.getFromPartyID ()))
-                                              .fromRole ("http://www.toop.eu/edelivery/gateway")
-                                              .toPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
-                                                                                           PeppolCertificateHelper.getCN (aTheirCert.getSubjectDN ()
-                                                                                                                                    .getName ())))
-                                              .toRole ("http://www.toop.eu/edelivery/gateway")
-                                              .rawResponseConsumer (new RawResponseWriter ())
-                                              .endpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
-                                                                                                                    aRoutingInfo.getEndpointURL ()));
+      final CEFUserMessageBuilder aBuilder = Phase4CEFSender.builder ()
+                                                            .httpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
+                                                            .cryptoFactory (aCF)
+                                                            .senderParticipantID (aRoutingInfo.getSenderID ())
+                                                            .receiverParticipantID (aRoutingInfo.getReceiverID ())
+                                                            .documentTypeID (aRoutingInfo.getDocumentTypeID ())
+                                                            .processID (aRoutingInfo.getProcessID ())
+                                                            .conversationID (MessageHelperMethods.createRandomConversationID ())
+                                                            .fromPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
+                                                                                                           Phase4Config.getFromPartyID ()))
+                                                            .fromRole ("http://www.toop.eu/edelivery/gateway")
+                                                            .toPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
+                                                                                                         PeppolCertificateHelper.getCN (aTheirCert.getSubjectDN ()
+                                                                                                                                                  .getName ())))
+                                                            .toRole ("http://www.toop.eu/edelivery/gateway")
+                                                            .rawResponseConsumer (new RawResponseWriter ())
+                                                            .endpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
+                                                                                                                                  aRoutingInfo.getEndpointURL ()));
 
       // Payload/attachments
       int nPayloadIndex = 0;
