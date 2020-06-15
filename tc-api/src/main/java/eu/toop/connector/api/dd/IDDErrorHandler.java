@@ -48,6 +48,11 @@ public interface IDDErrorHandler
     onMessage (EErrorLevel.WARN, sMsg, null, eCode);
   }
 
+  default void onWarning (@Nonnull final String sMsg, @Nullable final Throwable t, @Nonnull final IToopErrorCode eCode)
+  {
+    onMessage (EErrorLevel.WARN, sMsg, t, eCode);
+  }
+
   default void onError (@Nonnull final String sMsg, @Nonnull final IToopErrorCode eCode)
   {
     onMessage (EErrorLevel.ERROR, sMsg, null, eCode);
