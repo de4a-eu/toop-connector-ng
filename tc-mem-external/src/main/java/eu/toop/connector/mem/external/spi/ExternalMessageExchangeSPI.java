@@ -55,10 +55,10 @@ import eu.toop.kafkaclient.ToopKafkaClient;
  * @author Philip Helger
  */
 @IsSPIImplementation
-public class DefaultMessageExchangeSPI implements IMessageExchangeSPI {
+public class ExternalMessageExchangeSPI implements IMessageExchangeSPI {
   private IMEIncomingHandler m_aIncomingHandler;
 
-  public DefaultMessageExchangeSPI() {
+  public ExternalMessageExchangeSPI() {
   }
 
   @Nonnull
