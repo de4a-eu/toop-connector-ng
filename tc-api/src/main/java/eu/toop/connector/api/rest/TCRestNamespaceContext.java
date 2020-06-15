@@ -35,7 +35,7 @@ public class TCRestNamespaceContext extends MapBasedNamespaceContext
 
   protected TCRestNamespaceContext ()
   {
-    addDefaultNamespaceURI (TCRestJAXB.NS_URI);
+    addMapping (TCRestJAXB.DEFAULT_NAMESPACE_PREFIX, TCRestJAXB.NS_URI);
   }
 
   @Nonnull

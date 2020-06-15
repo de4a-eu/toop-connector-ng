@@ -28,7 +28,7 @@ import com.helger.jaxb.GenericJAXBMarshaller;
 import com.helger.peppolid.IIdentifier;
 
 /**
- * JAXB helper for TC NG REST classes
+ * JAXB helper for TC NG REST classes.
  *
  * @author Philip Helger
  */
@@ -37,6 +37,7 @@ public final class TCRestJAXB
 {
   public static final ClassPathResource XSD_RES = new ClassPathResource ("/schemas/tc-rest.xsd", TCRestJAXB.class.getClassLoader ());
   public static final String NS_URI = "urn:eu.toop/toop-connector-ng/2020/05/";
+  public static final String DEFAULT_NAMESPACE_PREFIX = "tc";
 
   private TCRestJAXB ()
   {}
@@ -50,6 +51,10 @@ public final class TCRestJAXB
     return ret;
   }
 
+  /**
+   * @return A new marshaller to read and write {@link TCOutgoingMessage}
+   *         objects. Never <code>null</code>.
+   */
   @Nonnull
   public static GenericJAXBMarshaller <TCOutgoingMessage> outgoingMessage ()
   {
@@ -61,6 +66,10 @@ public final class TCRestJAXB
     return ret;
   }
 
+  /**
+   * @return A new marshaller to read and write {@link TCIncomingMessage}
+   *         objects. Never <code>null</code>.
+   */
   @Nonnull
   public static GenericJAXBMarshaller <TCIncomingMessage> incomingMessage ()
   {
@@ -72,6 +81,11 @@ public final class TCRestJAXB
     return ret;
   }
 
+  /**
+   * @param aID
+   *        The source identifier. May not be <code>null</code>.
+   * @return The created {@link TCIdentifierType} and never <code>null</code>.
+   */
   @Nonnull
   public static TCIdentifierType createTCID (@Nonnull final IIdentifier aID)
   {
@@ -79,6 +93,15 @@ public final class TCRestJAXB
     return createTCID (aID.getScheme (), aID.getValue ());
   }
 
+  /**
+   * Create a new {@link TCIdentifierType}
+   *
+   * @param sScheme
+   *        The scheme to use. May be <code>null</code>.
+   * @param sValue
+   *        The value to use. May not be <code>null</code>.
+   * @return The created {@link TCIdentifierType} and never <code>null</code>.
+   */
   @Nonnull
   public static TCIdentifierType createTCID (@Nullable final String sScheme, @Nonnull final String sValue)
   {
