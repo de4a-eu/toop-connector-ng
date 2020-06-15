@@ -31,7 +31,7 @@ public interface IVSValidator
 {
   /**
    * Perform validation
-   * 
+   *
    * @param aVESID
    *        VESID to use.
    * @param aPayload
@@ -41,5 +41,5 @@ public interface IVSValidator
    * @return A non-<code>null</code> result list.
    */
   @Nonnull
-  ValidationResultList validate (@Nonnull final VESID aVESID, @Nonnull final byte [] aPayload, @Nonnull final Locale aDisplayLocale);
+  ValidationResultList validate (@Nonnull VESID aVESID, @Nonnull byte [] aPayload, @Nonnull Locale aDisplayLocale);
 }
