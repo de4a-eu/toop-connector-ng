@@ -51,7 +51,7 @@ public final class DSDDatasetHelper
    */
   @Nonnull
   @ReturnsMutableCopy
-  public static ICommonsSet <DSDDatasetResponse> buildDSDResponseSet (final List <DCatAPDatasetType> datasetTypesList)
+  public static ICommonsSet <DSDDatasetResponse> buildDSDResponseSet (@Nonnull final List <DCatAPDatasetType> datasetTypesList)
   {
     final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
     final ICommonsSet <DSDDatasetResponse> ret = new CommonsHashSet <> ();
@@ -75,7 +75,8 @@ public final class DSDDatasetHelper
         if (dist.hasConformsToEntries ())
           resp.setDistributionConforms (dist.getConformsToAtIndex (0).getValue ());
 
-        resp.setDistributionFormat (dist.getFormat ().getContentAtIndex (0).toString ());
+        if (dist.getFormat ().hasContentEntries ())
+          resp.setDistributionFormat (dist.getFormat ().getContentAtIndex (0).toString ());
         ret.add (resp);
       });
     });

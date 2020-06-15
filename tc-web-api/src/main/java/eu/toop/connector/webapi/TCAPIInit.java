@@ -23,10 +23,10 @@ import com.helger.photon.api.APIPath;
 import com.helger.photon.api.IAPIRegistry;
 
 import eu.toop.connector.webapi.as4.ApiPostSend;
+import eu.toop.connector.webapi.dd.ApiGetSmpDocTypes;
+import eu.toop.connector.webapi.dd.ApiGetSmpEndpoints;
 import eu.toop.connector.webapi.dsd.ApiGetDsdDp;
 import eu.toop.connector.webapi.dsd.ApiGetDsdDpByCountry;
-import eu.toop.connector.webapi.smp.ApiGetSmpDocTypes;
-import eu.toop.connector.webapi.smp.ApiGetSmpEndpoints;
 import eu.toop.connector.webapi.user.ApiPostUserSubmitEdm;
 import eu.toop.connector.webapi.validation.ApiPostValidateEdm;
 

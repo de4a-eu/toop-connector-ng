@@ -57,10 +57,10 @@ import com.helger.xsds.bdxr.smp1.ServiceInformationType;
 import com.helger.xsds.bdxr.smp1.SignedServiceMetadataType;
 
 import eu.toop.connector.api.TCConfig;
+import eu.toop.connector.api.dd.DDEndpoint;
 import eu.toop.connector.api.dd.IDDEndpoint;
 import eu.toop.connector.api.dd.IDDEndpointProvider;
 import eu.toop.connector.api.dd.IDDErrorHandler;
-import eu.toop.connector.api.dd.DDEndpoint;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.kafkaclient.ToopKafkaClient;
 
@@ -91,11 +91,11 @@ public class DDEndpointProviderSMP implements IDDEndpointProvider
 
   @Nullable
   public IDDEndpoint getEndpoint (@Nonnull final String sLogPrefix,
-                                   @Nonnull final IParticipantIdentifier aRecipientID,
-                                   @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
-                                   @Nonnull final IProcessIdentifier aProcessID,
-                                   @Nonnull @Nonempty final String sTransportProfileID,
-                                   @Nonnull final IDDErrorHandler aErrorHandler)
+                                  @Nonnull final IParticipantIdentifier aRecipientID,
+                                  @Nonnull final IDocumentTypeIdentifier aDocumentTypeID,
+                                  @Nonnull final IProcessIdentifier aProcessID,
+                                  @Nonnull @Nonempty final String sTransportProfileID,
+                                  @Nonnull final IDDErrorHandler aErrorHandler)
   {
     ValueEnforcer.notNull (aRecipientID, "Recipient");
     ValueEnforcer.notNull (aDocumentTypeID, "DocumentTypeID");

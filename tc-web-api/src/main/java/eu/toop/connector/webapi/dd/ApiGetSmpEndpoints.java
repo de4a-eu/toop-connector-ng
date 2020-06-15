@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.webapi.smp;
+package eu.toop.connector.webapi.dd;
 
 import java.util.Map;
 
