@@ -111,7 +111,7 @@ public final class TCValidationRules
 
     // Error Response
     {
-      final IJAXBDocumentType aDT = RegRep4Reader.queryResponse ().getJAXBDocumentType ();
+      final IJAXBDocumentType aDT = RegRep4Reader.queryResponse (CCCEV.XSDS).getJAXBDocumentType ();
       aRegistry.registerValidationExecutorSet (ValidationExecutorSet.create (VID_TOOP_EDM_ERROR_RESPONSE_200,
                                                                              "TOOP EDM Error Response 2.0.0",
                                                                              bNotDeprecated,
