@@ -337,7 +337,7 @@ public final class EBMSUtils {
     final SOAPHeader soapHeader;
     try {
       soapHeader = message.getSOAPHeader();
-    } catch (SOAPException e) {
+    } catch (final SOAPException e) {
       throw new MEIncomingException(e.getMessage(), e);
     }
 
@@ -406,7 +406,6 @@ public final class EBMSUtils {
         meMessage.addPayload(payload);
       }
     }
-    final MEMessage builtMessage = meMessage.build();
 
     final Node messagePropsNode = SoapXPathUtil.safeFindSingleNode(soapHeader, "//:MessageProperties");
     final String sSenderId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
@@ -418,12 +417,7 @@ public final class EBMSUtils {
     final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
         ".//:Property[@name='Action']/text()");
 
-    builtMessage.setSenderId(sSenderId);
-    builtMessage.setReceiverId(sReceiverId);
-    builtMessage.setProcessId(sProcid);
-    builtMessage.setDoctypeId(sDoctypeId);
-
-    return builtMessage;
+    return meMessage.senderID(sSenderId).receiverID(sReceiverId).processID(sProcid).docTypeID(sDoctypeId).build();
   }
 
   public static RelayResult soap2RelayResult(final SOAPMessage sNotification) throws MEIncomingException {

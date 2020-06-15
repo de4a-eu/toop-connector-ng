@@ -98,13 +98,13 @@ public class ExternalMessageExchangeSPI implements IMessageExchangeSPI {
       // TODO get metadata in here
 
       final IParticipantIdentifier sender = TCConfig.getIdentifierFactory()
-                                                    .parseParticipantIdentifier(aMEMessage.getSenderId());
+                                                    .parseParticipantIdentifier(aMEMessage.getSenderID());
       final IParticipantIdentifier receiver = TCConfig.getIdentifierFactory()
-                                                      .parseParticipantIdentifier(aMEMessage.getReceiverId());
+                                                      .parseParticipantIdentifier(aMEMessage.getReceiverID());
       final IDocumentTypeIdentifier docid = TCConfig.getIdentifierFactory()
-                                                    .parseDocumentTypeIdentifier(aMEMessage.getDoctypeId());
+                                                    .parseDocumentTypeIdentifier(aMEMessage.getDoctypeID());
       final IProcessIdentifier procid = TCConfig.getIdentifierFactory()
-                                                .parseProcessIdentifier(aMEMessage.getProcessId());
+                                                .parseProcessIdentifier(aMEMessage.getProcessID());
 
       final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata(sender, receiver, docid, procid);
 
