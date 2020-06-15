@@ -13,25 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.app.servlet;
+package eu.toop.connector.servlet;
 
-import javax.annotation.Nonnull;
-import javax.servlet.http.HttpServletRequest;
+import javax.servlet.annotation.WebServlet;
 
-import com.helger.servlet.request.RequestHelper;
-import com.helger.servlet.response.UnifiedResponse;
+import com.helger.commons.http.EHttpMethod;
+import com.helger.xservlet.AbstractXServlet;
 
 /**
- * Special unified response for TOOP Connector.
+ * The servlet to show the application status.
  *
  * @author Philip Helger
  */
-public class TCUnifiedResponse extends UnifiedResponse
+@WebServlet ("/tc-status/*")
+public class TCStatusServlet extends AbstractXServlet
 {
-  public TCUnifiedResponse (@Nonnull final HttpServletRequest aHttpRequest)
+  public static final String SERVLET_DEFAULT_NAME = "tc-status";
+  public static final String SERVLET_DEFAULT_PATH = '/' + SERVLET_DEFAULT_NAME;
+
+  public TCStatusServlet ()
   {
-    super (RequestHelper.getHttpVersion (aHttpRequest), RequestHelper.getHttpMethod (aHttpRequest), aHttpRequest);
-    setAllowContentOnStatusCode (true);
-    disableCaching ();
+    handlerRegistry ().registerHandler (EHttpMethod.GET, new TCStatusXServletHandler ());
   }
 }

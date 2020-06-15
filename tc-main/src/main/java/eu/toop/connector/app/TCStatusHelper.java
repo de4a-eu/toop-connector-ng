@@ -72,6 +72,7 @@ public final class TCStatusHelper
       }
     });
 
+    // Maintain the retrieved order
     for (final Map.Entry <String, String> aEntry : aVals.entrySet ())
     {
       final String sKey = aEntry.getKey ();
