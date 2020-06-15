@@ -41,9 +41,9 @@ import eu.toop.connector.api.rest.TCOutgoingMessage;
 import eu.toop.connector.api.rest.TCPayload;
 import eu.toop.connector.api.rest.TCRestJAXB;
 import eu.toop.connector.webapi.APIParamException;
-import eu.toop.connector.webapi.dd.SMPJsonResponse;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
+import eu.toop.connector.webapi.smp.SMPJsonResponse;
 
 /**
  * Send an outgoing AS4 message via the configured MEM gateway

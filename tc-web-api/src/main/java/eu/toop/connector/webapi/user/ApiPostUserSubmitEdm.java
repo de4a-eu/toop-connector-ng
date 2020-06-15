@@ -58,9 +58,9 @@ import eu.toop.connector.app.validation.TCValidator;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.ETCEdmType;
 import eu.toop.connector.webapi.TCAPIConfig;
-import eu.toop.connector.webapi.dd.SMPJsonResponse;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
+import eu.toop.connector.webapi.smp.SMPJsonResponse;
 
 /**
  * Perform validation, lookup and sending via API

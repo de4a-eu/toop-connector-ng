@@ -25,9 +25,9 @@ import eu.toop.connector.api.dd.IDDServiceGroupHrefProvider;
 import eu.toop.connector.api.dd.IDDServiceMetadataProvider;
 import eu.toop.connector.api.dsd.IDSDDatasetResponseProvider;
 import eu.toop.connector.api.validation.IVSValidator;
-import eu.toop.connector.app.dd.DDServiceGroupHrefProviderSMP;
-import eu.toop.connector.app.dd.DDServiceMetadataProviderSMP;
 import eu.toop.connector.app.dsd.DSDDatasetResponseProviderRemote;
+import eu.toop.connector.app.smp.DDServiceGroupHrefProviderSMP;
+import eu.toop.connector.app.smp.DDServiceMetadataProviderSMP;
 import eu.toop.connector.app.validation.TCValidator;
 
 /**

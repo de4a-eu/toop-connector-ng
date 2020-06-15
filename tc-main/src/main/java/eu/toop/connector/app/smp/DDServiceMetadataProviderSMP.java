@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.app.dd;
+package eu.toop.connector.app.smp;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -31,7 +31,7 @@ import eu.toop.connector.api.dd.IDDServiceMetadataProvider;
 /**
  * An implementation of {@link IDDServiceMetadataProvider} going to the SMP for
  * querying.
- * 
+ *
  * @author Philip Helger
  */
 public class DDServiceMetadataProviderSMP implements IDDServiceMetadataProvider
@@ -45,7 +45,7 @@ public class DDServiceMetadataProviderSMP implements IDDServiceMetadataProvider
   {
     try
     {
-      final BDXRClientReadOnly aBDXR1Client = DDEndpointProviderSMP.getSMPClient (aParticipantID);
+      final BDXRClientReadOnly aBDXR1Client = DDServiceGroupHrefProviderSMP.getSMPClient (aParticipantID);
 
       final SignedServiceMetadataType aSSM = aBDXR1Client.getServiceMetadataOrNull (aParticipantID, aDocTypeID);
       if (aSSM == null)
