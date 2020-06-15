@@ -47,6 +47,7 @@ public class TCRootServlet extends HttpServlet
   @Override
   protected void doGet (@Nonnull final HttpServletRequest req, @Nonnull final HttpServletResponse resp) throws ServletException, IOException
   {
+    final String sContextPath = req.getServletContext ().getContextPath ();
     final String sCSS = "* { font-family: sans-serif; }" +
                         " a:link, a:visited, a:hover, a:active { color: #2255ff; }" +
                         " code { font-family:monospace; color:#e83e8c; }";
@@ -88,12 +89,20 @@ public class TCRootServlet extends HttpServlet
       aSB.append ("<h2>API information</h2>");
 
       aSB.append ("<h3>DSD</h3>");
-      aSB.append ("<div>GET /api/dsd/dp - <a href='/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE' target='_blank'>test me</a></div>");
-      aSB.append ("<div>GET /api/dsd/dp/by-country - <a href='/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE/by-country/SV' target='_blank'>test me</a></div>");
+      aSB.append ("<div>GET /api/dsd/dp - <a href='" +
+                  sContextPath +
+                  "/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE' target='_blank'>test me</a></div>");
+      aSB.append ("<div>GET /api/dsd/dp/by-country - <a href='" +
+                  sContextPath +
+                  "/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE/by-country/SV' target='_blank'>test me</a></div>");
 
       aSB.append ("<h3>SMP</h3>");
-      aSB.append ("<div>GET /api/smp/doctypes - <a href='/api/smp/doctypes/iso6523-actorid-upis%3A%3A9915%3Atooptest' target='_blank'>test me</a></div>");
-      aSB.append ("<div>GET /api/smp/endpoints - <a href='/api/smp/endpoints/iso6523-actorid-upis%3A%3A9915%3Atooptest/toop-doctypeid-qns%3A%3Aurn%3Aeu%3Atoop%3Ans%3Adataexchange-1p40%3A%3ARequest%23%23urn%3Aeu.toop.request.registeredorganization%3A%3A1.40' target='_blank'>test me</a></div>");
+      aSB.append ("<div>GET /api/smp/doctypes - <a href='" +
+                  sContextPath +
+                  "/api/smp/doctypes/iso6523-actorid-upis%3A%3A9915%3Atooptest' target='_blank'>test me</a></div>");
+      aSB.append ("<div>GET /api/smp/endpoints - <a href='" +
+                  sContextPath +
+                  "/api/smp/endpoints/iso6523-actorid-upis%3A%3A9915%3Atooptest/toop-doctypeid-qns%3A%3Aurn%3Aeu%3Atoop%3Ans%3Adataexchange-1p40%3A%3ARequest%23%23urn%3Aeu.toop.request.registeredorganization%3A%3A1.40' target='_blank'>test me</a></div>");
 
       aSB.append ("<h3>Validation</h3>");
       aSB.append ("<div>POST /api/validate/request</div>");
