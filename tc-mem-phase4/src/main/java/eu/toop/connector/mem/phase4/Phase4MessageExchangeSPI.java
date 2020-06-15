@@ -33,6 +33,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.exception.InitializationException;
 import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.string.StringHelper;
+import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.system.SystemProperties;
 import com.helger.httpclient.HttpClientFactory;
 import com.helger.peppol.utils.PeppolCertificateHelper;
@@ -228,5 +229,11 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
   public void shutdown (@Nonnull final ServletContext aServletContext)
   {
     // Nothing to do here
+  }
+
+  @Override
+  public String toString ()
+  {
+    return new ToStringGenerator (this).append ("CryptoFactory", m_aCF).getToString ();
   }
 }
