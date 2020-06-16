@@ -124,7 +124,7 @@
                 <cva:CoreBusiness
                     xmlns:cva="http://www.w3.org/ns/corevocabulary/AggregateComponents"
                     xmlns:cvb="http://www.w3.org/ns/corevocabulary/BasicComponents">
-                    <cvb:LegalEntityLegalID schemeID="VAT">DE/GB/02735442Z</cvb:LegalEntityLegalID>
+                    <cvb:LegalEntityLegalID schemeID="VATRegistration">DE/GB/02735442Z</cvb:LegalEntityLegalID>
                     <cvb:LegalEntityID schemeID='EIDAS'>DE730757727</cvb:LegalEntityID>
                     <cvb:LegalEntityLegalName>AnyCompanyName</cvb:LegalEntityLegalName>
                     <!--     Core Location Vocabuary (CLV) Expression of the LegalEntityRegisteredAddress  -->
