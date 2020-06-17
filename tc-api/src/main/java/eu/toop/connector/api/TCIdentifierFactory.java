@@ -48,12 +48,14 @@ public final class TCIdentifierFactory implements IIdentifierFactory
     return ret.length () == 0 ? null : ret;
   }
 
+  @Override
   public boolean isDocumentTypeIdentifierSchemeMandatory ()
   {
     return true;
   }
 
   @Nonnull
+  @Override
   public String getDefaultDocumentTypeIdentifierScheme ()
   {
     return DOCTYPE_SCHEME;
@@ -69,12 +71,14 @@ public final class TCIdentifierFactory implements IIdentifierFactory
     return new SimpleDocumentTypeIdentifier (_nullNotEmptyTrimmed (sScheme), sRealValue);
   }
 
+  @Override
   public boolean isParticipantIdentifierSchemeMandatory ()
   {
     return true;
   }
 
   @Nonnull
+  @Override
   public String getDefaultParticipantIdentifierScheme ()
   {
     return PARTICIPANT_SCHEME;
@@ -97,6 +101,7 @@ public final class TCIdentifierFactory implements IIdentifierFactory
   }
 
   @Nonnull
+  @Override
   public String getDefaultProcessIdentifierScheme ()
   {
     return PROCESS_SCHEME;

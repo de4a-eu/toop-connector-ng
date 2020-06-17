@@ -89,7 +89,7 @@ public final class TCValidationRules
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
-                                                                                                        () -> aDT.getSchema ()),
+                                                                                                        aDT::getSchema),
                                                                              _createXSLT (CEDMSchematron.TOOP_IS_REQUEST).setStopValidationOnError (true),
                                                                              _createXSLT (CEDMSchematron.TOOP_EDM2_XSLT),
                                                                              _createXSLT (CEDMSchematron.TOOP_BUSINESS_RULES_XSLT)));
@@ -103,7 +103,7 @@ public final class TCValidationRules
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
-                                                                                                        () -> aDT.getSchema ()),
+                                                                                                        aDT::getSchema),
                                                                              _createXSLT (CEDMSchematron.TOOP_IS_RESPONSE).setStopValidationOnError (true),
                                                                              _createXSLT (CEDMSchematron.TOOP_EDM2_XSLT),
                                                                              _createXSLT (CEDMSchematron.TOOP_BUSINESS_RULES_XSLT)));
@@ -117,7 +117,7 @@ public final class TCValidationRules
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
-                                                                                                        () -> aDT.getSchema ()),
+                                                                                                        aDT::getSchema),
                                                                              _createXSLT (CEDMSchematron.TOOP_IS_ERROR_RESPONSE).setStopValidationOnError (true),
                                                                              _createXSLT (CEDMSchematron.TOOP_EDM2_XSLT),
                                                                              _createXSLT (CEDMSchematron.TOOP_BUSINESS_RULES_XSLT)));

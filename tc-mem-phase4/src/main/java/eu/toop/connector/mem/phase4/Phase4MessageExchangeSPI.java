@@ -152,9 +152,9 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       AS4HttpDebug.setEnabled (true);
   }
 
-  private void _sendOutgoing (@Nonnull final IAS4CryptoFactory aCF,
-                              @Nonnull final IMERoutingInformation aRoutingInfo,
-                              @Nonnull final MEMessage aMessage) throws MEOutgoingException
+  private static void _sendOutgoing (@Nonnull final IAS4CryptoFactory aCF,
+                                     @Nonnull final IMERoutingInformation aRoutingInfo,
+                                     @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
     try
     {

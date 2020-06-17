@@ -30,6 +30,7 @@ import eu.toop.connector.api.TCConfig;
 import eu.toop.edm.jaxb.cv.agent.PublicOrganizationType;
 import eu.toop.edm.jaxb.cv.cbc.IDType;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import eu.toop.edm.jaxb.dcatap.DCatAPDistributionType;
 
 /**
  * Contains helper functions for DSD service.
@@ -55,8 +56,9 @@ public final class DSDDatasetHelper
   {
     final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
     final ICommonsSet <DSDDatasetResponse> ret = new CommonsHashSet <> ();
-    datasetTypesList.forEach (d -> {
-      d.getDistribution ().forEach (dist -> {
+    for (final DCatAPDatasetType d : datasetTypesList)
+      for (final DCatAPDistributionType dist : d.getDistribution ())
+      {
         final DSDDatasetResponse resp = new DSDDatasetResponse ();
         // Access Service Conforms To
         if (dist.getAccessService ().hasConformsToEntries ())
@@ -78,8 +80,7 @@ public final class DSDDatasetHelper
         if (dist.getFormat ().hasContentEntries ())
           resp.setDistributionFormat (dist.getFormat ().getContentAtIndex (0).toString ());
         ret.add (resp);
-      });
-    });
+      }
 
     return ret;
   }

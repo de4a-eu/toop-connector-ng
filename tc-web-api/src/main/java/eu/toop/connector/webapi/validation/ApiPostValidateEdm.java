@@ -70,7 +70,8 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
     final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
     final VESID aVESID = m_eType.getVESID ();
 
-    LOGGER.info ("API validating " + aPayload.length + " bytes using '" + aVESID.getAsSingleID () + "'");
+    if (LOGGER.isInfoEnabled ())
+      LOGGER.info ("API validating " + aPayload.length + " bytes using '" + aVESID.getAsSingleID () + "'");
 
     final IJsonObject aJson = new JsonObject ();
     CommonAPIInvoker.invoke (aJson, () -> {
