@@ -15,6 +15,8 @@
  */
 package eu.toop.connector.api.me.incoming;
 
+import java.util.List;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
@@ -23,7 +25,6 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
-import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsOrderedMap;
 import com.helger.commons.string.ToStringGenerator;
 
@@ -44,7 +45,7 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
   private final IMEIncomingTransportMetadata m_aMetadata;
 
   public IncomingEDMResponse (@Nonnull final EDMResponse aResponse,
-                              @Nullable final ICommonsList <MEPayload> aAttachments,
+                              @Nullable final List <MEPayload> aAttachments,
                               @Nonnull final IMEIncomingTransportMetadata aMetadata)
   {
     ValueEnforcer.notNull (aResponse, "Response");
