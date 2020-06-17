@@ -14,6 +14,7 @@ It uses the shared components from:
 Status of `2.0.0-rc1`
 * Integrated the standalone version `tc-jetty` into this repository
 * Fixed the XSD validation for error responses in the context of Schematron validation
+* Made some message exchange components implement equals/hashCode
 
 2020-06-01: release of `2.0.0-beta5`
 * Improved the validation API to create no more false positives
