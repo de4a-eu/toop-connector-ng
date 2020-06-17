@@ -106,7 +106,7 @@ public class MEIncomingTransportMetadata implements IMEIncomingTransportMetadata
       return false;
 
     final MEIncomingTransportMetadata rhs = (MEIncomingTransportMetadata) o;
-    return _equalsCustom (m_aSenderID, rhs.m_aReceiverID, IParticipantIdentifier::hasSameContent) &&
+    return _equalsCustom (m_aSenderID, rhs.m_aSenderID, IParticipantIdentifier::hasSameContent) &&
            _equalsCustom (m_aReceiverID, rhs.m_aReceiverID, IParticipantIdentifier::hasSameContent) &&
            _equalsCustom (m_aDocTypeID, rhs.m_aDocTypeID, IDocumentTypeIdentifier::hasSameContent) &&
            _equalsCustom (m_aProcessID, rhs.m_aProcessID, IProcessIdentifier::hasSameContent);
