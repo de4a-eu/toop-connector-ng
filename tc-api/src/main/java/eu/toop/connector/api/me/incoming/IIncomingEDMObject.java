@@ -25,7 +25,8 @@ import javax.annotation.Nonnull;
 public interface IIncomingEDMObject
 {
   /**
-   * @return The incoming metadata associated with this request.
+   * @return The incoming metadata associated with this request. Never
+   *         <code>null</code>.
    */
   @Nonnull
   IMEIncomingTransportMetadata getMetadata ();
