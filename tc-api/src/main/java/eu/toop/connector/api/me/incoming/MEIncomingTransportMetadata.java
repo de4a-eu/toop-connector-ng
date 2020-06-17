@@ -15,10 +15,15 @@
  */
 package eu.toop.connector.api.me.incoming;
 
+import java.util.function.BiPredicate;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
+import com.helger.commons.ValueEnforcer;
+import com.helger.commons.equals.EqualsHelper;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
@@ -75,6 +80,46 @@ public class MEIncomingTransportMetadata implements IMEIncomingTransportMetadata
   public IProcessIdentifier getProcessID ()
   {
     return m_aProcessID;
+  }
+
+  private static <T> boolean _equalsCustom (@Nullable final T aObj1, @Nullable final T aObj2, @Nonnull final BiPredicate <T, T> aPredicate)
+  {
+    ValueEnforcer.notNull (aPredicate, "Predicate");
+
+    // Same object - check first
+    if (EqualsHelper.identityEqual (aObj1, aObj2))
+      return true;
+
+    // Is only one value null?
+    if (aObj1 == null || aObj2 == null)
+      return false;
+
+    return aPredicate.test (aObj1, aObj2);
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+
+    final MEIncomingTransportMetadata rhs = (MEIncomingTransportMetadata) o;
+    return _equalsCustom (m_aSenderID, rhs.m_aReceiverID, IParticipantIdentifier::hasSameContent) &&
+           _equalsCustom (m_aReceiverID, rhs.m_aReceiverID, IParticipantIdentifier::hasSameContent) &&
+           _equalsCustom (m_aDocTypeID, rhs.m_aDocTypeID, IDocumentTypeIdentifier::hasSameContent) &&
+           _equalsCustom (m_aProcessID, rhs.m_aProcessID, IProcessIdentifier::hasSameContent);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aSenderID)
+                                       .append (m_aReceiverID)
+                                       .append (m_aDocTypeID)
+                                       .append (m_aProcessID)
+                                       .getHashCode ();
   }
 
   @Override

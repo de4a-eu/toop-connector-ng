@@ -24,8 +24,10 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableObject;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.io.ByteArrayWrapper;
 import com.helger.commons.mime.IMimeType;
 import com.helger.commons.string.StringHelper;
@@ -40,6 +42,7 @@ import eu.toop.regrep.CRegRep4;
  * @author Philip Helger
  */
 @Immutable
+@MustImplementEqualsAndHashcode
 public final class MEPayload implements Serializable
 {
   /**
@@ -93,6 +96,24 @@ public final class MEPayload implements Serializable
   public ByteArrayWrapper getData ()
   {
     return m_aData;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+
+    final MEPayload rhs = (MEPayload) o;
+    return m_aMimeType.equals (rhs.m_aMimeType) && m_sContentID.equals (rhs.m_sContentID) && m_aData.equals (rhs.m_aData);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aMimeType).append (m_sContentID).append (m_aData).getHashCode ();
   }
 
   @Override

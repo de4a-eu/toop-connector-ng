@@ -17,6 +17,7 @@ package eu.toop.connector.api.me.incoming;
 
 import javax.annotation.Nullable;
 
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
@@ -26,6 +27,7 @@ import com.helger.peppolid.IProcessIdentifier;
  *
  * @author Philip Helger
  */
+@MustImplementEqualsAndHashcode
 public interface IMEIncomingTransportMetadata
 {
   /**
