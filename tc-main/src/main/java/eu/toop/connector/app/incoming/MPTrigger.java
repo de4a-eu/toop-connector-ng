@@ -68,9 +68,10 @@ public final class MPTrigger
 
     if (StringHelper.hasNoText (sDestURL))
       throw new IllegalStateException ("No URL for handling inbound messages is defined.");
+
     final IURLProtocol aProtocol = URLProtocolRegistry.getInstance ().getProtocol (sDestURL);
     if (aProtocol == null)
-      throw new IllegalStateException ("The URL for handling inbound messages is invalid.");
+      throw new IllegalStateException ("The URL for handling inbound messages '" + sDestURL + "' is invalid.");
 
     // Convert XML to bytes
     final byte [] aPayload = TCRestJAXB.incomingMessage ().getAsBytes (aMsg);
@@ -79,7 +80,7 @@ public final class MPTrigger
 
     ToopKafkaClient.send (EErrorLevel.INFO, () -> "Sending inbound message to '" + sDestURL + "' with " + aPayload.length + " bytes");
 
-    // Main sending
+    // Main sending, using TC http settings
     try (final HttpClientManager aHCM = HttpClientManager.create (new TCHttpClientSettings ()))
     {
       final HttpPost aPost = new HttpPost (sDestURL);
@@ -129,12 +130,14 @@ public final class MPTrigger
   }
 
   @Nonnull
-  public static ESuccess forwardMessage (@Nonnull final IncomingEDMRequest aRequest, @Nonnull @Nonempty final String sDestUrl)
+  public static ESuccess forwardMessage (@Nonnull final IncomingEDMRequest aRequest, @Nonnull @Nonempty final String sDestURL)
   {
+    ValueEnforcer.notEmpty (sDestURL, "Destination URL");
+
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aRequest.getMetadata (), TCPayloadType.REQUEST));
     aMsg.addPayload (_createPayload (aRequest.getRequest ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
-    return _forwardMessage (aMsg, sDestUrl);
+    return _forwardMessage (aMsg, sDestURL);
   }
 
   @Nonnull
@@ -146,6 +149,8 @@ public final class MPTrigger
   @Nonnull
   public static ESuccess forwardMessage (@Nonnull final IncomingEDMResponse aResponse, @Nonnull @Nonempty final String sDestURL)
   {
+    ValueEnforcer.notEmpty (sDestURL, "Destination URL");
+
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aResponse.getMetadata (), TCPayloadType.RESPONSE));
     aMsg.addPayload (_createPayload (aResponse.getResponse ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
@@ -164,6 +169,8 @@ public final class MPTrigger
   @Nonnull
   public static ESuccess forwardMessage (@Nonnull final IncomingEDMErrorResponse aErrorResponse, @Nonnull @Nonempty final String sDestURL)
   {
+    ValueEnforcer.notEmpty (sDestURL, "Destination URL");
+
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aErrorResponse.getMetadata (), TCPayloadType.ERROR_RESPONSE));
     aMsg.addPayload (_createPayload (aErrorResponse.getErrorResponse ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
