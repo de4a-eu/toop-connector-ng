@@ -29,25 +29,25 @@ import com.helger.peppolid.IProcessIdentifier;
 public interface IMEIncomingTransportMetadata
 {
   /**
-   * @return Sender participant ID. Never <code>null</code>.
+   * @return Sender participant ID. May be <code>null</code>.
    */
   @Nullable
   IParticipantIdentifier getSenderID ();
 
   /**
-   * @return Receiver participant ID. Never <code>null</code>.
+   * @return Receiver participant ID. May be <code>null</code>.
    */
   @Nullable
   IParticipantIdentifier getReceiverID ();
 
   /**
-   * @return Document type ID. Never <code>null</code>.
+   * @return Document type ID. May be <code>null</code>.
    */
   @Nullable
   IDocumentTypeIdentifier getDocumentTypeID ();
 
   /**
-   * @return Process ID. Never <code>null</code>.
+   * @return Process ID. May be <code>null</code>.
    */
   @Nullable
   IProcessIdentifier getProcessID ();
