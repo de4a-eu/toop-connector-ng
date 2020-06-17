@@ -26,6 +26,7 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
 import com.helger.commons.collection.impl.ICommonsOrderedMap;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.connector.api.me.model.MEPayload;
@@ -82,6 +83,24 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
   public IMEIncomingTransportMetadata getMetadata ()
   {
     return m_aMetadata;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+
+    final IncomingEDMResponse rhs = (IncomingEDMResponse) o;
+    return m_aResponse.equals (rhs.m_aResponse) && m_aAttachments.equals (m_aAttachments) && m_aMetadata.equals (rhs.m_aMetadata);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aResponse).append (m_aAttachments).append (m_aMetadata).getHashCode ();
   }
 
   @Override

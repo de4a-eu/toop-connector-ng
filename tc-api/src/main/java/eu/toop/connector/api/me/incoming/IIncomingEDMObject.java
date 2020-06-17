@@ -17,11 +17,14 @@ package eu.toop.connector.api.me.incoming;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+
 /**
  * Marker interface for incoming EDM objects.
  *
  * @author Philip Helger
  */
+@MustImplementEqualsAndHashcode
 public interface IIncomingEDMObject
 {
   /**

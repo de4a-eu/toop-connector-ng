@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.edm.EDMRequest;
@@ -53,6 +54,24 @@ public class IncomingEDMRequest implements IIncomingEDMObject
   public IMEIncomingTransportMetadata getMetadata ()
   {
     return m_aMetadata;
+  }
+
+  @Override
+  public boolean equals (final Object o)
+  {
+    if (o == this)
+      return true;
+    if (o == null || !getClass ().equals (o.getClass ()))
+      return false;
+
+    final IncomingEDMRequest rhs = (IncomingEDMRequest) o;
+    return m_aRequest.equals (rhs.m_aRequest) && m_aMetadata.equals (rhs.m_aMetadata);
+  }
+
+  @Override
+  public int hashCode ()
+  {
+    return new HashCodeGenerator (this).append (m_aRequest).append (m_aMetadata).getHashCode ();
   }
 
   @Override
