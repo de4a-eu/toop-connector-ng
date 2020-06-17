@@ -16,6 +16,8 @@
 package eu.toop.connector.api.me.incoming;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.ReturnsMutableCopy;
@@ -34,6 +36,7 @@ import eu.toop.edm.EDMResponse;
  *
  * @author Philip Helger
  */
+@NotThreadSafe
 public class IncomingEDMResponse implements IIncomingEDMResponse
 {
   private final EDMResponse m_aResponse;
@@ -41,16 +44,16 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
   private final IMEIncomingTransportMetadata m_aMetadata;
 
   public IncomingEDMResponse (@Nonnull final EDMResponse aResponse,
-                              @Nonnull final ICommonsList <MEPayload> aAttachments,
+                              @Nullable final ICommonsList <MEPayload> aAttachments,
                               @Nonnull final IMEIncomingTransportMetadata aMetadata)
   {
     ValueEnforcer.notNull (aResponse, "Response");
-    ValueEnforcer.notNullNoNullValue (aAttachments, "Attachments");
     ValueEnforcer.notNull (aMetadata, "Metadata");
 
     m_aResponse = aResponse;
-    for (final MEPayload aItem : aAttachments)
-      m_aAttachments.put (aItem.getContentID (), aItem);
+    if (aAttachments != null)
+      for (final MEPayload aItem : aAttachments)
+        m_aAttachments.put (aItem.getContentID (), aItem);
     m_aMetadata = aMetadata;
   }
 
