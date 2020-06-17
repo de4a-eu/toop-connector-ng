@@ -81,7 +81,7 @@
                             <cccev:documentURI>URI</cccev:documentURI>
                             <cccev:documentDescription>DocumentDescription</cccev:documentDescription>
                             <cccev:documentType>application/xml</cccev:documentType>
-                            <cccev:localeCode>GR</cccev:localeCode>
+                            <cccev:localeCode>DE</cccev:localeCode>
                         </dcat:distribution>
                         <!-- Creator is an Agent OrganizationType-->
                         <creator xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#"
