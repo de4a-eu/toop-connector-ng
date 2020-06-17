@@ -44,7 +44,10 @@ public final class TCAPIInit
   public static void initAPI (@Nonnull final IAPIRegistry aAPIRegistry)
   {
     // DSD stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}"), ApiGetDsdDp.class));
+    // For rc1 it was decided to not use it, because of issues with the TOOP
+    // Directory integration
+    if (false)
+      aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}"), ApiGetDsdDp.class));
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}/by-country/{country}"), ApiGetDsdDpByCountry.class));
 
     // SMP stuff

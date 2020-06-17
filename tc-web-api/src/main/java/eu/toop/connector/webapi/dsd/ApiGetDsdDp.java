@@ -39,7 +39,8 @@ import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
 /**
- * Search DSD participants by dataset only
+ * Search DSD participants by dataset only. <br>
+ * Was disabled for RC1
  *
  * @author Philip Helger
  */
