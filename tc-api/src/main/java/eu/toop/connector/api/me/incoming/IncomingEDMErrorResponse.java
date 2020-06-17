@@ -16,6 +16,7 @@
 package eu.toop.connector.api.me.incoming;
 
 import javax.annotation.Nonnull;
+import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.string.ToStringGenerator;
@@ -28,6 +29,7 @@ import eu.toop.edm.EDMErrorResponse;
  *
  * @author Philip Helger
  */
+@NotThreadSafe
 public class IncomingEDMErrorResponse implements IIncomingEDMResponse
 {
   private final EDMErrorResponse m_aErrorResponse;
