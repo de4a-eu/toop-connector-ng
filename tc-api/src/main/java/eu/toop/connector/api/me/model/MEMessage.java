@@ -44,12 +44,16 @@ public class MEMessage implements Serializable
   /**
    * Instantiates a new Me message.
    *
-   * @param sProcessID
-   * @param sDocTypeID
-   * @param sReceiverID
    * @param sSenderID
+   *        Sender ID
+   * @param sReceiverID
+   *        Receiver ID
+   * @param sDocTypeID
+   *        Document type ID
+   * @param sProcessID
+   *        Process ID
    * @param aPayloads
-   *        the a payloads
+   *        the payloads
    */
   protected MEMessage (@Nullable final String sSenderID,
                        @Nullable final String sReceiverID,
@@ -158,7 +162,7 @@ public class MEMessage implements Serializable
     /**
      * Sets sender id.
      *
-     * @param senderId
+     * @param s
      *        the sender id
      * @return the builder
      */
