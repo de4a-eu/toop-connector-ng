@@ -17,6 +17,7 @@ package eu.toop.connector.api.me.incoming;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import javax.annotation.concurrent.Immutable;
 
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.peppolid.IDocumentTypeIdentifier;
@@ -33,6 +34,7 @@ import eu.toop.connector.api.rest.TCIncomingMetadata;
  *
  * @author Philip Helger
  */
+@Immutable
 public class MEIncomingTransportMetadata implements IMEIncomingTransportMetadata
 {
   private final IParticipantIdentifier m_aSenderID;
@@ -80,8 +82,8 @@ public class MEIncomingTransportMetadata implements IMEIncomingTransportMetadata
   {
     return new ToStringGenerator (this).append ("SenderID", m_aSenderID)
                                        .append ("ReceiverID", m_aReceiverID)
-                                       .append ("DocTypeID", m_aDocTypeID)
-                                       .append ("ProcID", m_aProcessID)
+                                       .append ("DocumentTypeID", m_aDocTypeID)
+                                       .append ("ProcessID", m_aProcessID)
                                        .getToString ();
   }
 
