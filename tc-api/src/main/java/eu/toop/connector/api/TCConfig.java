@@ -358,8 +358,8 @@ public final class TCConfig
     }
 
     /**
-     * @return The URL where incoming AS4 messages are forwarded to. This is the
-     *         value from the configuration file.
+     * @return The DSC/DP URL where incoming AS4 messages are forwarded to. This
+     *         is the value from the configuration file.
      */
     @Nullable
     public static String getMEMIncomingURL ()
