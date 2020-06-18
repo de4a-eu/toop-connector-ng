@@ -51,7 +51,7 @@ final class TCStatusXServletHandler implements IXServletSimpleHandler
       LOGGER.debug ("Status information requested");
 
     // Build data to provide
-    IJsonObject aStatusData;
+    final IJsonObject aStatusData;
     if (TCConfig.WebApp.isStatusEnabled ())
       aStatusData = TCStatusHelper.getDefaultStatusData ();
     else
