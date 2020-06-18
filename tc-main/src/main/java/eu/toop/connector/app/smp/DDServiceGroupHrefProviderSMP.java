@@ -72,7 +72,8 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
           // Decoded href is important for unification
           final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
           if (ret.put (sHref, aSMR.getHref ()) != null)
-            LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
+            if (LOGGER.isWarnEnabled ())
+              LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
         }
       }
       return ret;

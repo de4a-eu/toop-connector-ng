@@ -28,34 +28,36 @@ import eu.toop.edm.error.IToopErrorCode;
  */
 public class MEOutgoingException extends MEException
 {
-  private IToopErrorCode m_aErrorCode;
+  private final IToopErrorCode m_aErrorCode;
+
+  protected MEOutgoingException (@Nullable final String sMsg, @Nullable final Throwable aCause, @Nullable final IToopErrorCode aErrorCode)
+  {
+    super (sMsg, aCause);
+    m_aErrorCode = aErrorCode;
+  }
 
   public MEOutgoingException (@Nullable final String sMsg)
   {
-    super (sMsg);
-    m_aErrorCode = null;
+    this (sMsg, null, null);
   }
 
   public MEOutgoingException (@Nullable final String sMsg, @Nullable final Throwable aCause)
   {
-    super (sMsg, aCause);
-    m_aErrorCode = null;
+    this (sMsg, aCause, null);
   }
 
   public MEOutgoingException (@Nonnull final IToopErrorCode aErrorCode, @Nullable final Throwable aCause)
   {
-    this ("TOOP Error " + aErrorCode.getID (), aCause);
-    m_aErrorCode = aErrorCode;
+    this ("TOOP Error " + aErrorCode.getID (), aCause, aErrorCode);
   }
 
   public MEOutgoingException (@Nonnull final IToopErrorCode aErrorCode, @Nullable final String sMsg)
   {
-    this ("TOOP Error " + aErrorCode.getID () + " - " + sMsg);
-    m_aErrorCode = aErrorCode;
+    this ("TOOP Error " + aErrorCode.getID () + " - " + sMsg, null, aErrorCode);
   }
 
   @Nullable
-  public IToopErrorCode getToopErrorCode ()
+  public final IToopErrorCode getToopErrorCode ()
   {
     return m_aErrorCode;
   }

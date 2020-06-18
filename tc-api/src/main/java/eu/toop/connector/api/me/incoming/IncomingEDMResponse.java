@@ -94,7 +94,7 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
       return false;
 
     final IncomingEDMResponse rhs = (IncomingEDMResponse) o;
-    return m_aResponse.equals (rhs.m_aResponse) && m_aAttachments.equals (m_aAttachments) && m_aMetadata.equals (rhs.m_aMetadata);
+    return m_aResponse.equals (rhs.m_aResponse) && m_aAttachments.equals (rhs.m_aAttachments) && m_aMetadata.equals (rhs.m_aMetadata);
   }
 
   @Override

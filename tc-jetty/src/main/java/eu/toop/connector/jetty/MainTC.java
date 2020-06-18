@@ -97,6 +97,8 @@ public class MainTC implements Callable <Integer>
           new JettyStopper ().setStopPort (m_aStopPort.intValue ()).run ();
           break;
         }
+        default:
+          throw new IllegalStateException ("Don't know how to do that");
       }
     }
     catch (final Exception ex)

@@ -42,6 +42,7 @@ import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.security.certificate.CertificateHelper;
+import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
 import com.helger.smpclient.bdxr1.utils.BDXR1ExtensionConverter;
 
 @Immutable
@@ -51,10 +52,6 @@ public final class SMPJsonResponse
   public static final String JSON_PARTICIPANT_ID = "participantID";
   public static final String JSON_HREF = "href";
   public static final String JSON_DOCUMENT_TYPE_ID = "documentTypeID";
-  @SuppressWarnings ("unused")
-  public static final String JSON_NICE_NAME = "niceName";
-  @SuppressWarnings ("unused")
-  public static final String JSON_IS_DEPRECATED = "isDeprecated";
   public static final String JSON_ERROR = "error";
   public static final String JSON_URLS = "urls";
 
@@ -88,7 +85,7 @@ public final class SMPJsonResponse
     final IJsonObject aJson = new JsonObject ();
     aJson.add (JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
 
-    final String sPathStart = "/" + aParticipantID.getURIEncoded () + "/services/";
+    final String sPathStart = "/" + aParticipantID.getURIEncoded () + "/" + BDXRClientReadOnly.URL_PART_SERVICES + "/";
     final IJsonArray aURLsArray = new JsonArray ();
     // Show all ServiceGroup hrefs
     for (final Map.Entry <String, String> aEntry : aSGHrefs.entrySet ())
