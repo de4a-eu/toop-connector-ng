@@ -30,10 +30,10 @@ import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.dd.IDDErrorHandler;
 import eu.toop.connector.api.dsd.DSDDatasetHelper;
 import eu.toop.connector.api.dsd.DSDDatasetResponse;
 import eu.toop.connector.api.dsd.IDSDDatasetResponseProvider;
+import eu.toop.connector.api.error.ITCErrorHandler;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
@@ -86,7 +86,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
   public ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull final String sLogPrefix,
                                                                   @Nonnull final String sDatasetType,
                                                                   @Nullable final String sCountryCode,
-                                                                  @Nonnull final IDDErrorHandler aErrorHandler)
+                                                                  @Nonnull final ITCErrorHandler aErrorHandler)
   {
     final DSDClient aDSDClient = new DSDClient (m_sBaseURL);
     aDSDClient.setHttpClientSettings (new TCHttpClientSettings ());

@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 
 import com.helger.commons.collection.impl.ICommonsSet;
 
-import eu.toop.connector.api.dd.IDDErrorHandler;
+import eu.toop.connector.api.error.ITCErrorHandler;
 
 /**
  * Interface to resolve Country Code and Dataset Type ID to a set of matching
@@ -51,5 +51,5 @@ public interface IDSDDatasetResponseProvider
   ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull String sLogPrefix,
                                                            @Nonnull String sDatasetType,
                                                            @Nullable String sCountryCode,
-                                                           @Nonnull IDDErrorHandler aErrorHandler);
+                                                           @Nonnull ITCErrorHandler aErrorHandler);
 }

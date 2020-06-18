@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.dd;
+package eu.toop.connector.api.error;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -23,11 +23,11 @@ import com.helger.commons.error.level.EErrorLevel;
 import eu.toop.edm.error.IToopErrorCode;
 
 /**
- * Custom SMP error handler callback
+ * Custom TOOP Connector error handler callback
  *
  * @author Philip Helger
  */
-public interface IDDErrorHandler
+public interface ITCErrorHandler
 {
   /**
    * The main error handler method to be implemented

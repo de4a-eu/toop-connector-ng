@@ -31,8 +31,8 @@ import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.api.dd.IDDErrorHandler;
 import eu.toop.connector.api.dsd.DSDDatasetResponse;
+import eu.toop.connector.api.error.ITCErrorHandler;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
@@ -63,7 +63,7 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
     final IJsonObject aJson = new JsonObject ();
     CommonAPIInvoker.invoke (aJson, () -> {
       final ICommonsList <String> aErrorMsgs = new CommonsArrayList <> ();
-      final IDDErrorHandler aErrorHdl = (eErrorLevel, sMsg, t, eCode) -> {
+      final ITCErrorHandler aErrorHdl = (eErrorLevel, sMsg, t, eCode) -> {
         if (eErrorLevel.isError ())
           aErrorMsgs.add (sMsg);
       };

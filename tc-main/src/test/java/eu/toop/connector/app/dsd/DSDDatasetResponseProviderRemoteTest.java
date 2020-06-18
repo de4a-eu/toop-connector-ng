@@ -21,8 +21,8 @@ import org.junit.Test;
 
 import com.helger.commons.collection.impl.ICommonsSet;
 
-import eu.toop.connector.api.dd.LoggingDDErrorHandler;
 import eu.toop.connector.api.dsd.DSDDatasetResponse;
+import eu.toop.connector.api.error.LoggingTCErrorHandler;
 
 /**
  * Test class of class {@link DSDDatasetResponseProviderRemote}.
@@ -37,7 +37,7 @@ public final class DSDDatasetResponseProviderRemoteTest
     final ICommonsSet <DSDDatasetResponse> aResp = new DSDDatasetResponseProviderRemote ().getAllDatasetResponses ("test",
                                                                                                                    "REGISTERED_ORGANIZATION_TYPE",
                                                                                                                    null,
-                                                                                                                   LoggingDDErrorHandler.INSTANCE);
+                                                                                                                   LoggingTCErrorHandler.INSTANCE);
     assertNotNull (aResp);
   }
 }

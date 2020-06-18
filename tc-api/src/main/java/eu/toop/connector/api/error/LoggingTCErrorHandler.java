@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.dd;
+package eu.toop.connector.api.error;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -27,14 +27,14 @@ import com.helger.commons.log.LogHelper;
 import eu.toop.edm.error.IToopErrorCode;
 
 /**
- * Logging implementation of {@link IDDErrorHandler}
+ * Logging implementation of {@link ITCErrorHandler}
  * 
  * @author Philip Helger
  */
-public class LoggingDDErrorHandler implements IDDErrorHandler
+public class LoggingTCErrorHandler implements ITCErrorHandler
 {
-  public static final LoggingDDErrorHandler INSTANCE = new LoggingDDErrorHandler ();
-  private static final Logger LOGGER = LoggerFactory.getLogger (LoggingDDErrorHandler.class);
+  public static final LoggingTCErrorHandler INSTANCE = new LoggingTCErrorHandler ();
+  private static final Logger LOGGER = LoggerFactory.getLogger (LoggingTCErrorHandler.class);
 
   public void onMessage (@Nonnull final EErrorLevel eErrorLevel,
                          @Nonnull final String sMsg,

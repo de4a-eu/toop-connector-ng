@@ -22,7 +22,7 @@ import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 
-import eu.toop.connector.api.dd.IDDErrorHandler;
+import eu.toop.connector.api.error.ITCErrorHandler;
 
 /**
  * Interface to resolve Country Code and Document Type ID to a set of matching
@@ -56,5 +56,5 @@ public interface IDSDParticipantIDProvider
                                                              @Nonnull String sDatasetType,
                                                              @Nullable String sCountryCode,
                                                              @Nonnull IDocumentTypeIdentifier aDocumentTypeID,
-                                                             @Nonnull IDDErrorHandler aErrorHandler);
+                                                             @Nonnull ITCErrorHandler aErrorHandler);
 }

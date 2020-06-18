@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package eu.toop.connector.api.dd;
+package eu.toop.connector.api.error;
 
 import java.util.function.Predicate;
 
@@ -28,12 +28,12 @@ import com.helger.commons.error.list.ErrorList;
 import eu.toop.edm.error.IToopErrorCode;
 
 /**
- * Collecting implementation of {@link IDDErrorHandler}
+ * Collecting implementation of {@link ITCErrorHandler}
  *
  * @author Philip Helger
  * @since 2.0.0-rc1
  */
-public class WrappedDDErrorHandler implements IDDErrorHandler
+public class WrappedTCErrorHandler implements ITCErrorHandler
 {
   private final ErrorList m_aErrorList;
   private final Predicate <? super IError> m_aFilter;
@@ -44,7 +44,7 @@ public class WrappedDDErrorHandler implements IDDErrorHandler
    * @param aErrorList
    *        The error list to be filled. May not be <code>null</code>.
    */
-  public WrappedDDErrorHandler (@Nonnull final ErrorList aErrorList)
+  public WrappedTCErrorHandler (@Nonnull final ErrorList aErrorList)
   {
     this (aErrorList, null);
   }
@@ -58,7 +58,7 @@ public class WrappedDDErrorHandler implements IDDErrorHandler
    *        The filter to be used. May be <code>null</code> to collect all
    *        errors.
    */
-  public WrappedDDErrorHandler (@Nonnull final ErrorList aErrorList, @Nullable final Predicate <? super IError> aFilter)
+  public WrappedTCErrorHandler (@Nonnull final ErrorList aErrorList, @Nullable final Predicate <? super IError> aFilter)
   {
     m_aErrorList = aErrorList;
     m_aFilter = aFilter;
