@@ -11,7 +11,7 @@ It uses the shared components from:
 
 # News and Noteworthy
 
-Status of `2.0.0-rc1`
+2020-06-18: release of `2.0.0-rc1`
 * Integrated the standalone version `tc-jetty` into this repository
 * Fixed the XSD validation for error responses in the context of Schematron validation
 * Made some message exchange components implement equals/hashCode
@@ -38,7 +38,7 @@ Status of `2.0.0-rc1`
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>tc-webapp</artifactId>
-        <version>2.0.0-beta5</version>
+        <version>2.0.0-rc1</version>
         <type>war</type>
       </dependency>
 ```
