@@ -15,6 +15,9 @@
  */
 package eu.toop.connector.api.dd;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,12 +26,20 @@ import com.helger.commons.log.LogHelper;
 
 import eu.toop.edm.error.IToopErrorCode;
 
+/**
+ * Logging implementation of {@link IDDErrorHandler}
+ * 
+ * @author Philip Helger
+ */
 public class LoggingDDErrorHandler implements IDDErrorHandler
 {
   public static final LoggingDDErrorHandler INSTANCE = new LoggingDDErrorHandler ();
   private static final Logger LOGGER = LoggerFactory.getLogger (LoggingDDErrorHandler.class);
 
-  public void onMessage (final EErrorLevel eErrorLevel, final String sMsg, final Throwable t, final IToopErrorCode eCode)
+  public void onMessage (@Nonnull final EErrorLevel eErrorLevel,
+                         @Nonnull final String sMsg,
+                         @Nullable final Throwable t,
+                         @Nonnull final IToopErrorCode eCode)
   {
     LogHelper.log (LOGGER, eErrorLevel, sMsg, t);
   }
