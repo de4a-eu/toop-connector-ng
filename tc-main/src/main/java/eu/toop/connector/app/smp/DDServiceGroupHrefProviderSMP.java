@@ -17,6 +17,7 @@ package eu.toop.connector.app.smp;
 
 import javax.annotation.Nonnull;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.commons.collection.impl.CommonsTreeMap;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
 import com.helger.peppolid.CIdentifier;
@@ -43,6 +44,8 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
   {
     if (TCConfig.R2D2.isR2D2UseDNS ())
     {
+      ValueEnforcer.notNull (aRecipientID, "RecipientID");
+
       // Use dynamic lookup via DNS - can throw exception
       return new BDXRClientReadOnly (BDXLURLProvider.INSTANCE, aRecipientID, TCConfig.R2D2.getR2D2SML ());
     }
@@ -54,6 +57,9 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
   public ICommonsSortedMap <String, String> getAllServiceGroupHrefs (@Nonnull final IParticipantIdentifier aParticipantID,
                                                                      @Nonnull final ITCErrorHandler aErrorHandler)
   {
+    ValueEnforcer.notNull (aParticipantID, "ParticipantID");
+    ValueEnforcer.notNull (aErrorHandler, "ErrorHandler");
+
     try
     {
       final ICommonsSortedMap <String, String> ret = new CommonsTreeMap <> ();

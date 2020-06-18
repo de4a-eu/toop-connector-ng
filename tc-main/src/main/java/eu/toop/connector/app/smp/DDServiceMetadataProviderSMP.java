@@ -18,6 +18,7 @@ package eu.toop.connector.app.smp;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.ValueEnforcer;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
@@ -43,6 +44,9 @@ public class DDServiceMetadataProviderSMP implements IDDServiceMetadataProvider
   public ServiceMetadataType getServiceMetadata (@Nonnull final IParticipantIdentifier aParticipantID,
                                                  @Nonnull final IDocumentTypeIdentifier aDocTypeID)
   {
+    ValueEnforcer.notNull (aParticipantID, "ParticipantID");
+    ValueEnforcer.notNull (aDocTypeID, "DocTypeID");
+
     try
     {
       final BDXRClientReadOnly aBDXR1Client = DDServiceGroupHrefProviderSMP.getSMPClient (aParticipantID);
