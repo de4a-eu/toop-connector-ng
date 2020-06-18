@@ -17,6 +17,7 @@ Status of `2.0.0-rc1`
 * Made some message exchange components implement equals/hashCode
 * This version should again work in Tomcat
 * Changed class name `IDDErrorHandler` to `ITCErrorHandler`
+* Changed the API calls to return HTTP 400 in case of error
 
 2020-06-01: release of `2.0.0-beta5`
 * Improved the validation API to create no more false positives

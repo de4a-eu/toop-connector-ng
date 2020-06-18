@@ -28,7 +28,6 @@ import com.helger.json.IJsonObject;
 import com.helger.json.JsonArray;
 import com.helger.json.JsonObject;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.dsd.DSDDatasetResponse;
@@ -46,11 +45,10 @@ import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
 {
   @Override
-  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                         @Nonnull @Nonempty final String sPath,
-                         @Nonnull final Map <String, String> aPathVariables,
-                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final PhotonUnifiedResponse aUnifiedResponse)
+  public IJsonObject invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                                @Nonnull @Nonempty final String sPath,
+                                @Nonnull final Map <String, String> aPathVariables,
+                                @Nonnull final IRequestWebScopeWithoutResponse aRequestScope)
   {
     final String sDatasetType = aPathVariables.get ("dataset");
     if (StringHelper.hasNoText (sDatasetType))
@@ -91,6 +89,6 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
       }
     });
 
-    aUnifiedResponse.json (aJson);
+    return aJson;
   }
 }

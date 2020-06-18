@@ -23,8 +23,12 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.http.CHttp;
+import com.helger.commons.http.EHttpMethod;
 import com.helger.commons.timing.StopWatch;
+import com.helger.json.IJsonObject;
 import com.helger.json.serialize.JsonWriterSettings;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.photon.api.IAPIExecutor;
@@ -41,11 +45,11 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
 {
   private static final Logger LOGGER = LoggerFactory.getLogger (AbstractTCAPIInvoker.class);
 
-  public abstract void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                                  @Nonnull @Nonempty final String sPath,
-                                  @Nonnull final Map <String, String> aPathVariables,
-                                  @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                                  @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws IOException;
+  @Nonnull
+  public abstract IJsonObject invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                                         @Nonnull @Nonempty final String sPath,
+                                         @Nonnull final Map <String, String> aPathVariables,
+                                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope) throws IOException;
 
   public final void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
                                @Nonnull @Nonempty final String sPath,
@@ -55,9 +59,16 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
   {
     final StopWatch aSW = StopWatch.createdStarted ();
 
+    final IJsonObject aJson = invokeAPI (aAPIDescriptor, sPath, aPathVariables, aRequestScope);
+
     final PhotonUnifiedResponse aPUR = (PhotonUnifiedResponse) aUnifiedResponse;
     aPUR.setJsonWriterSettings (new JsonWriterSettings ().setIndentEnabled (true));
-    invokeAPI (aAPIDescriptor, sPath, aPathVariables, aRequestScope, aPUR);
+    aPUR.json (aJson);
+    if (!aJson.getAsBoolean ("success", false))
+      aPUR.setAllowContentOnStatusCode (true).setStatus (CHttp.HTTP_BAD_REQUEST);
+    else
+      if (aRequestScope.getHttpMethod () == EHttpMethod.GET)
+        aPUR.enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
 
     aSW.stop ();
     LOGGER.info ("[API] Succesfully finished '" +

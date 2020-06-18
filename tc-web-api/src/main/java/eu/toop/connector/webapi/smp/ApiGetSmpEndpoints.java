@@ -22,14 +22,12 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 
@@ -49,11 +47,10 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
   private static final Logger LOGGER = LoggerFactory.getLogger (ApiGetSmpEndpoints.class);
 
   @Override
-  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                         @Nonnull @Nonempty final String sPath,
-                         @Nonnull final Map <String, String> aPathVariables,
-                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final PhotonUnifiedResponse aUnifiedResponse)
+  public IJsonObject invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                                @Nonnull @Nonempty final String sPath,
+                                @Nonnull final Map <String, String> aPathVariables,
+                                @Nonnull final IRequestWebScopeWithoutResponse aRequestScope)
   {
     final String sParticipantID = aPathVariables.get ("pid");
     final IParticipantIdentifier aParticipantID = TCConfig.getIdentifierFactory ().parseParticipantIdentifier (sParticipantID);
@@ -86,7 +83,6 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
         aJson.add ("success", false);
     });
 
-    aUnifiedResponse.json (aJson);
-    aUnifiedResponse.enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
+    return aJson;
   }
 }

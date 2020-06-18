@@ -18,8 +18,14 @@ package eu.toop.connector.api.dd;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.commons.collection.CollectionHelper;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
+import com.helger.peppolid.IProcessIdentifier;
+import com.helger.peppolid.simple.process.SimpleProcessIdentifier;
+import com.helger.xsds.bdxr.smp1.EndpointType;
+import com.helger.xsds.bdxr.smp1.ProcessType;
+import com.helger.xsds.bdxr.smp1.ServiceInformationType;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 
 /**
@@ -30,6 +36,8 @@ import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 public interface IDDServiceMetadataProvider
 {
   /**
+   * Find the service metadata
+   *
    * @param aParticipantID
    *        Participant ID to query. May not be <code>null</code>.
    * @param aDocTypeID
@@ -38,4 +46,44 @@ public interface IDDServiceMetadataProvider
    */
   @Nullable
   ServiceMetadataType getServiceMetadata (@Nonnull IParticipantIdentifier aParticipantID, @Nonnull IDocumentTypeIdentifier aDocTypeID);
+
+  /**
+   * Find the dynamic discovery endpoint from the respective parameters.
+   *
+   * @param aParticipantID
+   *        Participant ID to query. May not be <code>null</code>.
+   * @param aDocTypeID
+   *        Document type ID. May not be <code>null</code>.
+   * @param aProcessID
+   *        Process ID. May not be <code>null</code>.
+   * @param sTransportProfile
+   *        Transport profile to be used. May not be <code>null</code>.
+   * @return <code>null</code> if no such endpoint was found
+   * @see #getServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier)
+   * @since 2.0.0-rc1
+   */
+  @Nullable
+  default EndpointType getEndpoint (@Nonnull final IParticipantIdentifier aParticipantID,
+                                    @Nonnull final IDocumentTypeIdentifier aDocTypeID,
+                                    @Nonnull final IProcessIdentifier aProcessID,
+                                    @Nonnull final String sTransportProfile)
+  {
+    final ServiceMetadataType aSM = getServiceMetadata (aParticipantID, aDocTypeID);
+    if (aSM != null)
+    {
+      final ServiceInformationType aSI = aSM.getServiceInformation ();
+      if (aSI != null)
+      {
+        final ProcessType aProcess = CollectionHelper.findFirst (aSI.getProcessList ().getProcess (),
+                                                                 x -> aProcessID.hasSameContent (SimpleProcessIdentifier.wrap (x.getProcessIdentifier ())));
+        if (aProcess != null)
+        {
+          final EndpointType aEndpoint = CollectionHelper.findFirst (aProcess.getServiceEndpointList ().getEndpoint (),
+                                                                     x -> sTransportProfile.equals (x.getTransportProfile ()));
+          return aEndpoint;
+        }
+      }
+    }
+    return null;
+  }
 }

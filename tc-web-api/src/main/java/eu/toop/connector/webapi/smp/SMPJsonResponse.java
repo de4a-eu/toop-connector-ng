@@ -103,7 +103,7 @@ public final class SMPJsonResponse
         final IDocumentTypeIdentifier aDocType = aIF.parseDocumentTypeIdentifier (sDocType);
         if (aDocType != null)
         {
-          // TODO if motivated: nice name
+          // TODO if motivated: optional nice name
         }
         else
         {

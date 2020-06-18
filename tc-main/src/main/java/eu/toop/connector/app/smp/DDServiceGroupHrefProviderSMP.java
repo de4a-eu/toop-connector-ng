@@ -17,9 +17,6 @@ package eu.toop.connector.app.smp;
 
 import javax.annotation.Nonnull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.collection.impl.CommonsTreeMap;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
 import com.helger.peppolid.CIdentifier;
@@ -33,11 +30,11 @@ import com.helger.xsds.bdxr.smp1.ServiceMetadataReferenceType;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.dd.IDDServiceGroupHrefProvider;
+import eu.toop.connector.api.error.ITCErrorHandler;
+import eu.toop.edm.error.EToopErrorCode;
 
 public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvider
 {
-  private static final Logger LOGGER = LoggerFactory.getLogger (DDServiceGroupHrefProviderSMP.class);
-
   public DDServiceGroupHrefProviderSMP ()
   {}
 
@@ -54,7 +51,8 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
   }
 
   @Nonnull
-  public ICommonsSortedMap <String, String> getAllServiceGroupHrefs (@Nonnull final IParticipantIdentifier aParticipantID)
+  public ICommonsSortedMap <String, String> getAllServiceGroupHrefs (@Nonnull final IParticipantIdentifier aParticipantID,
+                                                                     @Nonnull final ITCErrorHandler aErrorHandler)
   {
     try
     {
@@ -72,8 +70,7 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
           // Decoded href is important for unification
           final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
           if (ret.put (sHref, aSMR.getHref ()) != null)
-            if (LOGGER.isWarnEnabled ())
-              LOGGER.warn ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'");
+            aErrorHandler.onWarning ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'", EToopErrorCode.GEN);
         }
       }
       return ret;

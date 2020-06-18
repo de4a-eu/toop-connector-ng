@@ -37,7 +37,6 @@ import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
 import com.helger.peppolid.simple.process.SimpleProcessIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.security.certificate.CertificateHelper;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 import com.helger.xsds.bdxr.smp1.EndpointType;
@@ -79,11 +78,10 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
   }
 
   @Override
-  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                         @Nonnull @Nonempty final String sPath,
-                         @Nonnull final Map <String, String> aPathVariables,
-                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws IOException
+  public IJsonObject invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                                @Nonnull @Nonempty final String sPath,
+                                @Nonnull final Map <String, String> aPathVariables,
+                                @Nonnull final IRequestWebScopeWithoutResponse aRequestScope) throws IOException
   {
     // Read the payload as XML
     final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
@@ -210,6 +208,6 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
       }
     });
 
-    aUnifiedResponse.json (aJson);
+    return aJson;
   }
 }

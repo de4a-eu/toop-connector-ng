@@ -33,7 +33,6 @@ import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
 import com.helger.photon.api.IAPIDescriptor;
-import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.app.validation.TCValidator;
@@ -59,11 +58,10 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
   }
 
   @Override
-  public void invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
-                         @Nonnull @Nonempty final String sPath,
-                         @Nonnull final Map <String, String> aPathVariables,
-                         @Nonnull final IRequestWebScopeWithoutResponse aRequestScope,
-                         @Nonnull final PhotonUnifiedResponse aUnifiedResponse) throws IOException
+  public IJsonObject invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
+                                @Nonnull @Nonempty final String sPath,
+                                @Nonnull final Map <String, String> aPathVariables,
+                                @Nonnull final IRequestWebScopeWithoutResponse aRequestScope) throws IOException
   {
     final Locale aDisplayLocale = Locale.UK;
 
@@ -91,6 +89,6 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
                                                 null);
     });
 
-    aUnifiedResponse.json (aJson);
+    return aJson;
   }
 }
