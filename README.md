@@ -35,11 +35,25 @@ Note: this is the successor project of the old [toop-interface](https://github.c
 
 # Maven coordinates
 
+Use one of the following artefacts for inclusion, replacing `x.y.z` with the effective version number:
+
+To integrate the TOOP Connector directly into your DC/DP without the HTTP bridge:
+
+```xml
+      <dependency>
+        <groupId>eu.toop</groupId>
+        <artifactId>tc-main</artifactId>
+        <version>x.y.z</version>
+      </dependency>
+```
+
+To use the full WAR file (unlikely in Maven):
+
 ```xml
       <dependency>
         <groupId>eu.toop</groupId>
         <artifactId>tc-webapp</artifactId>
-        <version>2.0.0-rc1</version>
+        <version>x.y.z</version>
         <type>war</type>
       </dependency>
 ```
@@ -101,7 +115,6 @@ The following configuration properties are **supported** - some of them have def
 * **`phase4.truststore.type`** (string) - the type of the truststore (either "JKS" or "PKCS12" - case insensitive) - defaults to JKS.
 * **`phase4.truststore.path`** (string) - the path to the truststore (can be classpath relative or an absolute file)
 * **`phase4.truststore.password`** (string) - the password to access the truststore 
-
 
 Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src/main/resources/application.properties for the default configuration file
 
