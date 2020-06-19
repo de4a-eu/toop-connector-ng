@@ -110,6 +110,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
 
     CommonAPIInvoker.invoke (aJson, () -> {
       final boolean bValidationOK;
+      boolean bOverallSuccess = false;
       {
         // validation
         final StopWatch aSW = StopWatch.createdStarted ();
@@ -178,10 +179,10 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
           }
 
           // Only if a match was found
-          aJsonSMP.add ("success", aRoutingInfoFinal != null);
+          aJsonSMP.add (JSON_SUCCESS, aRoutingInfoFinal != null);
         }
         else
-          aJsonSMP.add ("success", false);
+          aJsonSMP.add (JSON_SUCCESS, false);
         aJson.addJson ("lookup-results", aJsonSMP);
 
         // Read for sending?
@@ -201,10 +202,14 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
                                           .data (aPayload.getValue ()));
           }
           aMEM.sendOutgoing (aRoutingInfoFinal, aMessage.build ());
-          aJsonSending.add ("success", true);
+          aJsonSending.add (JSON_SUCCESS, true);
 
           aJson.addJson ("sending-results", aJsonSending);
+          bOverallSuccess = true;
         }
+
+        // Overall success
+        aJson.add (JSON_SUCCESS, bOverallSuccess);
       }
     });
 

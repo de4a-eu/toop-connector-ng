@@ -76,11 +76,11 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
       final ServiceMetadataType aSM = TCAPIConfig.getDDServiceMetadataProvider ().getServiceMetadata (aParticipantID, aDocTypeID);
       if (aSM != null)
       {
-        aJson.add ("success", true);
+        aJson.add (JSON_SUCCESS, true);
         aJson.addJson ("response", SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM));
       }
       else
-        aJson.add ("success", false);
+        aJson.add (JSON_SUCCESS, false);
     });
 
     return aJson;

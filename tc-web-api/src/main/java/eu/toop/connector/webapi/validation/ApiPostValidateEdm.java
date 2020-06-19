@@ -79,7 +79,7 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
       aSW.stop ();
 
       // Build response
-      aJson.add ("success", true);
+      aJson.add (JSON_SUCCESS, true);
       BDVEJsonHelper.applyValidationResultList (aJson,
                                                 TCValidator.getVES (aVESID),
                                                 aValidationResultList,

@@ -71,7 +71,7 @@ public class ApiGetDsdDp extends AbstractTCAPIInvoker
 
       if (aErrorMsgs.isEmpty ())
       {
-        aJson.add ("success", true);
+        aJson.add (JSON_SUCCESS, true);
 
         final JsonArray aList = new JsonArray ();
         for (final DSDDatasetResponse aResponse : aResponses)
@@ -80,7 +80,7 @@ public class ApiGetDsdDp extends AbstractTCAPIInvoker
       }
       else
       {
-        aJson.add ("success", false);
+        aJson.add (JSON_SUCCESS, false);
         aJson.addJson ("errors", new JsonArray ().addAll (aErrorMsgs));
       }
     });

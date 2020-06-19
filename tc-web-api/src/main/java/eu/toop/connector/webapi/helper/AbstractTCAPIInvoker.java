@@ -43,6 +43,7 @@ import com.helger.web.scope.IRequestWebScopeWithoutResponse;
  */
 public abstract class AbstractTCAPIInvoker implements IAPIExecutor
 {
+  protected static final String JSON_SUCCESS = "success";
   private static final Logger LOGGER = LoggerFactory.getLogger (AbstractTCAPIInvoker.class);
 
   @Nonnull
@@ -64,7 +65,7 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
     final PhotonUnifiedResponse aPUR = (PhotonUnifiedResponse) aUnifiedResponse;
     aPUR.setJsonWriterSettings (new JsonWriterSettings ().setIndentEnabled (true));
     aPUR.json (aJson);
-    if (!aJson.getAsBoolean ("success", false))
+    if (!aJson.getAsBoolean (JSON_SUCCESS, false))
       aPUR.setAllowContentOnStatusCode (true).setStatus (CHttp.HTTP_BAD_REQUEST);
     else
       if (aRequestScope.getHttpMethod () == EHttpMethod.GET)

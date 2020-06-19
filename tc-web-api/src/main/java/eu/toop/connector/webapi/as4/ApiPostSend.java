@@ -102,7 +102,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
     CommonAPIInvoker.invoke (aJson, () -> {
       final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
       aMEM.sendOutgoing (aRoutingInfo, aMessage.build ());
-      aJson.add ("success", true);
+      aJson.add (JSON_SUCCESS, true);
     });
 
     return aJson;

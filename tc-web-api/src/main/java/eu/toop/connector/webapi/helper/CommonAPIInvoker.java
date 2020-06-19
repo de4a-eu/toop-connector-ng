@@ -43,7 +43,7 @@ public final class CommonAPIInvoker
     }
     catch (final Exception ex)
     {
-      aJson.add ("success", false);
+      aJson.add (AbstractTCAPIInvoker.JSON_SUCCESS, false);
       aJson.addJson ("exception", BDVEJsonHelper.getJsonStackTrace (ex));
     }
     aSW.stop ();
