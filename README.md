@@ -84,7 +84,7 @@ The following configuration properties are **supported** - some of them have def
 * **`toop.r2d2.sml.clientcert`** (boolean) - is a client certificate need when talking to this SML?
 * **`toop.r2d2.smp.url`** (string) - the absolute URL of the SMP to use, if `toop.r2d2.usedns` is set to `false`
 * **`toop.mem.implementation`** (string) - the ID of the AS4 implementation to use. Can be either `external` or `phase4` - depending on this, different configuration properties must be configured (see below)
-* **`toop.mem.incoming.url`** (string) - the URL of the DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to
+* **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to
 * **`http.proxy.enabled`** (boolean) - is an HTTP proxy needed?
 * **`http.proxy.address`** (string) - the URL of the proxy server (including the scheme)
 * **`http.proxy.port`** (int) - the port to access the HTTP proxy server
@@ -93,14 +93,14 @@ The following configuration properties are **supported** - some of them have def
 * **`http.connection-timeout`** (int) - the HTTP connection timeout in milliseconds
 * **`http.read-timeout`** (int) - the HTTP read/socket timeout in milliseconds
 
-### Properties for AS4 implementation `external`
+### Properties for MEM implementation `external`
 
 * **`toop.mem.as4.endpoint`** (string) - the AS4 endpoint
 * **`toop.mem.as4.gw.partyid`** (string) - the AS4 gateway party ID
 * **`toop.mem.as4.tc.partyid`** (string) - the AS4 TOOP Connector party ID
 * **`toop.mem.as4.notificationWaitTimeout`** (long) - the timeout for a notification in milliseconds
 
-### Properties for AS4 implementation `phase4`
+### Properties for MEM implementation `phase4`
 
 * **`phase4.datapath`** (string) - the absolute path to a local directory to store data
 * **`toop.mem.as4.tc.partyid`** (string) - the from party ID
@@ -128,7 +128,7 @@ The `tc-webapp` module is a web application that can be deployed in arbitrary ap
 
 ## tc-jetty
 
-Standalone version of TOOP Connector NG (integrated since 2.0.0-rc1)
+Standalone version of TOOP Connector NG
 
 Usage:
 
@@ -151,13 +151,13 @@ How to run it: invoke the following command, replacing `x.y.z` with the effectiv
 java -jar tc-jetty-x.y.z-full.jar start
 ```
 
-to add a custom configuration file add the propert "config.file" like this:
+to add a custom configuration file add the property "config.file" like this:
 
 ```
 java -Dconfig.file=/path/to/your/file.properties -jar tc-jetty-x.y.z-full.jar start
 ```
 
-Binary versions of the TOOP Connector are available at https://repo1.maven.org/maven2/eu/toop/tc-jetty/
+Binary versions of the standalone TOOP Connector NG are available at https://repo1.maven.org/maven2/eu/toop/tc-jetty/
 
 # Design considerations
 
