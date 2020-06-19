@@ -12,7 +12,7 @@ Note: this is the successor project of the old [toop-interface](https://github.c
 # News and Noteworthy
 
 2020-06-19: release of `2.0.0-rc2`
-* Fixed a regression in `/user/submit/...` API that they accidentally delivered HTTP in case of success
+* Fixed a regression in `/user/submit/...` API that accidentally delivered HTTP 400 in case of success
 
 2020-06-18: release of `2.0.0-rc1`
 * Integrated the standalone version `tc-jetty` into this repository
@@ -40,7 +40,7 @@ Note: this is the successor project of the old [toop-interface](https://github.c
 
 Use one of the following artefacts for inclusion, replacing `x.y.z` with the effective version number:
 
-To integrate the TOOP Connector directly into your DC/DP without the HTTP bridge:
+To integrate the TOOP Connector NG directly into your DC/DP without the HTTP bridge:
 
 ```xml
       <dependency>
