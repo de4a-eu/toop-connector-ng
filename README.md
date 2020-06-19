@@ -11,6 +11,9 @@ Note: this is the successor project of the old [toop-interface](https://github.c
 
 # News and Noteworthy
 
+2020-06-19: release of `2.0.0-rc2`
+* Fixed a regression in `/user/submit/...` API that they accidentally delivered HTTP in case of success
+
 2020-06-18: release of `2.0.0-rc1`
 * Integrated the standalone version `tc-jetty` into this repository
 * Fixed the XSD validation for error responses in the context of Schematron validation
