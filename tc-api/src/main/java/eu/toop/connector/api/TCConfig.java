@@ -184,8 +184,7 @@ public final class TCConfig
     }
 
     /**
-     * @return A debug name to identify an instance. If none is provided, the IP
-     *         address is used.
+     * @return A debug name to identify an instance, especially in the tracker.
      */
     @Nullable
     public static String getToopInstanceName ()

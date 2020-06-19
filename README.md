@@ -1,13 +1,13 @@
 # TOOP Connector NG
 
-This is the successor project of the old [toop-interface](https://github.com/TOOP4EU/toop-interface) and [toop-connector](https://github.com/TOOP4EU/toop-connector) projects.
-
 The TOOP Connector NG is a set of shared utility functions that you CAN include in your DC (Data Consumer) and/or DP (Data Provider) to perform common tasks that are required for a safe and interoperable data exchange. The TOOP Connector NG can be used both as a Java library AND via an REST API.  
 The TOOP Connector NG is a Java only solution. Other environments like .NET etc. are currently not supported.
 
 It uses the shared components from:
 * https://github.com/TOOP4EU/toop-commons-ng
 * https://github.com/TOOP4EU/data-services-directory
+
+Note: this is the successor project of the old [toop-interface](https://github.com/TOOP4EU/toop-interface) and [toop-connector](https://github.com/TOOP4EU/toop-connector) projects.
 
 # News and Noteworthy
 
@@ -46,11 +46,72 @@ It uses the shared components from:
 
 or download directly from Maven Central: https://repo1.maven.org/maven2/eu/toop/tc-webapp/
 
+# Configuration
+
+The configuration file is called `application.properties` and is search by default in the classpath.
+Custom configuration files can be located like this:
+1. if the system property `config.resource` or the environment variable `CONFIG_RESOURCE` is present, and it points to an existing classpath resource, the first one matching is used - priority 200 or determined by the system property `config.resource.priority` or the environment variable `CONFIG_RESOURCE_PRIORITY`. Note: the file type is determined by the extension and defaults to "properties".
+1. if the system property `config.file` or the environment variable `CONFIG_FILE` is present, and it points to an existing file, it is used - priority 200 or determined by the system property `config.file.priority` or the environment variable `CONFIG_FILE_PRIORITY`. Note: the file type is determined by the extension and defaults to "properties".
+1. if the system property `config.url` or the environment variable `CONFIG_URL` is present, and it points to an existing URL, it is used - priority 200 or determined by the system property `config.url.priority` or the environment variable `CONFIG_URL_PRIORITY`. Note: the file type is determined by the extension and defaults to "properties".
+
+The following configuration properties are **supported** - some of them have default values:
+
+* **`global.debug`** (boolean) - enable development debug functionality
+* **`global.production`** (boolean) - enable production mode (performance optimizations, less checks)
+* **`global.instancename`** (string) - this is only used as the log prefix if the tracker is used
+* **`toop.tracker.enabled`** (boolean) - enable or disable the remote tracker
+* **`toop.tracker.url`** (string) - the URL where the tracker is collecting data elements
+* **`toop.tracker.topic`** (string) - the TOOP tracker topic (left pane)
+* **`toop.dsd.service.baseurl`** (string) - the URL of the DSD
+* **`toop.r2d2.usedns`** (boolean) - use the SML system to dynamically discover partner systems?
+* **`toop.r2d2.sml.name`** (string) - internal name of the SML
+* **`toop.r2d2.sml.dnszone`** (string) - the DNS zone of the SML
+* **`toop.r2d2.sml.serviceurl`** (string) - the management service URL of the SML
+* **`toop.r2d2.sml.clientcert`** (boolean) - is a client certificate need when talking to this SML?
+* **`toop.r2d2.smp.url`** (string) - the absolute URL of the SMP to use, if `toop.r2d2.usedns` is set to `false`
+* **`toop.mem.implementation`** (string) - the ID of the AS4 implementation to use. Can be either `external` or `phase4` - depending on this, different configuration properties must be configured (see below)
+* **`toop.mem.incoming.url` (string) - the URL of the DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to
+* **`http.proxy.enabled`** (boolean) - is an HTTP proxy needed?
+* **`http.proxy.address`** (string) - the URL of the proxy server (including the scheme)
+* **`http.proxy.port`** (int) - the port to access the HTTP proxy server
+* **`http.proxy.non-proxy`** (string) - a list of hosts that should not be proxied. Use the pipe character as the separator for multiple entries.
+* **`http.tls.trustall`** (boolean) - use this to disable the hostname and trusted certificate check for SSL/TLS connections
+* **`http.connection-timeout`** (int) - the HTTP connection timeout in milliseconds
+* **`http.read-timeout`** (int) - the HTTP read/socket timeout in milliseconds
+
+** Properties for AS4 implementation `external` **
+
+* **`toop.mem.as4.endpoint`** (string) - the AS4 endpoint
+* **`toop.mem.as4.gw.partyid`** (string) - the AS4 gateway party ID
+* **`toop.mem.as4.tc.partyid`** (string) - the AS4 TOOP Connector party ID
+* **`toop.mem.as4.notificationWaitTimeout`** (long) - the timeout for a notification in milliseconds
+
+** Properties for AS4 implementation `phase4` **
+
+* **`phase4.datapath`** (string) - the absolute path to a local directory to store data
+* **`toop.mem.as4.tc.partyid`** (string) - the from party ID
+* **`phase4.debug.http`** (boolean) - enable HTTP debugging for AS4 transmissions?
+* **`phase4.debug.incoming`** (boolean) - enable debug logging for incoming AS4 transmissions?
+* **`phase4.send.response.folder`** (string) - an optional folder, where sent responses should be stored. If this property is not provided, they are not stored
+* **`phase4.keystore.type`** (string) - the type of the keystore (either "JKS" or "PKCS12" - case insensitive) - defaults to JKS.
+* **`phase4.keystore.path`** (string) - the path to the keystore (can be classpath relative or an absolute file)
+* **`phase4.keystore.password`** (string) - the password to access the keystore 
+* **`phase4.keystore.key-alias`** (string) - the alias of the key in the keystore (may be case sensitive)
+* **`phase4.keystore.key-password`** (string) - the password to access the key in the keystore
+* **`phase4.truststore.type`** (string) - the type of the truststore (either "JKS" or "PKCS12" - case insensitive) - defaults to JKS.
+* **`phase4.truststore.path`** (string) - the path to the truststore (can be classpath relative or an absolute file)
+* **`phase4.truststore.password`** (string) - the password to access the truststore 
+
+
+Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src/main/resources/application.properties for the default configuration file
+
+Note: this TOOP Connector uses a different configuration engine than the old version.
+
 # Running
 
 The `tc-webapp` module is a web application that can be deployed in arbitrary application servers supporting the Servlet specification 3.1 and onwards.
 
-**Note** there are classloader issues running TOOP Connector NG in Tomcat - we suggest to use Jetty until we have figured out how to resolve it. 
+**Note** there were classloader issues running TOOP Connector NG in Tomcat (prior to - we suggest to use Jetty until we have figured out how to resolve it. 
 
 ## tc-jetty
 
