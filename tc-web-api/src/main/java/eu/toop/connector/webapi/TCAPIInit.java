@@ -47,8 +47,8 @@ public final class TCAPIInit
     // For rc1 it was decided to not use it, because of issues with the TOOP
     // Directory integration
     if (false)
-      aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}"), ApiGetDsdDp.class));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{dataset}/by-country/{country}"), ApiGetDsdDpByCountry.class));
+      aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{datasetType}"), ApiGetDsdDp.class));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{datasetType}/by-country/{country}"), ApiGetDsdDpByCountry.class));
 
     // SMP stuff
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/doctypes/{pid}"), ApiGetSmpDocTypes.class));

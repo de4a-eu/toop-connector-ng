@@ -18,6 +18,7 @@ It uses the shared components from:
 * This version should again work in Tomcat
 * Changed class name `IDDErrorHandler` to `ITCErrorHandler`
 * Changed the API calls to return HTTP 400 in case of error
+* The API `/dsd/dp/{datasetType}` (without country code) was disabled
 
 2020-06-01: release of `2.0.0-beta5`
 * Improved the validation API to create no more false positives

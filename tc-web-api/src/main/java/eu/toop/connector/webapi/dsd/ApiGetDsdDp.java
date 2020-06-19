@@ -51,7 +51,7 @@ public class ApiGetDsdDp extends AbstractTCAPIInvoker
                                 @Nonnull final Map <String, String> aPathVariables,
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope)
   {
-    final String sDatasetType = aPathVariables.get ("dataset");
+    final String sDatasetType = aPathVariables.get ("datasetType");
     if (StringHelper.hasNoText (sDatasetType))
       throw new APIParamException ("Missing DatasetType");
 
