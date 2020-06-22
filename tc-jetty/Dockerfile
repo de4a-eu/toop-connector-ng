@@ -16,7 +16,7 @@
 
 FROM tomcat:8-jre8
 
-ARG VERSION="2.0.0-beta5"
+ARG VERSION="2.0.0-rc2"
 ARG JAR_NAME=tc-jetty-${VERSION}-full.jar
 
 #create tc folder
@@ -28,5 +28,5 @@ ENV JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom" \
 RUN wget https://oss.sonatype.org/service/local/repositories/releases/content/eu/toop/tc-jetty/${VERSION}/${JAR_NAME}
 #ADD ./target/${JAR_NAME} ./
 
-ENTRYPOINT ["java", "-jar", "tc-jetty-2.0.0-beta5-full.jar"]
+ENTRYPOINT ["java", "-jar", "tc-jetty-2.0.0-rc2-full.jar"]
 CMD ["start"]
