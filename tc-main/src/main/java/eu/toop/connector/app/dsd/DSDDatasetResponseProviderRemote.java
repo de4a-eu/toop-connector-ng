@@ -27,6 +27,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsHashSet;
 import com.helger.commons.collection.impl.ICommonsSet;
+import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.string.ToStringGenerator;
 
 import eu.toop.connector.api.TCConfig;
@@ -38,6 +39,7 @@ import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.dsd.client.DSDClient;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.edm.jaxb.dcatap.DCatAPDatasetType;
+import eu.toop.kafkaclient.ToopKafkaClient;
 
 /**
  * This class implements the {@link IDSDDatasetResponseProvider} interface using
@@ -91,19 +93,31 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
     final DSDClient aDSDClient = new DSDClient (m_sBaseURL);
     aDSDClient.setHttpClientSettings (new TCHttpClientSettings ());
 
+    ICommonsSet <DSDDatasetResponse> ret;
     try
     {
       final List <DCatAPDatasetType> datasetTypesList = aDSDClient.queryDataset (sDatasetType, sCountryCode);
-      return DSDDatasetHelper.buildDSDResponseSet (datasetTypesList);
+      ret = DSDDatasetHelper.buildDSDResponseSet (datasetTypesList);
     }
     catch (final RuntimeException ex)
     {
       LOGGER.error (ex.getMessage (), ex);
       aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
+      // return EMPTY result set.
+      ret = new CommonsHashSet <> ();
     }
 
-    // return EMPTY result set.
-    return new CommonsHashSet <> ();
+    ToopKafkaClient.send (EErrorLevel.INFO,
+                          sLogPrefix +
+                                            "DSD querying '" +
+                                            sDatasetType +
+                                            "' and country code '" +
+                                            sCountryCode +
+                                            "' lead to " +
+                                            ret.size () +
+                                            " result entries");
+
+    return ret;
   }
 
   @Override
