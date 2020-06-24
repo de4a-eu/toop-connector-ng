@@ -65,17 +65,22 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
     final PhotonUnifiedResponse aPUR = (PhotonUnifiedResponse) aUnifiedResponse;
     aPUR.setJsonWriterSettings (new JsonWriterSettings ().setIndentEnabled (true));
     aPUR.json (aJson);
-    if (!aJson.getAsBoolean (JSON_SUCCESS, false))
+
+    final boolean bSuccess = aJson.getAsBoolean (JSON_SUCCESS, false);
+    if (!bSuccess)
       aPUR.setAllowContentOnStatusCode (true).setStatus (CHttp.HTTP_BAD_REQUEST);
     else
       if (aRequestScope.getHttpMethod () == EHttpMethod.GET)
         aPUR.enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
+      else
+        aPUR.disableCaching ();
 
     aSW.stop ();
-    LOGGER.info ("[API] Successfully finished '" +
+    LOGGER.info ("[API] Finished '" +
                  aAPIDescriptor.getPathDescriptor ().getAsURLString () +
                  "' after " +
                  aSW.getMillis () +
-                 " milliseconds");
+                 " milliseconds with " +
+                 (bSuccess ? "success" : "error"));
   }
 }
