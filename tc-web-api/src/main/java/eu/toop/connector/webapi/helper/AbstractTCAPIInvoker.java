@@ -20,11 +20,9 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.helger.commons.CGlobal;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.http.CHttp;
 import com.helger.commons.http.EHttpMethod;
 import com.helger.commons.timing.StopWatch;
@@ -36,6 +34,8 @@ import com.helger.photon.app.PhotonUnifiedResponse;
 import com.helger.servlet.response.UnifiedResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
+import eu.toop.kafkaclient.ToopKafkaClient;
+
 /**
  * Abstract base invoker for TC REST API
  *
@@ -44,7 +44,6 @@ import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 public abstract class AbstractTCAPIInvoker implements IAPIExecutor
 {
   protected static final String JSON_SUCCESS = "success";
-  private static final Logger LOGGER = LoggerFactory.getLogger (AbstractTCAPIInvoker.class);
 
   @Nonnull
   public abstract IJsonObject invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
@@ -76,11 +75,13 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
         aPUR.disableCaching ();
 
     aSW.stop ();
-    LOGGER.info ("[API] Finished '" +
-                 aAPIDescriptor.getPathDescriptor ().getAsURLString () +
-                 "' after " +
-                 aSW.getMillis () +
-                 " milliseconds with " +
-                 (bSuccess ? "success" : "error"));
+
+    ToopKafkaClient.send (bSuccess ? EErrorLevel.INFO : EErrorLevel.ERROR,
+                          () -> "[API] Finished '" +
+                                aAPIDescriptor.getPathDescriptor ().getAsURLString () +
+                                "' after " +
+                                aSW.getMillis () +
+                                " milliseconds with " +
+                                (bSuccess ? "success" : "error"));
   }
 }
