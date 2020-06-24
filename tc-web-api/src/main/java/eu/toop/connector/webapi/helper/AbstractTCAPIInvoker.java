@@ -72,7 +72,7 @@ public abstract class AbstractTCAPIInvoker implements IAPIExecutor
         aPUR.enableCaching (3 * CGlobal.SECONDS_PER_HOUR);
 
     aSW.stop ();
-    LOGGER.info ("[API] Succesfully finished '" +
+    LOGGER.info ("[API] Successfully finished '" +
                  aAPIDescriptor.getPathDescriptor ().getAsURLString () +
                  "' after " +
                  aSW.getMillis () +
