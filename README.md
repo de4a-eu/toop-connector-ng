@@ -9,35 +9,16 @@ It uses the shared components from:
 
 Note: this is the successor project of the old [toop-interface](https://github.com/TOOP4EU/toop-interface) and [toop-connector](https://github.com/TOOP4EU/toop-connector) projects.
 
-# News and Noteworthy
+# Modules
 
-Next version:
-* Updated to phase4 0.10.1 which finally fixes the XLink JAXB error, since it no longer contains its own version of xlink.xsd 
-
-2020-06-19: release of `2.0.0-rc2`
-* Fixed a regression in `/user/submit/...` API that accidentally delivered HTTP 400 in case of success
-
-2020-06-18: release of `2.0.0-rc1`
-* Integrated the standalone version `tc-jetty` into this repository
-* Fixed the XSD validation for error responses in the context of Schematron validation
-* Made some message exchange components implement equals/hashCode
-* This version should again work in Tomcat
-* Changed class name `IDDErrorHandler` to `ITCErrorHandler`
-* Changed the API calls to return HTTP 400 in case of error
-* The API `/dsd/dp/{datasetType}` (without country code) was disabled
-
-2020-06-01: release of `2.0.0-beta5`
-* Improved the validation API to create no more false positives
-* Improved response of `/user/submit/...` if the SMP lookup failed
-* The metadata of incoming messages are preserved and forwarded to DC/DP 
-* Note the changed Schematron rules in "toop-commons-ng" 2.0.0-beta5
-
-2020-05-26: release of `2.0.0-beta4`
-* Initial version of TOOP Connector that can exchange files
-* For dependency management reasons, the TOOP shared libraries are now available in https://github.com/TOOP4EU/toop-commons-ng
-
-2020-05-21: release of `2.0.0-beta3`
-* First proof of concept release that cannot yet send documents
+This project consists of the following sub modules:
+* **tc-api** - the shared data structures, building on top of the "toop-edm" project (see toop-commons-ng)
+* **tc-mem-external** - connection between TOOP Connector and an external AS4 gateway (mem = message exchange module)
+* **tc-mem-phase4** - a built-in AS4 gateway for the TOOP Connector avoiding the use of an external AS4 gateway
+* **tc-main** - contains the business logic functionality as an embeddable JAR
+* **tc-web-api** - contains the REST API that invokes the functionality from "tc-main"
+* **tc-webapp** - a web application (WAR) that includes the "tc-web-api" project
+* **tc-jetty** - a self-contained application that combines the "tc-webapp" project with a Jetty instance - this serves as the basis for the Docker image but can also be run standalone
 
 # Maven coordinates
 
@@ -193,3 +174,33 @@ Requires at least
 * Apache Maven for building
 
 Do a simple `mvn clean install` on the command line.
+
+# News and Noteworthy
+
+Next version:
+* Updated to phase4 0.10.1 which finally fixes the XLink JAXB error, since it no longer contains its own version of xlink.xsd 
+
+2020-06-19: release of `2.0.0-rc2`
+* Fixed a regression in `/user/submit/...` API that accidentally delivered HTTP 400 in case of success
+
+2020-06-18: release of `2.0.0-rc1`
+* Integrated the standalone version `tc-jetty` into this repository
+* Fixed the XSD validation for error responses in the context of Schematron validation
+* Made some message exchange components implement equals/hashCode
+* This version should again work in Tomcat
+* Changed class name `IDDErrorHandler` to `ITCErrorHandler`
+* Changed the API calls to return HTTP 400 in case of error
+* The API `/dsd/dp/{datasetType}` (without country code) was disabled
+
+2020-06-01: release of `2.0.0-beta5`
+* Improved the validation API to create no more false positives
+* Improved response of `/user/submit/...` if the SMP lookup failed
+* The metadata of incoming messages are preserved and forwarded to DC/DP 
+* Note the changed Schematron rules in "toop-commons-ng" 2.0.0-beta5
+
+2020-05-26: release of `2.0.0-beta4`
+* Initial version of TOOP Connector that can exchange files
+* For dependency management reasons, the TOOP shared libraries are now available in https://github.com/TOOP4EU/toop-commons-ng
+
+2020-05-21: release of `2.0.0-beta3`
+* First proof of concept release that cannot yet send documents
