@@ -32,6 +32,7 @@ import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.http.HttpHeaderMap;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.mime.MimeTypeParser;
+import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.phase4.CAS4;
 import com.helger.phase4.attachment.AS4DecompressException;
@@ -86,6 +87,23 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
     s_aIncomingHandler = aIncomingHandler;
   }
 
+  @Nullable
+  private static IParticipantIdentifier _asPI (@Nullable final Ebms3Property aProp)
+  {
+    if (aProp == null)
+      return null;
+
+    final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
+    final String sType = aProp.getType ();
+    final String sValue = aProp.getValue ();
+    if (sType == null)
+    {
+      LOGGER.warn ("The particpant identifier is provided without a 'type' attribute: '" + sValue + "'");
+      return aIF.parseParticipantIdentifier (sValue);
+    }
+    return aIF.createParticipantIdentifier (sType, sValue);
+  }
+
   @Nonnull
   public AS4MessageProcessorResult processAS4UserMessage (@Nonnull final IAS4IncomingMessageMetadata aMessageMetadata,
                                                           @Nonnull final HttpHeaderMap aHttpHeaders,
@@ -136,10 +154,8 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
         final Ebms3Property aPropOS = aProps.findFirst (x -> x.getName ().equals (CAS4.ORIGINAL_SENDER));
         final Ebms3Property aPropFR = aProps.findFirst (x -> x.getName ().equals (CAS4.FINAL_RECIPIENT));
 
-        final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata (aPropOS == null ? null
-                                                                                                       : aIF.parseParticipantIdentifier (aPropOS.getValue ()),
-                                                                                       aPropFR == null ? null
-                                                                                                       : aIF.parseParticipantIdentifier (aPropFR.getValue ()),
+        final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata (_asPI (aPropOS),
+                                                                                       _asPI (aPropFR),
                                                                                        aIF.parseDocumentTypeIdentifier (aUserMessage.getCollaborationInfo ()
                                                                                                                                     .getAction ()),
                                                                                        aIF.createProcessIdentifier (aUserMessage.getCollaborationInfo ()
