@@ -137,11 +137,9 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
         final Ebms3Property aPropFR = aProps.findFirst (x -> x.getName ().equals (CAS4.FINAL_RECIPIENT));
 
         final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata (aPropOS == null ? null
-                                                                                                       : aIF.createParticipantIdentifier (aPropOS.getType (),
-                                                                                                                                          aPropOS.getValue ()),
+                                                                                                       : aIF.parseParticipantIdentifier (aPropOS.getValue ()),
                                                                                        aPropFR == null ? null
-                                                                                                       : aIF.createParticipantIdentifier (aPropFR.getType (),
-                                                                                                                                          aPropFR.getValue ()),
+                                                                                                       : aIF.parseParticipantIdentifier (aPropFR.getValue ()),
                                                                                        aIF.parseDocumentTypeIdentifier (aUserMessage.getCollaborationInfo ()
                                                                                                                                     .getAction ()),
                                                                                        aIF.createProcessIdentifier (aUserMessage.getCollaborationInfo ()
@@ -150,6 +148,7 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
                                                                                                                     aUserMessage.getCollaborationInfo ()
                                                                                                                                 .getService ()
                                                                                                                                 .getValue ()));
+        LOGGER.info ("Incoming Transport Metadata: " + aMetadata.toString ());
 
         final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aMainPayload.getSourceStream ());
         if (aTopLevel instanceof EDMRequest)
