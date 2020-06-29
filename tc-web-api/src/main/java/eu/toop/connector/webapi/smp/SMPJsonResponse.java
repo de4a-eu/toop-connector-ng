@@ -101,11 +101,7 @@ public final class SMPJsonResponse
         final String sDocType = sHref.substring (nPathStart + sPathStart.length ());
         aUrlEntry.add (JSON_DOCUMENT_TYPE_ID, sDocType);
         final IDocumentTypeIdentifier aDocType = aIF.parseDocumentTypeIdentifier (sDocType);
-        if (aDocType != null)
-        {
-          // TODO if motivated: optional nice name
-        }
-        else
+        if (aDocType == null)
         {
           aUrlEntry.add (JSON_ERROR, "The document type ID could not be interpreted as a structured document type!");
         }
