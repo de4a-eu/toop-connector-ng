@@ -16,7 +16,6 @@
 package eu.toop.connector.api;
 
 import java.net.URI;
-import java.net.URL;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnull;
@@ -28,19 +27,11 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.concurrent.SimpleReadWriteLock;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.id.factory.GlobalIDFactory;
-import com.helger.commons.io.file.FilenameHelper;
-import com.helger.commons.io.resource.ClassPathResource;
-import com.helger.commons.io.resource.FileSystemResource;
-import com.helger.commons.io.resource.URLResource;
-import com.helger.commons.string.StringHelper;
 import com.helger.commons.url.URLHelper;
 import com.helger.config.Config;
 import com.helger.config.ConfigFactory;
 import com.helger.config.IConfig;
-import com.helger.config.source.EConfigSourceType;
 import com.helger.config.source.MultiConfigurationValueProvider;
-import com.helger.config.source.envvar.ConfigurationSourceEnvVar;
-import com.helger.config.source.sysprop.ConfigurationSourceSystemProperty;
 import com.helger.peppol.sml.ESML;
 import com.helger.peppol.sml.ISMLInfo;
 import com.helger.peppol.sml.SMLInfo;
@@ -57,15 +48,6 @@ import eu.toop.connector.api.me.EMEProtocol;
 public final class TCConfig
 {
   private static final SimpleReadWriteLock s_aRWLock = new SimpleReadWriteLock ();
-
-  private static final IConfig SYSTEM_ONLY;
-  static
-  {
-    final MultiConfigurationValueProvider aMCSVP = new MultiConfigurationValueProvider ();
-    aMCSVP.addConfigurationSource (new ConfigurationSourceSystemProperty ());
-    aMCSVP.addConfigurationSource (new ConfigurationSourceEnvVar ());
-    SYSTEM_ONLY = Config.create (aMCSVP);
-  }
 
   @GuardedBy ("s_aRWLock")
   private static IConfig s_aConfig;
@@ -105,59 +87,6 @@ public final class TCConfig
   public static void setDefaultConfig ()
   {
     final MultiConfigurationValueProvider aMCSVP = ConfigFactory.createDefaultValueProvider ();
-
-    // Prio 200 - external files
-    {
-      final String sConfigResource = SYSTEM_ONLY.getAsString ("config.resource");
-      if (StringHelper.hasText (sConfigResource))
-      {
-        final EConfigSourceResourceType eResType = EConfigSourceResourceType.getFromExtensionOrDefault (FilenameHelper.getExtension (sConfigResource),
-                                                                                                        EConfigSourceResourceType.PROPERTIES);
-        final ClassPathResource aRes = new ClassPathResource (sConfigResource);
-        if (aRes.exists ())
-        {
-          // Take priority from system property
-          final int nPriority = SYSTEM_ONLY.getAsInt ("config.resource.priority", EConfigSourceType.RESOURCE.getDefaultPriority ());
-          aMCSVP.addConfigurationSource (eResType.createConfigurationSource (aRes), nPriority);
-        }
-      }
-    }
-
-    {
-      final String sConfigFile = SYSTEM_ONLY.getAsString ("config.file");
-      if (StringHelper.hasText (sConfigFile))
-      {
-        final EConfigSourceResourceType eResType = EConfigSourceResourceType.getFromExtensionOrDefault (FilenameHelper.getExtension (sConfigFile),
-                                                                                                        EConfigSourceResourceType.PROPERTIES);
-        final FileSystemResource aRes = new FileSystemResource (sConfigFile);
-        if (aRes.exists ())
-        {
-          // Take priority from system property
-          final int nPriority = SYSTEM_ONLY.getAsInt ("config.file.priority", EConfigSourceType.RESOURCE.getDefaultPriority ());
-          aMCSVP.addConfigurationSource (eResType.createConfigurationSource (aRes), nPriority);
-        }
-      }
-    }
-
-    {
-      final String sConfigURL = SYSTEM_ONLY.getAsString ("config.url");
-      if (StringHelper.hasText (sConfigURL))
-      {
-        final EConfigSourceResourceType eResType = EConfigSourceResourceType.getFromExtensionOrDefault (FilenameHelper.getExtension (sConfigURL),
-                                                                                                        EConfigSourceResourceType.PROPERTIES);
-        final URL aURL = URLHelper.getAsURL (sConfigURL);
-        if (aURL != null)
-        {
-          final URLResource aRes = new URLResource (aURL);
-          if (aRes.exists ())
-          {
-            // Take priority from system property
-            final int nPriority = SYSTEM_ONLY.getAsInt ("config.url.priority", EConfigSourceType.RESOURCE.getDefaultPriority ());
-            aMCSVP.addConfigurationSource (eResType.createConfigurationSource (aRes), nPriority);
-          }
-        }
-      }
-    }
     final IConfig aConfig = Config.create (aMCSVP);
     setConfig (aConfig);
   }
