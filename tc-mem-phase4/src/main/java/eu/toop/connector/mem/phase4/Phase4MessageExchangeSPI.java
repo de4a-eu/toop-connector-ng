@@ -35,7 +35,6 @@ import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.system.SystemProperties;
-import com.helger.httpclient.HttpClientFactory;
 import com.helger.peppol.utils.PeppolCertificateHelper;
 import com.helger.phase4.attachment.EAS4CompressionMode;
 import com.helger.phase4.attachment.Phase4OutgoingAttachment;
@@ -162,23 +161,17 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       // http://wiki.ds.unipi.gr/display/TOOP/Routing+Information+Profile
       // http://wiki.ds.unipi.gr/display/CCTF/TOOP+AS4+GW+Interface+specification
       final CEFUserMessageBuilder aBuilder = Phase4CEFSender.builder ()
-                                                            .httpClientFactory (new HttpClientFactory (new TCHttpClientSettings ()))
+                                                            .httpClientFactory (new TCHttpClientSettings ())
                                                             .cryptoFactory (aCF)
                                                             .senderParticipantID (aRoutingInfo.getSenderID ())
                                                             .receiverParticipantID (aRoutingInfo.getReceiverID ())
                                                             .documentTypeID (aRoutingInfo.getDocumentTypeID ())
                                                             .processID (aRoutingInfo.getProcessID ())
                                                             .conversationID (MessageHelperMethods.createRandomConversationID ())
-                                                            /*
-                                                             * No fromPartyID
-                                                             * type!
-                                                             */
+                                                            .fromPartyIDType (null)
                                                             .fromPartyID (Phase4Config.getFromPartyID ())
                                                             .fromRole ("http://www.toop.eu/edelivery/gateway")
-                                                            /*
-                                                             * No toPartyID
-                                                             * type!
-                                                             */
+                                                            .toPartyIDType (null)
                                                             .toPartyID (PeppolCertificateHelper.getCN (aTheirCert.getSubjectX500Principal ()
                                                                                                                  .getName ()))
                                                             .toRole ("http://www.toop.eu/edelivery/gateway")
