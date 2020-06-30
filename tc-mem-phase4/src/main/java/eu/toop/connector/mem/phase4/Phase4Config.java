@@ -52,7 +52,13 @@ public final class Phase4Config
   @Nullable
   public static String getFromPartyID ()
   {
-    return TCConfig.MEM.getMEMAS4TcPartyid ();
+    String ret = getConfig ().getAsString ("phase4.fromparty.id");
+    if (ret == null)
+    {
+      // Fallback to old version
+      ret = TCConfig.MEM.getMEMAS4TcPartyid ();
+    }
+    return ret;
   }
 
   public static boolean isHttpDebugEnabled ()
