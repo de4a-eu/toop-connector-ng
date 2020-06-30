@@ -37,7 +37,6 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.system.SystemProperties;
 import com.helger.httpclient.HttpClientFactory;
 import com.helger.peppol.utils.PeppolCertificateHelper;
-import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.phase4.attachment.EAS4CompressionMode;
 import com.helger.phase4.attachment.Phase4OutgoingAttachment;
 import com.helger.phase4.cef.Phase4CEFEndpointDetailProviderConstant;
@@ -55,7 +54,6 @@ import com.helger.phase4.util.Phase4Exception;
 import com.helger.photon.app.io.WebFileIO;
 import com.helger.servlet.ServletHelper;
 
-import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
@@ -158,7 +156,6 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
   {
     try
     {
-      final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
       final X509Certificate aTheirCert = aRoutingInfo.getCertificate ();
 
       // See :
@@ -172,12 +169,18 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                                                             .documentTypeID (aRoutingInfo.getDocumentTypeID ())
                                                             .processID (aRoutingInfo.getProcessID ())
                                                             .conversationID (MessageHelperMethods.createRandomConversationID ())
-                                                            .fromPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
-                                                                                                           Phase4Config.getFromPartyID ()))
+                                                            /*
+                                                             * No fromPartyID
+                                                             * type!
+                                                             */
+                                                            .fromPartyID (Phase4Config.getFromPartyID ())
                                                             .fromRole ("http://www.toop.eu/edelivery/gateway")
-                                                            .toPartyID (aIF.createParticipantIdentifier ("urn:oasis:names:tc:ebcore:partyid-type:unregistered",
-                                                                                                         PeppolCertificateHelper.getCN (aTheirCert.getSubjectDN ()
-                                                                                                                                                  .getName ())))
+                                                            /*
+                                                             * No toPartyID
+                                                             * type!
+                                                             */
+                                                            .toPartyID (PeppolCertificateHelper.getCN (aTheirCert.getSubjectX500Principal ()
+                                                                                                                 .getName ()))
                                                             .toRole ("http://www.toop.eu/edelivery/gateway")
                                                             .rawResponseConsumer (new RawResponseWriter ())
                                                             .endpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
