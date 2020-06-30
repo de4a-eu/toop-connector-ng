@@ -34,7 +34,6 @@ import com.helger.commons.id.factory.StringIDFromGlobalPersistentLongIDFactory;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.url.IURLProtocol;
 import com.helger.commons.url.URLProtocolRegistry;
-import com.helger.peppol.sml.ISMLInfo;
 import com.helger.xservlet.requesttrack.RequestTracker;
 
 import eu.toop.connector.api.TCConfig;
@@ -138,13 +137,7 @@ public class TCInit
       if (StringHelper.hasNoText (sDirectoryURL))
         throw new InitializationException ("The URL of the DSD Service is missing in the configuration file!");
 
-      if (TCConfig.R2D2.isR2D2UseDNS ())
-      {
-        final ISMLInfo aSML = TCConfig.R2D2.getR2D2SML ();
-        if (aSML == null)
-          throw new InitializationException ("Since the usage of SML/DNS is enabled, the SML to be used must be provided in the configuration file!");
-      }
-      else
+      if (!TCConfig.R2D2.isR2D2UseDNS ())
       {
         final URI aSMPURI = TCConfig.R2D2.getR2D2SMPUrl ();
         if (aSMPURI == null)
