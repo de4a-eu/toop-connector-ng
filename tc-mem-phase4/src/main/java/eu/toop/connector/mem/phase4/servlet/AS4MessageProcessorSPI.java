@@ -114,7 +114,7 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
                                                           @Nonnull final IAS4MessageState aState,
                                                           @Nonnull final ICommonsList <Ebms3Error> aProcessingErrors)
   {
-    if (Phase4Config.isDebugIncoming () && LOGGER.isInfoEnabled ())
+    if (Phase4Config.isDebugLogIncoming () && LOGGER.isInfoEnabled ())
     {
       LOGGER.info ("Received AS4 message:");
       LOGGER.info ("  UserMessage: " + aUserMessage);

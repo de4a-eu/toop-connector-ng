@@ -90,9 +90,11 @@ The following configuration properties are **supported** - some of them have def
 ### Properties for MEM implementation `phase4`
 
 * **`phase4.datapath`** (string) - the absolute path to a local directory to store data
-* **`toop.mem.as4.tc.partyid`** (string) - the from party ID
-* **`phase4.debug.http`** (boolean) - enable HTTP debugging for AS4 transmissions?
-* **`phase4.debug.incoming`** (boolean) - enable debug logging for incoming AS4 transmissions?
+* **`phase4.debug.http`** (boolean) - enable or disable HTTP debugging for AS4 transmissions. The default value is `false`.
+* **`phase4.debug.incoming`** (boolean) - enable or disable debug logging for incoming AS4 transmissions. The default value is `false`.
+* **`phase4.dump.incoming.path`** (string) (since v2.0.0-rc3) - an optional absolute directory path where the incoming AS4 messages should be dumped to. Disabled by default.
+* **`phase4.dump.outgoing.path`** (string) (since v2.0.0-rc3) - an optional absolute directory path where the outgoing AS4 messages should be dumped to. Disabled by default.
+* **`phase4.send.fromparty.id`** (string) (since v2.0.0-rc3) - the from party ID to be used for outgoing messages. Previous versions need to use **`toop.mem.as4.tc.partyid`** - starting from RC3 this property is still used as a fallback)
 * **`phase4.send.response.folder`** (string) - an optional folder, where sent responses should be stored. If this property is not provided, they are not stored
 * **`phase4.keystore.type`** (string) - the type of the keystore (either "JKS" or "PKCS12" - case insensitive) - defaults to JKS.
 * **`phase4.keystore.path`** (string) - the path to the keystore (can be classpath relative or an absolute file)

@@ -18,7 +18,6 @@ package eu.toop.connector.mem.phase4;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import com.helger.commons.debug.GlobalDebug;
 import com.helger.config.IConfig;
 import com.helger.phase4.crypto.AS4CryptoFactoryPropertiesFile;
 import com.helger.phase4.crypto.AS4CryptoProperties;
@@ -49,26 +48,39 @@ public final class Phase4Config
     return getConfig ().getAsString ("phase4.datapath");
   }
 
-  @Nullable
-  public static String getFromPartyID ()
-  {
-    String ret = getConfig ().getAsString ("phase4.fromparty.id");
-    if (ret == null)
-    {
-      // Fallback to old version
-      ret = TCConfig.MEM.getMEMAS4TcPartyid ();
-    }
-    return ret;
-  }
-
   public static boolean isHttpDebugEnabled ()
   {
     return getConfig ().getAsBoolean ("phase4.debug.http", false);
   }
 
-  public static boolean isDebugIncoming ()
+  public static boolean isDebugLogIncoming ()
   {
-    return getConfig ().getAsBoolean ("phase4.debug.incoming", GlobalDebug.isDebugMode ());
+    return getConfig ().getAsBoolean ("phase4.debug.incoming", false);
+  }
+
+  @Nullable
+  public static String getDumpPathIncoming ()
+  {
+    return getConfig ().getAsString ("phase4.dump.incoming.path");
+  }
+
+  @Nullable
+  public static String getDumpPathOutgoing ()
+  {
+    return getConfig ().getAsString ("phase4.dump.outgoing.path");
+  }
+
+  @Nullable
+  public static String getFromPartyID ()
+  {
+    // Was added in 2.0.0-rc3
+    String ret = getConfig ().getAsString ("phase4.send.fromparty.id");
+    if (ret == null)
+    {
+      // Fallback to old version (prior to rc3)
+      ret = TCConfig.MEM.getMEMAS4TcPartyid ();
+    }
+    return ret;
   }
 
   /**

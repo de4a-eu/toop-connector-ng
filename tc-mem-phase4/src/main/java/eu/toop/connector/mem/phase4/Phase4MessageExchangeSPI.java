@@ -31,10 +31,12 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.exception.InitializationException;
+import com.helger.commons.io.file.FilenameHelper;
 import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.system.SystemProperties;
+import com.helger.datetime.util.PDTIOHelper;
 import com.helger.peppol.utils.PeppolCertificateHelper;
 import com.helger.phase4.attachment.EAS4CompressionMode;
 import com.helger.phase4.attachment.Phase4OutgoingAttachment;
@@ -42,6 +44,7 @@ import com.helger.phase4.cef.Phase4CEFEndpointDetailProviderConstant;
 import com.helger.phase4.cef.Phase4CEFSender;
 import com.helger.phase4.cef.Phase4CEFSender.CEFUserMessageBuilder;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
+import com.helger.phase4.dump.AS4DumpManager;
 import com.helger.phase4.http.AS4HttpDebug;
 import com.helger.phase4.messaging.domain.MessageHelperMethods;
 import com.helger.phase4.mgr.MetaAS4Manager;
@@ -49,6 +52,8 @@ import com.helger.phase4.model.pmode.IPModeManager;
 import com.helger.phase4.model.pmode.PMode;
 import com.helger.phase4.model.pmode.PModePayloadService;
 import com.helger.phase4.servlet.AS4ServerInitializer;
+import com.helger.phase4.servlet.dump.AS4IncomingDumperFileBased;
+import com.helger.phase4.servlet.dump.AS4OutgoingDumperFileBased;
 import com.helger.phase4.util.Phase4Exception;
 import com.helger.photon.app.io.WebFileIO;
 import com.helger.servlet.ServletHelper;
@@ -107,7 +112,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       // Get the data path
       final String sDataPath = Phase4Config.getDataPath ();
       if (StringHelper.hasNoText (sDataPath))
-        throw new InitializationException ("No data path was provided!");
+        throw new InitializationException ("No phase4 data path was provided!");
       final File aDataPath = new File (sDataPath).getAbsoluteFile ();
       // Init the IO layer
       WebFileIO.initPaths (aDataPath, sServletContextPath, false);
@@ -145,8 +150,33 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     AS4MessageProcessorSPI.setIncomingHandler (aIncomingHandler);
 
     // Enable debug (incoming and outgoing)
-    if (Phase4Config.isHttpDebugEnabled ())
-      AS4HttpDebug.setEnabled (true);
+    AS4HttpDebug.setEnabled (Phase4Config.isHttpDebugEnabled ());
+
+    // Set incoming dumper
+    final String sIncomingDumpPath = Phase4Config.getDumpPathIncoming ();
+    if (StringHelper.hasText (sIncomingDumpPath))
+    {
+      LOGGER.info ("Dumping incoming AS4 messages to '" + sIncomingDumpPath + "'");
+      AS4DumpManager.setIncomingDumper (new AS4IncomingDumperFileBased ( (aMessageMetadata,
+                                                                          aHttpHeaderMap) -> new File (sIncomingDumpPath,
+                                                                                                       PDTIOHelper.getLocalDateTimeForFilename (aMessageMetadata.getIncomingDT ()) +
+                                                                                                                          ".as4in")));
+    }
+
+    // Set outgoing dumper
+    final String sOutgoingDumpPath = Phase4Config.getDumpPathOutgoing ();
+    if (StringHelper.hasText (sOutgoingDumpPath))
+    {
+      LOGGER.info ("Dumping outgoing AS4 messages to '" + sOutgoingDumpPath + "'");
+      AS4DumpManager.setOutgoingDumper (new AS4OutgoingDumperFileBased ( (sMessageID,
+                                                                          nTry) -> new File (sOutgoingDumpPath,
+                                                                                             PDTIOHelper.getCurrentLocalDateTimeForFilename () +
+                                                                                                                "-" +
+                                                                                                                FilenameHelper.getAsSecureValidASCIIFilename (sMessageID) +
+                                                                                                                "-" +
+                                                                                                                nTry +
+                                                                                                                ".as4out")));
+    }
   }
 
   private static void _sendOutgoing (@Nonnull final IAS4CryptoFactory aCF,
