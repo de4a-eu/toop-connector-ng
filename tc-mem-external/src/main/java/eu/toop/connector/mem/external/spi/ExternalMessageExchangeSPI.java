@@ -24,12 +24,7 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.level.EErrorLevel;
-import com.helger.peppolid.IDocumentTypeIdentifier;
-import com.helger.peppolid.IParticipantIdentifier;
-import com.helger.peppolid.IProcessIdentifier;
-import com.helger.peppolid.factory.IIdentifierFactory;
 
-import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
@@ -97,13 +92,7 @@ public class ExternalMessageExchangeSPI implements IMessageExchangeSPI {
       final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind(aHead.getData().getInputStream());
       final String sTopLevelContentID = aHead.getContentID();
 
-      final IIdentifierFactory aIF = TCConfig.getIdentifierFactory();
-      final IParticipantIdentifier sender = aIF.parseParticipantIdentifier(aMEMessage.getSenderID());
-      final IParticipantIdentifier receiver = aIF.parseParticipantIdentifier(aMEMessage.getReceiverID());
-      final IDocumentTypeIdentifier docid = aIF.parseDocumentTypeIdentifier(aMEMessage.getDoctypeID());
-      final IProcessIdentifier procid = aIF.parseProcessIdentifier(aMEMessage.getProcessID());
-
-      final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata(sender, receiver, docid, procid);
+      final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata(aMEMessage.getSenderID(), aMEMessage.getReceiverID(), aMEMessage.getDoctypeID(), aMEMessage.getProcessID());
 
       if (aTopLevel instanceof EDMRequest) {
         // Request

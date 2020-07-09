@@ -55,6 +55,10 @@ import com.helger.commons.mime.MimeTypeParser;
 import com.helger.commons.mime.MimeTypeParserException;
 import com.helger.commons.regex.RegExHelper;
 import com.helger.commons.string.StringHelper;
+import com.helger.peppolid.IDocumentTypeIdentifier;
+import com.helger.peppolid.IParticipantIdentifier;
+import com.helger.peppolid.IProcessIdentifier;
+import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.xml.microdom.IMicroDocument;
 import com.helger.xml.microdom.IMicroElement;
 import com.helger.xml.microdom.MicroDocument;
@@ -416,12 +420,24 @@ public final class EBMSUtils {
         ".//:Property[@name='originalSender']/text()");
     final String sReceiverId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
         ".//:Property[@name='finalRecipient']/text()");
-    final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-        ".//:Property[@name='Service']/text()");
     final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
         ".//:Property[@name='Action']/text()");
+    final String sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
+        ".//:Property[@name='Service']/@type");
+    final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
+        ".//:Property[@name='Service']/text()");
 
-    return meMessage.senderID(sSenderId).receiverID(sReceiverId).processID(sProcid).docTypeID(sDoctypeId).build();
+    final IIdentifierFactory aIF = TCConfig.getIdentifierFactory();
+    final IParticipantIdentifier sender = aIF.parseParticipantIdentifier(sSenderId);
+    if (sender == null) LOG.warn ("Failed to parse sender participant identifier '"+sSenderId+"'");
+    final IParticipantIdentifier receiver = aIF.parseParticipantIdentifier(sReceiverId);
+    if (receiver == null) LOG.warn ("Failed to parse receiver participant identifier '"+sReceiverId+"'");
+    final IDocumentTypeIdentifier doctypeid = aIF.parseDocumentTypeIdentifier(sDoctypeId);
+    if (doctypeid == null) LOG.warn ("Failed to parse document type identifier '"+sDoctypeId+"'");
+    final IProcessIdentifier procid = StringHelper.hasText (sProcidType) ? aIF.createProcessIdentifier(sProcidType, sProcid) : aIF.parseProcessIdentifier(sProcid);
+    if (procid == null) LOG.warn ("Failed to parse process identifier '"+sProcidType+"' and '"+sProcid+"'");
+
+    return meMessage.senderID(sender).receiverID(receiver).processID(procid).docTypeID(doctypeid).build();
   }
 
   public static RelayResult soap2RelayResult(final SOAPMessage sNotification) throws MEIncomingException {

@@ -27,6 +27,9 @@ import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsArrayList;
 import com.helger.commons.collection.impl.ICommonsList;
+import com.helger.peppolid.IDocumentTypeIdentifier;
+import com.helger.peppolid.IParticipantIdentifier;
+import com.helger.peppolid.IProcessIdentifier;
 
 /**
  * List of {@link MEPayload} objects.
@@ -35,37 +38,37 @@ import com.helger.commons.collection.impl.ICommonsList;
  */
 public class MEMessage implements Serializable
 {
-  private final String m_sSenderID;
-  private final String m_sReceiverID;
-  private final String m_sDocTypeID;
-  private final String m_sProcessID;
+  private final IParticipantIdentifier m_aSenderID;
+  private final IParticipantIdentifier m_aReceiverID;
+  private final IDocumentTypeIdentifier m_aDocTypeID;
+  private final IProcessIdentifier m_aProcessID;
   private final ICommonsList <MEPayload> m_aPayloads = new CommonsArrayList <> ();
 
   /**
    * Instantiates a new Me message.
    *
-   * @param sSenderID
+   * @param aSenderID
    *        Sender ID
-   * @param sReceiverID
+   * @param aReceiverID
    *        Receiver ID
-   * @param sDocTypeID
+   * @param aDocTypeID
    *        Document type ID
-   * @param sProcessID
+   * @param aProcessID
    *        Process ID
    * @param aPayloads
    *        the payloads
    */
-  protected MEMessage (@Nullable final String sSenderID,
-                       @Nullable final String sReceiverID,
-                       @Nullable final String sDocTypeID,
-                       @Nullable final String sProcessID,
+  protected MEMessage (@Nullable final IParticipantIdentifier aSenderID,
+                       @Nullable final IParticipantIdentifier aReceiverID,
+                       @Nullable final IDocumentTypeIdentifier aDocTypeID,
+                       @Nullable final IProcessIdentifier aProcessID,
                        @Nonnull @Nonempty final ICommonsList <MEPayload> aPayloads)
   {
     ValueEnforcer.notEmptyNoNullValue (aPayloads, "Payloads");
-    m_sSenderID = sSenderID;
-    m_sReceiverID = sReceiverID;
-    m_sDocTypeID = sDocTypeID;
-    m_sProcessID = sProcessID;
+    m_aSenderID = aSenderID;
+    m_aReceiverID = aReceiverID;
+    m_aDocTypeID = aDocTypeID;
+    m_aProcessID = aProcessID;
     m_aPayloads.addAll (aPayloads);
   }
 
@@ -73,36 +76,36 @@ public class MEMessage implements Serializable
    * @return the sender participant id. Maybe <code>null</code>.
    */
   @Nullable
-  public String getSenderID ()
+  public IParticipantIdentifier getSenderID ()
   {
-    return m_sSenderID;
+    return m_aSenderID;
   }
 
   /**
    * @return the receiver participant id. Maybe <code>null</code>.
    */
   @Nullable
-  public String getReceiverID ()
+  public IParticipantIdentifier getReceiverID ()
   {
-    return m_sReceiverID;
+    return m_aReceiverID;
   }
 
   /**
    * @return the document type id. Maybe <code>null</code>.
    */
   @Nullable
-  public String getDoctypeID ()
+  public IDocumentTypeIdentifier getDoctypeID ()
   {
-    return m_sDocTypeID;
+    return m_aDocTypeID;
   }
 
   /**
    * @return the process id. Maybe <code>null</code>.
    */
   @Nullable
-  public String getProcessID ()
+  public IProcessIdentifier getProcessID ()
   {
-    return m_sProcessID;
+    return m_aProcessID;
   }
 
   /**
@@ -147,10 +150,10 @@ public class MEMessage implements Serializable
    */
   public static class Builder
   {
-    private String m_sSenderID;
-    private String m_sReceiverID;
-    private String m_sDocTypeID;
-    private String m_sProcessID;
+    private IParticipantIdentifier m_aSenderID;
+    private IParticipantIdentifier m_aReceiverID;
+    private IDocumentTypeIdentifier m_aDocTypeID;
+    private IProcessIdentifier m_aProcessID;
     private final ICommonsList <MEPayload> m_aPayloads = new CommonsArrayList <> ();
 
     /**
@@ -162,56 +165,56 @@ public class MEMessage implements Serializable
     /**
      * Sets sender id.
      *
-     * @param s
+     * @param a
      *        the sender id
      * @return the builder
      */
     @Nonnull
-    public Builder senderID (@Nullable final String s)
+    public Builder senderID (@Nullable final IParticipantIdentifier a)
     {
-      m_sSenderID = s;
+      m_aSenderID = a;
       return this;
     }
 
     /**
      * Sets receiver id.
      *
-     * @param s
+     * @param a
      *        the receiver id
      * @return the builder
      */
     @Nonnull
-    public Builder receiverID (@Nullable final String s)
+    public Builder receiverID (@Nullable final IParticipantIdentifier a)
     {
-      m_sReceiverID = s;
+      m_aReceiverID = a;
       return this;
     }
 
     /**
      * Sets document type id.
      *
-     * @param s
+     * @param a
      *        the document type id
      * @return the builder
      */
     @Nonnull
-    public Builder docTypeID (@Nullable final String s)
+    public Builder docTypeID (@Nullable final IDocumentTypeIdentifier a)
     {
-      m_sDocTypeID = s;
+      m_aDocTypeID = a;
       return this;
     }
 
     /**
      * Sets process id.
      *
-     * @param s
+     * @param a
      *        the process id
      * @return the builder
      */
     @Nonnull
-    public Builder processID (@Nullable final String s)
+    public Builder processID (@Nullable final IProcessIdentifier a)
     {
-      m_sProcessID = s;
+      m_aProcessID = a;
       return this;
     }
 
@@ -357,7 +360,7 @@ public class MEMessage implements Serializable
     public MEMessage build ()
     {
       checkConsistency ();
-      return new MEMessage (m_sSenderID, m_sReceiverID, m_sDocTypeID, m_sProcessID, m_aPayloads);
+      return new MEMessage (m_aSenderID, m_aReceiverID, m_aDocTypeID, m_aProcessID, m_aPayloads);
     }
   }
 }
