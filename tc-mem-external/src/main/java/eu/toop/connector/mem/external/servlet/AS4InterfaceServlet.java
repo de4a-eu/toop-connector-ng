@@ -16,6 +16,7 @@
 package eu.toop.connector.mem.external.servlet;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 import javax.servlet.annotation.WebServlet;
@@ -65,6 +66,9 @@ public class AS4InterfaceServlet extends HttpServlet {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Read inbound message");
       }
+
+      if (LOG.isInfoEnabled())
+        LOG.info ("Incoming message to '/from-as4', assuming UTF-8:\n" + new String (bytes, StandardCharsets.UTF_8));
 
       // Todo, remove buffering later
       try (final NonBlockingByteArrayInputStream is = new NonBlockingByteArrayInputStream(bytes)) {
