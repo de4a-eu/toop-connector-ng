@@ -69,6 +69,7 @@ import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.notifications.RelayResult;
 import eu.toop.connector.mem.external.notifications.SubmissionResult;
@@ -246,22 +247,25 @@ public final class EBMSUtils {
 
       {
         final IMicroElement eMessageProperties = eUserMessage.appendElement(NS_EBMS, "MessageProperties");
-        eMessageProperties.appendChild(_property("MessageId", metadata.messageId));
-        eMessageProperties.appendChild(_property("ConversationId", metadata.conversationId));
-        eMessageProperties.appendChild(_property("RefToMessageId", metadata.refToMessageId));
-        eMessageProperties.appendChild(_property("Service", metadata.service));
-        eMessageProperties.appendChild(_property("Action", metadata.action));
         eMessageProperties.appendChild(_property("ToPartyId", metadata.toPartyId));
         eMessageProperties.appendChild(_property("ToPartyIdType", metadata.toPartyIdType));
         eMessageProperties.appendChild(_property("ToPartyRole", metadata.toPartyRole));
-        eMessageProperties.appendChild(_property("originalSender", metadata.senderId));
-        eMessageProperties.appendChild(_property("finalRecipient", metadata.receiverId));
         // NOTE: ToPartyCertificate is the DER+BASE64 encoded X509 certificate.
         // First decode as byte array, then parse it using
         // CertificateFactory.getInstance("X509", "BC")
         // recommended provider: BouncyCastleProvider
         eMessageProperties.appendChild(_property("ToPartyCertificate", metadata.toPartyCertificate));
         eMessageProperties.appendChild(_property("TargetURL", metadata.targetURL));
+        eMessageProperties.appendChild(_property("Service", metadata.service));
+        eMessageProperties.appendChild(_property("ServiceType", metadata.serviceType));
+        eMessageProperties.appendChild(_property("Action", metadata.action));
+
+        eMessageProperties.appendChild(_property("MessageId", metadata.messageId));
+        eMessageProperties.appendChild(_property("RefToMessageId", metadata.refToMessageId));
+        eMessageProperties.appendChild(_property("ConversationId", metadata.conversationId));
+
+        eMessageProperties.appendChild(_property("originalSender", metadata.senderId));
+        eMessageProperties.appendChild(_property("finalRecipient", metadata.receiverId));
       }
 
       {
@@ -545,15 +549,16 @@ public final class EBMSUtils {
    *
    * @return SubmissionData
    */
-  static SubmissionMessageProperties inferSubmissionData(final GatewayRoutingMetadata gatewayRoutingMetadata)
+  static SubmissionMessageProperties inferSubmissionData(final IMERoutingInformation gatewayRoutingMetadata)
       throws MEOutgoingException {
     final X509Certificate certificate = gatewayRoutingMetadata.getCertificate();
     // we need the certificate to obtain the to party id
     ValueEnforcer.notNull(certificate, "Endpoint Certificate");
     final SubmissionMessageProperties submissionData = new SubmissionMessageProperties();
     submissionData.messageId = genereateEbmsMessageId(MEMConstants.MEM_AS4_SUFFIX);
-    submissionData.action = gatewayRoutingMetadata.getDocumentTypeId();
-    submissionData.service = gatewayRoutingMetadata.getProcessId();
+    submissionData.action = gatewayRoutingMetadata.getDocumentTypeID().getURIEncoded();
+    submissionData.service = gatewayRoutingMetadata.getProcessID().getValue();
+    submissionData.serviceType = gatewayRoutingMetadata.getProcessID().getScheme();
 
     submissionData.toPartyId = _getCN(gatewayRoutingMetadata.getCertificate().getSubjectX500Principal().getName());
 
@@ -564,10 +569,10 @@ public final class EBMSUtils {
     // to the role of the SENDING gateway (i.e MEMConstants.GW_PARTY_ROLE)
     submissionData.toPartyRole = MEMConstants.GW_PARTY_ROLE;
 
-    submissionData.targetURL = gatewayRoutingMetadata.getEndpointUrl();
+    submissionData.targetURL = gatewayRoutingMetadata.getEndpointURL();
 
-    submissionData.senderId = gatewayRoutingMetadata.getSenderParticipantId();
-    submissionData.receiverId = gatewayRoutingMetadata.getsReceiverParticipantId();
+    submissionData.senderId = gatewayRoutingMetadata.getSenderID().getURIEncoded();
+    submissionData.receiverId = gatewayRoutingMetadata.getReceiverID().getURIEncoded();
 
     try {
       // DER encoded X509 certificate

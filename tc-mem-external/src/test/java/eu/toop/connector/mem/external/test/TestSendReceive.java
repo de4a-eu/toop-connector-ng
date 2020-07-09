@@ -36,9 +36,9 @@ import com.helger.scope.mock.ScopeAwareTestSetup;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.EActingSide;
-import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;
 import eu.toop.connector.mem.external.notifications.IMessageHandler;
 import eu.toop.edm.error.EToopErrorCode;
@@ -58,7 +58,7 @@ public class TestSendReceive {
 
   // this must be created after the above level setting statement
   private static final Logger LOG = LoggerFactory.getLogger(TestSendReceive.class);
-  private static GatewayRoutingMetadata gatewayRoutingMetadata;
+  private static IMERoutingInformation gatewayRoutingMetadata;
   private static MEMessage sampleMessage;
 
   /**

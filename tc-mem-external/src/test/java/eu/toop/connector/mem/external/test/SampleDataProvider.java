@@ -24,12 +24,15 @@ import java.security.cert.X509Certificate;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.mime.CMimeType;
+import com.helger.peppol.smp.ESMPTransportProfile;
 
 import eu.toop.commons.codelist.EPredefinedDocumentTypeIdentifier;
 import eu.toop.commons.codelist.EPredefinedProcessIdentifier;
+import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
+import eu.toop.connector.api.me.outgoing.MERoutingInformation;
 import eu.toop.connector.mem.external.EActingSide;
-import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 
 /**
  * @author yerlibilgin
@@ -66,18 +69,19 @@ public class SampleDataProvider {
     }
   }
 
-  public static GatewayRoutingMetadata createGatewayRoutingMetadata(final EActingSide actingSide,
+  public static IMERoutingInformation createGatewayRoutingMetadata(final EActingSide actingSide,
                                                                     final String receivingGWURL) {
     final X509Certificate aCert = readCert(actingSide);
     return createGatewayRoutingMetadata(receivingGWURL, aCert);
   }
 
-  public static GatewayRoutingMetadata createGatewayRoutingMetadata(final String targetURL,
+  public static IMERoutingInformation createGatewayRoutingMetadata(final String targetURL,
                                                                     final X509Certificate targetCert) {
-    final GatewayRoutingMetadata metadata = new GatewayRoutingMetadata("iso6523-actorid-upis::0088:123456",
-        "iso6523-actorid-upis::0099:123456",
-        EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST.getURIEncoded(),
-        EPredefinedProcessIdentifier.DATAREQUESTRESPONSE.getURIEncoded(),
+    final IMERoutingInformation metadata = new MERoutingInformation(TCConfig.getIdentifierFactory().createParticipantIdentifier("iso6523-actorid-upis", "0088:123456"),
+                                                                    TCConfig.getIdentifierFactory().createParticipantIdentifier("iso6523-actorid-upis", "0099:123456"),
+        EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST,
+        EPredefinedProcessIdentifier.DATAREQUESTRESPONSE,
+        ESMPTransportProfile.TRANSPORT_PROFILE_BDXR_AS4.getID(),
         targetURL,
         targetCert);
 

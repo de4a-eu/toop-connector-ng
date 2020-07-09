@@ -36,8 +36,8 @@ import com.helger.scope.mock.ScopeAwareTestSetup;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.mem.external.EActingSide;
-import eu.toop.connector.mem.external.GatewayRoutingMetadata;
 import eu.toop.connector.mem.external.MEMDelegate;
 import eu.toop.connector.mem.external.notifications.IMessageHandler;
 
@@ -140,7 +140,7 @@ public class IntegrationTestMain
     deliveryWatcher.reset ();
 
     // set the address of the receiving gateway to t
-    final GatewayRoutingMetadata gatewayRoutingMetadata = SampleDataProvider.createGatewayRoutingMetadata (actingSide,
+    final IMERoutingInformation gatewayRoutingMetadata = SampleDataProvider.createGatewayRoutingMetadata (actingSide,
                                                                                                            recivingSideURL);
     final MEMessage meMessage = SampleDataProvider.createSampleMessage ();
 

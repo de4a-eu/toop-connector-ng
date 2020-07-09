@@ -63,13 +63,19 @@ public class SubmissionMessageProperties {
   public String toPartyIdType;
 
   /**
-   * //CollaborationInfo/service
+   * //CollaborationInfo/Service
    */
   @Nonnull
   public String service;
 
   /**
-   * //CollaborationInfo/action
+   * //CollaborationInfo/Service/@type
+   */
+  @Nullable
+  public String serviceType;
+
+  /**
+   * //CollaborationInfo/Action
    */
   @Nonnull
   public String action;

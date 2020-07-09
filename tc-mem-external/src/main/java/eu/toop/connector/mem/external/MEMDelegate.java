@@ -32,6 +32,7 @@ import com.helger.scope.singleton.AbstractGlobalSingleton;
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.api.me.model.MEMessage;
+import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.notifications.IMessageHandler;
 import eu.toop.connector.mem.external.notifications.IRelayResultHandler;
@@ -86,12 +87,12 @@ public class MEMDelegate extends AbstractGlobalSingleton {
    *                               the gateway.
    * @throws MEOutgoingException in case of error
    */
-  public void sendMessage(final GatewayRoutingMetadata gatewayRoutingMetadata, final MEMessage meMessage)
+  public void sendMessage(final IMERoutingInformation gatewayRoutingMetadata, final MEMessage meMessage)
       throws MEOutgoingException {
     if (LOG.isDebugEnabled()) {
-      LOG.debug("Send message called for procid: " + gatewayRoutingMetadata.getProcessId() +
+      LOG.debug("Send message called for procid: " + gatewayRoutingMetadata.getProcessID().getURIEncoded() +
                 " docid: " +
-                gatewayRoutingMetadata.getDocumentTypeId());
+                gatewayRoutingMetadata.getDocumentTypeID().getURIEncoded());
       LOG.debug("Convert gateway routing metadata to submission data");
     }
     final SubmissionMessageProperties submissionData = EBMSUtils.inferSubmissionData(gatewayRoutingMetadata);
