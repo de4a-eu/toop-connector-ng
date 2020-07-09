@@ -88,7 +88,7 @@ public class TOOPPMode
                                       @Nonnull final IPModeIDProvider aPModeIDProvider,
                                       final boolean bPersist)
   {
-    final PModeParty aInitiator = PModeParty.createSimple (sInitiatorID, "http://www.toop.eu/edelivery/backend");
+    final PModeParty aInitiator = PModeParty.createSimple (sInitiatorID, "http://www.toop.eu/edelivery/gateway");
     final PModeParty aResponder = PModeParty.createSimple (sResponderID, "http://www.toop.eu/edelivery/gateway");
 
     final PMode aPMode = new PMode (aPModeIDProvider,
@@ -98,8 +98,8 @@ public class TOOPPMode
                                     EMEP.ONE_WAY,
                                     EMEPBinding.PUSH,
                                     new PModeLeg (PModeLegProtocol.createForDefaultSoapVersion (sResponderAddress),
-                                                  new PModeLegBusinessInformation ("http://www.toop.eu/edelivery/bit",
-                                                                                   "Deliver",
+                                                  new PModeLegBusinessInformation ((String) null,
+                                                                                   (String) null,
                                                                                    (Long) null,
                                                                                    CAS4.DEFAULT_MPC_ID),
                                                   new PModeLegErrorHandling ((PModeAddressList) null,
