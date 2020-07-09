@@ -348,7 +348,7 @@ public final class EBMSUtils {
         final AttachmentPart att = (AttachmentPart) it.next();
         // remove surplus characters
         final String href = RegExHelper.stringReplacePattern("<|>", att.getContentId(), "");
-        Node partInfo;
+        final Node partInfo;
         try {
           // throws exception if part info does not exist
           partInfo = SoapXPathUtil.safeFindSingleNode(soapHeader,
