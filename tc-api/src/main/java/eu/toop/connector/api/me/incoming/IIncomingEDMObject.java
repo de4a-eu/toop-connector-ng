@@ -18,6 +18,7 @@ package eu.toop.connector.api.me.incoming;
 import javax.annotation.Nonnull;
 
 import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
+import com.helger.commons.annotation.Nonempty;
 
 /**
  * Marker interface for incoming EDM objects.
@@ -27,6 +28,13 @@ import com.helger.commons.annotation.MustImplementEqualsAndHashcode;
 @MustImplementEqualsAndHashcode
 public interface IIncomingEDMObject
 {
+  /**
+   * @return The AS4 Content-ID of the AS4 MIME part containing the EDM object.
+   */
+  @Nonnull
+  @Nonempty
+  String getTopLevelContentID ();
+
   /**
    * @return The incoming metadata associated with this request. Never
    *         <code>null</code>.

@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
@@ -34,13 +35,18 @@ import eu.toop.edm.EDMErrorResponse;
 public class IncomingEDMErrorResponse implements IIncomingEDMResponse
 {
   private final EDMErrorResponse m_aErrorResponse;
+  private final String m_sTopLevelContentID;
   private final IMEIncomingTransportMetadata m_aMetadata;
 
-  public IncomingEDMErrorResponse (@Nonnull final EDMErrorResponse aErrorResponse, @Nonnull final IMEIncomingTransportMetadata aMetadata)
+  public IncomingEDMErrorResponse (@Nonnull final EDMErrorResponse aErrorResponse,
+                                   @Nonnull @Nonempty final String sTopLevelContentID,
+                                   @Nonnull final IMEIncomingTransportMetadata aMetadata)
   {
     ValueEnforcer.notNull (aErrorResponse, "ErrorResponse");
+    ValueEnforcer.notEmpty (sTopLevelContentID, "TopLevelContentID");
     ValueEnforcer.notNull (aMetadata, "Metadata");
     m_aErrorResponse = aErrorResponse;
+    m_sTopLevelContentID = sTopLevelContentID;
     m_aMetadata = aMetadata;
   }
 
@@ -48,6 +54,13 @@ public class IncomingEDMErrorResponse implements IIncomingEDMResponse
   public EDMErrorResponse getErrorResponse ()
   {
     return m_aErrorResponse;
+  }
+
+  @Nonnull
+  @Nonempty
+  public String getTopLevelContentID ()
+  {
+    return m_sTopLevelContentID;
   }
 
   @Nonnull

@@ -27,6 +27,7 @@ import com.helger.commons.error.level.EErrorLevel;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
+import com.helger.peppolid.factory.IIdentifierFactory;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
@@ -95,22 +96,21 @@ public class ExternalMessageExchangeSPI implements IMessageExchangeSPI {
     aDelegate.registerMessageHandler(aMEMessage -> {
       final MEPayload aHead = aMEMessage.payloads().getFirst();
       final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind(aHead.getData().getInputStream());
-      // TODO get metadata in here
+      final String sTopLevelContentID = aHead.getContentID();
 
-      final IParticipantIdentifier sender = TCConfig.getIdentifierFactory()
-                                                    .parseParticipantIdentifier(aMEMessage.getSenderID());
-      final IParticipantIdentifier receiver = TCConfig.getIdentifierFactory()
-                                                      .parseParticipantIdentifier(aMEMessage.getReceiverID());
-      final IDocumentTypeIdentifier docid = TCConfig.getIdentifierFactory()
-                                                    .parseDocumentTypeIdentifier(aMEMessage.getDoctypeID());
-      final IProcessIdentifier procid = TCConfig.getIdentifierFactory()
-                                                .parseProcessIdentifier(aMEMessage.getProcessID());
+      final IIdentifierFactory aIF = TCConfig.getIdentifierFactory();
+      final IParticipantIdentifier sender = aIF.parseParticipantIdentifier(aMEMessage.getSenderID());
+      final IParticipantIdentifier receiver = aIF.parseParticipantIdentifier(aMEMessage.getReceiverID());
+      final IDocumentTypeIdentifier docid = aIF.parseDocumentTypeIdentifier(aMEMessage.getDoctypeID());
+      final IProcessIdentifier procid = aIF.parseProcessIdentifier(aMEMessage.getProcessID());
 
       final MEIncomingTransportMetadata aMetadata = new MEIncomingTransportMetadata(sender, receiver, docid, procid);
 
       if (aTopLevel instanceof EDMRequest) {
         // Request
-        m_aIncomingHandler.handleIncomingRequest(new IncomingEDMRequest((EDMRequest) aTopLevel, aMetadata));
+        m_aIncomingHandler.handleIncomingRequest(new IncomingEDMRequest((EDMRequest) aTopLevel,
+                                                                        sTopLevelContentID,
+                                                                        aMetadata));
       } else if (aTopLevel instanceof EDMResponse) {
         // Response
         final ICommonsList<MEPayload> aAttachments = new CommonsArrayList<>();
@@ -118,11 +118,13 @@ public class ExternalMessageExchangeSPI implements IMessageExchangeSPI {
           if (aItem != aHead)
             aAttachments.add(aItem);
         m_aIncomingHandler.handleIncomingResponse(new IncomingEDMResponse((EDMResponse) aTopLevel,
+                                                                          sTopLevelContentID,
                                                                           aAttachments,
                                                                           aMetadata));
       } else if (aTopLevel instanceof EDMErrorResponse) {
         // Error response
         m_aIncomingHandler.handleIncomingErrorResponse(new IncomingEDMErrorResponse((EDMErrorResponse) aTopLevel,
+                                                                                    sTopLevelContentID,
                                                                                     aMetadata));
       } else {
         // Unknown
@@ -143,5 +145,6 @@ public class ExternalMessageExchangeSPI implements IMessageExchangeSPI {
   }
 
   public void shutdown(@Nonnull final ServletContext aServletContext) {
+    // empty
   }
 }

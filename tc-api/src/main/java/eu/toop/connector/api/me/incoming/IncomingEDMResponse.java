@@ -22,6 +22,7 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.annotation.ReturnsMutableCopy;
 import com.helger.commons.annotation.ReturnsMutableObject;
 import com.helger.commons.collection.impl.CommonsLinkedHashMap;
@@ -42,17 +43,21 @@ import eu.toop.edm.EDMResponse;
 public class IncomingEDMResponse implements IIncomingEDMResponse
 {
   private final EDMResponse m_aResponse;
+  private final String m_sTopLevelContentID;
   private final ICommonsOrderedMap <String, MEPayload> m_aAttachments = new CommonsLinkedHashMap <> ();
   private final IMEIncomingTransportMetadata m_aMetadata;
 
   public IncomingEDMResponse (@Nonnull final EDMResponse aResponse,
+                              @Nonnull @Nonempty final String sTopLevelContentID,
                               @Nullable final List <MEPayload> aAttachments,
                               @Nonnull final IMEIncomingTransportMetadata aMetadata)
   {
     ValueEnforcer.notNull (aResponse, "Response");
+    ValueEnforcer.notEmpty (sTopLevelContentID, "TopLevelContentID");
     ValueEnforcer.notNull (aMetadata, "Metadata");
 
     m_aResponse = aResponse;
+    m_sTopLevelContentID = sTopLevelContentID;
     if (aAttachments != null)
       for (final MEPayload aItem : aAttachments)
         m_aAttachments.put (aItem.getContentID (), aItem);
@@ -63,6 +68,13 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
   public EDMResponse getResponse ()
   {
     return m_aResponse;
+  }
+
+  @Nonnull
+  @Nonempty
+  public String getTopLevelContentID ()
+  {
+    return m_sTopLevelContentID;
   }
 
   @Nonnull

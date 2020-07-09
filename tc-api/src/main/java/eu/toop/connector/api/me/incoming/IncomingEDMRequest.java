@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.concurrent.NotThreadSafe;
 
 import com.helger.commons.ValueEnforcer;
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.hashcode.HashCodeGenerator;
 import com.helger.commons.string.ToStringGenerator;
 
@@ -34,13 +35,18 @@ import eu.toop.edm.EDMRequest;
 public class IncomingEDMRequest implements IIncomingEDMObject
 {
   private final EDMRequest m_aRequest;
+  private final String m_sTopLevelContentID;
   private final IMEIncomingTransportMetadata m_aMetadata;
 
-  public IncomingEDMRequest (@Nonnull final EDMRequest aRequest, @Nonnull final IMEIncomingTransportMetadata aMetadata)
+  public IncomingEDMRequest (@Nonnull final EDMRequest aRequest,
+                             @Nonnull @Nonempty final String sTopLevelContentID,
+                             @Nonnull final IMEIncomingTransportMetadata aMetadata)
   {
     ValueEnforcer.notNull (aRequest, "Request");
+    ValueEnforcer.notEmpty (sTopLevelContentID, "TopLevelContentID");
     ValueEnforcer.notNull (aMetadata, "Metadata");
     m_aRequest = aRequest;
+    m_sTopLevelContentID = sTopLevelContentID;
     m_aMetadata = aMetadata;
   }
 
@@ -48,6 +54,13 @@ public class IncomingEDMRequest implements IIncomingEDMObject
   public EDMRequest getRequest ()
   {
     return m_aRequest;
+  }
+
+  @Nonnull
+  @Nonempty
+  public String getTopLevelContentID ()
+  {
+    return m_sTopLevelContentID;
   }
 
   @Nonnull

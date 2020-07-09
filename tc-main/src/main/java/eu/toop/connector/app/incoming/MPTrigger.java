@@ -136,7 +136,9 @@ public final class MPTrigger
 
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aRequest.getMetadata (), TCPayloadType.REQUEST));
-    aMsg.addPayload (_createPayload (aRequest.getRequest ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
+    aMsg.addPayload (_createPayload (aRequest.getRequest ().getWriter ().getAsBytes (),
+                                     aRequest.getTopLevelContentID (),
+                                     CRegRep4.MIME_TYPE_EBRS_XML));
     return _forwardMessage (aMsg, sDestURL);
   }
 
@@ -153,7 +155,9 @@ public final class MPTrigger
 
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aResponse.getMetadata (), TCPayloadType.RESPONSE));
-    aMsg.addPayload (_createPayload (aResponse.getResponse ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
+    aMsg.addPayload (_createPayload (aResponse.getResponse ().getWriter ().getAsBytes (),
+                                     aResponse.getTopLevelContentID (),
+                                     CRegRep4.MIME_TYPE_EBRS_XML));
     // Add all attachments
     for (final MEPayload aPayload : aResponse.attachments ().values ())
       aMsg.addPayload (_createPayload (aPayload.getData ().bytes (), aPayload.getContentID (), aPayload.getMimeType ()));
@@ -173,7 +177,9 @@ public final class MPTrigger
 
     final TCIncomingMessage aMsg = new TCIncomingMessage ();
     aMsg.setMetadata (_createMetadata (aErrorResponse.getMetadata (), TCPayloadType.ERROR_RESPONSE));
-    aMsg.addPayload (_createPayload (aErrorResponse.getErrorResponse ().getWriter ().getAsBytes (), null, CRegRep4.MIME_TYPE_EBRS_XML));
+    aMsg.addPayload (_createPayload (aErrorResponse.getErrorResponse ().getWriter ().getAsBytes (),
+                                     aErrorResponse.getTopLevelContentID (),
+                                     CRegRep4.MIME_TYPE_EBRS_XML));
     return _forwardMessage (aMsg, sDestURL);
   }
 }
