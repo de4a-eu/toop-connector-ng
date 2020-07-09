@@ -67,8 +67,8 @@ public class AS4InterfaceServlet extends HttpServlet {
         LOG.debug("Read inbound message");
       }
 
-      if (LOG.isInfoEnabled())
-        LOG.info ("Incoming message to '/from-as4', assuming UTF-8:\n" + new String (bytes, StandardCharsets.UTF_8));
+      if (LOG.isDebugEnabled())
+        LOG.debug ("Incoming message to '/from-as4', assuming UTF-8:\n" + new String (bytes, StandardCharsets.UTF_8));
 
       // Todo, remove buffering later
       try (final NonBlockingByteArrayInputStream is = new NonBlockingByteArrayInputStream(bytes)) {
