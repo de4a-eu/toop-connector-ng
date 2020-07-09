@@ -166,11 +166,13 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
                                                                                                                                 .getValue ()));
         LOGGER.info ("Incoming Transport Metadata: " + aMetadata.toString ());
 
+        final String sTopLevelContentID = aMainPayload.getId ();
+
         final IEDMTopLevelObject aTopLevel = EDMPayloadDeterminator.parseAndFind (aMainPayload.getSourceStream ());
         if (aTopLevel instanceof EDMRequest)
         {
           // Request
-          s_aIncomingHandler.handleIncomingRequest (new IncomingEDMRequest ((EDMRequest) aTopLevel, aMetadata));
+          s_aIncomingHandler.handleIncomingRequest (new IncomingEDMRequest ((EDMRequest) aTopLevel, sTopLevelContentID, aMetadata));
         }
         else
           if (aTopLevel instanceof EDMResponse)
@@ -184,13 +186,18 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
                                            .contentID (aItem.getId ())
                                            .data (StreamHelper.getAllBytes (aItem.getSourceStream ()))
                                            .build ());
-            s_aIncomingHandler.handleIncomingResponse (new IncomingEDMResponse ((EDMResponse) aTopLevel, aAttachments, aMetadata));
+            s_aIncomingHandler.handleIncomingResponse (new IncomingEDMResponse ((EDMResponse) aTopLevel,
+                                                                                sTopLevelContentID,
+                                                                                aAttachments,
+                                                                                aMetadata));
           }
           else
             if (aTopLevel instanceof EDMErrorResponse)
             {
               // Error Response
-              s_aIncomingHandler.handleIncomingErrorResponse (new IncomingEDMErrorResponse ((EDMErrorResponse) aTopLevel, aMetadata));
+              s_aIncomingHandler.handleIncomingErrorResponse (new IncomingEDMErrorResponse ((EDMErrorResponse) aTopLevel,
+                                                                                            sTopLevelContentID,
+                                                                                            aMetadata));
             }
             else
               ToopKafkaClient.send (EErrorLevel.ERROR, () -> "Unsuspported Message: " + aTopLevel);
