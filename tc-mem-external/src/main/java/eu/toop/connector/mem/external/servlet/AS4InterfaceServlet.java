@@ -16,7 +16,6 @@
 package eu.toop.connector.mem.external.servlet;
 
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 
 import javax.servlet.annotation.WebServlet;
@@ -52,7 +51,7 @@ public class AS4InterfaceServlet extends HttpServlet {
   @Override
   protected void doPost(final HttpServletRequest req, final HttpServletResponse resp) throws IOException {
 
-    LOG.info("Received a message from the gateway");
+    LOG.info("Received a mem 'external' message from the gateway");
 
     // Convert the request headers into MimeHeaders
     final MimeHeaders mimeHeaders = readMimeHeaders(req);
@@ -67,9 +66,6 @@ public class AS4InterfaceServlet extends HttpServlet {
       if (LOG.isDebugEnabled()) {
         LOG.debug("Read inbound message");
       }
-
-      if (LOG.isDebugEnabled())
-        LOG.debug ("Incoming message to '/from-as4', assuming UTF-8:\n" + new String (bytes, StandardCharsets.UTF_8));
 
       MEMDumper.dumpIncomingMessage(bytes);
 
