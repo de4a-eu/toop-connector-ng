@@ -38,16 +38,17 @@ import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.system.SystemProperties;
 import com.helger.datetime.util.PDTIOHelper;
 import com.helger.peppol.utils.PeppolCertificateHelper;
+import com.helger.phase4.CAS4;
 import com.helger.phase4.attachment.EAS4CompressionMode;
 import com.helger.phase4.attachment.Phase4OutgoingAttachment;
 import com.helger.phase4.cef.Phase4CEFEndpointDetailProviderConstant;
-import com.helger.phase4.cef.Phase4CEFSender;
 import com.helger.phase4.cef.Phase4CEFSender.CEFUserMessageBuilder;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
 import com.helger.phase4.dump.AS4DumpManager;
 import com.helger.phase4.http.AS4HttpDebug;
 import com.helger.phase4.messaging.domain.MessageHelperMethods;
 import com.helger.phase4.mgr.MetaAS4Manager;
+import com.helger.phase4.model.MessageProperty;
 import com.helger.phase4.model.pmode.IPModeManager;
 import com.helger.phase4.model.pmode.PMode;
 import com.helger.phase4.model.pmode.PModePayloadService;
@@ -190,24 +191,31 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       // See :
       // http://wiki.ds.unipi.gr/display/TOOP/Routing+Information+Profile
       // http://wiki.ds.unipi.gr/display/CCTF/TOOP+AS4+GW+Interface+specification
-      final CEFUserMessageBuilder aBuilder = Phase4CEFSender.builder ()
-                                                            .httpClientFactory (new TCHttpClientSettings ())
-                                                            .cryptoFactory (aCF)
-                                                            .senderParticipantID (aRoutingInfo.getSenderID ())
-                                                            .receiverParticipantID (aRoutingInfo.getReceiverID ())
-                                                            .documentTypeID (aRoutingInfo.getDocumentTypeID ())
-                                                            .processID (aRoutingInfo.getProcessID ())
-                                                            .conversationID (MessageHelperMethods.createRandomConversationID ())
-                                                            .fromPartyIDType (null)
-                                                            .fromPartyID (Phase4Config.getFromPartyID ())
-                                                            .fromRole ("http://www.toop.eu/edelivery/gateway")
-                                                            .toPartyIDType (null)
-                                                            .toPartyID (PeppolCertificateHelper.getCN (aTheirCert.getSubjectX500Principal ()
-                                                                                                                 .getName ()))
-                                                            .toRole ("http://www.toop.eu/edelivery/gateway")
-                                                            .rawResponseConsumer (new RawResponseWriter ())
-                                                            .endpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
-                                                                                                                                  aRoutingInfo.getEndpointURL ()));
+      final CEFUserMessageBuilder aBuilder = new CEFUserMessageBuilder ()
+      {
+        @Override
+        protected void customizeBeforeSending () throws Phase4Exception
+        {
+          // Don't use the type attribute
+          addMessageProperty (MessageProperty.builder ().name (CAS4.ORIGINAL_SENDER).value (m_aSenderID.getURIEncoded ()));
+          addMessageProperty (MessageProperty.builder ().name (CAS4.FINAL_RECIPIENT).value (m_aReceiverID.getURIEncoded ()));
+        }
+      }.httpClientFactory (new TCHttpClientSettings ())
+       .cryptoFactory (aCF)
+       .senderParticipantID (aRoutingInfo.getSenderID ())
+       .receiverParticipantID (aRoutingInfo.getReceiverID ())
+       .documentTypeID (aRoutingInfo.getDocumentTypeID ())
+       .processID (aRoutingInfo.getProcessID ())
+       .conversationID (MessageHelperMethods.createRandomConversationID ())
+       .fromPartyIDType (null)
+       .fromPartyID (Phase4Config.getFromPartyID ())
+       .fromRole ("http://www.toop.eu/edelivery/gateway")
+       .toPartyIDType (null)
+       .toPartyID (PeppolCertificateHelper.getCN (aTheirCert.getSubjectX500Principal ().getName ()))
+       .toRole ("http://www.toop.eu/edelivery/gateway")
+       .rawResponseConsumer (new RawResponseWriter ())
+       .endpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
+                                                                             aRoutingInfo.getEndpointURL ()));
 
       // Payload/attachments
       int nPayloadIndex = 0;

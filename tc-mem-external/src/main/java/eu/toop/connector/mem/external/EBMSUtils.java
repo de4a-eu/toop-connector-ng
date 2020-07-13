@@ -268,8 +268,9 @@ public final class EBMSUtils {
         eMessageProperties.appendChild(_property("RefToMessageId", metadata.refToMessageId));
         eMessageProperties.appendChild(_property("ConversationId", metadata.conversationId));
 
-        eMessageProperties.appendChild(_property("originalSender", metadata.senderId));
-        eMessageProperties.appendChild(_property("finalRecipient", metadata.receiverId));
+        // split in type and value is not desired
+        eMessageProperties.appendChild(_property("originalSender", metadata.senderId.getURIEncoded()));
+        eMessageProperties.appendChild(_property("finalRecipient", metadata.receiverId.getURIEncoded()));
       }
 
       {
@@ -416,31 +417,38 @@ public final class EBMSUtils {
     }
 
     final Node messagePropsNode = SoapXPathUtil.safeFindSingleNode(soapHeader, "//:MessageProperties");
-    final String sSenderId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-        ".//:Property[@name='originalSender']/text()");
-    final String sReceiverId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-        ".//:Property[@name='finalRecipient']/text()");
-    final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-        ".//:Property[@name='Action']/text()");
-    String sProcidType;
+
+    String sSenderIdType;
     try {
-      sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-        ".//:Property[@name='Service']/@type");
+      sSenderIdType= SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='originalSender']/@type");
     } catch (final IllegalArgumentException ex) {
-      sProcidType = null;
+      sSenderIdType = null;
     }
-    final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-        ".//:Property[@name='Service']/text()");
+    final String sSenderId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='originalSender']/text()");
+
+    String sReceiverIdType;
+    try {
+      sReceiverIdType= SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='finalRecipient']/@type");
+    } catch (final IllegalArgumentException ex){
+      sReceiverIdType = null;
+    }
+    final String sReceiverId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='finalRecipient']/text()");
+
+    // Document can never have a type attribute
+    final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Action']/text()");
+
+    final String sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Service']/@type");
+    final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Service']/text()");
 
     final IIdentifierFactory aIF = TCConfig.getIdentifierFactory();
-    final IParticipantIdentifier sender = aIF.parseParticipantIdentifier(sSenderId);
-    if (sender == null) LOG.warn ("Failed to parse sender participant identifier '"+sSenderId+"'");
-    final IParticipantIdentifier receiver = aIF.parseParticipantIdentifier(sReceiverId);
-    if (receiver == null) LOG.warn ("Failed to parse receiver participant identifier '"+sReceiverId+"'");
+    final IParticipantIdentifier sender = sSenderIdType != null ? aIF.createParticipantIdentifier(sSenderIdType, sSenderId) : aIF.parseParticipantIdentifier(sSenderId);
+    if (sender == null) LOG.warn ("Failed to create/parse sender participant identifier '"+sSenderIdType+"' and '"+sSenderId+"'");
+    final IParticipantIdentifier receiver = sReceiverIdType != null ? aIF.createParticipantIdentifier(sReceiverIdType, sReceiverId) : aIF.parseParticipantIdentifier(sReceiverId);
+    if (receiver == null) LOG.warn ("Failed to create/parse receiver participant identifier '"+sReceiverIdType+"' and '"+sReceiverId+"'");
     final IDocumentTypeIdentifier doctypeid = aIF.parseDocumentTypeIdentifier(sDoctypeId);
     if (doctypeid == null) LOG.warn ("Failed to parse document type identifier '"+sDoctypeId+"'");
-    final IProcessIdentifier procid = StringHelper.hasText (sProcidType) ? aIF.createProcessIdentifier(sProcidType, sProcid) : aIF.parseProcessIdentifier(sProcid);
-    if (procid == null) LOG.warn ("Failed to parse process identifier '"+sProcidType+"' and '"+sProcid+"'");
+    final IProcessIdentifier procid = aIF.createProcessIdentifier(sProcidType, sProcid);
+    if (procid == null) LOG.warn ("Failed to create process identifier '"+sProcidType+"' and '"+sProcid+"'");
 
     return meMessage.senderID(sender).receiverID(receiver).processID(procid).docTypeID(doctypeid).build();
   }
@@ -592,8 +600,8 @@ public final class EBMSUtils {
 
     submissionData.targetURL = gatewayRoutingMetadata.getEndpointURL();
 
-    submissionData.senderId = gatewayRoutingMetadata.getSenderID().getURIEncoded();
-    submissionData.receiverId = gatewayRoutingMetadata.getReceiverID().getURIEncoded();
+    submissionData.senderId = gatewayRoutingMetadata.getSenderID();
+    submissionData.receiverId = gatewayRoutingMetadata.getReceiverID();
 
     try {
       // DER encoded X509 certificate

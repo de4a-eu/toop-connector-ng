@@ -18,6 +18,8 @@ package eu.toop.connector.mem.external;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
+import com.helger.peppolid.IParticipantIdentifier;
+
 import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 
 /**
@@ -96,10 +98,10 @@ public class SubmissionMessageProperties {
   /**
    * The participant identifier of the sender
    */
-  public String senderId;
+  public IParticipantIdentifier senderId;
 
   /**
    * The participant identifier of the receiver
    */
-  public String receiverId;
+  public IParticipantIdentifier receiverId;
 }
