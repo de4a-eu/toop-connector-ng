@@ -437,7 +437,7 @@ public final class EBMSUtils {
     // Document can never have a type attribute
     final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Action']/text()");
 
-    final String sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Service']/@type");
+    final String sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='ServiceType']/text()");
     final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Service']/text()");
 
     final IIdentifierFactory aIF = TCConfig.getIdentifierFactory();
