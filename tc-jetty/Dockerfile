@@ -14,7 +14,7 @@
 # limitations under the License.
 #
 
-FROM tomcat:8-jre8
+FROM adoptopenjdk:8-jre-hotspot
 
 ARG VERSION="2.0.0-rc2"
 ARG JAR_NAME=tc-jetty-${VERSION}-full.jar
@@ -25,8 +25,7 @@ WORKDIR /tc-jetty
 ENV JAVA_OPTS="$JAVA_OPTS -Djava.security.egd=file:/dev/urandom" \
     JAR_NAME="${JAR_NAME}"
 
-RUN wget https://oss.sonatype.org/service/local/repositories/releases/content/eu/toop/tc-jetty/${VERSION}/${JAR_NAME}
-#ADD ./target/${JAR_NAME} ./
+RUN curl https://oss.sonatype.org/service/local/repositories/releases/content/eu/toop/tc-jetty/${VERSION}/${JAR_NAME} -o tc-jetty.jar
 
-ENTRYPOINT ["java", "-jar", "tc-jetty-2.0.0-rc2-full.jar"]
+ENTRYPOINT ["java", "-jar", "tc-jetty.jar"]
 CMD ["start"]
