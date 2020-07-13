@@ -422,8 +422,13 @@ public final class EBMSUtils {
         ".//:Property[@name='finalRecipient']/text()");
     final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
         ".//:Property[@name='Action']/text()");
-    final String sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
+    String sProcidType;
+    try {
+      sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
         ".//:Property[@name='Service']/@type");
+    } catch (final IllegalArgumentException ex) {
+      sProcidType = null;
+    }
     final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
         ".//:Property[@name='Service']/text()");
 
