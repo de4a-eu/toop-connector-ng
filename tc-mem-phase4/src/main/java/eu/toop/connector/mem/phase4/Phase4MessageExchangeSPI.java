@@ -60,7 +60,6 @@ import com.helger.servlet.ServletHelper;
 
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
-import eu.toop.connector.api.me.dump.MEMDumper;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
@@ -157,7 +156,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     final String sIncomingDumpPath = Phase4Config.getDumpPathIncoming ();
     if (StringHelper.hasText (sIncomingDumpPath))
     {
-      LOGGER.info ("Dumping incoming AS4 messages to '" + sIncomingDumpPath + "'");
+      LOGGER.info ("Dumping incoming phase4 AS4 messages to '" + sIncomingDumpPath + "'");
       AS4DumpManager.setIncomingDumper (new AS4IncomingDumperFileBased ( (aMessageMetadata,
                                                                           aHttpHeaderMap) -> new File (sIncomingDumpPath,
                                                                                                        PDTIOHelper.getLocalDateTimeForFilename (aMessageMetadata.getIncomingDT ()) +
@@ -168,7 +167,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     final String sOutgoingDumpPath = Phase4Config.getDumpPathOutgoing ();
     if (StringHelper.hasText (sOutgoingDumpPath))
     {
-      LOGGER.info ("Dumping outgoing AS4 messages to '" + sOutgoingDumpPath + "'");
+      LOGGER.info ("Dumping outgoing phase4 AS4 messages to '" + sOutgoingDumpPath + "'");
       AS4DumpManager.setOutgoingDumper (new AS4OutgoingDumperFileBased ( (sMessageID,
                                                                           nTry) -> new File (sOutgoingDumpPath,
                                                                                              PDTIOHelper.getCurrentLocalDateTimeForFilename () +
@@ -249,7 +248,6 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
   public void sendOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
     LOGGER.info ("[phase4] sendOutgoing");
-    MEMDumper.dumpOutgoingMessage (aRoutingInfo, aMessage);
     _sendOutgoing (m_aCF, aRoutingInfo, aMessage);
   }
 
