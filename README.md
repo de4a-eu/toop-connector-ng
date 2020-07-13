@@ -87,9 +87,9 @@ The following configuration properties are **supported** - some of them have def
 * **`toop.mem.as4.notificationWaitTimeout`** (long) - the timeout for a notification in milliseconds
 * **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to
 * **`toop.mem.outgoing.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of outgoing messages. By default this is disabled. 
-* **`toop.mem.outgoing.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the outgoing messages are stored. This should be an absolute path.
+* **`toop.mem.outgoing.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the outgoing messages are stored. This should be an absolute path. The filenames in the directory start with `toop-mem-external-outgoing-`.
 * **`toop.mem.incoming.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of incoming messages. By default this is disabled.
-* **`toop.mem.incoming.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the incoming messages are stored. This should be an absolute path.
+* **`toop.mem.incoming.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the incoming messages are stored. This should be an absolute path. The filenames in the directory start with `toop-mem-external-incoming-`.
 
 ### Properties for MEM implementation `phase4`
 
