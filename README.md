@@ -188,8 +188,9 @@ Do a simple `mvn clean install` on the command line.
 # News and Noteworthy
 
 Next version:
-* Updated to phase4 0.10.1 which finally fixes the XLink JAXB error, since it no longer contains its own version of xlink.xsd
-* Added new configuration options to dump incoming and outgoing AS4 messages more easily 
+* Updated phase4 version which finally fixes the XLink JAXB error, since it no longer contains its own version of xlink.xsd
+* Added new configuration options to dump incoming and outgoing AS4 messages more easily
+* Fixed a bug, that the "Content-ID" field was not passed to the "TCIncomingMessage"
 
 2020-06-19: release of `2.0.0-rc2`
 * Fixed a regression in `/user/submit/...` API that accidentally delivered HTTP 400 in case of success
