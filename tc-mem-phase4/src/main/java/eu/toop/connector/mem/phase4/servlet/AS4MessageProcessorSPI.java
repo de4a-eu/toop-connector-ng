@@ -98,7 +98,8 @@ public class AS4MessageProcessorSPI implements IAS4ServletMessageProcessorSPI
     final String sValue = aProp.getValue ();
     if (sType == null)
     {
-      LOGGER.warn ("The particpant identifier is provided without a 'type' attribute: '" + sValue + "'");
+      if (LOGGER.isDebugEnabled ())
+        LOGGER.debug ("The particpant identifier is provided without a 'type' attribute: '" + sValue + "'");
       return aIF.parseParticipantIdentifier (sValue);
     }
     return aIF.createParticipantIdentifier (sType, sValue);
