@@ -437,7 +437,13 @@ public final class EBMSUtils {
     // Document can never have a type attribute
     final String sDoctypeId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Action']/text()");
 
-    final String sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='ServiceType']/text()");
+    // For RC2 backwards compatibility
+    String sProcidType;
+    try {
+      sProcidType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='ServiceType']/text()");
+    } catch (final IllegalArgumentException ex) {
+      sProcidType = null;
+    }
     final String sProcid = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='Service']/text()");
 
     final IIdentifierFactory aIF = TCConfig.getIdentifierFactory();
@@ -447,8 +453,8 @@ public final class EBMSUtils {
     if (receiver == null) LOG.warn ("Failed to create/parse receiver participant identifier '"+sReceiverIdType+"' and '"+sReceiverId+"'");
     final IDocumentTypeIdentifier doctypeid = aIF.parseDocumentTypeIdentifier(sDoctypeId);
     if (doctypeid == null) LOG.warn ("Failed to parse document type identifier '"+sDoctypeId+"'");
-    final IProcessIdentifier procid = aIF.createProcessIdentifier(sProcidType, sProcid);
-    if (procid == null) LOG.warn ("Failed to create process identifier '"+sProcidType+"' and '"+sProcid+"'");
+    final IProcessIdentifier procid = sProcidType != null ? aIF.createProcessIdentifier(sProcidType, sProcid) : aIF.parseProcessIdentifier(sProcid);
+    if (procid == null) LOG.warn ("Failed to create/parse process identifier '"+sProcidType+"' and '"+sProcid+"'");
 
     return meMessage.senderID(sender).receiverID(receiver).processID(procid).docTypeID(doctypeid).build();
   }
