@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
@@ -30,8 +31,10 @@ import org.slf4j.LoggerFactory;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.base64.Base64;
+import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.io.file.FileOperationManager;
 import com.helger.commons.io.file.SimpleFileIO;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
@@ -85,6 +88,19 @@ public final class MEMDumper {
 
   @Nonnull
   @Nonempty
+  private static final File _getTargetFolder(@Nonnull final String sPath) {
+    final LocalDate aLD = PDTFactory.getCurrentLocalDate();
+    final File ret = new File(sPath,
+                              StringHelper.getLeadingZero(aLD.getYear(), 4) + "/" +
+                                     StringHelper.getLeadingZero(aLD.getMonthValue(), 2) +
+                                     "/" +
+                                     StringHelper.getLeadingZero(aLD.getDayOfMonth(), 2));
+    FileOperationManager.INSTANCE.createDirRecursiveIfNotExisting(ret);
+    return ret;
+  }
+
+  @Nonnull
+  @Nonempty
   private static final String _getFileID() {
     return PDTIOHelper.getCurrentLocalDateTimeForFilename() + "-" + GlobalIDFactory.getNewIntID();
   }
@@ -123,7 +139,8 @@ public final class MEMDumper {
                                                                                 CertificateHelper.getPEMEncodedCertificate(aRoutingInfo.getCertificate())))
                                                   .addJson("message", _asJson(aMessage));
 
-        final File aTargetFile = new File(sPath, "toop-mem-external-outgoing-" + _getFileID() + ".json");
+        final File aTargetFile = new File(_getTargetFolder(sPath),
+                                          "toop-mem-external-outgoing-" + _getFileID() + ".json");
         try (final OutputStream aOS = FileHelper.getBufferedOutputStream(aTargetFile)) {
           new JsonWriter(new JsonWriterSettings().setIndentEnabled(true)).writeToStream(aJson,
                                                                                         aOS,
@@ -144,7 +161,8 @@ public final class MEMDumper {
         try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream()) {
           aMessage.writeTo(aBAOS);
 
-          final File aTargetFile = new File(sPath, "toop-mem-external-outgoing-" + _getFileID() + ".raw");
+          final File aTargetFile = new File(_getTargetFolder(sPath),
+                                            "toop-mem-external-outgoing-" + _getFileID() + ".raw");
           if (SimpleFileIO.writeFile(aTargetFile, aBAOS.toByteArray()).isSuccess())
             LOGGER.info("Wrote outgoing MEM dump file '" + aTargetFile.getAbsolutePath() + "'");
           else
@@ -162,7 +180,7 @@ public final class MEMDumper {
       final String sPath = TCConfig.MEM.getMEMIncomingDumpPath();
       if (StringHelper.hasText(sPath)) {
         final String sFilename = "toop-mem-external-incoming-" + _getFileID() + ".raw";
-        final File aTargetFile = new File(sPath, sFilename);
+        final File aTargetFile = new File(_getTargetFolder(sPath), sFilename);
         if (SimpleFileIO.writeFile(aTargetFile, aBytes).isSuccess())
           LOGGER.info("Wrote incoming MEM dump file '" + aTargetFile.getAbsolutePath() + "'");
         else

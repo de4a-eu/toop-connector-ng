@@ -19,6 +19,7 @@ import java.io.File;
 import java.security.KeyStore;
 import java.security.KeyStore.PrivateKeyEntry;
 import java.security.cert.X509Certificate;
+import java.time.LocalDate;
 
 import javax.annotation.Nonnull;
 import javax.naming.InvalidNameException;
@@ -30,13 +31,13 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.IsSPIImplementation;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.commons.datetime.PDTFactory;
 import com.helger.commons.exception.InitializationException;
-import com.helger.commons.io.file.FilenameHelper;
+import com.helger.commons.io.file.FileOperationManager;
 import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
 import com.helger.commons.system.SystemProperties;
-import com.helger.datetime.util.PDTIOHelper;
 import com.helger.peppol.utils.PeppolCertificateHelper;
 import com.helger.phase4.CAS4;
 import com.helger.phase4.attachment.EAS4CompressionMode;
@@ -100,6 +101,21 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     return ID;
   }
 
+  @Nonnull
+  @Nonempty
+  private static final File _getTargetFolder (@Nonnull final String sPath)
+  {
+    final LocalDate aLD = PDTFactory.getCurrentLocalDate ();
+    final File ret = new File (sPath,
+                               StringHelper.getLeadingZero (aLD.getYear (), 4) +
+                                      "/" +
+                                      StringHelper.getLeadingZero (aLD.getMonthValue (), 2) +
+                                      "/" +
+                                      StringHelper.getLeadingZero (aLD.getDayOfMonth (), 2));
+    FileOperationManager.INSTANCE.createDirRecursiveIfNotExisting (ret);
+    return ret;
+  }
+
   public void registerIncomingHandler (@Nonnull final ServletContext aServletContext, @Nonnull final IMEIncomingHandler aIncomingHandler)
   {
     ValueEnforcer.notNull (aServletContext, "ServletContext");
@@ -159,9 +175,8 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     {
       LOGGER.info ("Dumping incoming phase4 AS4 messages to '" + sIncomingDumpPath + "'");
       AS4DumpManager.setIncomingDumper (new AS4IncomingDumperFileBased ( (aMessageMetadata,
-                                                                          aHttpHeaderMap) -> new File (sIncomingDumpPath,
-                                                                                                       PDTIOHelper.getLocalDateTimeForFilename (aMessageMetadata.getIncomingDT ()) +
-                                                                                                                          ".as4in")));
+                                                                          aHttpHeaderMap) -> new File (_getTargetFolder (sIncomingDumpPath),
+                                                                                                       AS4IncomingDumperFileBased.IFileProvider.getFilename (aMessageMetadata))));
     }
 
     // Set outgoing dumper
@@ -170,13 +185,9 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     {
       LOGGER.info ("Dumping outgoing phase4 AS4 messages to '" + sOutgoingDumpPath + "'");
       AS4DumpManager.setOutgoingDumper (new AS4OutgoingDumperFileBased ( (sMessageID,
-                                                                          nTry) -> new File (sOutgoingDumpPath,
-                                                                                             PDTIOHelper.getCurrentLocalDateTimeForFilename () +
-                                                                                                                "-" +
-                                                                                                                FilenameHelper.getAsSecureValidASCIIFilename (sMessageID) +
-                                                                                                                "-" +
-                                                                                                                nTry +
-                                                                                                                ".as4out")));
+                                                                          nTry) -> new File (_getTargetFolder (sOutgoingDumpPath),
+                                                                                             AS4OutgoingDumperFileBased.IFileProvider.getFilename (sMessageID,
+                                                                                                                                                   nTry))));
     }
   }
 
