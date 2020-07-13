@@ -79,6 +79,10 @@ The following configuration properties are **supported** - some of them have def
 * **`http.connection-timeout`** (int) - the HTTP connection timeout in milliseconds
 * **`http.read-timeout`** (int) - the HTTP read/socket timeout in milliseconds
 
+Note: this TOOP Connector uses a different configuration engine than the old version.
+
+Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src/main/resources/application.properties for the default configuration file
+
 ### Properties for MEM implementation `external`
 
 * **`toop.mem.as4.endpoint`** (string) - the AS4 endpoint
@@ -90,6 +94,8 @@ The following configuration properties are **supported** - some of them have def
 * **`toop.mem.outgoing.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the outgoing messages are stored. This should be an absolute path. The filenames in the directory start with `toop-mem-external-outgoing-`.
 * **`toop.mem.incoming.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of incoming messages. By default this is disabled.
 * **`toop.mem.incoming.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the incoming messages are stored. This should be an absolute path. The filenames in the directory start with `toop-mem-external-incoming-`.
+
+Note: the receiving endpoint for MEM implementation `external` is `/from-as4` - this must be part of your SMP endpoint URL.
 
 ### Properties for MEM implementation `phase4`
 
@@ -109,9 +115,7 @@ The following configuration properties are **supported** - some of them have def
 * **`phase4.truststore.path`** (string) - the path to the truststore (can be classpath relative or an absolute file)
 * **`phase4.truststore.password`** (string) - the password to access the truststore 
 
-Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src/main/resources/application.properties for the default configuration file
-
-Note: this TOOP Connector uses a different configuration engine than the old version.
+Note: the receiving endpoint for MEM implementation `phase4` is `/phase4` - this must be part of your SMP endpoint URL.
 
 # Running
 
