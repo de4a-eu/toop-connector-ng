@@ -61,9 +61,7 @@ public interface IMessageExchangeSPI
   void registerIncomingHandler (@Nonnull ServletContext aServletContext, @Nonnull IMEIncomingHandler aIncomingHandler);
 
   /**
-   * Trigger the message transmission in step 1/4 and 3/4.<br>
-   * Note: each implementation MUST take care of dumping using
-   * {@link eu.toop.connector.api.me.dump.MEMDumper}.
+   * Trigger the message transmission in step 1/4 and 3/4.
    *
    * @param aRoutingInfo
    *        Routing information. May not be <code>null</code>.

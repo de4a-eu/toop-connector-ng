@@ -42,7 +42,6 @@ import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.exception.InitializationException;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 
-import eu.toop.connector.api.me.dump.MEMDumper;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.kafkaclient.ToopKafkaClient;

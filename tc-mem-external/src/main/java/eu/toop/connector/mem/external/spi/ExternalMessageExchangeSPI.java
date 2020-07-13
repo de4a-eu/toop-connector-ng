@@ -26,7 +26,6 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.level.EErrorLevel;
 
 import eu.toop.connector.api.me.IMessageExchangeSPI;
-import eu.toop.connector.api.me.dump.MEMDumper;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
 import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
@@ -37,6 +36,7 @@ import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.connector.mem.external.MEMDelegate;
+import eu.toop.connector.mem.external.MEMDumper;
 import eu.toop.edm.EDMErrorResponse;
 import eu.toop.edm.EDMRequest;
 import eu.toop.edm.EDMResponse;

@@ -1,4 +1,4 @@
-package eu.toop.connector.api.me.dump;
+package eu.toop.connector.mem.external;
 
 import java.io.File;
 import java.io.IOException;
