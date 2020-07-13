@@ -71,7 +71,6 @@ The following configuration properties are **supported** - some of them have def
 * **`toop.r2d2.sml.clientcert`** (boolean) - is a client certificate need when talking to this SML?
 * **`toop.r2d2.smp.url`** (string) - the absolute URL of the SMP to use, if `toop.r2d2.usedns` is set to `false`
 * **`toop.mem.implementation`** (string) - the ID of the AS4 implementation to use. Can be either `external` or `phase4` - depending on this, different configuration properties must be configured (see below)
-* **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to
 * **`http.proxy.enabled`** (boolean) - is an HTTP proxy needed?
 * **`http.proxy.address`** (string) - the URL of the proxy server (including the scheme)
 * **`http.proxy.port`** (int) - the port to access the HTTP proxy server
@@ -86,6 +85,11 @@ The following configuration properties are **supported** - some of them have def
 * **`toop.mem.as4.gw.partyid`** (string) - the AS4 gateway party ID
 * **`toop.mem.as4.tc.partyid`** (string) - the AS4 TOOP Connector party ID
 * **`toop.mem.as4.notificationWaitTimeout`** (long) - the timeout for a notification in milliseconds
+* **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to
+* **`toop.mem.outgoing.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of outgoing messages. By default this is disabled. 
+* **`toop.mem.outgoing.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the outgoing messages are stored. This should be an absolute path.
+* **`toop.mem.incoming.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of incoming messages. By default this is disabled.
+* **`toop.mem.incoming.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the incoming messages are stored. This should be an absolute path.
 
 ### Properties for MEM implementation `phase4`
 
