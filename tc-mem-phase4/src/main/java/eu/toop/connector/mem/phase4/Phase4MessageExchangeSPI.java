@@ -60,6 +60,7 @@ import com.helger.servlet.ServletHelper;
 
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
+import eu.toop.connector.api.me.dump.MEMDumper;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
@@ -248,7 +249,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
   public void sendOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
     LOGGER.info ("[phase4] sendOutgoing");
-    // No difference
+    MEMDumper.dumpOutgoingMessage (aRoutingInfo, aMessage);
     _sendOutgoing (m_aCF, aRoutingInfo, aMessage);
   }
 

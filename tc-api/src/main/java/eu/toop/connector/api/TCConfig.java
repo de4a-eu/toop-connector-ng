@@ -294,6 +294,28 @@ public final class TCConfig
     {
       return getConfig ().getAsString ("toop.mem.incoming.url");
     }
+
+    public static boolean isMEMOutgoingDumpEnabled ()
+    {
+      return getConfig ().getAsBoolean ("toop.mem.outgoing.dump.enabled", false);
+    }
+
+    @Nullable
+    public static String getMEMOutgoingDumpPath ()
+    {
+      return getConfig ().getAsString ("toop.mem.outgoing.dump.path");
+    }
+
+    public static boolean isMEMIncomingDumpEnabled ()
+    {
+      return getConfig ().getAsBoolean ("toop.mem.incoming.dump.enabled", false);
+    }
+
+    @Nullable
+    public static String getMEMIncomingDumpPath ()
+    {
+      return getConfig ().getAsString ("toop.mem.incoming.dump.path");
+    }
   }
 
   public static class HTTP

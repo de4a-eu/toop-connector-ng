@@ -26,6 +26,7 @@ import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.error.level.EErrorLevel;
 
 import eu.toop.connector.api.me.IMessageExchangeSPI;
+import eu.toop.connector.api.me.dump.MEMDumper;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
 import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
@@ -123,6 +124,7 @@ public class ExternalMessageExchangeSPI implements IMessageExchangeSPI {
 
   public void sendOutgoing(@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage)
       throws MEOutgoingException {
+    MEMDumper.dumpOutgoingMessage(aRoutingInfo, aMessage);
     MEMDelegate.getInstance().sendMessage(aRoutingInfo, aMessage);
   }
 
