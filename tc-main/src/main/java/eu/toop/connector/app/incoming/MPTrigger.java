@@ -124,9 +124,19 @@ public final class MPTrigger
   }
 
   @Nonnull
+  @Nonempty
+  private static String _getConfiguredDestURL ()
+  {
+    final String ret = TCConfig.MEM.getMEMIncomingURL ();
+    if (StringHelper.hasNoText (ret))
+      throw new IllegalStateException ("The MEM incoming URL for forwarding to DC/DP is not configured.");
+    return ret;
+  }
+
+  @Nonnull
   public static ESuccess forwardMessage (@Nonnull final IncomingEDMRequest aRequest)
   {
-    return forwardMessage (aRequest, TCConfig.MEM.getMEMIncomingURL ());
+    return forwardMessage (aRequest, _getConfiguredDestURL ());
   }
 
   @Nonnull
@@ -145,7 +155,7 @@ public final class MPTrigger
   @Nonnull
   public static ESuccess forwardMessage (@Nonnull final IncomingEDMResponse aResponse)
   {
-    return forwardMessage (aResponse, TCConfig.MEM.getMEMIncomingURL ());
+    return forwardMessage (aResponse, _getConfiguredDestURL ());
   }
 
   @Nonnull
@@ -167,7 +177,7 @@ public final class MPTrigger
   @Nonnull
   public static ESuccess forwardMessage (@Nonnull final IncomingEDMErrorResponse aErrorResponse)
   {
-    return forwardMessage (aErrorResponse, TCConfig.MEM.getMEMIncomingURL ());
+    return forwardMessage (aErrorResponse, _getConfiguredDestURL ());
   }
 
   @Nonnull
