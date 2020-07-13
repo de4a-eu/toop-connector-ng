@@ -7,12 +7,18 @@ import java.nio.charset.StandardCharsets;
 
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
+import javax.xml.soap.SOAPException;
+import javax.xml.soap.SOAPMessage;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.base64.Base64;
+import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.io.file.FileHelper;
+import com.helger.commons.io.file.SimpleFileIO;
+import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 import com.helger.commons.string.StringHelper;
 import com.helger.datetime.util.PDTIOHelper;
 import com.helger.json.IJsonArray;
@@ -35,6 +41,36 @@ public final class MEMDumper
 
   private MEMDumper ()
   {}
+
+  @Nonnull
+  private static IJsonObject _asJson (@Nonnull final MEMessage aMessage)
+  {
+    final IJsonObject ret = new JsonObject ();
+    if (aMessage.getSenderID () != null)
+      ret.add ("sender", aMessage.getSenderID ().getURIEncoded ());
+    if (aMessage.getReceiverID () != null)
+      ret.add ("receiver", aMessage.getReceiverID ().getURIEncoded ());
+    if (aMessage.getDoctypeID () != null)
+      ret.add ("doctype", aMessage.getDoctypeID ().getURIEncoded ());
+    if (aMessage.getProcessID () != null)
+      ret.add ("process", aMessage.getProcessID ().getURIEncoded ());
+    final IJsonArray aJsonPayloads = new JsonArray ();
+    for (final MEPayload aPayload : aMessage.payloads ())
+    {
+      aJsonPayloads.add (new JsonObject ().add ("mimeType", aPayload.getMimeTypeString ())
+                                          .add ("contentID", aPayload.getContentID ())
+                                          .add ("data", Base64.safeEncodeBytes (aPayload.getData ().bytes ())));
+    }
+    ret.addJson ("payloads", aJsonPayloads);
+    return ret;
+  }
+
+  @Nonnull
+  @Nonempty
+  private static final String _getFileID ()
+  {
+    return PDTIOHelper.getCurrentLocalDateTimeForFilename () + "-" + GlobalIDFactory.getNewIntID ();
+  }
 
   /**
    * Dump an outgoing message if dumping is enabled.
@@ -64,40 +100,68 @@ public final class MEMDumper
 
                                                                               .add ("endpointURL", aRoutingInfo.getEndpointURL ())
                                                                               .add ("certificate",
-                                                                                    CertificateHelper.getPEMEncodedCertificate (aRoutingInfo.getCertificate ())));
-        final IJsonObject aJsonMessage = new JsonObject ();
-        if (aMessage.getSenderID () != null)
-          aJsonMessage.add ("sender", aMessage.getSenderID ().getURIEncoded ());
-        if (aMessage.getReceiverID () != null)
-          aJsonMessage.add ("receiver", aMessage.getReceiverID ().getURIEncoded ());
-        if (aMessage.getDoctypeID () != null)
-          aJsonMessage.add ("doctype", aMessage.getDoctypeID ().getURIEncoded ());
-        if (aMessage.getProcessID () != null)
-          aJsonMessage.add ("process", aMessage.getProcessID ().getURIEncoded ());
-        final IJsonArray aJsonPayloads = new JsonArray ();
-        for (final MEPayload aPayload : aMessage.payloads ())
-        {
-          aJsonPayloads.add (new JsonObject ().add ("mimeType", aPayload.getMimeTypeString ())
-                                              .add ("contentID", aPayload.getContentID ())
-                                              .add ("data", Base64.safeEncodeBytes (aPayload.getData ().bytes ())));
-        }
-        aJsonMessage.addJson ("payloads", aJsonPayloads);
-        aJson.addJson ("message", aJsonMessage);
+                                                                                    CertificateHelper.getPEMEncodedCertificate (aRoutingInfo.getCertificate ())))
+                                                   .addJson ("message", _asJson (aMessage));
 
-        final String sFilename = "toop-outgoing-" + PDTIOHelper.getCurrentLocalDateTimeForFilename () + ".json";
-        final File aTargetFile = new File (sPath, sFilename);
+        final File aTargetFile = new File (sPath, "toop-mem-external-outgoing-" + _getFileID () + ".json");
         try (final OutputStream aOS = FileHelper.getBufferedOutputStream (aTargetFile))
         {
           new JsonWriter (new JsonWriterSettings ().setIndentEnabled (true)).writeToStream (aJson, aOS, StandardCharsets.UTF_8);
-          LOGGER.error ("Wrote outgoing MEM dump file '" + aTargetFile.getAbsolutePath () + "'");
+          LOGGER.info ("Wrote outgoing MEM dump file '" + aTargetFile.getAbsolutePath () + "'");
         }
         catch (final IOException ex)
         {
-          LOGGER.error ("Error writing to MEM dump file '" + aTargetFile.getAbsolutePath () + "'", ex);
+          LOGGER.error ("Error writing to outgoing MEM dump file '" + aTargetFile.getAbsolutePath () + "'", ex);
         }
       }
       else
         LOGGER.warn ("Dumping of outgoing MEM messages is enabled, but no dump path was configured. Not dumping the message.");
+    }
+  }
+
+  public static void dumpOutgoingMessage (@Nonnull final SOAPMessage aMessage)
+  {
+    if (TCConfig.MEM.isMEMOutgoingDumpEnabled ())
+    {
+      final String sPath = TCConfig.MEM.getMEMOutgoingDumpPath ();
+      if (StringHelper.hasText (sPath))
+      {
+        try (final NonBlockingByteArrayOutputStream aBAOS = new NonBlockingByteArrayOutputStream ())
+        {
+          aMessage.writeTo (aBAOS);
+
+          final File aTargetFile = new File (sPath, "toop-mem-external-outgoing-" + _getFileID () + ".raw");
+          if (SimpleFileIO.writeFile (aTargetFile, aBAOS.toByteArray ()).isSuccess ())
+            LOGGER.info ("Wrote outgoing MEM dump file '" + aTargetFile.getAbsolutePath () + "'");
+          else
+            LOGGER.error ("Error writing to outgoing MEM dump file '" + aTargetFile.getAbsolutePath () + "'");
+        }
+        catch (final SOAPException | IOException ex)
+        {
+          LOGGER.error ("Error dumping outgoing SOAP message", ex);
+        }
+      }
+      else
+        LOGGER.warn ("Dumping of outgoing MEM messages is enabled, but no dump path was configured. Not dumping the message.");
+    }
+  }
+
+  public static void dumpIncomingMessage (@Nonnull final byte [] aBytes)
+  {
+    if (TCConfig.MEM.isMEMIncomingDumpEnabled ())
+    {
+      final String sPath = TCConfig.MEM.getMEMIncomingDumpPath ();
+      if (StringHelper.hasText (sPath))
+      {
+        final String sFilename = "toop-mem-external-incoming-" + _getFileID () + ".raw";
+        final File aTargetFile = new File (sPath, sFilename);
+        if (SimpleFileIO.writeFile (aTargetFile, aBytes).isSuccess ())
+          LOGGER.info ("Wrote incoming MEM dump file '" + aTargetFile.getAbsolutePath () + "'");
+        else
+          LOGGER.error ("Error writing to incoming MEM dump file '" + aTargetFile.getAbsolutePath () + "'");
+      }
+      else
+        LOGGER.warn ("Dumping of incoming MEM messages is enabled, but no dump path was configured. Not dumping the message.");
     }
   }
 }

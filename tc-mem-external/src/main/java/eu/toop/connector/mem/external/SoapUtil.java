@@ -42,6 +42,7 @@ import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.exception.InitializationException;
 import com.helger.commons.io.stream.NonBlockingByteArrayOutputStream;
 
+import eu.toop.connector.api.me.dump.MEMDumper;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 import eu.toop.edm.error.EToopErrorCode;
 import eu.toop.kafkaclient.ToopKafkaClient;
@@ -100,6 +101,7 @@ public class SoapUtil {
    */
   public static SOAPMessage sendSOAPMessage(final SOAPMessage message, final URL endpoint) throws MEOutgoingException {
     ToopKafkaClient.send(EErrorLevel.INFO, () -> "Sending AS4 SOAP message to " + endpoint.toExternalForm());
+    MEMDumper.dumpOutgoingMessage(message);
     try {
       final SOAPConnection connection = soapConnectionFactory.createConnection();
       return connection.call(message, endpoint);

@@ -33,6 +33,7 @@ import com.helger.commons.io.stream.NonBlockingByteArrayInputStream;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.mime.CMimeType;
 
+import eu.toop.connector.api.me.dump.MEMDumper;
 import eu.toop.connector.api.me.incoming.MEIncomingException;
 import eu.toop.connector.mem.external.EBMSUtils;
 import eu.toop.connector.mem.external.MEMConstants;
@@ -69,6 +70,8 @@ public class AS4InterfaceServlet extends HttpServlet {
 
       if (LOG.isDebugEnabled())
         LOG.debug ("Incoming message to '/from-as4', assuming UTF-8:\n" + new String (bytes, StandardCharsets.UTF_8));
+
+      MEMDumper.dumpIncomingMessage(bytes);
 
       // Todo, remove buffering later
       try (final NonBlockingByteArrayInputStream is = new NonBlockingByteArrayInputStream(bytes)) {
