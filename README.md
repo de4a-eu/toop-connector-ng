@@ -190,7 +190,9 @@ Do a simple `mvn clean install` on the command line.
 Next version:
 * Updated phase4 version which finally fixes the XLink JAXB error, since it no longer contains its own version of xlink.xsd
 * Added new configuration options to dump incoming and outgoing AS4 messages more easily
-* Fixed a bug, that the "Content-ID" field was not passed to the "TCIncomingMessage"
+* Fixed a bug, that the "Content-ID" field of the payload of the incoming message was not passed to the `TCIncomingMessage`
+* The "external" MEM implementation now consistently uses the `ServiceType` message property
+* Interoperability between phase4 and Holodeck has been tested
 
 2020-06-19: release of `2.0.0-rc2`
 * Fixed a regression in `/user/submit/...` API that accidentally delivered HTTP 400 in case of success
