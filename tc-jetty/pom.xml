@@ -27,7 +27,7 @@
   <packaging>jar</packaging>
   <name>tc-jetty</name>
   <description>Contains the TOOP Connector standalone Jetty version</description>
-  <url>https://github.com/toop4eu/tc-jetty</url>
+  <url>https://github.com/toop4eu/toop-connector-ng/tc-jetty</url>
   <inceptionYear>2020</inceptionYear>
   
   <licenses>
@@ -37,13 +37,6 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
-  <scm>
-    <connection>scm:git:git@github.com:toop4eu/tc-jetty.git</connection>
-    <developerConnection>scm:git:git@github.com:toop4eu/tc-jetty.git</developerConnection>
-    <url>http://github.com/toop4eu/tc-jetty</url>
-    <tag>HEAD</tag>
-  </scm>
   
   <organization>
     <name>toop.eu</name>
@@ -55,7 +48,6 @@
       <id>philip</id>
       <name>Philip Helger</name>
       <email>ph(at)helger.com</email>
-      <url>http://www.helger.com</url>
     </developer>
   </developers>
   
