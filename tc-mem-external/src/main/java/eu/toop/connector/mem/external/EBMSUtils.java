@@ -269,8 +269,8 @@ public final class EBMSUtils {
         eMessageProperties.appendChild(_property("ConversationId", metadata.conversationId));
 
         // split in type and value is not desired
-        eMessageProperties.appendChild(_property("originalSender", metadata.senderId.getURIEncoded()));
-        eMessageProperties.appendChild(_property("finalRecipient", metadata.receiverId.getURIEncoded()));
+        eMessageProperties.appendChild(_property("originalSender", metadata.senderId != null ? metadata.senderId.getURIEncoded() : null));
+        eMessageProperties.appendChild(_property("finalRecipient", metadata.receiverId != null ? metadata.receiverId.getURIEncoded() : null));
       }
 
       {
