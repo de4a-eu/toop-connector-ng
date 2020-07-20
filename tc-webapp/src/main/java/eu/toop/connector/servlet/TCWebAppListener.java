@@ -21,6 +21,7 @@ import javax.servlet.ServletContext;
 import com.helger.photon.api.IAPIRegistry;
 import com.helger.photon.core.servlet.WebAppListener;
 
+import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.app.TCInit;
 import eu.toop.connector.webapi.TCAPIInit;
 
@@ -34,6 +35,26 @@ public class TCWebAppListener extends WebAppListener
   public TCWebAppListener ()
   {
     setHandleStatisticsOnEnd (false);
+  }
+
+  @Override
+  protected String getDataPath (@Nonnull final ServletContext aSC)
+  {
+    return TCConfig.WebApp.getDataPath ();
+  }
+
+  @Override
+  protected String getServletContextPath (final ServletContext aSC) throws IllegalStateException
+  {
+    try
+    {
+      return super.getServletContextPath (aSC);
+    }
+    catch (final IllegalStateException ex)
+    {
+      // E.g. "Unpack WAR files" in Tomcat is disabled
+      return getDataPath (aSC);
+    }
   }
 
   @Override

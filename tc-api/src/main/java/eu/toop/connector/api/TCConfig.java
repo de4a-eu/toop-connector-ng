@@ -373,5 +373,15 @@ public final class TCConfig
     {
       return getConfig ().getAsBoolean ("toop.webapp.status.enabled", true);
     }
+
+    /**
+     * @return The storage path for the TC.
+     * @since 2.0.0-RC4
+     */
+    @Nullable
+    public static String getDataPath ()
+    {
+      return getConfig ().getAsString ("toop.webapp.data.path");
+    }
   }
 }

@@ -78,6 +78,7 @@ The following configuration properties are **supported** - some of them have def
 * **`http.tls.trustall`** (boolean) - use this to disable the hostname and trusted certificate check for SSL/TLS connections
 * **`http.connection-timeout`** (int) - the HTTP connection timeout in milliseconds
 * **`http.read-timeout`** (int) - the HTTP read/socket timeout in milliseconds
+* **`toop.webapp.data.path`** (string) (since 2.0.0-rc4) - the absolute path, where data should be stored.
 
 Note: this TOOP Connector uses a different configuration engine than the old version.
 
