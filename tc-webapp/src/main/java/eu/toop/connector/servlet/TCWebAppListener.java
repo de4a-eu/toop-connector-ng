@@ -40,7 +40,13 @@ public class TCWebAppListener extends WebAppListener
   @Override
   protected String getDataPath (@Nonnull final ServletContext aSC)
   {
-    return TCConfig.WebApp.getDataPath ();
+    String ret = TCConfig.WebApp.getDataPath ();
+    if (ret == null)
+    {
+      // Fall back to servlet context path
+      ret = super.getDataPath (aSC);
+    }
+    return ret;
   }
 
   @Override
