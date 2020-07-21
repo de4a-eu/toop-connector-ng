@@ -19,7 +19,10 @@ import javax.annotation.Nonnull;
 import javax.servlet.ServletContext;
 
 import com.helger.photon.api.IAPIRegistry;
+import com.helger.photon.audit.AuditHelper;
+import com.helger.photon.audit.DoNothingAuditor;
 import com.helger.photon.core.servlet.WebAppListener;
+import com.helger.photon.security.login.LoggedInUserManager;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.app.TCInit;
@@ -67,6 +70,8 @@ public class TCWebAppListener extends WebAppListener
   protected void afterContextInitialized (final ServletContext aSC)
   {
     TCInit.initGlobally (aSC);
+    // Don't write audit logs
+    AuditHelper.setAuditor (new DoNothingAuditor (LoggedInUserManager.getInstance ()));
   }
 
   @Override
