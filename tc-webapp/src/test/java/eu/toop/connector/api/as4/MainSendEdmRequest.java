@@ -68,7 +68,7 @@ public class MainSendEdmRequest
 
     LOGGER.info (TCRestJAXB.outgoingMessage ().getAsString (aOM));
 
-    try (HttpClientManager aHCM = new HttpClientManager ())
+    try (final HttpClientManager aHCM = new HttpClientManager ())
     {
       final HttpPost aPost = new HttpPost ("http://localhost:8090/api/send");
       aPost.setEntity (new ByteArrayEntity (TCRestJAXB.outgoingMessage ().getAsBytes (aOM)));

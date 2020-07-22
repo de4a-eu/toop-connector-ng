@@ -36,7 +36,7 @@ public class MainValidateEdmResponse
 
   public static void main (final String [] args) throws IOException
   {
-    try (HttpClientManager aHCM = new HttpClientManager ())
+    try (final HttpClientManager aHCM = new HttpClientManager ())
     {
       final HttpPost aPost = new HttpPost ("http://localhost:8090/api/validate/response");
       aPost.setEntity (new ByteArrayEntity (StreamHelper.getAllBytes (new ClassPathResource ("edm/Concept Response.xml"))));
