@@ -25,6 +25,7 @@ import com.helger.photon.core.servlet.WebAppListener;
 import com.helger.photon.security.login.LoggedInUserManager;
 
 import eu.toop.connector.api.TCConfig;
+import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.connector.app.TCInit;
 import eu.toop.connector.webapi.TCAPIInit;
 
@@ -69,7 +70,9 @@ public class TCWebAppListener extends WebAppListener
   @Override
   protected void afterContextInitialized (final ServletContext aSC)
   {
-    TCInit.initGlobally (aSC);
+    // Use default handler
+    TCInit.initGlobally (aSC, (IMEIncomingHandler) null);
+
     // Don't write audit logs
     AuditHelper.setAuditor (new DoNothingAuditor (LoggedInUserManager.getInstance ()));
   }

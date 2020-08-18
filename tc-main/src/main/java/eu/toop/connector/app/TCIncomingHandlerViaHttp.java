@@ -30,7 +30,8 @@ import eu.toop.kafkaclient.ToopKafkaClient;
 
 /**
  * Implementation of {@link IMEIncomingHandler} using
- * {@link DC_DP_TriggerViaHttp} to forward the message.
+ * {@link DC_DP_TriggerViaHttp} to forward the message. By default this class is
+ * invoked if an incoming AS4 message is received.
  *
  * @author Philip Helger
  * @since 2.0.0-rc4
@@ -39,6 +40,10 @@ public class TCIncomingHandlerViaHttp implements IMEIncomingHandler
 {
   private final String m_sLogPrefix;
 
+  /**
+   * @param sLogPrefix
+   *        The log prefix to use. May not be <code>null</code> but maybe empty.
+   */
   public TCIncomingHandlerViaHttp (@Nonnull final String sLogPrefix)
   {
     m_sLogPrefix = ValueEnforcer.notNull (sLogPrefix, "LogPrefix");
@@ -65,5 +70,4 @@ public class TCIncomingHandlerViaHttp implements IMEIncomingHandler
     ToopKafkaClient.send (EErrorLevel.INFO, () -> m_sLogPrefix + "TC got DC incoming MEM response (4/4) with ERRORs");
     DC_DP_TriggerViaHttp.forwardMessage (aErrorResponse);
   }
-
 }

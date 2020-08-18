@@ -21,6 +21,7 @@ import java.net.UnknownHostException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.annotation.concurrent.NotThreadSafe;
 import javax.servlet.ServletContext;
 
@@ -38,6 +39,7 @@ import com.helger.xservlet.requesttrack.RequestTracker;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.MessageExchangeManager;
+import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
 import eu.toop.kafkaclient.ToopKafkaClient;
 import eu.toop.kafkaclient.ToopKafkaSettings;
 
@@ -66,8 +68,32 @@ public class TCInit
    *         If the TOOP Connector is already initialized
    * @throws InitializationException
    *         If any of the settings are totally bogus
+   * @deprecated Use {@link #initGlobally(ServletContext, IMEIncomingHandler)}
+   *             instead
    */
+  @Deprecated
   public static void initGlobally (@Nonnull final ServletContext aServletContext)
+  {
+    initGlobally (aServletContext, (IMEIncomingHandler) null);
+  }
+
+  /**
+   * Globally init the TOOP Connector. Calling it, if it is already initialized
+   * will thrown an exception.
+   *
+   * @param aServletContext
+   *        The servlet context used for initialization. May not be
+   *        <code>null</code> but maybe a mocked one.
+   * @param aIncomingHandler
+   *        The incoming handler to be used. If <code>null</code> the default of
+   *        {@link TCIncomingHandlerViaHttp} will be used.
+   * @throws IllegalStateException
+   *         If the TOOP Connector is already initialized
+   * @throws InitializationException
+   *         If any of the settings are totally bogus
+   * @since 2.0.0-rc4
+   */
+  public static void initGlobally (@Nonnull final ServletContext aServletContext, @Nullable final IMEIncomingHandler aIncomingHandler)
   {
     if (!INITED.compareAndSet (false, true))
       throw new IllegalStateException ("TOOP Connector NG is already initialized");
@@ -140,8 +166,9 @@ public class TCInit
     }
 
     // Init incoming message handler
-    MessageExchangeManager.getConfiguredImplementation ()
-                          .registerIncomingHandler (aServletContext, new TCIncomingHandlerViaHttp (s_sLogPrefix));
+    final IMEIncomingHandler aRealIncomingHandler = aIncomingHandler != null ? aIncomingHandler
+                                                                             : new TCIncomingHandlerViaHttp (s_sLogPrefix);
+    MessageExchangeManager.getConfiguredImplementation ().registerIncomingHandler (aServletContext, aRealIncomingHandler);
 
     ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector NG WebApp " + CTC.getVersionNumber () + " started");
   }
