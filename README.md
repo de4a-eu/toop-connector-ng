@@ -188,6 +188,9 @@ Do a simple `mvn clean install` on the command line.
 
 # News and Noteworthy
 
+Work in progress:
+* Renamed class `MPTrigger` to `DC_DP_TriggerViaHttp`
+
 2020-07-13: release of `2.0.0-rc3`
 * Updated phase4 version which finally fixes the XLink JAXB error, since it no longer contains its own version of xlink.xsd
 * Added new configuration options to dump incoming and outgoing AS4 messages more easily

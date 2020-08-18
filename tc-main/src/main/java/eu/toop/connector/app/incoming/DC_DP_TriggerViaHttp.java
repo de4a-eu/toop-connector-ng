@@ -50,14 +50,14 @@ import eu.toop.kafkaclient.ToopKafkaClient;
 import eu.toop.regrep.CRegRep4;
 
 /**
- * Push incoming messages to DC/DP
+ * Push incoming messages to DC/DP via the HTTP interface.
  *
  * @author Philip Helger
  */
 @Immutable
-public final class MPTrigger
+public final class DC_DP_TriggerViaHttp
 {
-  private MPTrigger ()
+  private DC_DP_TriggerViaHttp ()
   {}
 
   @Nonnull

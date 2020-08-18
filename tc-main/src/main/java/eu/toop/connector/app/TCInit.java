@@ -38,12 +38,6 @@ import com.helger.xservlet.requesttrack.RequestTracker;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.me.MessageExchangeManager;
-import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
-import eu.toop.connector.api.me.incoming.IncomingEDMErrorResponse;
-import eu.toop.connector.api.me.incoming.IncomingEDMRequest;
-import eu.toop.connector.api.me.incoming.IncomingEDMResponse;
-import eu.toop.connector.api.me.incoming.MEIncomingException;
-import eu.toop.connector.app.incoming.MPTrigger;
 import eu.toop.kafkaclient.ToopKafkaClient;
 import eu.toop.kafkaclient.ToopKafkaSettings;
 
@@ -145,35 +139,11 @@ public class TCInit
       }
     }
 
-    ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector NG WebApp " + CTC.getVersionNumber () + " startup");
-
     // Init incoming message handler
-    MessageExchangeManager.getConfiguredImplementation ().registerIncomingHandler (aServletContext, new IMEIncomingHandler ()
-    {
-      public void handleIncomingRequest (@Nonnull final IncomingEDMRequest aRequest) throws MEIncomingException
-      {
-        ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TC got DP incoming MEM request (2/4)");
-        MPTrigger.forwardMessage (aRequest);
-      }
+    MessageExchangeManager.getConfiguredImplementation ()
+                          .registerIncomingHandler (aServletContext, new TCIncomingHandlerViaHttp (s_sLogPrefix));
 
-      public void handleIncomingResponse (@Nonnull final IncomingEDMResponse aResponse) throws MEIncomingException
-      {
-        ToopKafkaClient.send (EErrorLevel.INFO,
-                              () -> s_sLogPrefix +
-                                    "TC got DC incoming MEM response (4/4) with " +
-                                    aResponse.attachments ().size () +
-                                    " attachments");
-        MPTrigger.forwardMessage (aResponse);
-      }
-
-      public void handleIncomingErrorResponse (@Nonnull final IncomingEDMErrorResponse aErrorResponse) throws MEIncomingException
-      {
-        ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TC got DC incoming MEM response (4/4) with ERRORs");
-        MPTrigger.forwardMessage (aErrorResponse);
-      }
-    });
-
-    ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector NG started");
+    ToopKafkaClient.send (EErrorLevel.INFO, () -> s_sLogPrefix + "TOOP Connector NG WebApp " + CTC.getVersionNumber () + " started");
   }
 
   /**
