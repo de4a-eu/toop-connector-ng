@@ -79,6 +79,7 @@ The following configuration properties are **supported** - some of them have def
 * **`http.connection-timeout`** (int) - the HTTP connection timeout in milliseconds
 * **`http.read-timeout`** (int) - the HTTP read/socket timeout in milliseconds
 * **`toop.webapp.data.path`** (string) (since 2.0.0-rc4) - the absolute path, where data should be stored.
+* **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to (for receiving incoming message). Note: this property is only needed, if HTTP interface between DC/DP and TC is used.
 
 Note: this TOOP Connector uses a different configuration engine than the old version.
 
@@ -86,11 +87,10 @@ Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src
 
 ### Properties for MEM implementation `external`
 
-* **`toop.mem.as4.endpoint`** (string) - the AS4 endpoint
+* **`toop.mem.as4.endpoint`** (string) - the URL where the external AS4 gateway (Holodeck) listens to messages to be send out
 * **`toop.mem.as4.gw.partyid`** (string) - the AS4 gateway party ID
 * **`toop.mem.as4.tc.partyid`** (string) - the AS4 TOOP Connector party ID
 * **`toop.mem.as4.notificationWaitTimeout`** (long) - the timeout for a notification in milliseconds
-* **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to
 * **`toop.mem.outgoing.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of outgoing messages. By default this is disabled. 
 * **`toop.mem.outgoing.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the outgoing messages are stored. This should be an absolute path. The filenames in the directory start with `toop-mem-external-outgoing-`.
 * **`toop.mem.incoming.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of incoming messages. By default this is disabled.

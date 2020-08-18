@@ -85,11 +85,37 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     SystemProperties.setPropertyValue (MetaAS4Manager.SYSTEM_PROPERTY_PHASE4_MANAGER_INMEMORY, true);
   }
 
-  private final IAS4CryptoFactory m_aCF;
+  private IAS4CryptoFactory m_aCF;
 
   public Phase4MessageExchangeSPI ()
   {
     m_aCF = Phase4Config.getCryptoFactory ();
+  }
+
+  /**
+   * @return The crypto factory in use. Never <code>null</code>.
+   * @since 2.0.0-rc4
+   */
+  @Nonnull
+  public final IAS4CryptoFactory getCryptoFactory ()
+  {
+    return m_aCF;
+  }
+
+  /**
+   * Change the crypto factory deduced from the configuration file. MUST be
+   * called before
+   * {@link #registerIncomingHandler(ServletContext, IMEIncomingHandler)} to
+   * have an effect!
+   *
+   * @param aCF
+   *        The crypto factory to use. May not be <code>null</code>.
+   * @since 2.0.0-rc4
+   */
+  public final void setCryptoFactory (@Nonnull final IAS4CryptoFactory aCF)
+  {
+    ValueEnforcer.notNull (aCF, "CryptoFactory");
+    m_aCF = aCF;
   }
 
   @Nonnull
