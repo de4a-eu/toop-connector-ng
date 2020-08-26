@@ -18,14 +18,17 @@ package eu.toop.connector.api.me.incoming;
 import javax.annotation.Nonnull;
 
 /**
- * The callback handler for incoming messages.
+ * The callback handler for incoming messages. An implementation of this
+ * interface must be provided when calling "TCInit.initGlobally". The default
+ * implementation is "TCIncomingHandlerViaHttp". If you are embedding the TC
+ * into your application you must provide an implementation of this interface.
  *
  * @author Philip Helger
  */
 public interface IMEIncomingHandler
 {
   /**
-   * Handle an incoming request for step 2/4.
+   * Handle an incoming request for step 2/4 (on DP side).
    *
    * @param aRequest
    *        The request to handle. Never <code>null</code>.
@@ -35,7 +38,7 @@ public interface IMEIncomingHandler
   void handleIncomingRequest (@Nonnull IncomingEDMRequest aRequest) throws MEIncomingException;
 
   /**
-   * Handle an incoming response for step 4/4.
+   * Handle an incoming response for step 4/4 (on DC side).
    *
    * @param aResponse
    *        The response to handle. Contains attachments and metadata. Never
@@ -46,7 +49,7 @@ public interface IMEIncomingHandler
   void handleIncomingResponse (@Nonnull IncomingEDMResponse aResponse) throws MEIncomingException;
 
   /**
-   * Handle an incoming error response for step 4/4.
+   * Handle an incoming error response for step 4/4 (on DC side).
    *
    * @param aErrorResponse
    *        The response to handle. Never <code>null</code>.

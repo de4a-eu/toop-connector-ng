@@ -27,7 +27,7 @@ import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
 import eu.toop.connector.api.me.outgoing.MEOutgoingException;
 
 /**
- * Abstract API to be implemented for sending and receiving messages.
+ * Abstract API to be implemented for sending and receiving AS4 messages.
  *
  * @author Philip Helger
  */
@@ -70,7 +70,8 @@ public interface IMessageExchangeSPI
    * @throws MEOutgoingException
    *         In case of error.
    */
-  void sendOutgoing (@Nonnull IMERoutingInformation aRoutingInfo, @Nonnull MEMessage aMessage) throws MEOutgoingException;
+  void sendOutgoing (@Nonnull IMERoutingInformation aRoutingInfo,
+                     @Nonnull MEMessage aMessage) throws MEOutgoingException;
 
   /**
    * Shutdown the Message Exchange.

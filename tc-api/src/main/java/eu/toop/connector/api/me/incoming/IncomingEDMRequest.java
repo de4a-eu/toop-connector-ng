@@ -32,7 +32,7 @@ import eu.toop.edm.EDMRequest;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class IncomingEDMRequest implements IIncomingEDMObject
+public class IncomingEDMRequest implements IIncomingEDMRequest
 {
   private final EDMRequest m_aRequest;
   private final String m_sTopLevelContentID;
