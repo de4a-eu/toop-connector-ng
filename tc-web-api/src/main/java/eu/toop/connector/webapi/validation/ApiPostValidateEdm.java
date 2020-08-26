@@ -16,7 +16,6 @@
 package eu.toop.connector.webapi.validation;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -35,7 +34,7 @@ import com.helger.json.JsonObject;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.app.api.TCAPIConfig;
+import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.app.validation.TCValidator;
 import eu.toop.connector.webapi.ETCEdmType;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
@@ -63,8 +62,6 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
                                 @Nonnull final Map <String, String> aPathVariables,
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope) throws IOException
   {
-    final Locale aDisplayLocale = Locale.UK;
-
     final byte [] aPayload = StreamHelper.getAllBytes (aRequestScope.getRequest ().getInputStream ());
     final VESID aVESID = m_eType.getVESID ();
 
@@ -75,7 +72,7 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
     CommonAPIInvoker.invoke (aJson, () -> {
       // Main validation
       final StopWatch aSW = StopWatch.createdStarted ();
-      final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ().validate (aVESID, aPayload, aDisplayLocale);
+      final ValidationResultList aValidationResultList = TCAPIHelper.validateBusinessDocument (aVESID, aPayload);
       aSW.stop ();
 
       // Build response
@@ -83,7 +80,7 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
       BDVEJsonHelper.applyValidationResultList (aJson,
                                                 TCValidator.getVES (aVESID),
                                                 aValidationResultList,
-                                                aDisplayLocale,
+                                                TCAPIHelper.DEFAULT_LOCALE,
                                                 aSW.getMillis (),
                                                 null,
                                                 null);

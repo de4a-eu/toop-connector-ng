@@ -26,13 +26,14 @@ import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
+import com.helger.peppol.sml.ESMPAPIType;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
+import com.helger.smpclient.json.SMPJsonResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.api.error.LoggingTCErrorHandler;
-import eu.toop.connector.app.api.TCAPIConfig;
+import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
@@ -53,7 +54,8 @@ public class ApiGetSmpDocTypes extends AbstractTCAPIInvoker
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope)
   {
     final String sParticipantID = aPathVariables.get ("pid");
-    final IParticipantIdentifier aParticipantID = TCConfig.getIdentifierFactory ().parseParticipantIdentifier (sParticipantID);
+    final IParticipantIdentifier aParticipantID = TCConfig.getIdentifierFactory ()
+                                                          .parseParticipantIdentifier (sParticipantID);
     if (aParticipantID == null)
       throw new APIParamException ("Invalid participant ID '" + sParticipantID + "' provided.");
 
@@ -63,12 +65,14 @@ public class ApiGetSmpDocTypes extends AbstractTCAPIInvoker
     aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
     CommonAPIInvoker.invoke (aJson, () -> {
       // Query SMP
-      final ICommonsSortedMap <String, String> aSGHrefs = TCAPIConfig.getDDServiceGroupHrefProvider ()
-                                                                     .getAllServiceGroupHrefs (aParticipantID,
-                                                                                               LoggingTCErrorHandler.INSTANCE);
+      final ICommonsSortedMap <String, String> aSGHrefs = TCAPIHelper.querySMPServiceGroups (aParticipantID);
 
       aJson.add (JSON_SUCCESS, true);
-      aJson.addJson ("response", SMPJsonResponse.convert (aParticipantID, aSGHrefs, TCConfig.getIdentifierFactory ()));
+      aJson.addJson ("response",
+                     SMPJsonResponse.convert (ESMPAPIType.OASIS_BDXR_V1,
+                                              aParticipantID,
+                                              aSGHrefs,
+                                              TCConfig.getIdentifierFactory ()));
     });
 
     return aJson;

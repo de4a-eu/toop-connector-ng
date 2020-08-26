@@ -45,7 +45,8 @@ public interface IDDServiceMetadataProvider
    * @return <code>null</code> if not found.
    */
   @Nullable
-  ServiceMetadataType getServiceMetadata (@Nonnull IParticipantIdentifier aParticipantID, @Nonnull IDocumentTypeIdentifier aDocTypeID);
+  ServiceMetadataType getServiceMetadata (@Nonnull IParticipantIdentifier aParticipantID,
+                                          @Nonnull IDocumentTypeIdentifier aDocTypeID);
 
   /**
    * Find the dynamic discovery endpoint from the respective parameters.
@@ -69,6 +70,27 @@ public interface IDDServiceMetadataProvider
                                     @Nonnull final String sTransportProfile)
   {
     final ServiceMetadataType aSM = getServiceMetadata (aParticipantID, aDocTypeID);
+    return getEndpoint (aSM, aProcessID, sTransportProfile);
+  }
+
+  /**
+   * Find the dynamic discovery endpoint from the respective parameters.
+   *
+   * @param aSM
+   *        The service metadata to be searched. May be <code>null</code>.
+   * @param aProcessID
+   *        Process ID. May not be <code>null</code>.
+   * @param sTransportProfile
+   *        Transport profile to be used. May not be <code>null</code>.
+   * @return <code>null</code> if no such endpoint was found
+   * @see #getServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier)
+   * @since 2.0.0-rc4
+   */
+  @Nullable
+  static EndpointType getEndpoint (@Nullable final ServiceMetadataType aSM,
+                                   @Nonnull final IProcessIdentifier aProcessID,
+                                   @Nonnull final String sTransportProfile)
+  {
     if (aSM != null)
     {
       final ServiceInformationType aSI = aSM.getServiceInformation ();

@@ -49,6 +49,7 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
       // Use dynamic lookup via DNS - can throw exception
       return new BDXRClientReadOnly (BDXLURLProvider.INSTANCE, aRecipientID, TCConfig.R2D2.getR2D2SML ());
     }
+
     // Use a constant SMP URL
     return new BDXRClientReadOnly (TCConfig.R2D2.getR2D2SMPUrl ());
   }
@@ -71,12 +72,14 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
       // Map from cleaned URL to original URL
       if (aSG != null && aSG.getServiceMetadataReferenceCollection () != null)
       {
-        for (final ServiceMetadataReferenceType aSMR : aSG.getServiceMetadataReferenceCollection ().getServiceMetadataReference ())
+        for (final ServiceMetadataReferenceType aSMR : aSG.getServiceMetadataReferenceCollection ()
+                                                          .getServiceMetadataReference ())
         {
           // Decoded href is important for unification
           final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
           if (ret.put (sHref, aSMR.getHref ()) != null)
-            aErrorHandler.onWarning ("[API] The ServiceGroup list contains the duplicate URL '" + sHref + "'", EToopErrorCode.GEN);
+            aErrorHandler.onWarning ("The SMP ServiceGroup list contains the duplicate URL '" + sHref + "'",
+                                     EToopErrorCode.GEN);
         }
       }
       return ret;

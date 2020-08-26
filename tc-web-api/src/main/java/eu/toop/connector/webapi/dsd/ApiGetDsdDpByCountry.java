@@ -19,11 +19,11 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
+import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
-import com.helger.commons.collection.impl.CommonsArrayList;
-import com.helger.commons.collection.impl.ICommonsList;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.string.StringHelper;
+import com.helger.json.IJsonArray;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonArray;
 import com.helger.json.JsonObject;
@@ -60,14 +60,20 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
 
     final IJsonObject aJson = new JsonObject ();
     CommonAPIInvoker.invoke (aJson, () -> {
-      final ICommonsList <String> aErrorMsgs = new CommonsArrayList <> ();
+      final IJsonArray aErrorMsgs = new JsonArray ();
       final ITCErrorHandler aErrorHdl = (eErrorLevel, sMsg, t, eCode) -> {
         if (eErrorLevel.isError ())
-          aErrorMsgs.add (sMsg);
+          aErrorMsgs.add (BDVEJsonHelper.getJsonError (eErrorLevel,
+                                                       eCode == null ? null : eCode.getID (),
+                                                       null,
+                                                       null,
+                                                       null,
+                                                       sMsg,
+                                                       t));
       };
 
       // Query DSD
-      final ICommonsSet <DSDDatasetResponse> aResponses = TCAPIHelper.getAllDatasets (sDatasetType,
+      final ICommonsSet <DSDDatasetResponse> aResponses = TCAPIHelper.getDSDDatasets (sDatasetType,
                                                                                       sCountryCode,
                                                                                       aErrorHdl);
 
@@ -83,7 +89,7 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
       else
       {
         aJson.add (JSON_SUCCESS, false);
-        aJson.addJson ("errors", new JsonArray ().addAll (aErrorMsgs));
+        aJson.addJson ("errors", aErrorMsgs);
       }
     });
 

@@ -16,7 +16,6 @@
 package eu.toop.connector.webapi.user;
 
 import java.io.IOException;
-import java.util.Locale;
 import java.util.Map;
 
 import javax.annotation.Nonnull;
@@ -29,21 +28,19 @@ import com.helger.bdve.api.result.ValidationResultList;
 import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.ArrayHelper;
-import com.helger.commons.collection.CollectionHelper;
 import com.helger.commons.mime.MimeTypeParser;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
-import com.helger.peppolid.simple.process.SimpleProcessIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.security.certificate.CertificateHelper;
+import com.helger.smpclient.json.SMPJsonResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 import com.helger.xsds.bdxr.smp1.EndpointType;
-import com.helger.xsds.bdxr.smp1.ProcessType;
-import com.helger.xsds.bdxr.smp1.ServiceInformationType;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 
+import eu.toop.connector.api.dd.IDDServiceMetadataProvider;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.MERoutingInformation;
@@ -51,14 +48,12 @@ import eu.toop.connector.api.me.outgoing.MERoutingInformationInput;
 import eu.toop.connector.api.rest.TCOutgoingMessage;
 import eu.toop.connector.api.rest.TCPayload;
 import eu.toop.connector.api.rest.TCRestJAXB;
-import eu.toop.connector.app.api.TCAPIConfig;
 import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.app.validation.TCValidator;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.ETCEdmType;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
-import eu.toop.connector.webapi.smp.SMPJsonResponse;
 
 /**
  * Perform validation, lookup and sending via API
@@ -97,8 +92,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
     // Convert metadata
     final MERoutingInformationInput aRoutingInfo = MERoutingInformationInput.createForInput (aOutgoingMsg.getMetadata ());
 
-    final Locale aDisplayLocale = Locale.UK;
-
+    // Start response
     final IJsonObject aJson = new JsonObject ();
     {
       aJson.add ("senderid", aRoutingInfo.getSenderID ().getURIEncoded ());
@@ -115,18 +109,16 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         // validation
         final StopWatch aSW = StopWatch.createdStarted ();
         final VESID aVESID = m_eType.getVESID ();
-        final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ()
-                                                                      .validate (aVESID,
-                                                                                 aOutgoingMsg.getPayloadAtIndex (0)
-                                                                                             .getValue (),
-                                                                                 aDisplayLocale);
+        final ValidationResultList aValidationResultList = TCAPIHelper.validateBusinessDocument (aVESID,
+                                                                                                 aOutgoingMsg.getPayloadAtIndex (0)
+                                                                                                             .getValue ());
         aSW.stop ();
 
         final IJsonObject aJsonVR = new JsonObject ();
         BDVEJsonHelper.applyValidationResultList (aJsonVR,
                                                   TCValidator.getVES (aVESID),
                                                   aValidationResultList,
-                                                  aDisplayLocale,
+                                                  TCAPIHelper.DEFAULT_LOCALE,
                                                   aSW.getMillis (),
                                                   null,
                                                   null);
@@ -140,9 +132,8 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         MERoutingInformation aRoutingInfoFinal = null;
         final IJsonObject aJsonSMP = new JsonObject ();
         // Main query
-        final ServiceMetadataType aSM = TCAPIConfig.getDDServiceMetadataProvider ()
-                                                   .getServiceMetadata (aRoutingInfo.getReceiverID (),
-                                                                        aRoutingInfo.getDocumentTypeID ());
+        final ServiceMetadataType aSM = TCAPIHelper.querySMPServiceMetadata (aRoutingInfo.getReceiverID (),
+                                                                             aRoutingInfo.getDocumentTypeID ());
         if (aSM != null)
         {
           aJsonSMP.addJson ("response",
@@ -150,25 +141,15 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
                                                      aRoutingInfo.getDocumentTypeID (),
                                                      aSM));
 
-          final ServiceInformationType aSI = aSM.getServiceInformation ();
-          if (aSI != null)
+          final EndpointType aEndpoint = IDDServiceMetadataProvider.getEndpoint (aSM,
+                                                                                 aRoutingInfo.getProcessID (),
+                                                                                 aRoutingInfo.getTransportProtocol ());
+          if (aEndpoint != null)
           {
-            final ProcessType aProc = CollectionHelper.findFirst (aSI.getProcessList ().getProcess (),
-                                                                  x -> aRoutingInfo.getProcessID ()
-                                                                                   .hasSameContent (SimpleProcessIdentifier.wrap (x.getProcessIdentifier ())));
-            if (aProc != null)
-            {
-              final EndpointType aEndpoint = CollectionHelper.findFirst (aProc.getServiceEndpointList ().getEndpoint (),
-                                                                         x -> aRoutingInfo.getTransportProtocol ()
-                                                                                          .equals (x.getTransportProfile ()));
-              if (aEndpoint != null)
-              {
-                aJsonSMP.add (SMPJsonResponse.JSON_ENDPOINT_REFERENCE, aEndpoint.getEndpointURI ());
-                aRoutingInfoFinal = new MERoutingInformation (aRoutingInfo,
-                                                              aEndpoint.getEndpointURI (),
-                                                              CertificateHelper.convertByteArrayToCertficateDirect (aEndpoint.getCertificate ()));
-              }
-            }
+            aJsonSMP.add (SMPJsonResponse.JSON_ENDPOINT_REFERENCE, aEndpoint.getEndpointURI ());
+            aRoutingInfoFinal = new MERoutingInformation (aRoutingInfo,
+                                                          aEndpoint.getEndpointURI (),
+                                                          CertificateHelper.convertByteArrayToCertficateDirect (aEndpoint.getCertificate ()));
           }
           if (aRoutingInfoFinal == null)
           {
@@ -190,7 +171,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
           aJsonSMP.add (JSON_SUCCESS, false);
         aJson.addJson ("lookup-results", aJsonSMP);
 
-        // Read for sending?
+        // Read for AS4 sending?
         if (aRoutingInfoFinal != null)
         {
           final IJsonObject aJsonSending = new JsonObject ();

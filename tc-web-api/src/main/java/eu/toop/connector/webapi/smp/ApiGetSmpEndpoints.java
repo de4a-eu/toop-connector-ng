@@ -28,11 +28,12 @@ import com.helger.json.JsonObject;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.photon.api.IAPIDescriptor;
+import com.helger.smpclient.json.SMPJsonResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 
 import eu.toop.connector.api.TCConfig;
-import eu.toop.connector.app.api.TCAPIConfig;
+import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
@@ -52,13 +53,17 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
                                 @Nonnull final Map <String, String> aPathVariables,
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope)
   {
+    // Get participant ID
     final String sParticipantID = aPathVariables.get ("pid");
-    final IParticipantIdentifier aParticipantID = TCConfig.getIdentifierFactory ().parseParticipantIdentifier (sParticipantID);
+    final IParticipantIdentifier aParticipantID = TCConfig.getIdentifierFactory ()
+                                                          .parseParticipantIdentifier (sParticipantID);
     if (aParticipantID == null)
       throw new APIParamException ("Invalid participant ID '" + sParticipantID + "' provided.");
 
+    // Get document type ID
     final String sDocTypeID = aPathVariables.get ("doctypeid");
-    final IDocumentTypeIdentifier aDocTypeID = TCConfig.getIdentifierFactory ().parseDocumentTypeIdentifier (sDocTypeID);
+    final IDocumentTypeIdentifier aDocTypeID = TCConfig.getIdentifierFactory ()
+                                                       .parseDocumentTypeIdentifier (sDocTypeID);
     if (aDocTypeID == null)
       throw new APIParamException ("Invalid document type ID '" + sDocTypeID + "' provided.");
 
@@ -68,20 +73,26 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
                  aDocTypeID.getURIEncoded () +
                  "'");
 
+    // Start response
     final IJsonObject aJson = new JsonObject ();
     aJson.add (SMPJsonResponse.JSON_PARTICIPANT_ID, aParticipantID.getURIEncoded ());
     aJson.add (SMPJsonResponse.JSON_DOCUMENT_TYPE_ID, aDocTypeID.getURIEncoded ());
-    CommonAPIInvoker.invoke (aJson, () -> {
-      // Main query
-      final ServiceMetadataType aSM = TCAPIConfig.getDDServiceMetadataProvider ().getServiceMetadata (aParticipantID, aDocTypeID);
-      if (aSM != null)
-      {
-        aJson.add (JSON_SUCCESS, true);
-        aJson.addJson ("response", SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM));
-      }
-      else
-        aJson.add (JSON_SUCCESS, false);
-    });
+
+    CommonAPIInvoker.invoke (aJson,
+                             () -> {
+                               // Main query
+                               final ServiceMetadataType aSM = TCAPIHelper.querySMPServiceMetadata (aParticipantID,
+                                                                                                    aDocTypeID);
+
+                               // Add to response
+                               if (aSM != null)
+                               {
+                                 aJson.add (JSON_SUCCESS, true);
+                                 aJson.addJson ("response", SMPJsonResponse.convert (aParticipantID, aDocTypeID, aSM));
+                               }
+                               else
+                                 aJson.add (JSON_SUCCESS, false);
+                             });
 
     return aJson;
   }

@@ -28,6 +28,7 @@ import com.helger.commons.string.StringHelper;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
 import com.helger.photon.api.IAPIDescriptor;
+import com.helger.smpclient.json.SMPJsonResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.me.model.MEMessage;
@@ -41,7 +42,6 @@ import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
-import eu.toop.connector.webapi.smp.SMPJsonResponse;
 
 /**
  * Send an outgoing AS4 message via the configured MEM gateway
@@ -76,7 +76,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
     }
     catch (final CertificateException ex)
     {
-      throw new APIParamException ("Invalid certificate provided: " + ex.getMessage ());
+      throw new APIParamException ("Invalid routing information provided: " + ex.getMessage ());
     }
 
     // Add payloads
@@ -90,6 +90,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
                                     .data (aPayload.getValue ()));
     }
 
+    // Start response
     final IJsonObject aJson = new JsonObject ();
     {
       aJson.add ("senderid", aRoutingInfo.getSenderID ().getURIEncoded ());
@@ -101,6 +102,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
     }
 
     CommonAPIInvoker.invoke (aJson, () -> {
+      // Main sending - throws Exception on error
       TCAPIHelper.sendAS4Message (aRoutingInfo, aMessage.build ());
       aJson.add (JSON_SUCCESS, true);
     });
