@@ -191,6 +191,8 @@ Do a simple `mvn clean install` on the command line.
 Work in progress:
 * Renamed class `MPTrigger` to `DC_DP_TriggerViaHttp`
 * Extended APIs for increased customizability
+* Moved the class `TCAPIConfig` to `tc-main` module
+* Added new class `TCAPIHelper` for easier integration of the TC into Java applications
 
 2020-07-13: release of `2.0.0-rc3`
 * Updated phase4 version which finally fixes the XLink JAXB error, since it no longer contains its own version of xlink.xsd

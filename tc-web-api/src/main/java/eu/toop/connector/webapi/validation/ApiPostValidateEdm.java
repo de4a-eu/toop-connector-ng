@@ -35,9 +35,9 @@ import com.helger.json.JsonObject;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
+import eu.toop.connector.app.api.TCAPIConfig;
 import eu.toop.connector.app.validation.TCValidator;
 import eu.toop.connector.webapi.ETCEdmType;
-import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 

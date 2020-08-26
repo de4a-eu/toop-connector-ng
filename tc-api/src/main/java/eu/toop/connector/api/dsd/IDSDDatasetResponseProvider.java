@@ -43,13 +43,13 @@ public interface IDSDDatasetResponseProvider
    * @param sCountryCode
    *        Country code to use. Must be a 2-digit string. May be
    *        <code>null</code>.
-   * @param aErrorHandler
+   * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
-   * @return A non-<code>null</code> but maybe empty set of Participant IDs.
+   * @return A non-<code>null</code> but maybe empty set of datasets.
    */
   @Nonnull
   ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull String sLogPrefix,
                                                            @Nonnull String sDatasetType,
                                                            @Nullable String sCountryCode,
-                                                           @Nonnull ITCErrorHandler aErrorHandler);
+                                                           @Nonnull ITCErrorHandler aErrorHdl);
 }

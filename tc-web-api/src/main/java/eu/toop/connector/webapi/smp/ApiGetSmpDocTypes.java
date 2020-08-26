@@ -32,8 +32,8 @@ import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.error.LoggingTCErrorHandler;
+import eu.toop.connector.app.api.TCAPIConfig;
 import eu.toop.connector.webapi.APIParamException;
-import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 

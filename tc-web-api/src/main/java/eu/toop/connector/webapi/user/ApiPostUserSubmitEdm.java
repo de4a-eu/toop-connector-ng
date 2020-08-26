@@ -44,8 +44,6 @@ import com.helger.xsds.bdxr.smp1.ProcessType;
 import com.helger.xsds.bdxr.smp1.ServiceInformationType;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 
-import eu.toop.connector.api.me.IMessageExchangeSPI;
-import eu.toop.connector.api.me.MessageExchangeManager;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.MERoutingInformation;
@@ -53,10 +51,11 @@ import eu.toop.connector.api.me.outgoing.MERoutingInformationInput;
 import eu.toop.connector.api.rest.TCOutgoingMessage;
 import eu.toop.connector.api.rest.TCPayload;
 import eu.toop.connector.api.rest.TCRestJAXB;
+import eu.toop.connector.app.api.TCAPIConfig;
+import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.app.validation.TCValidator;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.ETCEdmType;
-import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 import eu.toop.connector.webapi.smp.SMPJsonResponse;
@@ -84,7 +83,8 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope) throws IOException
   {
     // Read the payload as XML
-    final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
+    final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ()
+                                                     .read (aRequestScope.getRequest ().getInputStream ());
     if (aOutgoingMsg == null)
       throw new APIParamException ("Failed to interpret the message body as an 'OutgoingMessage'");
 
@@ -117,7 +117,8 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         final VESID aVESID = m_eType.getVESID ();
         final ValidationResultList aValidationResultList = TCAPIConfig.getVSValidator ()
                                                                       .validate (aVESID,
-                                                                                 aOutgoingMsg.getPayloadAtIndex (0).getValue (),
+                                                                                 aOutgoingMsg.getPayloadAtIndex (0)
+                                                                                             .getValue (),
                                                                                  aDisplayLocale);
         aSW.stop ();
 
@@ -140,10 +141,14 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         final IJsonObject aJsonSMP = new JsonObject ();
         // Main query
         final ServiceMetadataType aSM = TCAPIConfig.getDDServiceMetadataProvider ()
-                                                   .getServiceMetadata (aRoutingInfo.getReceiverID (), aRoutingInfo.getDocumentTypeID ());
+                                                   .getServiceMetadata (aRoutingInfo.getReceiverID (),
+                                                                        aRoutingInfo.getDocumentTypeID ());
         if (aSM != null)
         {
-          aJsonSMP.addJson ("response", SMPJsonResponse.convert (aRoutingInfo.getReceiverID (), aRoutingInfo.getDocumentTypeID (), aSM));
+          aJsonSMP.addJson ("response",
+                            SMPJsonResponse.convert (aRoutingInfo.getReceiverID (),
+                                                     aRoutingInfo.getDocumentTypeID (),
+                                                     aSM));
 
           final ServiceInformationType aSI = aSM.getServiceInformation ();
           if (aSI != null)
@@ -189,7 +194,6 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         if (aRoutingInfoFinal != null)
         {
           final IJsonObject aJsonSending = new JsonObject ();
-          final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
 
           // Add payloads
           final MEMessage.Builder aMessage = MEMessage.builder ();
@@ -201,7 +205,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
                                                                                 MEPayload.createRandomContentID ()))
                                           .data (aPayload.getValue ()));
           }
-          aMEM.sendOutgoing (aRoutingInfoFinal, aMessage.build ());
+          TCAPIHelper.sendAS4Message (aRoutingInfoFinal, aMessage.build ());
           aJsonSending.add (JSON_SUCCESS, true);
 
           aJson.addJson ("sending-results", aJsonSending);

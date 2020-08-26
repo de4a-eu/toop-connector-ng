@@ -32,8 +32,8 @@ import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
 import eu.toop.connector.api.dsd.DSDDatasetResponse;
 import eu.toop.connector.api.error.ITCErrorHandler;
+import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.webapi.APIParamException;
-import eu.toop.connector.webapi.TCAPIConfig;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
@@ -67,11 +67,9 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
       };
 
       // Query DSD
-      final ICommonsSet <DSDDatasetResponse> aResponses = TCAPIConfig.getDSDDatasetResponseProvider ()
-                                                                     .getAllDatasetResponses ("[api /dsd/dp/by-country]",
-                                                                                              sDatasetType,
-                                                                                              sCountryCode,
-                                                                                              aErrorHdl);
+      final ICommonsSet <DSDDatasetResponse> aResponses = TCAPIHelper.getAllDatasets (sDatasetType,
+                                                                                      sCountryCode,
+                                                                                      aErrorHdl);
 
       if (aErrorMsgs.isEmpty ())
       {

@@ -30,8 +30,6 @@ import com.helger.json.JsonObject;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
-import eu.toop.connector.api.me.IMessageExchangeSPI;
-import eu.toop.connector.api.me.MessageExchangeManager;
 import eu.toop.connector.api.me.model.MEMessage;
 import eu.toop.connector.api.me.model.MEPayload;
 import eu.toop.connector.api.me.outgoing.IMERoutingInformation;
@@ -39,6 +37,7 @@ import eu.toop.connector.api.me.outgoing.MERoutingInformation;
 import eu.toop.connector.api.rest.TCOutgoingMessage;
 import eu.toop.connector.api.rest.TCPayload;
 import eu.toop.connector.api.rest.TCRestJAXB;
+import eu.toop.connector.app.api.TCAPIHelper;
 import eu.toop.connector.webapi.APIParamException;
 import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
@@ -58,7 +57,8 @@ public class ApiPostSend extends AbstractTCAPIInvoker
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope) throws IOException
   {
     // Read the payload as XML
-    final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
+    final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ()
+                                                     .read (aRequestScope.getRequest ().getInputStream ());
     if (aOutgoingMsg == null)
       throw new APIParamException ("Failed to interpret the message body as an 'OutgoingMessage'");
 
@@ -85,7 +85,8 @@ public class ApiPostSend extends AbstractTCAPIInvoker
     {
       aMessage.addPayload (MEPayload.builder ()
                                     .mimeType (MimeTypeParser.parseMimeType (aPayload.getMimeType ()))
-                                    .contentID (StringHelper.getNotEmpty (aPayload.getContentID (), MEPayload.createRandomContentID ()))
+                                    .contentID (StringHelper.getNotEmpty (aPayload.getContentID (),
+                                                                          MEPayload.createRandomContentID ()))
                                     .data (aPayload.getValue ()));
     }
 
@@ -100,8 +101,7 @@ public class ApiPostSend extends AbstractTCAPIInvoker
     }
 
     CommonAPIInvoker.invoke (aJson, () -> {
-      final IMessageExchangeSPI aMEM = MessageExchangeManager.getConfiguredImplementation ();
-      aMEM.sendOutgoing (aRoutingInfo, aMessage.build ());
+      TCAPIHelper.sendAS4Message (aRoutingInfo, aMessage.build ());
       aJson.add (JSON_SUCCESS, true);
     });
 

@@ -23,7 +23,6 @@ import com.helger.photon.api.APIPath;
 import com.helger.photon.api.IAPIRegistry;
 
 import eu.toop.connector.webapi.as4.ApiPostSend;
-import eu.toop.connector.webapi.dsd.ApiGetDsdDp;
 import eu.toop.connector.webapi.dsd.ApiGetDsdDpByCountry;
 import eu.toop.connector.webapi.smp.ApiGetSmpDocTypes;
 import eu.toop.connector.webapi.smp.ApiGetSmpEndpoints;
@@ -46,25 +45,32 @@ public final class TCAPIInit
     // DSD stuff
     // For rc1 it was decided to not use it, because of issues with the TOOP
     // Directory integration
-    if (false)
-      aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{datasetType}"), ApiGetDsdDp.class));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{datasetType}/by-country/{country}"), ApiGetDsdDpByCountry.class));
+    // aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get
+    // ("/dsd/dp/{datasetType}"), ApiGetDsdDp.class));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/dsd/dp/{datasetType}/by-country/{country}"),
+                                                 ApiGetDsdDpByCountry.class));
 
     // SMP stuff
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/doctypes/{pid}"), ApiGetSmpDocTypes.class));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/endpoints/{pid}/{doctypeid}"), ApiGetSmpEndpoints.class));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.get ("/smp/endpoints/{pid}/{doctypeid}"),
+                                                 ApiGetSmpEndpoints.class));
 
     // Validation stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/request"), new ApiPostValidateEdm (ETCEdmType.REQUEST)));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/response"), new ApiPostValidateEdm (ETCEdmType.RESPONSE)));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/error"), new ApiPostValidateEdm (ETCEdmType.ERROR_RESPONSE)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/request"),
+                                                 new ApiPostValidateEdm (ETCEdmType.REQUEST)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/response"),
+                                                 new ApiPostValidateEdm (ETCEdmType.RESPONSE)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/validate/error"),
+                                                 new ApiPostValidateEdm (ETCEdmType.ERROR_RESPONSE)));
 
     // AS4 stuff
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/send"), ApiPostSend.class));
 
     // User stuff
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/request"), new ApiPostUserSubmitEdm (ETCEdmType.REQUEST)));
-    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/response"), new ApiPostUserSubmitEdm (ETCEdmType.RESPONSE)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/request"),
+                                                 new ApiPostUserSubmitEdm (ETCEdmType.REQUEST)));
+    aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/response"),
+                                                 new ApiPostUserSubmitEdm (ETCEdmType.RESPONSE)));
     aAPIRegistry.registerAPI (new APIDescriptor (APIPath.post ("/user/submit/error"),
                                                  new ApiPostUserSubmitEdm (ETCEdmType.ERROR_RESPONSE)));
   }
