@@ -50,6 +50,10 @@ public class IncomingEDMErrorResponse implements IIncomingEDMResponse
     m_aMetadata = aMetadata;
   }
 
+  /**
+   * @return The EDM error response that contains the main payload. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public EDMErrorResponse getErrorResponse ()
   {
@@ -90,6 +94,9 @@ public class IncomingEDMErrorResponse implements IIncomingEDMResponse
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("ErrorResponse", m_aErrorResponse).append ("Metadata", m_aMetadata).getToString ();
+    return new ToStringGenerator (this).append ("ErrorResponse", m_aErrorResponse)
+                                       .append ("TopLevelContentID", m_sTopLevelContentID)
+                                       .append ("Metadata", m_aMetadata)
+                                       .getToString ();
   }
 }

@@ -18,10 +18,11 @@ package eu.toop.connector.api.me.incoming;
 import javax.annotation.Nonnull;
 
 /**
- * The callback handler for incoming messages. An implementation of this
- * interface must be provided when calling "TCInit.initGlobally". The default
- * implementation is "TCIncomingHandlerViaHttp". If you are embedding the TC
- * into your application you must provide an implementation of this interface.
+ * The callback handler for incoming messages from the AS4 Gateway. An
+ * implementation of this interface must be provided when calling
+ * "TCInit.initGlobally". The default implementation is
+ * "TCIncomingHandlerViaHttp". If you are embedding the TC into your application
+ * you must provide an implementation of this interface.
  *
  * @author Philip Helger
  */

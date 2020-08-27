@@ -50,6 +50,10 @@ public class IncomingEDMRequest implements IIncomingEDMRequest
     m_aMetadata = aMetadata;
   }
 
+  /**
+   * @return The EDM request that contains the main payload. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public EDMRequest getRequest ()
   {
@@ -90,6 +94,9 @@ public class IncomingEDMRequest implements IIncomingEDMRequest
   @Override
   public String toString ()
   {
-    return new ToStringGenerator (this).append ("Request", m_aRequest).append ("Metadata", m_aMetadata).getToString ();
+    return new ToStringGenerator (this).append ("Request", m_aRequest)
+                                       .append ("TopLevelContentID", m_sTopLevelContentID)
+                                       .append ("Metadata", m_aMetadata)
+                                       .getToString ();
   }
 }

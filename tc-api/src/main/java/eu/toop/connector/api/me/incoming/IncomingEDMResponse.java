@@ -64,6 +64,10 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
     m_aMetadata = aMetadata;
   }
 
+  /**
+   * @return The EDM response that contains the main payload. Never
+   *         <code>null</code>.
+   */
   @Nonnull
   public EDMResponse getResponse ()
   {
@@ -77,6 +81,10 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
     return m_sTopLevelContentID;
   }
 
+  /**
+   * @return The mutable map of all attachments that are part of the response.
+   *         Never <code>null</code> but maybe empty. Handle with care.
+   */
   @Nonnull
   @ReturnsMutableObject
   public ICommonsOrderedMap <String, MEPayload> attachments ()
@@ -84,6 +92,10 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
     return m_aAttachments;
   }
 
+  /**
+   * @return A copy of all attachments that are part of the response. Never
+   *         <code>null</code> but maybe empty.
+   */
   @Nonnull
   @ReturnsMutableCopy
   public ICommonsOrderedMap <String, MEPayload> getAllAttachments ()
@@ -106,19 +118,25 @@ public class IncomingEDMResponse implements IIncomingEDMResponse
       return false;
 
     final IncomingEDMResponse rhs = (IncomingEDMResponse) o;
-    return m_aResponse.equals (rhs.m_aResponse) && m_aAttachments.equals (rhs.m_aAttachments) && m_aMetadata.equals (rhs.m_aMetadata);
+    return m_aResponse.equals (rhs.m_aResponse) &&
+           m_aAttachments.equals (rhs.m_aAttachments) &&
+           m_aMetadata.equals (rhs.m_aMetadata);
   }
 
   @Override
   public int hashCode ()
   {
-    return new HashCodeGenerator (this).append (m_aResponse).append (m_aAttachments).append (m_aMetadata).getHashCode ();
+    return new HashCodeGenerator (this).append (m_aResponse)
+                                       .append (m_aAttachments)
+                                       .append (m_aMetadata)
+                                       .getHashCode ();
   }
 
   @Override
   public String toString ()
   {
     return new ToStringGenerator (this).append ("Response", m_aResponse)
+                                       .append ("TopLevelContentID", m_sTopLevelContentID)
                                        .append ("Attachments", m_aAttachments)
                                        .append ("Metadata", m_aMetadata)
                                        .getToString ();
