@@ -188,6 +188,9 @@ Do a simple `mvn clean install` on the command line.
 
 # News and Noteworthy
 
+`2.1.0` - work in progress
+* Bumped phase4 to 0.11.0
+
 2020-08-30: release of `2.0.0`
 * Renamed class `MPTrigger` to `DC_DP_TriggerViaHttp`
 * Extended APIs for increased customizability

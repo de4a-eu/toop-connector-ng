@@ -19,7 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.config.IConfig;
-import com.helger.phase4.crypto.AS4CryptoFactoryPropertiesFile;
+import com.helger.phase4.crypto.AS4CryptoFactoryProperties;
 import com.helger.phase4.crypto.AS4CryptoProperties;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
 import com.helger.security.keystore.EKeyStoreType;
@@ -146,13 +146,13 @@ public final class Phase4Config
   @Nonnull
   public static IAS4CryptoFactory getCryptoFactory ()
   {
-    return new AS4CryptoFactoryPropertiesFile (new AS4CryptoProperties ().setKeyStoreType (getKeyStoreType ())
-                                                                         .setKeyStorePath (getKeyStorePath ())
-                                                                         .setKeyStorePassword (getKeyStorePassword ())
-                                                                         .setKeyAlias (getKeyStoreKeyAlias ())
-                                                                         .setKeyPassword (getKeyStoreKeyPassword ())
-                                                                         .setTrustStoreType (getTrustStoreType ())
-                                                                         .setTrustStorePath (getTrustStorePath ())
-                                                                         .setTrustStorePassword (getTrustStorePassword ()));
+    return new AS4CryptoFactoryProperties (new AS4CryptoProperties ().setKeyStoreType (getKeyStoreType ())
+                                                                     .setKeyStorePath (getKeyStorePath ())
+                                                                     .setKeyStorePassword (getKeyStorePassword ())
+                                                                     .setKeyAlias (getKeyStoreKeyAlias ())
+                                                                     .setKeyPassword (getKeyStoreKeyPassword ())
+                                                                     .setTrustStoreType (getTrustStoreType ())
+                                                                     .setTrustStorePath (getTrustStorePath ())
+                                                                     .setTrustStorePassword (getTrustStorePassword ()));
   }
 }

@@ -37,14 +37,13 @@ import com.helger.commons.io.file.FileOperationManager;
 import com.helger.commons.mime.EMimeContentType;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.string.ToStringGenerator;
-import com.helger.commons.system.SystemProperties;
 import com.helger.peppol.utils.PeppolCertificateHelper;
 import com.helger.phase4.attachment.EAS4CompressionMode;
 import com.helger.phase4.attachment.Phase4OutgoingAttachment;
-import com.helger.phase4.cef.Phase4CEFEndpointDetailProviderConstant;
 import com.helger.phase4.cef.Phase4CEFSender.CEFUserMessageBuilder;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
 import com.helger.phase4.dump.AS4DumpManager;
+import com.helger.phase4.dynamicdiscovery.AS4EndpointDetailProviderConstant;
 import com.helger.phase4.http.AS4HttpDebug;
 import com.helger.phase4.messaging.domain.MessageHelperMethods;
 import com.helger.phase4.mgr.MetaAS4Manager;
@@ -79,11 +78,6 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
 {
   public static final String ID = "phase4";
   private static final Logger LOGGER = LoggerFactory.getLogger (Phase4MessageExchangeSPI.class);
-
-  static
-  {
-    SystemProperties.setPropertyValue (MetaAS4Manager.SYSTEM_PROPERTY_PHASE4_MANAGER_INMEMORY, true);
-  }
 
   private IAS4CryptoFactory m_aCF;
 
@@ -242,8 +236,8 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                                                                          .toRole ("http://www.toop.eu/edelivery/gateway")
                                                                          .useOriginalSenderFinalRecipientTypeAttr (false)
                                                                          .rawResponseConsumer (new RawResponseWriter ())
-                                                                         .endpointDetailProvider (new Phase4CEFEndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
-                                                                                                                                               aRoutingInfo.getEndpointURL ()));
+                                                                         .endpointDetailProvider (new AS4EndpointDetailProviderConstant (aRoutingInfo.getCertificate (),
+                                                                                                                                         aRoutingInfo.getEndpointURL ()));
 
       // Payload/attachments
       int nPayloadIndex = 0;
