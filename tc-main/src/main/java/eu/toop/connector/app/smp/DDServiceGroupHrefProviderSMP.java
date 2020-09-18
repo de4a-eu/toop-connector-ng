@@ -25,7 +25,7 @@ import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
 import com.helger.smpclient.exception.SMPClientException;
 import com.helger.smpclient.url.BDXLURLProvider;
-import com.helger.smpclient.url.PeppolDNSResolutionException;
+import com.helger.smpclient.url.SMPDNSResolutionException;
 import com.helger.xsds.bdxr.smp1.ServiceGroupType;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataReferenceType;
 
@@ -40,7 +40,7 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
   {}
 
   @Nonnull
-  public static BDXRClientReadOnly getSMPClient (@Nonnull final IParticipantIdentifier aRecipientID) throws PeppolDNSResolutionException
+  public static BDXRClientReadOnly getSMPClient (@Nonnull final IParticipantIdentifier aRecipientID) throws SMPDNSResolutionException
   {
     if (TCConfig.R2D2.isR2D2UseDNS ())
     {
@@ -72,19 +72,17 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
       // Map from cleaned URL to original URL
       if (aSG != null && aSG.getServiceMetadataReferenceCollection () != null)
       {
-        for (final ServiceMetadataReferenceType aSMR : aSG.getServiceMetadataReferenceCollection ()
-                                                          .getServiceMetadataReference ())
+        for (final ServiceMetadataReferenceType aSMR : aSG.getServiceMetadataReferenceCollection ().getServiceMetadataReference ())
         {
           // Decoded href is important for unification
           final String sHref = CIdentifier.createPercentDecoded (aSMR.getHref ());
           if (ret.put (sHref, aSMR.getHref ()) != null)
-            aErrorHandler.onWarning ("The SMP ServiceGroup list contains the duplicate URL '" + sHref + "'",
-                                     EToopErrorCode.GEN);
+            aErrorHandler.onWarning ("The SMP ServiceGroup list contains the duplicate URL '" + sHref + "'", EToopErrorCode.GEN);
         }
       }
       return ret;
     }
-    catch (final PeppolDNSResolutionException | SMPClientException ex)
+    catch (final SMPDNSResolutionException | SMPClientException ex)
     {
       throw new IllegalStateException (ex);
     }
