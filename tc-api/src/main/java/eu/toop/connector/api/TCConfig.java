@@ -339,14 +339,6 @@ public final class TCConfig {
   }
 
   public static class AS4 {
-
-    /**
-     * @return The party id type for sending party id
-     * @since 2.0.2-SNAPSHOT
-     */
-    public static String getFromPartyIdType() {
-      return getConfig().getAsString("toop.as4.from-party-id-type");
-    }
     /**
      * @return The party id type for receiving party id
      * @since 2.0.2-SNAPSHOT

@@ -226,18 +226,12 @@ public final class EBMSUtils {
           final IMicroElement eFrom = ePartyInfo.appendElement(NS_EBMS, "From");
           eFrom.appendElement(NS_EBMS, "PartyId")
               .appendText(TCConfig.MEM.getMEMAS4TcPartyid());
-          if (TCConfig.AS4.getFromPartyIdType() != null) {
-            eFrom.setAttribute("type", TCConfig.AS4.getFromPartyIdType());
-          }
           eFrom.appendElement(NS_EBMS, "Role").appendText(MEMConstants.MEM_PARTY_ROLE);
         }
         {
           final IMicroElement eTo = ePartyInfo.appendElement(NS_EBMS, "To");
           eTo.appendElement(NS_EBMS, "PartyId")
               .appendText(TCConfig.MEM.getMEMAS4GwPartyID());
-          if (TCConfig.AS4.getToPartyIdType() != null) {
-            eTo.setAttribute("type", TCConfig.AS4.getToPartyIdType());
-          }
           eTo.appendElement(NS_EBMS, "Role").appendText(MEMConstants.GW_PARTY_ROLE);
         }
       }
@@ -597,6 +591,10 @@ public final class EBMSUtils {
     submissionData.serviceType = gatewayRoutingMetadata.getProcessID().getScheme();
 
     submissionData.toPartyId = _getCN(gatewayRoutingMetadata.getCertificate().getSubjectX500Principal().getName());
+
+    if (TCConfig.AS4.getToPartyIdType() != null){
+      submissionData.toPartyIdType = TCConfig.AS4.getToPartyIdType();
+    }
 
     // TODO: infer it from the transaction id
     submissionData.conversationId = "1";
