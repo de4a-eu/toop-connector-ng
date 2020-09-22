@@ -1,12 +1,12 @@
 /**
  * Copyright (C) 2018-2020 toop.eu
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *         http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -203,7 +203,7 @@ public final class EBMSUtils {
    * The conversion procedure goes here
    */
   public static SOAPMessage convert2MEOutboundAS4Message(final SubmissionMessageProperties metadata,
-      final MEMessage meMessage) throws MEOutgoingException {
+                                                         final MEMessage meMessage) throws MEOutgoingException {
     if (LOG.isDebugEnabled()) {
       LOG.debug("Convert submission data to SOAP Message");
     }
@@ -225,19 +225,19 @@ public final class EBMSUtils {
         {
           final IMicroElement eFrom = ePartyInfo.appendElement(NS_EBMS, "From");
           eFrom.appendElement(NS_EBMS, "PartyId")
-               // No type
-               // .setAttribute ("type",
-               // "urn:oasis:names:tc:ebcore:partyid-type:unregistered")
-               .appendText(TCConfig.MEM.getMEMAS4TcPartyid());
+              .appendText(TCConfig.MEM.getMEMAS4TcPartyid());
+          if (TCConfig.AS4.getFromPartyIdType() != null) {
+            eFrom.setAttribute("type", TCConfig.AS4.getFromPartyIdType());
+          }
           eFrom.appendElement(NS_EBMS, "Role").appendText(MEMConstants.MEM_PARTY_ROLE);
         }
         {
           final IMicroElement eTo = ePartyInfo.appendElement(NS_EBMS, "To");
           eTo.appendElement(NS_EBMS, "PartyId")
-             // No type
-             // .setAttribute ("type",
-             // "urn:oasis:names:tc:ebcore:partyid-type:unregistered")
-             .appendText(TCConfig.MEM.getMEMAS4GwPartyID());
+              .appendText(TCConfig.MEM.getMEMAS4GwPartyID());
+          if (TCConfig.AS4.getToPartyIdType() != null) {
+            eTo.setAttribute("type", TCConfig.AS4.getToPartyIdType());
+          }
           eTo.appendElement(NS_EBMS, "Role").appendText(MEMConstants.GW_PARTY_ROLE);
         }
       }
@@ -290,8 +290,8 @@ public final class EBMSUtils {
 
       // Convert to org.w3c.dom ....
       final Element element = DOMReader.readXMLDOM(MicroWriter.getNodeAsBytes(aDoc,
-                                                                              new XMLWriterSettings().setNamespaceContext(aNSCtx)))
-                                       .getDocumentElement();
+          new XMLWriterSettings().setNamespaceContext(aNSCtx)))
+          .getDocumentElement();
 
       // create a soap message based on this XML
       final SOAPMessage message = SoapUtil.createEmptyMessage();
@@ -303,9 +303,9 @@ public final class EBMSUtils {
         attachmentPart.setContentId('<' + payload.getContentID() + '>');
         try {
           attachmentPart.setRawContentBytes(payload.getData().bytes(),
-                                            payload.getData().getOffset(),
-                                            payload.getData().size(),
-                                            payload.getMimeTypeString());
+              payload.getData().getOffset(),
+              payload.getData().size(),
+              payload.getMimeTypeString());
         } catch (final SOAPException e) {
           throw new MEOutgoingException("Failed to read payload", e);
         }
@@ -361,7 +361,7 @@ public final class EBMSUtils {
         try {
           // throws exception if part info does not exist
           partInfo = SoapXPathUtil.safeFindSingleNode(soapHeader,
-                                                      "//:PayloadInfo/:PartInfo[@href='cid:" + href + "']");
+              "//:PayloadInfo/:PartInfo[@href='cid:" + href + "']");
         } catch (final Exception ex) {
           throw new MEIncomingException("ContentId: " + href + " was not found in PartInfo");
         }
@@ -369,7 +369,7 @@ public final class EBMSUtils {
         MimeType mimeType;
         try {
           String sMimeType = SoapXPathUtil.getSingleNodeTextContent(partInfo,
-                                                                    ".//:PartProperties/:Property[@name='MimeType']");
+              ".//:PartProperties/:Property[@name='MimeType']");
           if (sMimeType.startsWith("cid:")) {
             sMimeType = sMimeType.substring(4);
           }
@@ -387,7 +387,7 @@ public final class EBMSUtils {
 
         try {
           final Node charSetNode = SoapXPathUtil.findSingleNode(partInfo,
-                                                                ".//:PartProperties/:Property[@name='CharacterSet']/text()");
+              ".//:PartProperties/:Property[@name='CharacterSet']/text()");
           if (charSetNode != null) {
             final Charset aCharset = CharsetHelper.getCharsetFromNameOrNull(charSetNode.getNodeValue());
             if (aCharset != null) {
@@ -420,7 +420,7 @@ public final class EBMSUtils {
 
     String sSenderIdType;
     try {
-      sSenderIdType= SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='originalSender']/@type");
+      sSenderIdType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='originalSender']/@type");
     } catch (final IllegalArgumentException ex) {
       sSenderIdType = null;
     }
@@ -428,8 +428,8 @@ public final class EBMSUtils {
 
     String sReceiverIdType;
     try {
-      sReceiverIdType= SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='finalRecipient']/@type");
-    } catch (final IllegalArgumentException ex){
+      sReceiverIdType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='finalRecipient']/@type");
+    } catch (final IllegalArgumentException ex) {
       sReceiverIdType = null;
     }
     final String sReceiverId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode, ".//:Property[@name='finalRecipient']/text()");
@@ -448,13 +448,14 @@ public final class EBMSUtils {
 
     final IIdentifierFactory aIF = TCConfig.getIdentifierFactory();
     final IParticipantIdentifier sender = sSenderIdType != null ? aIF.createParticipantIdentifier(sSenderIdType, sSenderId) : aIF.parseParticipantIdentifier(sSenderId);
-    if (sender == null) LOG.warn ("Failed to create/parse sender participant identifier '"+sSenderIdType+"' and '"+sSenderId+"'");
+    if (sender == null) LOG.warn("Failed to create/parse sender participant identifier '" + sSenderIdType + "' and '" + sSenderId + "'");
     final IParticipantIdentifier receiver = sReceiverIdType != null ? aIF.createParticipantIdentifier(sReceiverIdType, sReceiverId) : aIF.parseParticipantIdentifier(sReceiverId);
-    if (receiver == null) LOG.warn ("Failed to create/parse receiver participant identifier '"+sReceiverIdType+"' and '"+sReceiverId+"'");
+    if (receiver == null)
+      LOG.warn("Failed to create/parse receiver participant identifier '" + sReceiverIdType + "' and '" + sReceiverId + "'");
     final IDocumentTypeIdentifier doctypeid = aIF.parseDocumentTypeIdentifier(sDoctypeId);
-    if (doctypeid == null) LOG.warn ("Failed to parse document type identifier '"+sDoctypeId+"'");
+    if (doctypeid == null) LOG.warn("Failed to parse document type identifier '" + sDoctypeId + "'");
     final IProcessIdentifier procid = sProcidType != null ? aIF.createProcessIdentifier(sProcidType, sProcid) : aIF.parseProcessIdentifier(sProcid);
-    if (procid == null) LOG.warn ("Failed to create/parse process identifier '"+sProcidType+"' and '"+sProcid+"'");
+    if (procid == null) LOG.warn("Failed to create/parse process identifier '" + sProcidType + "' and '" + sProcid + "'");
 
     return meMessage.senderID(sender).receiverID(receiver).processID(procid).docTypeID(doctypeid).build();
   }
@@ -466,18 +467,18 @@ public final class EBMSUtils {
 
     try {
       final Node messagePropsNode = SoapXPathUtil.safeFindSingleNode(sNotification.getSOAPHeader(),
-                                                                     "//:MessageProperties");
+          "//:MessageProperties");
 
       final String messageId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                      ".//:Property[@name='MessageId']/text()");
+          ".//:Property[@name='MessageId']/text()");
       notification.setMessageID(messageId);
 
       final String refToMessageId = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                           ".//:Property[@name='RefToMessageId']/text()");
+          ".//:Property[@name='RefToMessageId']/text()");
       notification.setRefToMessageID(refToMessageId);
 
       final String sSignalType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                        ".//:Property[@name='Result']");
+          ".//:Property[@name='Result']");
       if (!"ERROR".equalsIgnoreCase(sSignalType)) {
         notification.setResult(ResultType.RECEIPT);
       } else {
@@ -485,7 +486,7 @@ public final class EBMSUtils {
 
         try {
           final String errorCode = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                          ".//:Property[@name='ErrorCode']");
+              ".//:Property[@name='ErrorCode']");
           notification.setErrorCode(errorCode);
         } catch (final RuntimeException e) {
           throw new IllegalStateException("ErrorCode is mandatory for relay result errors.");
@@ -493,7 +494,7 @@ public final class EBMSUtils {
 
         try {
           final String severity = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                         ".//:Property[@name='severity']");
+              ".//:Property[@name='severity']");
           notification.setSeverity(severity);
         } catch (final RuntimeException e) {
           // TODO so what?
@@ -501,7 +502,7 @@ public final class EBMSUtils {
 
         try {
           final String shortDesc = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                          ".//:Property[@name='ShortDescription']");
+              ".//:Property[@name='ShortDescription']");
           notification.setShortDescription(shortDesc);
         } catch (final RuntimeException ignored) {
           // TODO so what?
@@ -509,7 +510,7 @@ public final class EBMSUtils {
 
         try {
           final String desc = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                     ".//:Property[@name='Description']");
+              ".//:Property[@name='Description']");
           notification.setDescription(desc);
         } catch (final RuntimeException ignored) {
           // TODO so what?
@@ -531,20 +532,20 @@ public final class EBMSUtils {
 
     try {
       final Node messagePropsNode = SoapXPathUtil.safeFindSingleNode(sSubmissionResult.getSOAPHeader(),
-                                                                     "//:MessageProperties");
+          "//:MessageProperties");
 
       final String refToMessageID = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                           ".//:Property[@name='RefToMessageId']/text()");
+          ".//:Property[@name='RefToMessageId']/text()");
       submissionResult.setRefToMessageID(refToMessageID);
 
       final String sSignalType = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                        ".//:Property[@name='Result']");
+          ".//:Property[@name='Result']");
       if ("ERROR".equalsIgnoreCase(sSignalType)) {
         submissionResult.setResult(ResultType.ERROR);
 
         // description must be there when there is an error
         final String description = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                          ".//:Property[@name='Description']");
+            ".//:Property[@name='Description']");
         submissionResult.setDescription(description);
 
       } else {
@@ -552,7 +553,7 @@ public final class EBMSUtils {
 
         // message id is conditional, it must be there only in case of receipt
         final String messageID = SoapXPathUtil.getSingleNodeTextContent(messagePropsNode,
-                                                                        ".//:Property[@name='MessageId']/text()");
+            ".//:Property[@name='MessageId']/text()");
         submissionResult.setMessageID(messageID);
       }
 
@@ -653,12 +654,12 @@ public final class EBMSUtils {
 
     ValueEnforcer.notNull(response, "Soap message");
     final Element errorElement = (Element) SoapXPathUtil.findSingleNode(response.getSOAPPart(),
-                                                                        "//:SignalMessage/:Error");
+        "//:SignalMessage/:Error");
 
     if (errorElement != null) {
       final String cat = StringHelper.getNotNull(errorElement.getAttribute("category")).toUpperCase(Locale.US);
       final String shortDescription = StringHelper.getNotNull(errorElement.getAttribute("shortDescription"))
-                                                  .toUpperCase(Locale.US);
+          .toUpperCase(Locale.US);
       final String severity = StringHelper.getNotNull(errorElement.getAttribute("severity")).toUpperCase(Locale.US);
       final String code = StringHelper.getNotNull(errorElement.getAttribute("errorCode")).toUpperCase(Locale.US);
 
@@ -668,7 +669,7 @@ public final class EBMSUtils {
       errBuff.append("Category: [" + cat + "]\n");
       errBuff.append("ShortDescription: [" + shortDescription + "]\n");
       ToopKafkaClient.send(EErrorLevel.ERROR,
-                           () -> "Error from AS4 transmission: EToopErrorCode.ME_002 -- " + errBuff.toString());
+          () -> "Error from AS4 transmission: EToopErrorCode.ME_002 -- " + errBuff.toString());
       throw new MEOutgoingException(EToopErrorCode.ME_002, errBuff.toString());
     }
 
