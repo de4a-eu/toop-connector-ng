@@ -57,6 +57,7 @@ import com.helger.phase4.util.Phase4Exception;
 import com.helger.photon.app.io.WebFileIO;
 import com.helger.servlet.ServletHelper;
 
+import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.http.TCHttpClientSettings;
 import eu.toop.connector.api.me.IMessageExchangeSPI;
 import eu.toop.connector.api.me.incoming.IMEIncomingHandler;
@@ -134,7 +135,8 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     return ret;
   }
 
-  public void registerIncomingHandler (@Nonnull final ServletContext aServletContext, @Nonnull final IMEIncomingHandler aIncomingHandler)
+  public void registerIncomingHandler (@Nonnull final ServletContext aServletContext,
+                                       @Nonnull final IMEIncomingHandler aIncomingHandler)
   {
     ValueEnforcer.notNull (aServletContext, "ServletContext");
     ValueEnforcer.notNull (aIncomingHandler, "IncomingHandler");
@@ -227,10 +229,10 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                                                                          .documentTypeID (aRoutingInfo.getDocumentTypeID ())
                                                                          .processID (aRoutingInfo.getProcessID ())
                                                                          .conversationID (MessageHelperMethods.createRandomConversationID ())
-                                                                         .fromPartyIDType (null)
+                                                                         .fromPartyIDType (TCConfig.AS4.getFromPartyIdType ())
                                                                          .fromPartyID (Phase4Config.getFromPartyID ())
                                                                          .fromRole ("http://www.toop.eu/edelivery/gateway")
-                                                                         .toPartyIDType (null)
+                                                                         .toPartyIDType (TCConfig.AS4.getToPartyIdType ())
                                                                          .toPartyID (PeppolCertificateHelper.getCN (aTheirCert.getSubjectX500Principal ()
                                                                                                                               .getName ()))
                                                                          .toRole ("http://www.toop.eu/edelivery/gateway")
@@ -275,7 +277,8 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
     }
   }
 
-  public void sendOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo, @Nonnull final MEMessage aMessage) throws MEOutgoingException
+  public void sendOutgoing (@Nonnull final IMERoutingInformation aRoutingInfo,
+                            @Nonnull final MEMessage aMessage) throws MEOutgoingException
   {
     LOGGER.info ("[phase4] sendOutgoing");
     _sendOutgoing (m_aCF, aRoutingInfo, aMessage);
