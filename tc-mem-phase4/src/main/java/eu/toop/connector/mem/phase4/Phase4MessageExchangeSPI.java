@@ -229,7 +229,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
                                                                          .documentTypeID (aRoutingInfo.getDocumentTypeID ())
                                                                          .processID (aRoutingInfo.getProcessID ())
                                                                          .conversationID (MessageHelperMethods.createRandomConversationID ())
-                                                                         .fromPartyIDType (TCConfig.AS4.getFromPartyIdType ())
+                                                                         .fromPartyIDType (null)
                                                                          .fromPartyID (Phase4Config.getFromPartyID ())
                                                                          .fromRole ("http://www.toop.eu/edelivery/gateway")
                                                                          .toPartyIDType (TCConfig.AS4.getToPartyIdType ())
