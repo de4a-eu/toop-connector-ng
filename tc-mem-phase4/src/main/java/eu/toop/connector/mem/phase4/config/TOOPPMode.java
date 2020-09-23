@@ -91,17 +91,17 @@ public class TOOPPMode
     final PModeParty aInitiator = PModeParty.createSimple (sInitiatorID, "http://www.toop.eu/edelivery/gateway");
     final PModeParty aResponder = PModeParty.createSimple (sResponderID, "http://www.toop.eu/edelivery/gateway");
 
-    final PMode aPMode = new PMode (aPModeIDProvider,
+    final PMode aPMode = new PMode (aPModeIDProvider.getPModeID (aInitiator.getID (), aResponder.getID ()),
                                     aInitiator,
                                     aResponder,
                                     DEFAULT_AGREEMENT_ID,
                                     EMEP.ONE_WAY,
                                     EMEPBinding.PUSH,
                                     new PModeLeg (PModeLegProtocol.createForDefaultSoapVersion (sResponderAddress),
-                                                  new PModeLegBusinessInformation ((String) null,
-                                                                                   (String) null,
-                                                                                   (Long) null,
-                                                                                   CAS4.DEFAULT_MPC_ID),
+                                                  PModeLegBusinessInformation.create ((String) null,
+                                                                                      (String) null,
+                                                                                      (Long) null,
+                                                                                      CAS4.DEFAULT_MPC_ID),
                                                   new PModeLegErrorHandling ((PModeAddressList) null,
                                                                              (PModeAddressList) null,
                                                                              ETriState.TRUE,
