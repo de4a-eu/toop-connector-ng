@@ -176,7 +176,7 @@ public class Phase4MessageExchangeSPI implements IMessageExchangeSPI
       final PMode aPMode = TOOPPMode.createTOOPMode ("AnyInitiatorID",
                                                      "AnyResponderID",
                                                      "AnyResponderAddress",
-                                                     (i, r) -> "TOOP_PMODE",
+                                                     "TOOP_PMODE",
                                                      false);
       aPMode.setPayloadService (new PModePayloadService (EAS4CompressionMode.GZIP));
       aPMode.getReceptionAwareness ().setRetry (false);

@@ -27,7 +27,6 @@ import com.helger.phase4.crypto.ECryptoAlgorithmSignDigest;
 import com.helger.phase4.mgr.MetaAS4Manager;
 import com.helger.phase4.model.EMEP;
 import com.helger.phase4.model.EMEPBinding;
-import com.helger.phase4.model.pmode.IPModeIDProvider;
 import com.helger.phase4.model.pmode.PMode;
 import com.helger.phase4.model.pmode.PModeParty;
 import com.helger.phase4.model.pmode.PModePayloadService;
@@ -74,8 +73,8 @@ public class TOOPPMode
    *        Responder ID
    * @param sResponderAddress
    *        Responder URL
-   * @param aPModeIDProvider
-   *        PMode ID provider
+   * @param sPModeID
+   *        PMode ID
    * @param bPersist
    *        <code>true</code> to persist the PMode <code>false</code> to have it
    *        only in memory.
@@ -85,13 +84,13 @@ public class TOOPPMode
   public static PMode createTOOPMode (@Nonnull @Nonempty final String sInitiatorID,
                                       @Nonnull @Nonempty final String sResponderID,
                                       @Nullable final String sResponderAddress,
-                                      @Nonnull final IPModeIDProvider aPModeIDProvider,
+                                      @Nonnull final String sPModeID,
                                       final boolean bPersist)
   {
     final PModeParty aInitiator = PModeParty.createSimple (sInitiatorID, "http://www.toop.eu/edelivery/gateway");
     final PModeParty aResponder = PModeParty.createSimple (sResponderID, "http://www.toop.eu/edelivery/gateway");
 
-    final PMode aPMode = new PMode (aPModeIDProvider.getPModeID (aInitiator.getID (), aResponder.getID ()),
+    final PMode aPMode = new PMode (sPModeID,
                                     aInitiator,
                                     aResponder,
                                     DEFAULT_AGREEMENT_ID,
