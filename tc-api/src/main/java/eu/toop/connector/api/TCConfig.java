@@ -324,8 +324,21 @@ public final class TCConfig
 
   public static class AS4
   {
+    private AS4 ()
+    {}
+
     /**
-     * @return The to party id type for receiving party id
+     * @return The <code>From/PartyId/@type</code> for receiving party id
+     * @since 2.0.2
+     */
+    @Nullable
+    public static String getFromPartyIdType ()
+    {
+      return getConfig ().getAsString ("toop.as4.from-party-id-type");
+    }
+
+    /**
+     * @return The <code>To/PartyId/@type</code> for receiving party id
      * @since 2.0.2
      */
     @Nullable

@@ -80,6 +80,7 @@ The following configuration properties are **supported** - some of them have def
 * **`http.read-timeout`** (int) - the HTTP read/socket timeout in milliseconds
 * **`toop.webapp.data.path`** (string) (since 2.0.0-rc4) - the absolute path, where data should be stored.
 * **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to (for receiving incoming message). Note: this property is only needed, if HTTP interface between DC/DP and TC is used.
+* **`toop.as4.from-party-id-type`** (string) (since 2.0.2) - the AS4 `From/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
 * **`toop.as4.to-party-id-type`** (string) (since 2.0.2) - the AS4 `To/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
 
 Note: this TOOP Connector uses a different configuration engine than the old version.
