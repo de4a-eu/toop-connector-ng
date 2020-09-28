@@ -80,8 +80,6 @@ The following configuration properties are **supported** - some of them have def
 * **`http.read-timeout`** (int) - the HTTP read/socket timeout in milliseconds
 * **`toop.webapp.data.path`** (string) (since 2.0.0-rc4) - the absolute path, where data should be stored.
 * **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to (for receiving incoming message). Note: this property is only needed, if HTTP interface between DC/DP and TC is used.
-* **`toop.as4.from-party-id-type`** (string) (since 2.0.2) - the AS4 `From/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
-* **`toop.as4.to-party-id-type`** (string) (since 2.0.2) - the AS4 `To/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
 
 Note: this TOOP Connector uses a different configuration engine than the old version.
 
@@ -92,6 +90,8 @@ Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src
 * **`toop.mem.as4.endpoint`** (string) - the URL where the external AS4 gateway (Holodeck) listens to messages to be send out
 * **`toop.mem.as4.gw.partyid`** (string) - the AS4 gateway party ID
 * **`toop.mem.as4.tc.partyid`** (string) - the AS4 TOOP Connector party ID
+* **`toop.mem.as4.from-party-id-type`** (string) (since 2.0.2) - the AS4 `From/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
+* **`toop.mem.as4.to-party-id-type`** (string) (since 2.0.2) - the AS4 `To/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
 * **`toop.mem.as4.notificationWaitTimeout`** (long) - the timeout for a notification in milliseconds
 * **`toop.mem.outgoing.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of outgoing messages. By default this is disabled. 
 * **`toop.mem.outgoing.dump.path`** (string) (since v2.0.0-rc3) - the file system directory in which the dumps of the outgoing messages are stored. This should be an absolute path. The filenames in the directory start with `toop-mem-external-outgoing-`.
@@ -102,12 +102,16 @@ Note: the receiving endpoint for MEM implementation `external` is `/from-as4` - 
 
 ### Properties for MEM implementation `phase4`
 
+Note: since 2.0.2 they must reside in the file "phase4.properties".
+
 * **`phase4.datapath`** (string) - the absolute path to a local directory to store data
 * **`phase4.debug.http`** (boolean) - enable or disable HTTP debugging for AS4 transmissions. The default value is `false`.
 * **`phase4.debug.incoming`** (boolean) - enable or disable debug logging for incoming AS4 transmissions. The default value is `false`.
 * **`phase4.dump.incoming.path`** (string) (since v2.0.0-rc3) - an optional absolute directory path where the incoming AS4 messages should be dumped to. Disabled by default.
 * **`phase4.dump.outgoing.path`** (string) (since v2.0.0-rc3) - an optional absolute directory path where the outgoing AS4 messages should be dumped to. Disabled by default.
 * **`phase4.send.fromparty.id`** (string) (since v2.0.0-rc3) - the from party ID to be used for outgoing messages. Previous versions need to use **`toop.mem.as4.tc.partyid`** - starting from RC3 this property is still used as a fallback)
+* **`phase4.send.fromparty.id.type`** (string) (since 2.0.2) - the AS4 `From/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
+* **`phase4.send.toparty.id.type`** (string) (since 2.0.2) - the AS4 `To/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
 * **`phase4.send.response.folder`** (string) - an optional folder, where sent responses should be stored. If this property is not provided, they are not stored
 * **`phase4.keystore.type`** (string) - the type of the keystore (either "JKS" or "PKCS12" - case insensitive) - defaults to JKS.
 * **`phase4.keystore.path`** (string) - the path to the keystore (can be classpath relative or an absolute file)

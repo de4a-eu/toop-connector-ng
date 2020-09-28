@@ -209,11 +209,7 @@ public final class TCConfig
           final String sManagementServiceURL = getConfig ().getAsString ("toop.r2d2.sml.serviceurl");
           final boolean bClientCertificateRequired = getConfig ().getAsBoolean ("toop.r2d2.sml.clientcert", false);
           // No need for a persistent ID here
-          ret = new SMLInfo (GlobalIDFactory.getNewStringID (),
-                             sDisplayName,
-                             sDNSZone,
-                             sManagementServiceURL,
-                             bClientCertificateRequired);
+          ret = new SMLInfo (GlobalIDFactory.getNewStringID (), sDisplayName, sDNSZone, sManagementServiceURL, bClientCertificateRequired);
         }
         // Remember in cache
         s_aCachedSMLInfo = ret;
@@ -284,6 +280,26 @@ public final class TCConfig
       return getConfig ().getAsString ("toop.mem.as4.tc.partyid");
     }
 
+    /**
+     * @return The <code>From/PartyId/@type</code> for receiving party id
+     * @since 2.0.2
+     */
+    @Nullable
+    public static String getFromPartyIdType ()
+    {
+      return getConfig ().getAsString ("toop.mem.as4.from-party-id-type");
+    }
+
+    /**
+     * @return The <code>To/PartyId/@type</code> for receiving party id
+     * @since 2.0.2
+     */
+    @Nullable
+    public static String getToPartyIdType ()
+    {
+      return getConfig ().getAsString ("toop.mem.as4.to-party-id-type");
+    }
+
     public static long getGatewayNotificationWaitTimeout ()
     {
       return getConfig ().getAsLong ("toop.mem.as4.notificationWaitTimeout", 20000);
@@ -319,32 +335,6 @@ public final class TCConfig
     public static String getMEMIncomingDumpPath ()
     {
       return getConfig ().getAsString ("toop.mem.incoming.dump.path");
-    }
-  }
-
-  public static class AS4
-  {
-    private AS4 ()
-    {}
-
-    /**
-     * @return The <code>From/PartyId/@type</code> for receiving party id
-     * @since 2.0.2
-     */
-    @Nullable
-    public static String getFromPartyIdType ()
-    {
-      return getConfig ().getAsString ("toop.as4.from-party-id-type");
-    }
-
-    /**
-     * @return The <code>To/PartyId/@type</code> for receiving party id
-     * @since 2.0.2
-     */
-    @Nullable
-    public static String getToPartyIdType ()
-    {
-      return getConfig ().getAsString ("toop.as4.to-party-id-type");
     }
   }
 

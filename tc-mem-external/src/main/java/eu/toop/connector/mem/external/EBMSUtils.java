@@ -628,8 +628,8 @@ public final class EBMSUtils {
 
     submissionData.toPartyId = _getCN(gatewayRoutingMetadata.getCertificate().getSubjectX500Principal().getName());
 
-    submissionData.toPartyIdType = TCConfig.AS4.getToPartyIdType();
-    
+    submissionData.toPartyIdType = TCConfig.MEM.getToPartyIdType();
+
 
     // TODO: infer it from the transaction id
     submissionData.conversationId = "1";
