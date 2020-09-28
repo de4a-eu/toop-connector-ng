@@ -90,7 +90,6 @@ Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src
 * **`toop.mem.as4.endpoint`** (string) - the URL where the external AS4 gateway (Holodeck) listens to messages to be send out
 * **`toop.mem.as4.gw.partyid`** (string) - the AS4 gateway party ID
 * **`toop.mem.as4.tc.partyid`** (string) - the AS4 TOOP Connector party ID
-* **`toop.mem.as4.from-party-id-type`** (string) (since 2.0.2) - the AS4 `From/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
 * **`toop.mem.as4.to-party-id-type`** (string) (since 2.0.2) - the AS4 `To/PartyId/@type` value. This is optional and defaults to `null`. This is for Domibus compatibility only.
 * **`toop.mem.as4.notificationWaitTimeout`** (long) - the timeout for a notification in milliseconds
 * **`toop.mem.outgoing.dump.enabled`** (boolean) (since v2.0.0-rc3) - enable or disable the dumping of outgoing messages. By default this is disabled. 
