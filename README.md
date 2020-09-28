@@ -194,9 +194,12 @@ Do a simple `mvn clean install` on the command line.
 # News and Noteworthy
 
 `2.1.0` - work in progress
+* Update the EDM to version 2.1
 
 `2.0.2` - work in progress
 * Bumped phase4 to 0.12.0
+* Added new configuration items `toop.mem.as4.to-party-id-type`, `phase4.send.fromparty.id.type` and `phase4.send.toparty.id.type`
+* phase4 properties should now reside in the file `phase4.properties`
 
 2020-09-18: release of `2.0.1`
 * Bumped phase4 to 0.11.1
