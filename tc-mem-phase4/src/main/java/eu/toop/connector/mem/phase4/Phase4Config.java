@@ -19,6 +19,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
 import com.helger.config.IConfig;
+import com.helger.phase4.config.AS4Configuration;
 import com.helger.phase4.crypto.AS4CryptoFactoryProperties;
 import com.helger.phase4.crypto.AS4CryptoProperties;
 import com.helger.phase4.crypto.IAS4CryptoFactory;
@@ -39,7 +40,7 @@ public final class Phase4Config
   @Nonnull
   public static IConfig getConfig ()
   {
-    return TCConfig.getConfig ();
+    return AS4Configuration.getConfig ();
   }
 
   @Nullable
@@ -81,6 +82,26 @@ public final class Phase4Config
       ret = TCConfig.MEM.getMEMAS4TcPartyid ();
     }
     return ret;
+  }
+
+  /**
+   * @return The <code>From/PartyId/@type</code> for receiving party id
+   * @since 2.0.2
+   */
+  @Nullable
+  public static String getFromPartyIDType ()
+  {
+    return getConfig ().getAsString ("phase4.send.fromparty.id.type");
+  }
+
+  /**
+   * @return The <code>To/PartyId/@type</code> for receiving party id
+   * @since 2.0.2
+   */
+  @Nullable
+  public static String getToPartyIDType ()
+  {
+    return getConfig ().getAsString ("phase4.send.toparty.id.type");
   }
 
   /**
