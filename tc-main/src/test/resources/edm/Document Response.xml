@@ -52,7 +52,7 @@
         <rim:SlotValue xsi:type="rim:AnyValueType">
             <!--   Expression of DP information using Agent class of CAGV   -->
             <cagv:Agent xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#"
-                xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#"
+                xmlns:cbc="https://data.europe.eu/semanticassets/ns/cv/common/cbc_v2.0.0#"
                 xmlns:locn="http://www.w3.org/ns/locn#">
                 <cbc:id schemeID="VAT">12345678</cbc:id>
                 <cbc:name>DPName</cbc:name>
@@ -65,23 +65,22 @@
             <rim:Slot name="DocumentMetadata">
                 <rim:SlotValue xsi:type="rim:AnyValueType">
                     <dcat:Dataset
-                        xmlns:cccev="https://semic.org/sa/cv/cccev-2.0.0#"
+                        xmlns:cccev="https://data.europe.eu/semanticassets/ns/cv/cccev_v2.0.0#"
                         xmlns:dcat="http://data.europa.eu/r5r/"
-                        xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#"
+                        xmlns:cbc="https://data.europe.eu/semanticassets/ns/cv/common/cbc_v2.0.0#"
                         xsi:schemaLocation="http://data.europa.eu/r5r/ ../../../../xsd/dcat-ap/2.0.0/xml/dcat-ap.xsd
-                        https://semic.org/sa/cv/common/cbc-2.0.0# ../../../../xsd/common/2.0.0/xml/CV-CommonBasicComponents.xsd
-                        https://semic.org/sa/cv/cccev-2.0.0# ../../../../xsd/cccev/2.0.0/xml/xsd/cccev-2.0.0.xsd">
+                        https://data.europe.eu/semanticassets/ns/cv/common/cbc_v2.0.0# ../../../../xsd/common/2.0.0/xml/CV-CommonBasicComponents.xsd
+                        https://data.europe.eu/semanticassets/ns/cv/cccev_v2.0.0# ../../../../xsd/cccev/2.0.0/xml/xsd/cccev-2.0.0.xsd">
                         <description xmlns="http://purl.org/dc/terms/">Extract from the Commercial register that contains details of all tradespeople and legal entities in the district of the register.</description>
                         <title xmlns="http://purl.org/dc/terms/">Name</title>
                         <!-- DocumentReference-->
-                        <dcat:distribution xmlns:cccev="https://semic.org/sa/cv/cccev-2.0.0#"
-                            xsi:schemaLocation="https://semic.org/sa/cv/cccev-2.0.0# ../../../../xsd/cccev/2.0.0/xml/xsd/cccev-2.0.0.xsd"
-                            xsi:type="cccev:DocumentReferenceType">
-                            <dcat:accessURL></dcat:accessURL>
-                            <cccev:documentURI>URI</cccev:documentURI>
-                            <cccev:documentDescription>DocumentDescription</cccev:documentDescription>
-                            <cccev:documentType>application/xml</cccev:documentType>
-                            <cccev:localeCode>DE</cccev:localeCode>
+                        <dcat:distribution xmlns:cccev="https://data.europe.eu/semanticassets/ns/cv/cccev_v2.0.0#"
+                            xsi:schemaLocation="https://data.europe.eu/semanticassets/ns/cv/cccev_v2.0.0# ../../../../xsd/cccev/2.0.0/xml/xsd/cccev-2.0.0.xsd"
+                            xsi:type="cccev:DocumentReferenceType"
+                            xmlns:dct="http://purl.org/dc/terms/">
+                            <dcat:accessURL>URI</dcat:accessURL>
+                            <dct:description>DocumentDescription</dct:description>
+                            <dcat:mediaType>application/xml</dcat:mediaType>
                         </dcat:distribution>
                         <!-- Creator is an Agent OrganizationType-->
                         <creator xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#"
