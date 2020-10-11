@@ -195,8 +195,6 @@ Do a simple `mvn clean install` on the command line.
 
 `2.1.0` - work in progress
 * Update the EDM to version 2.1
-
-`2.0.2` - work in progress
 * Bumped phase4 to 0.12.0
 * Added new configuration items `toop.mem.as4.to-party-id-type`, `phase4.send.fromparty.id.type` and `phase4.send.toparty.id.type`
 * phase4 properties should now reside in the file `phase4.properties`
