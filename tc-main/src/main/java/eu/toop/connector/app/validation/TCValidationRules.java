@@ -29,7 +29,7 @@ import com.helger.bdve.engine.xsd.ValidationExecutorXSD;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.resource.IReadableResource;
 import com.helger.jaxb.builder.IJAXBDocumentType;
-import com.helger.ubl21.UBL21NamespaceContext;
+import com.helger.ubl23.UBL23NamespaceContext;
 
 import eu.toop.edm.schematron.CEDMSchematron;
 import eu.toop.edm.xml.cagv.CCAGV;
@@ -65,7 +65,7 @@ public final class TCValidationRules
   {
     return new ValidationExecutorSchematron (new ValidationArtefact (EValidationType.SCHEMATRON_XSLT, aRes),
                                              null,
-                                             UBL21NamespaceContext.getInstance ());
+                                             UBL23NamespaceContext.getInstance ());
   }
 
   /**

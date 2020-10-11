@@ -81,7 +81,7 @@
         <!--   Expression of DC information using Agent class of CAGV   -->
         <rim:SlotValue xsi:type="rim:AnyValueType">
             <cagv:Agent xmlns:cagv="https://semic.org/sa/cv/cagv/agent-2.0.0#"
-                xmlns:cbc="https://semic.org/sa/cv/common/cbc-2.0.0#"
+                xmlns:cbc="https://data.europe.eu/semanticassets/ns/cv/common/cbc_v2.0.0#"
                 xmlns:locn="http://www.w3.org/ns/locn#">
                 <cbc:id schemeID="EIDAS">DE730757727</cbc:id>
                 <cbc:name>aCompanyName</cbc:name>
