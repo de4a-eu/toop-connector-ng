@@ -70,6 +70,8 @@ The following configuration properties are **supported** - some of them have def
 * **`toop.r2d2.sml.serviceurl`** (string) - the management service URL of the SML
 * **`toop.r2d2.sml.clientcert`** (boolean) - is a client certificate need when talking to this SML?
 * **`toop.r2d2.smp.url`** (string) - the absolute URL of the SMP to use, if `toop.r2d2.usedns` is set to `false`
+* **`toop.r2d2.static.endpointurl`** (string) (since 2.1.0) - the absolute URL of the AS4 endpoint URL. **Caution:** if this is used, dynamic discovery id disabled and all messages are send to the same AS4 gateway
+* **`toop.r2d2.static.certificate`** (string) (since 2.1.0) - the PEM encoded X509 certificate of the AS4 gateway. **Caution:** if this is used, dynamic discovery id disabled and all messages are send to the same AS4 gateway
 * **`toop.mem.implementation`** (string) - the ID of the AS4 implementation to use. Can be either `external` or `phase4` - depending on this, different configuration properties must be configured (see below)
 * **`http.proxy.enabled`** (boolean) - is an HTTP proxy needed?
 * **`http.proxy.address`** (string) - the URL of the proxy server (including the scheme)
