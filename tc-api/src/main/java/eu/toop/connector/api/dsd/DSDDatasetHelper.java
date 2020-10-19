@@ -66,7 +66,7 @@ public final class DSDDatasetHelper
 
         // DP Identifier
         final IDType aDPID = ((PublicOrganizationType) d.getPublisherAtIndex (0)).getIdAtIndex (0);
-        resp.setDPIdentifier (aIF.createParticipantIdentifier (aDPID.getSchemeName (), aDPID.getValue ()));
+        resp.setDPIdentifier (aIF.createParticipantIdentifier (aDPID.getSchemeID (), aDPID.getValue ()));
 
         // Access Service Identifier, used as Document Type ID
         final ICommonsList <String> aDTParts = StringHelper.getExploded ("::", dist.getAccessService ().getIdentifier (), 2);
