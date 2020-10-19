@@ -42,11 +42,17 @@ public interface IDDServiceMetadataProvider
    *        Participant ID to query. May not be <code>null</code>.
    * @param aDocTypeID
    *        Document type ID. May not be <code>null</code>.
+   * @param aProcessID
+   *        Process ID. May not be <code>null</code>.
+   * @param sTransportProfile
+   *        Transport profile ID. May not be <code>null</code>.
    * @return <code>null</code> if not found.
    */
   @Nullable
   ServiceMetadataType getServiceMetadata (@Nonnull IParticipantIdentifier aParticipantID,
-                                          @Nonnull IDocumentTypeIdentifier aDocTypeID);
+                                          @Nonnull IDocumentTypeIdentifier aDocTypeID,
+                                          @Nonnull IProcessIdentifier aProcessID,
+                                          @Nonnull String sTransportProfile);
 
   /**
    * Find the dynamic discovery endpoint from the respective parameters.
@@ -69,7 +75,7 @@ public interface IDDServiceMetadataProvider
                                     @Nonnull final IProcessIdentifier aProcessID,
                                     @Nonnull final String sTransportProfile)
   {
-    final ServiceMetadataType aSM = getServiceMetadata (aParticipantID, aDocTypeID);
+    final ServiceMetadataType aSM = getServiceMetadata (aParticipantID, aDocTypeID, aProcessID, sTransportProfile);
     return getEndpoint (aSM, aProcessID, sTransportProfile);
   }
 

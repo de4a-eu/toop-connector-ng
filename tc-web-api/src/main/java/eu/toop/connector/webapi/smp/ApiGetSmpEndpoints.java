@@ -25,8 +25,10 @@ import org.slf4j.LoggerFactory;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
+import com.helger.peppol.smp.ESMPTransportProfile;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
+import com.helger.peppolid.factory.IIdentifierFactory;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.smpclient.json.SMPJsonResponse;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
@@ -53,17 +55,17 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
                                 @Nonnull final Map <String, String> aPathVariables,
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope)
   {
+    final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
+
     // Get participant ID
     final String sParticipantID = aPathVariables.get ("pid");
-    final IParticipantIdentifier aParticipantID = TCConfig.getIdentifierFactory ()
-                                                          .parseParticipantIdentifier (sParticipantID);
+    final IParticipantIdentifier aParticipantID = aIF.parseParticipantIdentifier (sParticipantID);
     if (aParticipantID == null)
       throw new APIParamException ("Invalid participant ID '" + sParticipantID + "' provided.");
 
     // Get document type ID
     final String sDocTypeID = aPathVariables.get ("doctypeid");
-    final IDocumentTypeIdentifier aDocTypeID = TCConfig.getIdentifierFactory ()
-                                                       .parseDocumentTypeIdentifier (sDocTypeID);
+    final IDocumentTypeIdentifier aDocTypeID = aIF.parseDocumentTypeIdentifier (sDocTypeID);
     if (aDocTypeID == null)
       throw new APIParamException ("Invalid document type ID '" + sDocTypeID + "' provided.");
 
@@ -82,7 +84,10 @@ public class ApiGetSmpEndpoints extends AbstractTCAPIInvoker
                              () -> {
                                // Main query
                                final ServiceMetadataType aSM = TCAPIHelper.querySMPServiceMetadata (aParticipantID,
-                                                                                                    aDocTypeID);
+                                                                                                    aDocTypeID,
+                                                                                                    aIF.createProcessIdentifier ("dummy-procid",
+                                                                                                                                 "procid-fake"),
+                                                                                                    ESMPTransportProfile.TRANSPORT_PROFILE_BDXR_AS4.getID ());
 
                                // Add to response
                                if (aSM != null)

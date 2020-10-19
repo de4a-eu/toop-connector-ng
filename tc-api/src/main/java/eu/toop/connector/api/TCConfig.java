@@ -16,6 +16,7 @@
 package eu.toop.connector.api;
 
 import java.net.URI;
+import java.security.cert.X509Certificate;
 
 import javax.annotation.CheckForSigned;
 import javax.annotation.Nonnull;
@@ -23,10 +24,14 @@ import javax.annotation.Nullable;
 import javax.annotation.concurrent.GuardedBy;
 import javax.annotation.concurrent.ThreadSafe;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.concurrent.SimpleReadWriteLock;
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.id.factory.GlobalIDFactory;
+import com.helger.commons.string.StringHelper;
 import com.helger.commons.url.URLHelper;
 import com.helger.config.Config;
 import com.helger.config.ConfigFactory;
@@ -36,6 +41,7 @@ import com.helger.peppol.sml.ESML;
 import com.helger.peppol.sml.ISMLInfo;
 import com.helger.peppol.sml.SMLInfo;
 import com.helger.peppolid.factory.IIdentifierFactory;
+import com.helger.security.certificate.CertificateHelper;
 
 import eu.toop.connector.api.me.EMEProtocol;
 
@@ -47,6 +53,7 @@ import eu.toop.connector.api.me.EMEProtocol;
 @ThreadSafe
 public final class TCConfig
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (TCConfig.class);
   private static final SimpleReadWriteLock s_aRWLock = new SimpleReadWriteLock ();
 
   @GuardedBy ("s_aRWLock")
@@ -97,7 +104,7 @@ public final class TCConfig
     return TCIdentifierFactory.INSTANCE_TC;
   }
 
-  public static class Global
+  public static final class Global
   {
     private Global ()
     {}
@@ -122,7 +129,7 @@ public final class TCConfig
     }
   }
 
-  public static class Tracker
+  public static final class Tracker
   {
     public static final boolean DEFAULT_TOOP_TRACKER_ENABLED = false;
     public static final String DEFAULT_TOOP_TRACKER_TOPIC = "toop";
@@ -148,7 +155,7 @@ public final class TCConfig
     }
   }
 
-  public static class DSD
+  public static final class DSD
   {
     private DSD ()
     {}
@@ -163,13 +170,55 @@ public final class TCConfig
     }
   }
 
-  public static class R2D2
+  public static final class R2D2
   {
     public static final boolean DEFAULT_USE_SML = true;
     private static ISMLInfo s_aCachedSMLInfo;
 
     private R2D2 ()
     {}
+
+    /**
+     * Get a static endpoint URL to use. This method is ONLY available for BRIS
+     * and effectively works around the SMP lookup by providing a constant
+     * result. This value is only used if it is not empty and if the static
+     * certificate is also present.<br>
+     * Additionally #isR2D2UseDNS () must return <code>false</code> for this
+     * method to be used.
+     *
+     * @return The static endpoint URL to use. May be <code>null</code>.
+     * @see #getR2D2StaticCertificate()
+     * @since 2.1.0
+     */
+    @Nullable
+    public static String getR2D2StaticEndpointURL ()
+    {
+      return getConfig ().getAsString ("toop.r2d2.static.endpointurl");
+    }
+
+    /**
+     * Get a static endpoint certificate to use. This method is ONLY available
+     * for BRIS and effectively works around the SMP lookup by providing a
+     * constant result. This value is only used if it is not empty and if the
+     * static endpoint URL is also present.<br>
+     * Additionally #isR2D2UseDNS () must return <code>false</code> for this
+     * method to be used.
+     *
+     * @return The static endpoint URL to use. May be <code>null</code>.
+     * @see #getR2D2StaticEndpointURL()
+     * @since 2.1.0
+     */
+    @Nullable
+    public static X509Certificate getR2D2StaticCertificate ()
+    {
+      final String sCert = getConfig ().getAsString ("toop.r2d2.static.certificate");
+      if (StringHelper.hasNoText (sCert))
+        return null;
+      final X509Certificate ret = CertificateHelper.convertStringToCertficateOrNull (sCert);
+      if (ret == null)
+        LOGGER.error ("The provided static R2D2 certificate could NOT be parsed");
+      return ret;
+    }
 
     /**
      * @return <code>true</code> to use SML lookup, <code>false</code> to not do
@@ -230,7 +279,7 @@ public final class TCConfig
     }
   }
 
-  public static class MEM
+  public static final class MEM
   {
     private MEM ()
     {}
@@ -328,7 +377,7 @@ public final class TCConfig
     }
   }
 
-  public static class HTTP
+  public static final class HTTP
   {
     private HTTP ()
     {}
@@ -374,7 +423,7 @@ public final class TCConfig
     }
   }
 
-  public static class WebApp
+  public static final class WebApp
   {
     private WebApp ()
     {}

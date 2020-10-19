@@ -18,6 +18,7 @@ package eu.toop.connector.app;
 import java.net.InetAddress;
 import java.net.URI;
 import java.net.UnknownHostException;
+import java.security.cert.X509Certificate;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.annotation.Nonnull;
@@ -26,6 +27,8 @@ import javax.annotation.concurrent.NotThreadSafe;
 import javax.servlet.ServletContext;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.error.level.EErrorLevel;
@@ -34,6 +37,7 @@ import com.helger.commons.id.factory.GlobalIDFactory;
 import com.helger.commons.id.factory.StringIDFromGlobalPersistentLongIDFactory;
 import com.helger.commons.string.StringHelper;
 import com.helger.commons.url.IURLProtocol;
+import com.helger.commons.url.URLHelper;
 import com.helger.commons.url.URLProtocolRegistry;
 import com.helger.xservlet.requesttrack.RequestTracker;
 
@@ -49,8 +53,9 @@ import eu.toop.kafkaclient.ToopKafkaSettings;
  * @author Philip Helger
  */
 @NotThreadSafe
-public class TCInit
+public final class TCInit
 {
+  private static final Logger LOGGER = LoggerFactory.getLogger (TCInit.class);
   private static final AtomicBoolean INITED = new AtomicBoolean (false);
   private static String s_sLogPrefix;
 
@@ -159,9 +164,22 @@ public class TCInit
 
       if (!TCConfig.R2D2.isR2D2UseDNS ())
       {
-        final URI aSMPURI = TCConfig.R2D2.getR2D2SMPUrl ();
-        if (aSMPURI == null)
-          throw new InitializationException ("Since the usage of SML/DNS is disabled, the fixed URL of the SMP to be used must be provided in the configuration file!");
+        final String sStaticEndpoint = TCConfig.R2D2.getR2D2StaticEndpointURL ();
+        final X509Certificate aStaticCert = TCConfig.R2D2.getR2D2StaticCertificate ();
+        if (URLHelper.getAsURL (sStaticEndpoint) != null && aStaticCert != null)
+        {
+          LOGGER.info ("Using static R2D2 target endpoint '" + sStaticEndpoint + "'");
+        }
+        else
+        {
+          final URI aSMPURI = TCConfig.R2D2.getR2D2SMPUrl ();
+          if (aSMPURI != null)
+          {
+            LOGGER.info ("Using static R2D2 SMP address '" + aSMPURI.toString () + "'");
+          }
+          else
+            throw new InitializationException ("Since the usage of SML/DNS is disabled, the fixed URL of the SMP or the static parameters to be used must be provided in the configuration file!");
+        }
       }
     }
 

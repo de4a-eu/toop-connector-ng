@@ -69,8 +69,7 @@ public final class TCAPIHelper
                                                                  @Nullable final String sCountryCode,
                                                                  @Nonnull final ITCErrorHandler aErrorHdl)
   {
-    return TCAPIConfig.getDSDDatasetResponseProvider ()
-                      .getAllDatasetResponses ("[dsd-by-country]", sDatasetType, sCountryCode, aErrorHdl);
+    return TCAPIConfig.getDSDDatasetResponseProvider ().getAllDatasetResponses ("[dsd-by-country]", sDatasetType, sCountryCode, aErrorHdl);
   }
 
   /**
@@ -83,30 +82,35 @@ public final class TCAPIHelper
   @Nonnull
   public static ICommonsSortedMap <String, String> querySMPServiceGroups (final IParticipantIdentifier aParticipantID)
   {
-    return TCAPIConfig.getDDServiceGroupHrefProvider ()
-                      .getAllServiceGroupHrefs (aParticipantID, LoggingTCErrorHandler.INSTANCE);
+    return TCAPIConfig.getDDServiceGroupHrefProvider ().getAllServiceGroupHrefs (aParticipantID, LoggingTCErrorHandler.INSTANCE);
   }
 
   /**
-   * Find the service metadata. This returns all endponts for the combination.
+   * Find the service metadata. This returns all endpoints for the combination.
    *
    * @param aParticipantID
    *        Participant ID to query. May not be <code>null</code>.
    * @param aDocTypeID
    *        Document type ID. May not be <code>null</code>.
+   * @param aProcessID
+   *        Process ID. May not be <code>null</code>.
+   * @param sTransportProfile
+   *        Transport profile ID. May not be <code>null</code>.
    * @return <code>null</code> if not found.
    */
   @Nullable
   public static ServiceMetadataType querySMPServiceMetadata (@Nonnull final IParticipantIdentifier aParticipantID,
-                                                             @Nonnull final IDocumentTypeIdentifier aDocTypeID)
+                                                             @Nonnull final IDocumentTypeIdentifier aDocTypeID,
+                                                             @Nonnull final IProcessIdentifier aProcessID,
+                                                             @Nonnull final String sTransportProfile)
   {
-    return TCAPIConfig.getDDServiceMetadataProvider ().getServiceMetadata (aParticipantID, aDocTypeID);
+    return TCAPIConfig.getDDServiceMetadataProvider ().getServiceMetadata (aParticipantID, aDocTypeID, aProcessID, sTransportProfile);
   }
 
   /**
    * Find the dynamic discovery endpoint from the respective parameters. This
    * calls
-   * {@link #querySMPServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier)}
+   * {@link #querySMPServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier, IProcessIdentifier, String)}
    * and filters out the matching process ID and transport profile ID.
    *
    * @param aParticipantID
@@ -125,8 +129,7 @@ public final class TCAPIHelper
                                                @Nonnull final IProcessIdentifier aProcessID,
                                                @Nonnull final String sTransportProfile)
   {
-    return TCAPIConfig.getDDServiceMetadataProvider ()
-                      .getEndpoint (aParticipantID, aDocTypeID, aProcessID, sTransportProfile);
+    return TCAPIConfig.getDDServiceMetadataProvider ().getEndpoint (aParticipantID, aDocTypeID, aProcessID, sTransportProfile);
   }
 
   /**
@@ -139,8 +142,7 @@ public final class TCAPIHelper
    * @return A non-<code>null</code> result list.
    */
   @Nonnull
-  public static ValidationResultList validateBusinessDocument (@Nonnull final VESID aVESID,
-                                                               @Nonnull final byte [] aPayload)
+  public static ValidationResultList validateBusinessDocument (@Nonnull final VESID aVESID, @Nonnull final byte [] aPayload)
   {
     return TCAPIConfig.getVSValidator ().validate (aVESID, aPayload, DEFAULT_LOCALE);
   }

@@ -78,8 +78,7 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
                                 @Nonnull final IRequestWebScopeWithoutResponse aRequestScope) throws IOException
   {
     // Read the payload as XML
-    final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ()
-                                                     .read (aRequestScope.getRequest ().getInputStream ());
+    final TCOutgoingMessage aOutgoingMsg = TCRestJAXB.outgoingMessage ().read (aRequestScope.getRequest ().getInputStream ());
     if (aOutgoingMsg == null)
       throw new APIParamException ("Failed to interpret the message body as an 'OutgoingMessage'");
 
@@ -133,13 +132,12 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         final IJsonObject aJsonSMP = new JsonObject ();
         // Main query
         final ServiceMetadataType aSM = TCAPIHelper.querySMPServiceMetadata (aRoutingInfo.getReceiverID (),
-                                                                             aRoutingInfo.getDocumentTypeID ());
+                                                                             aRoutingInfo.getDocumentTypeID (),
+                                                                             aRoutingInfo.getProcessID (),
+                                                                             aRoutingInfo.getTransportProtocol ());
         if (aSM != null)
         {
-          aJsonSMP.addJson ("response",
-                            SMPJsonResponse.convert (aRoutingInfo.getReceiverID (),
-                                                     aRoutingInfo.getDocumentTypeID (),
-                                                     aSM));
+          aJsonSMP.addJson ("response", SMPJsonResponse.convert (aRoutingInfo.getReceiverID (), aRoutingInfo.getDocumentTypeID (), aSM));
 
           final EndpointType aEndpoint = IDDServiceMetadataProvider.getEndpoint (aSM,
                                                                                  aRoutingInfo.getProcessID (),

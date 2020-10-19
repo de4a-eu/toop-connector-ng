@@ -22,37 +22,20 @@ import com.helger.commons.collection.impl.CommonsTreeMap;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
 import com.helger.peppolid.CIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
-import com.helger.smpclient.bdxr1.BDXRClientReadOnly;
+import com.helger.smpclient.bdxr1.IBDXRServiceGroupProvider;
 import com.helger.smpclient.exception.SMPClientException;
-import com.helger.smpclient.url.BDXLURLProvider;
 import com.helger.smpclient.url.SMPDNSResolutionException;
 import com.helger.xsds.bdxr.smp1.ServiceGroupType;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataReferenceType;
 
-import eu.toop.connector.api.TCConfig;
 import eu.toop.connector.api.dd.IDDServiceGroupHrefProvider;
 import eu.toop.connector.api.error.ITCErrorHandler;
 import eu.toop.edm.error.EToopErrorCode;
 
-public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvider
+public class DDServiceGroupHrefProviderSMP extends AbstractDDClient implements IDDServiceGroupHrefProvider
 {
   public DDServiceGroupHrefProviderSMP ()
   {}
-
-  @Nonnull
-  public static BDXRClientReadOnly getSMPClient (@Nonnull final IParticipantIdentifier aRecipientID) throws SMPDNSResolutionException
-  {
-    if (TCConfig.R2D2.isR2D2UseDNS ())
-    {
-      ValueEnforcer.notNull (aRecipientID, "RecipientID");
-
-      // Use dynamic lookup via DNS - can throw exception
-      return new BDXRClientReadOnly (BDXLURLProvider.INSTANCE, aRecipientID, TCConfig.R2D2.getR2D2SML ());
-    }
-
-    // Use a constant SMP URL
-    return new BDXRClientReadOnly (TCConfig.R2D2.getR2D2SMPUrl ());
-  }
 
   @Nonnull
   public ICommonsSortedMap <String, String> getAllServiceGroupHrefs (@Nonnull final IParticipantIdentifier aParticipantID,
@@ -64,7 +47,7 @@ public class DDServiceGroupHrefProviderSMP implements IDDServiceGroupHrefProvide
     try
     {
       final ICommonsSortedMap <String, String> ret = new CommonsTreeMap <> ();
-      final BDXRClientReadOnly aClient = getSMPClient (aParticipantID);
+      final IBDXRServiceGroupProvider aClient = getServiceGroupProvider (aParticipantID);
 
       // Get all HRefs and sort them by decoded URL
       final ServiceGroupType aSG = aClient.getServiceGroupOrNull (aParticipantID);
