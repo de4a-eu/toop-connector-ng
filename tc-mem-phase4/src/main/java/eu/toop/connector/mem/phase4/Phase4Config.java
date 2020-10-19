@@ -79,7 +79,7 @@ public final class Phase4Config
     if (ret == null)
     {
       // Fallback to old version (prior to rc3)
-      ret = TCConfig.MEM.getMEMAS4TcPartyid ();
+      ret = TCConfig.getConfig ().getAsString ("toop.mem.as4.tc.partyid");
     }
     return ret;
   }
