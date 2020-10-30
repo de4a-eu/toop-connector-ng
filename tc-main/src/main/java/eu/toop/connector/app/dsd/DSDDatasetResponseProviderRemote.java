@@ -96,7 +96,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
     ICommonsSet <DSDDatasetResponse> ret;
     try
     {
-      final List <DCatAPDatasetType> datasetTypesList = aDSDClient.queryDataset (sDatasetType, sCountryCode);
+      final List <DCatAPDatasetType> datasetTypesList = aDSDClient.queryDatasetByLocation(sDatasetType, sCountryCode);
       ret = DSDDatasetHelper.buildDSDResponseSet (datasetTypesList);
     }
     catch (final RuntimeException ex)

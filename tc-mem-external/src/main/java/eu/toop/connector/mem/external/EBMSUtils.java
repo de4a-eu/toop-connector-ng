@@ -231,13 +231,16 @@ public final class EBMSUtils {
         final IMicroElement ePartyInfo = eUserMessage.appendElement(NS_EBMS, "PartyInfo");
         {
           final IMicroElement eFrom = ePartyInfo.appendElement(NS_EBMS, "From");
-          eFrom.appendElement(NS_EBMS, "PartyId")
+          final IMicroElement partyId = eFrom.appendElement(NS_EBMS, "PartyId");
+          partyId
+              //.setAttribute("type", "urn:oasis:names:tc:ebcore:partyid-type:unregistered")
               .appendText(TCConfig.MEM.getMEMAS4TcPartyid());
           eFrom.appendElement(NS_EBMS, "Role").appendText(MEMConstants.MEM_PARTY_ROLE);
         }
         {
           final IMicroElement eTo = ePartyInfo.appendElement(NS_EBMS, "To");
           eTo.appendElement(NS_EBMS, "PartyId")
+              //.setAttribute("type", "urn:oasis:names:tc:ebcore:partyid-type:unregistered")
               .appendText(TCConfig.MEM.getMEMAS4GwPartyID());
           eTo.appendElement(NS_EBMS, "Role").appendText(MEMConstants.GW_PARTY_ROLE);
         }
