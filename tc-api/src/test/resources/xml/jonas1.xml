@@ -20,7 +20,7 @@
   <Metadata>
     <SenderID scheme="iso6523-actorid-upis" value="9999:freedonia" />
     <ReceiverID scheme="iso6523-actorid-upis" value="9999:bolagsverket1" />
-    <DocTypeID scheme="toop-doctypeid-qns" value="RegisteredOrganization::REGISTERED_ORGANIZATION_TYPE::CONCEPT##CCCEV::toop-edm:v2.0" />
+    <DocTypeID scheme="toop-doctypeid-qns" value="RegisteredOrganization::REGISTERED_ORGANIZATION_TYPE::CONCEPT##CCCEV::toop-edm:v2.1" />
     <ProcessID scheme="toop-procid-agreement" value="urn:eu.toop.process.dataquery" />
     <TransportProtocol>bdxr-transport-ebms3-as4-v1p0</TransportProtocol>
   </Metadata>

@@ -30,10 +30,10 @@
                           <dct:description>?This is a distribution of REGISTERED_ORGANIZATION_TYPE?</dct:description>
                           <dct:format>CONCEPT</dct:format>
                           <dcat:accessService>
-                <dct:identifier>toop-doctypeid-qns::RegisteredOrganization::REGISTERED_ORGANIZATION_TYPE::CONCEPT##CCCEV::toop-edm:v2.0</dct:identifier>
+                <dct:identifier>toop-doctypeid-qns::RegisteredOrganization::REGISTERED_ORGANIZATION_TYPE::CONCEPT##CCCEV::toop-edm:v2.1</dct:identifier>
                               <dct:title>?Service for REGISTERED_ORGANIZATION_TYPE distribution?</dct:title>
                               <dcat:endpointURL />
-                              <dct:conformsTo>toop-edm:v2.0</dct:conformsTo>
+                              <dct:conformsTo>toop-edm:v2.1</dct:conformsTo>
               </dcat:accessService>
                           <dcat:mediaType>?application/xml?</dcat:mediaType>
             </dcat:distribution>

@@ -27,7 +27,7 @@
   requestId="c4369c4d-740e-4b64-80f0-7b209a66d629">
   <rim:Slot name="SpecificationIdentifier">
     <rim:SlotValue xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="rim:StringValueType">
-      <rim:Value>toop-edm:v2.0</rim:Value>
+      <rim:Value>toop-edm:v2.1</rim:Value>
     </rim:SlotValue>
   </rim:Slot>
   <rs:Exception xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:type="rs:ObjectNotFoundExceptionType" code="GEN" message="What went wrong: OBJECT_NOT_FOUND" severity="FAILURE">
