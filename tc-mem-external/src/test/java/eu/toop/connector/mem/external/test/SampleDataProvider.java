@@ -75,12 +75,13 @@ public class SampleDataProvider {
     return createGatewayRoutingMetadata(receivingGWURL, aCert);
   }
 
+  @SuppressWarnings("deprecation")
   public static IMERoutingInformation createGatewayRoutingMetadata(final String targetURL,
                                                                     final X509Certificate targetCert) {
     final IMERoutingInformation metadata = new MERoutingInformation(TCConfig.getIdentifierFactory().createParticipantIdentifier("iso6523-actorid-upis", "0088:123456"),
                                                                     TCConfig.getIdentifierFactory().createParticipantIdentifier("iso6523-actorid-upis", "0099:123456"),
-        EPredefinedDocumentTypeIdentifier.REQUEST_REGISTEREDORGANIZATION_LIST,
-        EPredefinedProcessIdentifier.DATAREQUESTRESPONSE,
+        EPredefinedDocumentTypeIdentifier.URN_EU_TOOP_NS_DATAEXCHANGE_1P40_REQUEST_URN_EU_TOOP_REQUEST_REGISTEREDORGANIZATION_LIST_1_40,
+        EPredefinedProcessIdentifier.URN_EU_TOOP_PROCESS_DATAREQUESTRESPONSE,
         ESMPTransportProfile.TRANSPORT_PROFILE_BDXR_AS4.getID(),
         targetURL,
         targetCert);
