@@ -27,6 +27,7 @@ import com.helger.commons.ValueEnforcer;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.CommonsHashSet;
 import com.helger.commons.collection.impl.ICommonsSet;
+import com.helger.commons.debug.GlobalDebug;
 import com.helger.commons.error.level.EErrorLevel;
 import com.helger.commons.string.ToStringGenerator;
 
@@ -101,7 +102,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
     }
     catch (final RuntimeException ex)
     {
-      LOGGER.error (ex.getMessage (), ex);
+      LOGGER.error (ex.getMessage (), GlobalDebug.isDebugMode () ? ex : null);
       aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
       // return EMPTY result set.
       ret = new CommonsHashSet <> ();
@@ -138,7 +139,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
     }
     catch (final RuntimeException ex)
     {
-      LOGGER.error (ex.getMessage (), ex);
+      LOGGER.error (ex.getMessage (), GlobalDebug.isDebugMode () ? ex : null);
       aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
       // return EMPTY result set.
       ret = new CommonsHashSet <> ();
