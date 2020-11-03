@@ -38,11 +38,12 @@ import eu.toop.connector.webapi.helper.AbstractTCAPIInvoker;
 import eu.toop.connector.webapi.helper.CommonAPIInvoker;
 
 /**
- * Search DSD participants by dataset and country
+ * Search DSD participants by dataset and DP Type
  *
  * @author Philip Helger
+ * @since 2.1.0
  */
-public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
+public class ApiGetDsdDpByDPType extends AbstractTCAPIInvoker
 {
   @Override
   public IJsonObject invokeAPI (@Nonnull final IAPIDescriptor aAPIDescriptor,
@@ -54,9 +55,9 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
     if (StringHelper.hasNoText (sDatasetType))
       throw new APIParamException ("Missing DatasetType");
 
-    final String sCountryCode = aPathVariables.get ("country");
-    if (StringHelper.hasNoText (sCountryCode))
-      throw new APIParamException ("Missing Country Code");
+    final String sDPType = aPathVariables.get ("dpType");
+    if (StringHelper.hasNoText (sDPType))
+      throw new APIParamException ("Missing DP Type");
 
     final IJsonObject aJson = new JsonObject ();
     CommonAPIInvoker.invoke (aJson, () -> {
@@ -67,7 +68,7 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
       };
 
       // Query DSD
-      final ICommonsSet <DSDDatasetResponse> aResponses = TCAPIHelper.getDSDDatasetsByCountry (sDatasetType, sCountryCode, aErrorHdl);
+      final ICommonsSet <DSDDatasetResponse> aResponses = TCAPIHelper.getDSDDatasetsByDPType (sDatasetType, sDPType, aErrorHdl);
 
       if (aErrorMsgs.isEmpty ())
       {

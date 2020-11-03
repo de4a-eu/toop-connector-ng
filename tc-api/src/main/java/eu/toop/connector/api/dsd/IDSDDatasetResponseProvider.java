@@ -47,6 +47,35 @@ public interface IDSDDatasetResponseProvider
    * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
    * @return A non-<code>null</code> but maybe empty set of datasets.
+   * @deprecated Use
+   *             {@link #getAllDatasetResponsesByCountry(String, String, String, ITCErrorHandler)}
+   *             instead
+   */
+  @Nonnull
+  @Deprecated
+  default ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull final String sLogPrefix,
+                                                                   @Nonnull final String sDatasetType,
+                                                                   @Nullable final String sCountryCode,
+                                                                   @Nonnull final ITCErrorHandler aErrorHdl)
+  {
+    return getAllDatasetResponsesByCountry (sLogPrefix, sDatasetType, sCountryCode, aErrorHdl);
+  }
+
+  /**
+   * Get all DSD Responses that match the provided country code and document
+   * type ID.
+   *
+   * @param sLogPrefix
+   *        The logging prefix to be used. May not be <code>null</code>.
+   * @param sDatasetType
+   *        Dataset Type to query. May not be <code>null</code>.
+   * @param sCountryCode
+   *        Country code to use. Must be a 2-digit string. May be
+   *        <code>null</code>.
+   * @param aErrorHdl
+   *        The error handler to be used. May not be <code>null</code>.
+   * @return A non-<code>null</code> but maybe empty set of datasets.
+   * @since 2.1.0
    */
   @Nonnull
   ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByCountry (@Nonnull String sLogPrefix,
@@ -67,6 +96,7 @@ public interface IDSDDatasetResponseProvider
    * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
    * @return A non-<code>null</code> but maybe empty set of datasets.
+   * @since 2.1.0
    */
   @Nonnull
   ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByDPType (@Nonnull String sLogPrefix,

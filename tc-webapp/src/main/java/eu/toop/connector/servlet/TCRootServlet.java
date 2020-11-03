@@ -89,14 +89,13 @@ public class TCRootServlet extends HttpServlet
       aSB.append ("<h2>API information</h2>");
 
       aSB.append ("<h3>DSD</h3>");
-      // Disabled for RC1
-      if (false)
-        aSB.append ("<div>GET /api/dsd/dp - <a href='" +
-                    sContextPath +
-                    "/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE' target='_blank'>test me</a></div>");
       aSB.append ("<div>GET /api/dsd/dp/by-country - <a href='" +
                   sContextPath +
                   "/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE/by-country/SV' target='_blank'>test me</a></div>");
+      // New in 2.1.0
+      aSB.append ("<div>GET /api/dsd/dp/by-dp-type - <a href='" +
+                  sContextPath +
+                  "/api/dsd/dp/REGISTERED_ORGANIZATION_TYPE/by-dp-type/Scheme A' target='_blank'>test me</a></div>");
 
       aSB.append ("<h3>SMP</h3>");
       aSB.append ("<div>GET /api/smp/doctypes - <a href='" +

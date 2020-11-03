@@ -64,12 +64,56 @@ public final class TCAPIHelper
    * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
    * @return A non-<code>null</code> but maybe empty set of datasets.
+   * @deprecated Use
+   *             {@link #getDSDDatasetsByCountry(String, String, ITCErrorHandler)}
+   *             insted
    */
+  @Deprecated
+  @Nonnull
   public static ICommonsSet <DSDDatasetResponse> getDSDDatasets (@Nonnull final String sDatasetType,
                                                                  @Nullable final String sCountryCode,
                                                                  @Nonnull final ITCErrorHandler aErrorHdl)
   {
-    return TCAPIConfig.getDSDDatasetResponseProvider ().getAllDatasetResponsesByCountry ("[dsd-by-country]", sDatasetType, sCountryCode, aErrorHdl);
+    return getDSDDatasetsByCountry (sDatasetType, sCountryCode, aErrorHdl);
+  }
+
+  /**
+   * @param sDatasetType
+   *        Dataset Type to query. May not be <code>null</code>.
+   * @param sCountryCode
+   *        Country code to use. Must be a 2-digit string. May be
+   *        <code>null</code>.
+   * @param aErrorHdl
+   *        The error handler to be used. May not be <code>null</code>.
+   * @return A non-<code>null</code> but maybe empty set of datasets.
+   * @since 2.1.0
+   */
+  @Nonnull
+  public static ICommonsSet <DSDDatasetResponse> getDSDDatasetsByCountry (@Nonnull final String sDatasetType,
+                                                                          @Nullable final String sCountryCode,
+                                                                          @Nonnull final ITCErrorHandler aErrorHdl)
+  {
+    return TCAPIConfig.getDSDDatasetResponseProvider ()
+                      .getAllDatasetResponsesByCountry ("[dsd-by-country]", sDatasetType, sCountryCode, aErrorHdl);
+  }
+
+  /**
+   * @param sDatasetType
+   *        Dataset Type to query. May not be <code>null</code>.
+   * @param sDPType
+   *        DP type to use. May be <code>null</code>.
+   * @param aErrorHdl
+   *        The error handler to be used. May not be <code>null</code>.
+   * @return A non-<code>null</code> but maybe empty set of datasets.
+   * @since 2.1.0
+   */
+  @Nonnull
+  public static ICommonsSet <DSDDatasetResponse> getDSDDatasetsByDPType (@Nonnull final String sDatasetType,
+                                                                         @Nullable final String sDPType,
+                                                                         @Nonnull final ITCErrorHandler aErrorHdl)
+  {
+    return TCAPIConfig.getDSDDatasetResponseProvider ()
+                      .getAllDatasetResponsesByDPType ("[dsd-by-dptype]", sDatasetType, sDPType, aErrorHdl);
   }
 
   /**
