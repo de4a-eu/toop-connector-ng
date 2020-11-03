@@ -85,10 +85,10 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
   }
 
   @Nonnull
-  public ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull final String sLogPrefix,
-                                                                  @Nonnull final String sDatasetType,
-                                                                  @Nullable final String sCountryCode,
-                                                                  @Nonnull final ITCErrorHandler aErrorHandler)
+  public ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByCountry (@Nonnull final String sLogPrefix,
+                                                                           @Nonnull final String sDatasetType,
+                                                                           @Nullable final String sCountryCode,
+                                                                           @Nonnull final ITCErrorHandler aErrorHandler)
   {
     final DSDClient aDSDClient = new DSDClient (m_sBaseURL);
     aDSDClient.setHttpClientSettings (new TCHttpClientSettings ());
@@ -96,8 +96,8 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
     ICommonsSet <DSDDatasetResponse> ret;
     try
     {
-      final List <DCatAPDatasetType> datasetTypesList = aDSDClient.queryDatasetByLocation(sDatasetType, sCountryCode);
-      ret = DSDDatasetHelper.buildDSDResponseSet (datasetTypesList);
+      final List <DCatAPDatasetType> aDatasetTypeList = aDSDClient.queryDatasetByLocation (sDatasetType, sCountryCode);
+      ret = DSDDatasetHelper.buildDSDResponseSet (aDatasetTypeList);
     }
     catch (final RuntimeException ex)
     {
@@ -107,15 +107,53 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
       ret = new CommonsHashSet <> ();
     }
 
+    final int nResultCount = ret.size ();
     ToopKafkaClient.send (EErrorLevel.INFO,
-                          sLogPrefix +
-                                            "DSD querying '" +
-                                            sDatasetType +
-                                            "' and country code '" +
-                                            sCountryCode +
-                                            "' lead to " +
-                                            ret.size () +
-                                            " result entries");
+                          () -> sLogPrefix +
+                                "DSD querying '" +
+                                sDatasetType +
+                                "' and country code '" +
+                                sCountryCode +
+                                "' lead to " +
+                                nResultCount +
+                                " result entries");
+
+    return ret;
+  }
+
+  @Nonnull
+  public ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByDPType (@Nonnull final String sLogPrefix,
+                                                                          @Nonnull final String sDatasetType,
+                                                                          @Nullable final String sDPType,
+                                                                          @Nonnull final ITCErrorHandler aErrorHandler)
+  {
+    final DSDClient aDSDClient = new DSDClient (m_sBaseURL);
+    aDSDClient.setHttpClientSettings (new TCHttpClientSettings ());
+
+    ICommonsSet <DSDDatasetResponse> ret;
+    try
+    {
+      final List <DCatAPDatasetType> aDatasetTypeList = aDSDClient.queryDatasetByDPType (sDatasetType, sDPType);
+      ret = DSDDatasetHelper.buildDSDResponseSet (aDatasetTypeList);
+    }
+    catch (final RuntimeException ex)
+    {
+      LOGGER.error (ex.getMessage (), ex);
+      aErrorHandler.onError ("Failed to query the DSD", ex, EToopErrorCode.DD_001);
+      // return EMPTY result set.
+      ret = new CommonsHashSet <> ();
+    }
+
+    final int nResultCount = ret.size ();
+    ToopKafkaClient.send (EErrorLevel.INFO,
+                          () -> sLogPrefix +
+                                "DSD querying '" +
+                                sDatasetType +
+                                "' and DPType '" +
+                                sDPType +
+                                "' lead to " +
+                                nResultCount +
+                                " result entries");
 
     return ret;
   }

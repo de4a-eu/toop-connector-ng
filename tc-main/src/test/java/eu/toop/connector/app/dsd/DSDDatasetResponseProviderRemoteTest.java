@@ -34,7 +34,7 @@ public final class DSDDatasetResponseProviderRemoteTest
   @Test
   public void testSimple ()
   {
-    final ICommonsSet <DSDDatasetResponse> aResp = new DSDDatasetResponseProviderRemote ().getAllDatasetResponses ("test",
+    final ICommonsSet <DSDDatasetResponse> aResp = new DSDDatasetResponseProviderRemote ().getAllDatasetResponsesByCountry ("test",
                                                                                                                    "REGISTERED_ORGANIZATION_TYPE",
                                                                                                                    null,
                                                                                                                    LoggingTCErrorHandler.INSTANCE);

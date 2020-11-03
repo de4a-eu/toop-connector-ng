@@ -29,6 +29,7 @@ import eu.toop.connector.api.error.ITCErrorHandler;
  * participants.
  *
  * @author jerouris
+ * @author Philip Helger
  */
 public interface IDSDDatasetResponseProvider
 {
@@ -48,8 +49,28 @@ public interface IDSDDatasetResponseProvider
    * @return A non-<code>null</code> but maybe empty set of datasets.
    */
   @Nonnull
-  ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull String sLogPrefix,
-                                                           @Nonnull String sDatasetType,
-                                                           @Nullable String sCountryCode,
-                                                           @Nonnull ITCErrorHandler aErrorHdl);
+  ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByCountry (@Nonnull String sLogPrefix,
+                                                                    @Nonnull String sDatasetType,
+                                                                    @Nullable String sCountryCode,
+                                                                    @Nonnull ITCErrorHandler aErrorHdl);
+
+  /**
+   * Get all DSD Responses that match the provided DP type and document type ID.
+   *
+   * @param sLogPrefix
+   *        The logging prefix to be used. May not be <code>null</code>.
+   * @param sDatasetType
+   *        Dataset Type to query. May not be <code>null</code>.
+   * @param sDPType
+   *        DP type to use. This is mapped to the Business Card of the
+   *        participant. May be <code>null</code>.
+   * @param aErrorHdl
+   *        The error handler to be used. May not be <code>null</code>.
+   * @return A non-<code>null</code> but maybe empty set of datasets.
+   */
+  @Nonnull
+  ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByDPType (@Nonnull String sLogPrefix,
+                                                                   @Nonnull String sDatasetType,
+                                                                   @Nullable String sDPType,
+                                                                   @Nonnull ITCErrorHandler aErrorHdl);
 }

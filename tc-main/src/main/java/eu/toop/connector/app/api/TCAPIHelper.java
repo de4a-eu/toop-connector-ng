@@ -69,7 +69,7 @@ public final class TCAPIHelper
                                                                  @Nullable final String sCountryCode,
                                                                  @Nonnull final ITCErrorHandler aErrorHdl)
   {
-    return TCAPIConfig.getDSDDatasetResponseProvider ().getAllDatasetResponses ("[dsd-by-country]", sDatasetType, sCountryCode, aErrorHdl);
+    return TCAPIConfig.getDSDDatasetResponseProvider ().getAllDatasetResponsesByCountry ("[dsd-by-country]", sDatasetType, sCountryCode, aErrorHdl);
   }
 
   /**
