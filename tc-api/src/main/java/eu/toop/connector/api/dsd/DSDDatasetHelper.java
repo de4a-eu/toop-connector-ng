@@ -46,39 +46,41 @@ public final class DSDDatasetHelper
    * Creates a set of {@link DSDDatasetResponse} objects from the given
    * <code>datasetTypesList</code>
    *
-   * @param datasetTypesList
-   *        the list of {@link DCatAPDatasetType} objects
-   * @return the set of {@link DSDDatasetResponse} objects
+   * @param aDatasetTypeList
+   *        the list of {@link DCatAPDatasetType} objects. May not be
+   *        <code>null</code>.
+   * @return the set of {@link DSDDatasetResponse} objects. Never
+   *         <code>null</code>.
    */
   @Nonnull
   @ReturnsMutableCopy
-  public static ICommonsSet <DSDDatasetResponse> buildDSDResponseSet (@Nonnull final List <DCatAPDatasetType> datasetTypesList)
+  public static ICommonsSet <DSDDatasetResponse> buildDSDResponseSet (@Nonnull final List <DCatAPDatasetType> aDatasetTypeList)
   {
     final IIdentifierFactory aIF = TCConfig.getIdentifierFactory ();
     final ICommonsSet <DSDDatasetResponse> ret = new CommonsHashSet <> ();
-    for (final DCatAPDatasetType d : datasetTypesList)
-      for (final DCatAPDistributionType dist : d.getDistribution ())
+    for (final DCatAPDatasetType aItem : aDatasetTypeList)
+      for (final DCatAPDistributionType aDist : aItem.getDistribution ())
       {
         final DSDDatasetResponse resp = new DSDDatasetResponse ();
         // Access Service Conforms To
-        if (dist.getAccessService ().hasConformsToEntries ())
-          resp.setAccessServiceConforms (dist.getAccessService ().getConformsToAtIndex (0).getValue ());
+        if (aDist.getAccessService ().hasConformsToEntries ())
+          resp.setAccessServiceConforms (aDist.getAccessService ().getConformsToAtIndex (0).getValue ());
 
         // DP Identifier
-        final IDType aDPID = ((PublicOrganizationType) d.getPublisherAtIndex (0)).getIdAtIndex (0);
+        final IDType aDPID = ((PublicOrganizationType) aItem.getPublisherAtIndex (0)).getIdAtIndex (0);
         resp.setDPIdentifier (aIF.createParticipantIdentifier (aDPID.getSchemeID (), aDPID.getValue ()));
 
         // Access Service Identifier, used as Document Type ID
-        final ICommonsList <String> aDTParts = StringHelper.getExploded ("::", dist.getAccessService ().getIdentifier (), 2);
+        final ICommonsList <String> aDTParts = StringHelper.getExploded ("::", aDist.getAccessService ().getIdentifier (), 2);
         if (aDTParts.size () == 2)
           resp.setDocumentTypeIdentifier (aIF.createDocumentTypeIdentifier (aDTParts.get (0), aDTParts.get (1)));
 
-        resp.setDatasetIdentifier (d.getIdentifierAtIndex (0));
-        if (dist.hasConformsToEntries ())
-          resp.setDistributionConforms (dist.getConformsToAtIndex (0).getValue ());
+        resp.setDatasetIdentifier (aItem.getIdentifierAtIndex (0));
+        if (aDist.hasConformsToEntries ())
+          resp.setDistributionConforms (aDist.getConformsToAtIndex (0).getValue ());
 
-        if (dist.getFormat ().hasContentEntries ())
-          resp.setDistributionFormat (dist.getFormat ().getContentAtIndex (0).toString ());
+        if (aDist.getFormat ().hasContentEntries ())
+          resp.setDistributionFormat (aDist.getFormat ().getContentAtIndex (0).toString ());
         ret.add (resp);
       }
 
