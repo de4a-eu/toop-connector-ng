@@ -18,7 +18,6 @@ package eu.toop.connector.app.dsd;
 import java.util.List;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -88,7 +87,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
   @Nonnull
   public ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByCountry (@Nonnull final String sLogPrefix,
                                                                            @Nonnull @Nonempty final String sDatasetType,
-                                                                           @Nullable final String sCountryCode,
+                                                                           @Nonnull @Nonempty final String sCountryCode,
                                                                            @Nonnull final ITCErrorHandler aErrorHandler)
   {
     final DSDClient aDSDClient = new DSDClient (m_sBaseURL);

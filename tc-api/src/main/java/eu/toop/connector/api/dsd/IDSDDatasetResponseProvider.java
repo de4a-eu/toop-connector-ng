@@ -16,7 +16,6 @@
 package eu.toop.connector.api.dsd;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSet;
@@ -43,36 +42,8 @@ public interface IDSDDatasetResponseProvider
    * @param sDatasetType
    *        Dataset Type to query. May neither be <code>null</code> nor empty.
    * @param sCountryCode
-   *        Country code to use. Must be a 2-digit string. May be
-   *        <code>null</code>.
-   * @param aErrorHdl
-   *        The error handler to be used. May not be <code>null</code>.
-   * @return A non-<code>null</code> but maybe empty set of datasets.
-   * @deprecated Use
-   *             {@link #getAllDatasetResponsesByCountry(String, String, String, ITCErrorHandler)}
-   *             instead
-   */
-  @Nonnull
-  @Deprecated
-  default ICommonsSet <DSDDatasetResponse> getAllDatasetResponses (@Nonnull final String sLogPrefix,
-                                                                   @Nonnull @Nonempty final String sDatasetType,
-                                                                   @Nullable final String sCountryCode,
-                                                                   @Nonnull final ITCErrorHandler aErrorHdl)
-  {
-    return getAllDatasetResponsesByCountry (sLogPrefix, sDatasetType, sCountryCode, aErrorHdl);
-  }
-
-  /**
-   * Get all DSD Responses that match the provided country code and document
-   * type ID.
-   *
-   * @param sLogPrefix
-   *        The logging prefix to be used. May not be <code>null</code>.
-   * @param sDatasetType
-   *        Dataset Type to query. May neither be <code>null</code> nor empty.
-   * @param sCountryCode
-   *        Country code to use. Must be a 2-digit string. May be
-   *        <code>null</code>.
+   *        Country code to use. Must be a 2-digit string. May neither be
+   *        <code>null</code> nor empty.
    * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
    * @return A non-<code>null</code> but maybe empty set of datasets.
@@ -81,7 +52,7 @@ public interface IDSDDatasetResponseProvider
   @Nonnull
   ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByCountry (@Nonnull String sLogPrefix,
                                                                     @Nonnull @Nonempty String sDatasetType,
-                                                                    @Nullable String sCountryCode,
+                                                                    @Nonnull @Nonempty String sCountryCode,
                                                                     @Nonnull ITCErrorHandler aErrorHdl);
 
   /**

@@ -60,8 +60,8 @@ public final class TCAPIHelper
    * @param sDatasetType
    *        Dataset Type to query. May neither be <code>null</code> nor empty.
    * @param sCountryCode
-   *        Country code to use. Must be a 2-digit string. May be
-   *        <code>null</code>.
+   *        Country code to use. Must be a 2-digit string. May neither be
+   *        <code>null</code> nor empty.
    * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
    * @return A non-<code>null</code> but maybe empty set of datasets.
@@ -72,7 +72,7 @@ public final class TCAPIHelper
   @Deprecated
   @Nonnull
   public static ICommonsSet <DSDDatasetResponse> getDSDDatasets (@Nonnull @Nonempty final String sDatasetType,
-                                                                 @Nullable final String sCountryCode,
+                                                                 @Nonnull @Nonempty final String sCountryCode,
                                                                  @Nonnull final ITCErrorHandler aErrorHdl)
   {
     return getDSDDatasetsByCountry (sDatasetType, sCountryCode, aErrorHdl);
@@ -82,8 +82,8 @@ public final class TCAPIHelper
    * @param sDatasetType
    *        Dataset Type to query. May neither be <code>null</code> nor empty.
    * @param sCountryCode
-   *        Country code to use. Must be a 2-digit string. May be
-   *        <code>null</code>.
+   *        Country code to use. Must be a 2-digit string. May neither be
+   *        <code>null</code> nor empty.
    * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
    * @return A non-<code>null</code> but maybe empty set of datasets.
@@ -91,7 +91,7 @@ public final class TCAPIHelper
    */
   @Nonnull
   public static ICommonsSet <DSDDatasetResponse> getDSDDatasetsByCountry (@Nonnull @Nonempty final String sDatasetType,
-                                                                          @Nullable final String sCountryCode,
+                                                                          @Nonnull @Nonempty final String sCountryCode,
                                                                           @Nonnull final ITCErrorHandler aErrorHdl)
   {
     return TCAPIConfig.getDSDDatasetResponseProvider ()
