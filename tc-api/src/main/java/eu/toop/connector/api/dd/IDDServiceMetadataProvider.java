@@ -66,7 +66,8 @@ public interface IDDServiceMetadataProvider
    * @param sTransportProfile
    *        Transport profile to be used. May not be <code>null</code>.
    * @return <code>null</code> if no such endpoint was found
-   * @see #getServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier)
+   * @see #getServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier,
+   *      IProcessIdentifier, String)
    * @since 2.0.0-rc1
    */
   @Nullable
@@ -89,7 +90,8 @@ public interface IDDServiceMetadataProvider
    * @param sTransportProfile
    *        Transport profile to be used. May not be <code>null</code>.
    * @return <code>null</code> if no such endpoint was found
-   * @see #getServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier)
+   * @see #getServiceMetadata(IParticipantIdentifier, IDocumentTypeIdentifier,
+   *      IProcessIdentifier, String)
    * @since 2.0.0-rc4
    */
   @Nullable
