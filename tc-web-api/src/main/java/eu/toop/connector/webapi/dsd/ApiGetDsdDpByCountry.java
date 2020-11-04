@@ -55,8 +55,10 @@ public class ApiGetDsdDpByCountry extends AbstractTCAPIInvoker
       throw new APIParamException ("Missing DatasetType");
 
     final String sCountryCode = aPathVariables.get ("country");
-    if (StringHelper.hasNoText (sCountryCode))
-      throw new APIParamException ("Missing Country Code");
+    // Country code may be null
+    if (false)
+      if (StringHelper.hasNoText (sCountryCode))
+        throw new APIParamException ("Missing Country Code");
 
     final IJsonObject aJson = new JsonObject ();
     CommonAPIInvoker.invoke (aJson, () -> {

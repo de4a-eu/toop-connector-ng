@@ -87,7 +87,7 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
 
   @Nonnull
   public ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByCountry (@Nonnull final String sLogPrefix,
-                                                                           @Nonnull final String sDatasetType,
+                                                                           @Nonnull @Nonempty final String sDatasetType,
                                                                            @Nullable final String sCountryCode,
                                                                            @Nonnull final ITCErrorHandler aErrorHandler)
   {
@@ -124,8 +124,8 @@ public class DSDDatasetResponseProviderRemote implements IDSDDatasetResponseProv
 
   @Nonnull
   public ICommonsSet <DSDDatasetResponse> getAllDatasetResponsesByDPType (@Nonnull final String sLogPrefix,
-                                                                          @Nonnull final String sDatasetType,
-                                                                          @Nullable final String sDPType,
+                                                                          @Nonnull @Nonempty final String sDatasetType,
+                                                                          @Nonnull @Nonempty final String sDPType,
                                                                           @Nonnull final ITCErrorHandler aErrorHandler)
   {
     final DSDClient aDSDClient = new DSDClient (m_sBaseURL);

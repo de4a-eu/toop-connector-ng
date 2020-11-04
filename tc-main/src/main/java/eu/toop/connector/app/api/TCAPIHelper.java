@@ -23,6 +23,7 @@ import javax.annotation.concurrent.Immutable;
 
 import com.helger.bdve.api.executorset.VESID;
 import com.helger.bdve.api.result.ValidationResultList;
+import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
 import com.helger.peppolid.IDocumentTypeIdentifier;
@@ -57,7 +58,7 @@ public final class TCAPIHelper
 
   /**
    * @param sDatasetType
-   *        Dataset Type to query. May not be <code>null</code>.
+   *        Dataset Type to query. May neither be <code>null</code> nor empty.
    * @param sCountryCode
    *        Country code to use. Must be a 2-digit string. May be
    *        <code>null</code>.
@@ -70,7 +71,7 @@ public final class TCAPIHelper
    */
   @Deprecated
   @Nonnull
-  public static ICommonsSet <DSDDatasetResponse> getDSDDatasets (@Nonnull final String sDatasetType,
+  public static ICommonsSet <DSDDatasetResponse> getDSDDatasets (@Nonnull @Nonempty final String sDatasetType,
                                                                  @Nullable final String sCountryCode,
                                                                  @Nonnull final ITCErrorHandler aErrorHdl)
   {
@@ -79,7 +80,7 @@ public final class TCAPIHelper
 
   /**
    * @param sDatasetType
-   *        Dataset Type to query. May not be <code>null</code>.
+   *        Dataset Type to query. May neither be <code>null</code> nor empty.
    * @param sCountryCode
    *        Country code to use. Must be a 2-digit string. May be
    *        <code>null</code>.
@@ -89,7 +90,7 @@ public final class TCAPIHelper
    * @since 2.1.0
    */
   @Nonnull
-  public static ICommonsSet <DSDDatasetResponse> getDSDDatasetsByCountry (@Nonnull final String sDatasetType,
+  public static ICommonsSet <DSDDatasetResponse> getDSDDatasetsByCountry (@Nonnull @Nonempty final String sDatasetType,
                                                                           @Nullable final String sCountryCode,
                                                                           @Nonnull final ITCErrorHandler aErrorHdl)
   {
@@ -99,17 +100,17 @@ public final class TCAPIHelper
 
   /**
    * @param sDatasetType
-   *        Dataset Type to query. May not be <code>null</code>.
+   *        Dataset Type to query. May neither be <code>null</code> nor empty.
    * @param sDPType
-   *        DP type to use. May be <code>null</code>.
+   *        DP type to use. May neither be <code>null</code> nor empty.
    * @param aErrorHdl
    *        The error handler to be used. May not be <code>null</code>.
    * @return A non-<code>null</code> but maybe empty set of datasets.
    * @since 2.1.0
    */
   @Nonnull
-  public static ICommonsSet <DSDDatasetResponse> getDSDDatasetsByDPType (@Nonnull final String sDatasetType,
-                                                                         @Nullable final String sDPType,
+  public static ICommonsSet <DSDDatasetResponse> getDSDDatasetsByDPType (@Nonnull @Nonempty final String sDatasetType,
+                                                                         @Nonnull @Nonempty final String sDPType,
                                                                          @Nonnull final ITCErrorHandler aErrorHdl)
   {
     return TCAPIConfig.getDSDDatasetResponseProvider ()
