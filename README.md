@@ -195,11 +195,12 @@ Do a simple `mvn clean install` on the command line.
 
 # News and Noteworthy
 
-`2.1.0` - work in progress
+2020-11-04: release of `2.1.0`
 * Update the EDM to version 2.1
-* Bumped phase4 to 0.12.0
+* Bumped phase4 to 0.12.x
 * Added new configuration items `toop.mem.as4.to-party-id-type`, `phase4.send.fromparty.id.type` and `phase4.send.toparty.id.type`
 * phase4 properties should now reside in the file `phase4.properties`
+* Added new REST API `/dsd/dp/{datasetType}/by-dp-type/{dpType}` to query the DSD for all entities having an SMP BusinessCard additional identifier of scheme `DataProviderType` and the provided `{dpType}` as the identifier value.
 
 2020-09-18: release of `2.0.1`
 * Bumped phase4 to 0.11.1
