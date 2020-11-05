@@ -39,6 +39,7 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.url.IURLProtocol;
 import com.helger.commons.url.URLHelper;
 import com.helger.commons.url.URLProtocolRegistry;
+import com.helger.dns.config.DNSConfig;
 import com.helger.dns.dnsjava.DnsjavaInit;
 import com.helger.xservlet.requesttrack.RequestTracker;
 
@@ -137,6 +138,8 @@ public final class TCInit
     RequestTracker.getInstance ().getRequestTrackingMgr ().setParallelRunningRequestCheckEnabled (false);
 
     // Don't use any custom DNS servers
+    // Note: call DNSConfig first for initialization order
+    DNSConfig.getDefaultCustomServers ();
     DnsjavaInit.setDefaultConfig ();
 
     {
