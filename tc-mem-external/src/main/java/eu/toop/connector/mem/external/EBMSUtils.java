@@ -377,23 +377,29 @@ public final class EBMSUtils {
           throw new MEIncomingException("ContentId: " + href + " was not found in PartInfo");
         }
 
+        String sMimeType = SoapXPathUtil.getSingleNodeTextContent(partInfo,
+            ".//:PartProperties/:Property[@name='MimeType']");
+        if (sMimeType.startsWith("cid:")) {
+          sMimeType = sMimeType.substring(4);
+        }
+
         MimeType mimeType;
         try {
-          String sMimeType = SoapXPathUtil.getSingleNodeTextContent(partInfo,
-              ".//:PartProperties/:Property[@name='MimeType']");
-          if (sMimeType.startsWith("cid:")) {
-            sMimeType = sMimeType.substring(4);
-          }
-
           mimeType = MimeTypeParser.parseMimeType(sMimeType);
         } catch (final MimeTypeParserException ex) {
-          LOG.warn("Error parsing MIME type: " + ex.getMessage());
+          LOG.warn("Error parsing MIME type '"+sMimeType+"': " + ex.getMessage());
           // if there is a problem wrt the processing of the mimetype, simply
           // grab the
           // content type
-          // FIXME: Do not swallow the error, there might a problem with the
-          // mimtype
-          mimeType = MimeTypeParser.parseMimeType(att.getContentType());
+          try
+          {
+            mimeType = MimeTypeParser.parseMimeType(att.getContentType());
+          }
+          catch (final MimeTypeParserException ex2)
+          {
+            LOG.warn("Error parsing fallback MIME type '"+att.getContentType()+"': " + ex2.getMessage());
+            mimeType = new MimeType (CMimeType.APPLICATION_OCTET_STREAM);
+          }
         }
 
         try {

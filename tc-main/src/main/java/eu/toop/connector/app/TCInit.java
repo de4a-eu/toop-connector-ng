@@ -75,7 +75,8 @@ public final class TCInit
    *         If the TOOP Connector is already initialized
    * @throws InitializationException
    *         If any of the settings are totally bogus
-   * @deprecated Use {@link #initGlobally(ServletContext, IMEIncomingHandler)}
+   * @deprecated Since 2.0.0-rc4; Use
+   *             {@link #initGlobally(ServletContext, IMEIncomingHandler)}
    *             instead
    */
   @Deprecated
@@ -175,14 +176,16 @@ public final class TCInit
         final X509Certificate aStaticCert = TCConfig.R2D2.getR2D2StaticCertificate ();
         if (URLHelper.getAsURL (sStaticEndpoint) != null && aStaticCert != null)
         {
-          LOGGER.info ("Using static R2D2 target endpoint '" + sStaticEndpoint + "'");
+          if (LOGGER.isInfoEnabled ())
+            LOGGER.info ("Using static R2D2 target endpoint '" + sStaticEndpoint + "'");
         }
         else
         {
           final URI aSMPURI = TCConfig.R2D2.getR2D2SMPUrl ();
           if (aSMPURI != null)
           {
-            LOGGER.info ("Using static R2D2 SMP address '" + aSMPURI.toString () + "'");
+            if (LOGGER.isInfoEnabled ())
+              LOGGER.info ("Using static R2D2 SMP address '" + aSMPURI.toString () + "'");
           }
           else
             throw new InitializationException ("Since the usage of SML/DNS is disabled, the fixed URL of the SMP or the static parameters to be used must be provided in the configuration file!");
@@ -234,6 +237,6 @@ public final class TCInit
     s_sLogPrefix = null;
 
     if (!INITED.compareAndSet (true, false))
-      throw new IllegalStateException ("TOOP Connector NG is already shutdown");
+      throw new IllegalStateException ("TOOP Connector NG was already shutdown");
   }
 }

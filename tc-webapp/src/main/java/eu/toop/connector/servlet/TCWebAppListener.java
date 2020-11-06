@@ -54,7 +54,7 @@ public class TCWebAppListener extends WebAppListener
   }
 
   @Override
-  protected String getServletContextPath (final ServletContext aSC) throws IllegalStateException
+  protected String getServletContextPath (final ServletContext aSC)
   {
     try
     {

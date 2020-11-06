@@ -108,9 +108,8 @@ public interface IDDServiceMetadataProvider
                                                                  x -> aProcessID.hasSameContent (SimpleProcessIdentifier.wrap (x.getProcessIdentifier ())));
         if (aProcess != null)
         {
-          final EndpointType aEndpoint = CollectionHelper.findFirst (aProcess.getServiceEndpointList ().getEndpoint (),
-                                                                     x -> sTransportProfile.equals (x.getTransportProfile ()));
-          return aEndpoint;
+          return CollectionHelper.findFirst (aProcess.getServiceEndpointList ().getEndpoint (),
+                                             x -> sTransportProfile.equals (x.getTransportProfile ()));
         }
       }
     }
