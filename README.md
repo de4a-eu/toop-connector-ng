@@ -195,8 +195,8 @@ Do a simple `mvn clean install` on the command line.
 
 # News and Noteworthy
 
-`2.1.1` - work in progress
-* Fixed the version IDs of the validation artefacts from `2.0.0` to `2.1.0`
+2020-11-09: release of `2.1.0-1`
+* Corrected the version IDs of the validation artefacts from `2.0.0` to `2.1.0`
 
 2020-11-06: release of `2.1.0`
 * Update the EDM to version 2.1
