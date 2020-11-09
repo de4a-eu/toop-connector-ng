@@ -103,7 +103,7 @@ public class TCRootServlet extends HttpServlet
                   "/api/smp/doctypes/iso6523-actorid-upis%3A%3A9915%3Atooptest' target='_blank'>test me</a></div>");
       aSB.append ("<div>GET /api/smp/endpoints - <a href='" +
                   sContextPath +
-                  "/api/smp/endpoints/iso6523-actorid-upis%3A%3A9915%3Atooptest/toop-doctypeid-qns%3A%3Aurn%3Aeu%3Atoop%3Ans%3Adataexchange-1p40%3A%3ARequest%23%23urn%3Aeu.toop.request.registeredorganization%3A%3A1.40' target='_blank'>test me</a></div>");
+                  "/api/smp/endpoints/iso6523-actorid-upis%3A%3A9915%3Atooptest/toop-doctypeid-qns%3A%3ARegisteredOrganization%3A%3AREGISTERED_ORGANIZATION_TYPE%3A%3ACONCEPT%23%23CCCEV%3A%3Atoop-edm%3Av2.0' target='_blank'>test me</a></div>");
 
       aSB.append ("<h3>Validation</h3>");
       aSB.append ("<div>POST /api/validate/request</div>");
