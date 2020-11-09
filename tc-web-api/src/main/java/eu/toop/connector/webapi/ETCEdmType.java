@@ -30,9 +30,9 @@ import eu.toop.connector.app.validation.TCValidationRules;
  */
 public enum ETCEdmType
 {
-  REQUEST ("req", TCValidationRules.VID_TOOP_EDM_REQUEST_200, TCPayloadType.REQUEST),
-  RESPONSE ("resp", TCValidationRules.VID_TOOP_EDM_RESPONSE_200, TCPayloadType.RESPONSE),
-  ERROR_RESPONSE ("errresp", TCValidationRules.VID_TOOP_EDM_ERROR_RESPONSE_200, TCPayloadType.ERROR_RESPONSE);
+  REQUEST ("req", TCValidationRules.VID_TOOP_EDM_REQUEST_210, TCPayloadType.REQUEST),
+  RESPONSE ("resp", TCValidationRules.VID_TOOP_EDM_RESPONSE_210, TCPayloadType.RESPONSE),
+  ERROR_RESPONSE ("errresp", TCValidationRules.VID_TOOP_EDM_ERROR_RESPONSE_210, TCPayloadType.ERROR_RESPONSE);
 
   private final String m_sID;
   private final VESID m_aVESID;

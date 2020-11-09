@@ -38,7 +38,7 @@ import eu.toop.regrep.CRegRep4;
 import eu.toop.regrep.RegRep4Reader;
 
 /**
- * Generic TOOP EDM v2 validation configuration
+ * Generic TOOP EDM 2.1.0 validation configuration
  *
  * @author Philip Helger
  */
@@ -47,9 +47,10 @@ public final class TCValidationRules
 {
   public static final String GROUP_ID = "eu.toop";
 
-  public static final VESID VID_TOOP_EDM_REQUEST_200 = new VESID (GROUP_ID, "edm-request", "2.0.0");
-  public static final VESID VID_TOOP_EDM_RESPONSE_200 = new VESID (GROUP_ID, "edm-response", "2.0.0");
-  public static final VESID VID_TOOP_EDM_ERROR_RESPONSE_200 = new VESID (GROUP_ID, "edm-error-response", "2.0.0");
+  // The 2.1.0 release was using "2.0.0" by accident
+  public static final VESID VID_TOOP_EDM_REQUEST_210 = new VESID (GROUP_ID, "edm-request", "2.1.0");
+  public static final VESID VID_TOOP_EDM_RESPONSE_210 = new VESID (GROUP_ID, "edm-response", "2.1.0");
+  public static final VESID VID_TOOP_EDM_ERROR_RESPONSE_210 = new VESID (GROUP_ID, "edm-error-response", "2.1.0");
 
   private TCValidationRules ()
   {}
@@ -84,8 +85,8 @@ public final class TCValidationRules
     // Request
     {
       final IJAXBDocumentType aDT = RegRep4Reader.queryRequest (CCAGV.XSDS).getJAXBDocumentType ();
-      aRegistry.registerValidationExecutorSet (ValidationExecutorSet.create (VID_TOOP_EDM_REQUEST_200,
-                                                                             "TOOP EDM Request 2.0.0",
+      aRegistry.registerValidationExecutorSet (ValidationExecutorSet.create (VID_TOOP_EDM_REQUEST_210,
+                                                                             "TOOP EDM Request 2.1.0",
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
@@ -98,8 +99,8 @@ public final class TCValidationRules
     // Response
     {
       final IJAXBDocumentType aDT = RegRep4Reader.queryResponse (CCCEV.XSDS).getJAXBDocumentType ();
-      aRegistry.registerValidationExecutorSet (ValidationExecutorSet.create (VID_TOOP_EDM_RESPONSE_200,
-                                                                             "TOOP EDM Response 2.0.0",
+      aRegistry.registerValidationExecutorSet (ValidationExecutorSet.create (VID_TOOP_EDM_RESPONSE_210,
+                                                                             "TOOP EDM Response 2.1.0",
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),
@@ -112,8 +113,8 @@ public final class TCValidationRules
     // Error Response
     {
       final IJAXBDocumentType aDT = RegRep4Reader.queryResponse (CCCEV.XSDS).getJAXBDocumentType ();
-      aRegistry.registerValidationExecutorSet (ValidationExecutorSet.create (VID_TOOP_EDM_ERROR_RESPONSE_200,
-                                                                             "TOOP EDM Error Response 2.0.0",
+      aRegistry.registerValidationExecutorSet (ValidationExecutorSet.create (VID_TOOP_EDM_ERROR_RESPONSE_210,
+                                                                             "TOOP EDM Error Response 2.1.0",
                                                                              bNotDeprecated,
                                                                              new ValidationExecutorXSD (new ValidationArtefact (EValidationType.XSD,
                                                                                                                                 CRegRep4.getXSDResourceQuery ()),

@@ -56,7 +56,7 @@ public final class TCValidatorTest
   @Test
   public void testRequest ()
   {
-    final VESID aVESID = TCValidationRules.VID_TOOP_EDM_REQUEST_200;
+    final VESID aVESID = TCValidationRules.VID_TOOP_EDM_REQUEST_210;
     _assumeSuccess (_validate (aVESID, "Concept Request_LP.xml"));
     _assumeSuccess (_validate (aVESID, "Concept Request_NP.xml"));
     _assumeError (_validate (aVESID, "Concept Response.xml"));
@@ -70,7 +70,7 @@ public final class TCValidatorTest
   @Test
   public void testResponse ()
   {
-    final VESID aVESID = TCValidationRules.VID_TOOP_EDM_RESPONSE_200;
+    final VESID aVESID = TCValidationRules.VID_TOOP_EDM_RESPONSE_210;
     _assumeError (_validate (aVESID, "Concept Request_LP.xml"));
     _assumeError (_validate (aVESID, "Concept Request_NP.xml"));
     _assumeSuccess (_validate (aVESID, "Concept Response.xml"));
@@ -84,7 +84,7 @@ public final class TCValidatorTest
   @Test
   public void testErrorResponse ()
   {
-    final VESID aVESID = TCValidationRules.VID_TOOP_EDM_ERROR_RESPONSE_200;
+    final VESID aVESID = TCValidationRules.VID_TOOP_EDM_ERROR_RESPONSE_210;
     _assumeError (_validate (aVESID, "Concept Request_LP.xml"));
     _assumeError (_validate (aVESID, "Concept Request_NP.xml"));
     _assumeError (_validate (aVESID, "Concept Response.xml"));
