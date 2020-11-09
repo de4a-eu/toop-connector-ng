@@ -21,7 +21,7 @@
   <parent>
     <groupId>eu.toop</groupId>
     <artifactId>tc-parent-pom</artifactId>
-    <version>2.1.0-1</version>
+    <version>2.1.1-SNAPSHOT</version>
   </parent>
   <artifactId>tc-mem-external</artifactId>
   <packaging>bundle</packaging>
