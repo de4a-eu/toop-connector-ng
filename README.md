@@ -83,6 +83,11 @@ The following configuration properties are **supported** - some of them have def
 * **`toop.webapp.data.path`** (string) (since 2.0.0-rc4) - the absolute path, where data should be stored.
 * **`toop.mem.incoming.url`** (string) - the URL inside your DC/DP where incoming messages (of type `TCIncomingMessage`) should be send to (for receiving incoming message). Note: this property is only needed, if HTTP interface between DC/DP and TC is used.
 
+Additionally the configuration items of the SMP client should be configured. The complete description can be found at https://github.com/phax/peppol-commons#configuration - the main items are:
+* **`truststore.type`** (string): the type of key store to be used. Possible values are `JKS` and `PKCS12`. Defaults to `JKS` (which was the implicit default prior to v6).
+* **`truststore.path`** (string): the location of the trust store (of the specified type) to be used.
+* **`truststore.password`** (string): the password to access the trust store.
+
 Note: this TOOP Connector uses a different configuration engine than the old version.
 
 Note: see https://github.com/TOOP4EU/toop-connector-ng/blob/master/tc-webapp/src/main/resources/application.properties for the default configuration file
