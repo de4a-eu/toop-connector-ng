@@ -21,14 +21,14 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.bdve.api.executorset.VESID;
-import com.helger.bdve.api.result.ValidationResultList;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.collection.impl.ICommonsSortedMap;
 import com.helger.peppolid.IDocumentTypeIdentifier;
 import com.helger.peppolid.IParticipantIdentifier;
 import com.helger.peppolid.IProcessIdentifier;
+import com.helger.phive.api.executorset.VESID;
+import com.helger.phive.api.result.ValidationResultList;
 import com.helger.xsds.bdxr.smp1.EndpointType;
 import com.helger.xsds.bdxr.smp1.ServiceMetadataType;
 

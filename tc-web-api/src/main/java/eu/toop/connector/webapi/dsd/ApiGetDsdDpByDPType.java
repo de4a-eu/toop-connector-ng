@@ -19,7 +19,6 @@ import java.util.Map;
 
 import javax.annotation.Nonnull;
 
-import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.impl.ICommonsSet;
 import com.helger.commons.string.StringHelper;
@@ -27,6 +26,7 @@ import com.helger.json.IJsonArray;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonArray;
 import com.helger.json.JsonObject;
+import com.helger.phive.json.PhiveJsonHelper;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
@@ -64,7 +64,7 @@ public class ApiGetDsdDpByDPType extends AbstractTCAPIInvoker
       final IJsonArray aErrorMsgs = new JsonArray ();
       final ITCErrorHandler aErrorHdl = (eErrorLevel, sMsg, t, eCode) -> {
         if (eErrorLevel.isError ())
-          aErrorMsgs.add (BDVEJsonHelper.getJsonError (eErrorLevel, eCode == null ? null : eCode.getID (), null, null, null, sMsg, t));
+          aErrorMsgs.add (PhiveJsonHelper.getJsonError (eErrorLevel, eCode == null ? null : eCode.getID (), null, null, null, sMsg, t));
       };
 
       // Query DSD

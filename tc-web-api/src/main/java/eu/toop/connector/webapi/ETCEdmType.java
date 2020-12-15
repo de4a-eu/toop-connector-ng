@@ -17,8 +17,8 @@ package eu.toop.connector.webapi;
 
 import javax.annotation.Nonnull;
 
-import com.helger.bdve.api.executorset.VESID;
 import com.helger.commons.annotation.Nonempty;
+import com.helger.phive.api.executorset.VESID;
 
 import eu.toop.connector.api.rest.TCPayloadType;
 import eu.toop.connector.app.validation.TCValidationRules;

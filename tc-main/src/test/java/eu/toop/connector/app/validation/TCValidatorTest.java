@@ -23,10 +23,10 @@ import javax.annotation.Nonnull;
 
 import org.junit.Test;
 
-import com.helger.bdve.api.executorset.VESID;
-import com.helger.bdve.api.result.ValidationResultList;
 import com.helger.commons.io.resource.ClassPathResource;
 import com.helger.commons.io.stream.StreamHelper;
+import com.helger.phive.api.executorset.VESID;
+import com.helger.phive.api.result.ValidationResultList;
 
 /**
  * Test class for class {@link TCValidator}

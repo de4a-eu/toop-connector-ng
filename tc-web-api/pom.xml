@@ -65,8 +65,8 @@
       <artifactId>tc-main</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger.bdve</groupId>
-      <artifactId>ph-bdve-json</artifactId>
+      <groupId>com.helger.phive</groupId>
+      <artifactId>phive-json</artifactId>
     </dependency>
     <!-- Default MEM module -->
     <dependency>

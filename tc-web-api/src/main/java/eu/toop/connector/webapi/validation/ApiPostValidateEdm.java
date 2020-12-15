@@ -23,14 +23,14 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.bdve.api.executorset.VESID;
-import com.helger.bdve.api.result.ValidationResultList;
-import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.io.stream.StreamHelper;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
+import com.helger.phive.api.executorset.VESID;
+import com.helger.phive.api.result.ValidationResultList;
+import com.helger.phive.json.PhiveJsonHelper;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.web.scope.IRequestWebScopeWithoutResponse;
 
@@ -77,13 +77,13 @@ public class ApiPostValidateEdm extends AbstractTCAPIInvoker
 
       // Build response
       aJson.add (JSON_SUCCESS, true);
-      BDVEJsonHelper.applyValidationResultList (aJson,
-                                                TCValidator.getVES (aVESID),
-                                                aValidationResultList,
-                                                TCAPIHelper.DEFAULT_LOCALE,
-                                                aSW.getMillis (),
-                                                null,
-                                                null);
+      PhiveJsonHelper.applyValidationResultList (aJson,
+                                                 TCValidator.getVES (aVESID),
+                                                 aValidationResultList,
+                                                 TCAPIHelper.DEFAULT_LOCALE,
+                                                 aSW.getMillis (),
+                                                 null,
+                                                 null);
     });
 
     return aJson;

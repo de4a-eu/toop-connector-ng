@@ -21,18 +21,18 @@ import javax.annotation.Nonnull;
 
 import org.w3c.dom.Document;
 
-import com.helger.bdve.api.EValidationType;
-import com.helger.bdve.api.artefact.ValidationArtefact;
-import com.helger.bdve.api.execute.ValidationExecutionManager;
-import com.helger.bdve.api.executorset.IValidationExecutorSet;
-import com.helger.bdve.api.executorset.VESID;
-import com.helger.bdve.api.executorset.ValidationExecutorSetRegistry;
-import com.helger.bdve.api.result.ValidationResult;
-import com.helger.bdve.api.result.ValidationResultList;
-import com.helger.bdve.engine.source.IValidationSourceXML;
-import com.helger.bdve.engine.source.ValidationSourceXML;
 import com.helger.commons.error.list.ErrorList;
 import com.helger.commons.io.resource.inmemory.ReadableResourceByteArray;
+import com.helger.phive.api.EValidationType;
+import com.helger.phive.api.artefact.ValidationArtefact;
+import com.helger.phive.api.execute.ValidationExecutionManager;
+import com.helger.phive.api.executorset.IValidationExecutorSet;
+import com.helger.phive.api.executorset.VESID;
+import com.helger.phive.api.executorset.ValidationExecutorSetRegistry;
+import com.helger.phive.api.result.ValidationResult;
+import com.helger.phive.api.result.ValidationResultList;
+import com.helger.phive.engine.source.IValidationSourceXML;
+import com.helger.phive.engine.source.ValidationSourceXML;
 import com.helger.xml.EXMLParserFeature;
 import com.helger.xml.sax.WrappedCollectingSAXErrorHandler;
 import com.helger.xml.serialize.read.DOMReader;

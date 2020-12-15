@@ -73,8 +73,8 @@
       <artifactId>peppol-commons</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.helger.bdve</groupId>
-      <artifactId>ph-bdve-engine</artifactId>
+      <groupId>com.helger.phive</groupId>
+      <artifactId>phive-engine</artifactId>
     </dependency>
     
     <dependency>

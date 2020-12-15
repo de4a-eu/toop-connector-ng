@@ -23,9 +23,6 @@ import javax.annotation.Nonnull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.helger.bdve.api.executorset.VESID;
-import com.helger.bdve.api.result.ValidationResultList;
-import com.helger.bdve.json.BDVEJsonHelper;
 import com.helger.commons.annotation.Nonempty;
 import com.helger.commons.collection.ArrayHelper;
 import com.helger.commons.mime.MimeTypeParser;
@@ -33,6 +30,9 @@ import com.helger.commons.string.StringHelper;
 import com.helger.commons.timing.StopWatch;
 import com.helger.json.IJsonObject;
 import com.helger.json.JsonObject;
+import com.helger.phive.api.executorset.VESID;
+import com.helger.phive.api.result.ValidationResultList;
+import com.helger.phive.json.PhiveJsonHelper;
 import com.helger.photon.api.IAPIDescriptor;
 import com.helger.security.certificate.CertificateHelper;
 import com.helger.smpclient.json.SMPJsonResponse;
@@ -114,13 +114,13 @@ public class ApiPostUserSubmitEdm extends AbstractTCAPIInvoker
         aSW.stop ();
 
         final IJsonObject aJsonVR = new JsonObject ();
-        BDVEJsonHelper.applyValidationResultList (aJsonVR,
-                                                  TCValidator.getVES (aVESID),
-                                                  aValidationResultList,
-                                                  TCAPIHelper.DEFAULT_LOCALE,
-                                                  aSW.getMillis (),
-                                                  null,
-                                                  null);
+        PhiveJsonHelper.applyValidationResultList (aJsonVR,
+                                                   TCValidator.getVES (aVESID),
+                                                   aValidationResultList,
+                                                   TCAPIHelper.DEFAULT_LOCALE,
+                                                   aSW.getMillis (),
+                                                   null,
+                                                   null);
         aJson.addJson ("validation-results", aJsonVR);
 
         bValidationOK = aValidationResultList.containsNoError ();

@@ -18,17 +18,17 @@ package eu.toop.connector.app.validation;
 import javax.annotation.Nonnull;
 import javax.annotation.concurrent.Immutable;
 
-import com.helger.bdve.api.EValidationType;
-import com.helger.bdve.api.artefact.ValidationArtefact;
-import com.helger.bdve.api.executorset.VESID;
-import com.helger.bdve.api.executorset.ValidationExecutorSet;
-import com.helger.bdve.api.executorset.ValidationExecutorSetRegistry;
-import com.helger.bdve.engine.schematron.ValidationExecutorSchematron;
-import com.helger.bdve.engine.source.IValidationSourceXML;
-import com.helger.bdve.engine.xsd.ValidationExecutorXSD;
 import com.helger.commons.ValueEnforcer;
 import com.helger.commons.io.resource.IReadableResource;
 import com.helger.jaxb.builder.IJAXBDocumentType;
+import com.helger.phive.api.EValidationType;
+import com.helger.phive.api.artefact.ValidationArtefact;
+import com.helger.phive.api.executorset.VESID;
+import com.helger.phive.api.executorset.ValidationExecutorSet;
+import com.helger.phive.api.executorset.ValidationExecutorSetRegistry;
+import com.helger.phive.engine.schematron.ValidationExecutorSchematron;
+import com.helger.phive.engine.source.IValidationSourceXML;
+import com.helger.phive.engine.xsd.ValidationExecutorXSD;
 import com.helger.ubl23.UBL23NamespaceContext;
 
 import eu.toop.edm.schematron.CEDMSchematron;
