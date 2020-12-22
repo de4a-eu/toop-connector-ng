@@ -119,13 +119,13 @@ public final class TCAPIHelper
 
   /**
    * @param aParticipantID
-   *        Participant ID to query.
+   *        Participant ID to query. May not be <code>null</code>.
    * @return A non-<code>null</code> sorted map of all hrefs. The key MUST be
    *         URL decoded whereas the value is the "original href" as found in
    *         the response.
    */
   @Nonnull
-  public static ICommonsSortedMap <String, String> querySMPServiceGroups (final IParticipantIdentifier aParticipantID)
+  public static ICommonsSortedMap <String, String> querySMPServiceGroups (@Nonnull final IParticipantIdentifier aParticipantID)
   {
     return TCAPIConfig.getDDServiceGroupHrefProvider ().getAllServiceGroupHrefs (aParticipantID, LoggingTCErrorHandler.INSTANCE);
   }
