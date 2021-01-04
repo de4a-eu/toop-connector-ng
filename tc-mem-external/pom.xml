@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
 
-    Copyright (C) 2018-2020 toop.eu
+    Copyright (C) 2018-2021 toop.eu
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@
   <description>Contains the TOOP message exchange with an external AS4 gateway</description>
   <url>https://github.com/toop4eu/toop-connector-ng/tc-mem-external</url>
   <inceptionYear>2020</inceptionYear>
-
   <licenses>
     <license>
       <name>Apache 2</name>
@@ -37,12 +36,10 @@
       <distribution>repo</distribution>
     </license>
   </licenses>
-
   <organization>
     <name>toop.eu</name>
     <url>http://www.toop.eu</url>
   </organization>
-
   <developers>
     <developer>
       <id>myildiz83</id>
@@ -55,10 +52,8 @@
       <email>ph(at)helger.com</email>
     </developer>
   </developers>
-
   <dependencies>
-    <!-- Required for the class SOAPException in Java9+ -->
-    <dependency>
+    <!-- Required for the class SOAPException in Java9+ -->    <dependency>
       <groupId>com.helger</groupId>
       <artifactId>ph-jaxws-pom</artifactId>
       <type>pom</type>
@@ -95,13 +90,11 @@
       <groupId>eu.toop</groupId>
       <artifactId>tc-api</artifactId>
     </dependency>
-
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>javax.servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
-
     <!-- Test only -->    <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
@@ -113,7 +106,6 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-
   <build>
     <plugins>
       <plugin>
@@ -125,7 +117,7 @@
             <Export-Package>eu.toop.connector.mem.def.*</Export-Package>
             <Import-Package>!javax.annotation.*,*</Import-Package>
             <Require-Capability>osgi.extender; filter:="(osgi.extender=osgi.serviceloader.registrar)"</Require-Capability>
-            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=eu.toop.connector.api.as4.IMessageExchangeSPI</Provide-Capability>
+            <Provide-Capability>osgi.serviceloader; osgi.serviceloader=eu.toop.connector.api.me.IMessageExchangeSPI</Provide-Capability>
           </instructions>
         </configuration>
       </plugin>
