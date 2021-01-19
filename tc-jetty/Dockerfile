@@ -34,7 +34,7 @@
 
 FROM adoptopenjdk:8-jre-hotspot
 
-ARG VERSION="2.0.0"
+ARG VERSION="2.1.1"
 ARG JAR_NAME=tc-jetty-${VERSION}-full.jar
 
 #create tc folder
