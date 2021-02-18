@@ -1,8 +1,5 @@
 pipeline {
     agent none
-    environment {
-	VERSION=readMavenPom().getVersion()
-    }
     stages {
 	stage('Test') {
 	    agent {
@@ -32,6 +29,7 @@ pipeline {
     post {
 	success {
 	    script{
+		env.VERSION=readMavenPom().getVersion()
 		env.COMMIT=sh '$(git rev-parse --short HEAD)'
 		def img
 		    if (env.BRANCH_NAME == 'development') {
