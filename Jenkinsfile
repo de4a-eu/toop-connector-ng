@@ -15,7 +15,6 @@ pipeline {
 
 	stage('Build'){
 	    environment {
-		COMMIT=$(git rev-parse --short HEAD)
 		VERSION=readMavenPom().getVersion()
 	    }
 	    agent {
@@ -25,6 +24,8 @@ pipeline {
 		}
 	    }
 	    steps {
+		
+		env.COMMIT= sh '$(git rev-parse --short HEAD)'
 		sh 'mvn clean package'
 	    }
 
