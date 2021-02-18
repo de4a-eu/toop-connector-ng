@@ -25,28 +25,31 @@ pipeline {
 	    }
 
 	}
-    }
-    post {
-	success {
-	    script{
-		env.VERSION=readMavenPom().getVersion()
-		env.COMMIT=sh '$(git rev-parse --short HEAD)'
-		def img
+	
+	stage('Docker') {
+	    agent { docker { image 'egovlab/docker:latest' } }
+	    environment {
+		VERSION=readMavenPom().getVersion()
+	    } 
+	    steps {
+		script{
+		    env.COMMIT=sh '$(git rev-parse --short HEAD)'
+		    def img
 		    if (env.BRANCH_NAME == 'development') {
 			dir('tc-webapp') {
 			    img = docker.build('de4a/dev-connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
 			}
 		    }
-		if (env.BRANCH_NAME == 'master') {
-		    dir('tc-webapp') {
-			img = docker.build('de4a/connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
+		    if (env.BRANCH_NAME == 'master') {
+			dir('tc-webapp') {
+			    img = docker.build('de4a/connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
+			}
 		    }
-		}
-		docker.withRegistry('','docker-hub-token') { 
-		    img.push('latest')
+		    docker.withRegistry('','docker-hub-token') { 
+			img.push('latest')
 			img.push('$VERSION')
-		}				 
-
+		    }				 
+		}
 	    }
 	}
     }
