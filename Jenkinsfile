@@ -30,10 +30,10 @@ pipeline {
 	    agent { docker { image 'egovlab/docker:latest' } }
 	    environment {
 		VERSION=readMavenPom().getVersion()
+		COMMIT="${GIT_COMMIT[0..7]}"
 	    } 
 	    steps {
 		script{
-		    env.COMMIT=sh '$(git rev-parse --short HEAD)'
 		    def img
 		    if (env.BRANCH_NAME == 'development') {
 			dir('tc-webapp') {
