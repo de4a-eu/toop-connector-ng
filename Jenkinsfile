@@ -1,5 +1,8 @@
 pipeline {
     agent none
+    environment {
+	VERSION=readMavenPom().getVersion()
+    }
     stages {
 	stage('Test') {
 	    agent {
@@ -14,9 +17,6 @@ pipeline {
 	}
 
 	stage('Build'){
-	    environment {
-		VERSION=readMavenPom().getVersion()
-	    }
 	    agent {
 		docker {
 		    image 'maven:3.6.3-jdk-11'
@@ -24,33 +24,31 @@ pipeline {
 		}
 	    }
 	    steps {
-		script {
-		    env.COMMIT= '$(git rev-parse --short HEAD)'
-		}
 		sh 'mvn clean package'
 	    }
 
-	    post {
-		success {
-		    script{
-			def img
-			if (env.BRANCH_NAME == 'development') {
-			    dir('tc-webapp') {
-				img = docker.build('de4a/dev-connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
-			    }
+	}
+    }
+    post {
+	success {
+	    script{
+		env.COMMIT=sh '$(git rev-parse --short HEAD)'
+		def img
+		    if (env.BRANCH_NAME == 'development') {
+			dir('tc-webapp') {
+			    img = docker.build('de4a/dev-connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
 			}
-			if (env.BRANCH_NAME == 'master') {
-			    dir('tc-webapp') {
-				img = docker.build('de4a/connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
-			    }
-			}
-			docker.withRegistry('','docker-hub-token') { 
-			    img.push('latest')
-			    img.push('$VERSION')
-			}				 
-
+		    }
+		if (env.BRANCH_NAME == 'master') {
+		    dir('tc-webapp') {
+			img = docker.build('de4a/connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
 		    }
 		}
+		docker.withRegistry('','docker-hub-token') { 
+		    img.push('latest')
+			img.push('$VERSION')
+		}				 
+
 	    }
 	}
     }
