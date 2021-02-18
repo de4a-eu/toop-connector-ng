@@ -34,8 +34,11 @@
 
 FROM tomcat:9-jdk11
 
-ARG VERSION="2.1.1"
-ARG WAR_NAME=tc-webapp-${VERSION}.war
+ARG VERSION="2.1.2"
+ARG WAR_NAME=tc-webapp-${VERSION}-SNAPSHOT.war
+
+ARG CHASH=""
+ENV COMMIT_HASH=${CHASH}
 
 #create tc webapp folder
 WORKDIR $CATALINA_HOME/webapps
