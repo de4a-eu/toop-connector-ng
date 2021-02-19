@@ -26,10 +26,15 @@ pipeline {
 
 	    post {
 		failure {
-		    slackSend color: "danger", message: "Build fail\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.GIT_AUTHOR_NAME}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+		    slackSend color: "danger", message: ":darth_maul: Build fail! :darth_maul:\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.GIT_AUTHOR_NAME}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
 		}
 		success {
-		    slackSend color: "good", message: "Build success\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.GIT_AUTHOR_NAME}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+		    script { 
+			if(currentBuild.getpreviousBuild() &&
+			   currentBuild.getpreviousBuild().getResult().toString() != 'SUCCESS') {
+				slackSend color: "good", message: ":baby-yoda: This is the way! :baby-yoda: \nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.GIT_AUTHOR_NAME}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+			   }
+		    }
 		}
 
 	    }
