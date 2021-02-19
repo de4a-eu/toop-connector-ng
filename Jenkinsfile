@@ -26,10 +26,10 @@ pipeline {
 
 	    post {
 		failure {
-		    slackSend color: "danger", message: "Build failed: ${env.JOB_NAME}, ${env.BUILD_NUMBER}\nGit: ${env.GIT_COMMITTER_NAME}, ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+		    slackSend color: "danger", message: "Build fail\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.GIT_AUTHOR_NAME}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
 		}
 		success {
-		    slackSend color: "good", message: "Build success: ${env.JOB_NAME}, ${env.BUILD_NUMBER}\nGit: ${env.GIT_COMMITTER_NAME}, ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+		    slackSend color: "good", message: "Build success\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.GIT_AUTHOR_NAME}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
 		}
 
 	    }
