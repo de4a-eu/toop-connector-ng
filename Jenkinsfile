@@ -27,9 +27,9 @@ pipeline {
 	}
 	
 	stage('Docker') {
-	    agent { docker { image 'egovlab/docker:latest' } }
+	    agent { label 'master' }
 	    environment {
-		VERSION=readMavenPom().getVersion()
+		VERSION=readMavenPom().getVersion().replace("-SNAPSHOT","")
 		COMMIT="${GIT_COMMIT[0..7]}"
 	    } 
 	    steps {
