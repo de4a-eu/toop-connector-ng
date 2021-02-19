@@ -24,6 +24,15 @@ pipeline {
 		sh 'mvn clean package'
 	    }
 
+	    post {
+		failure {
+		    slackSend color: "danger", message: "Build failed: ${env.JOB_NAME}, ${env.BUILD_NUMBER}\nGit: ${env.GIT_COMMITTER_NAME}, ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+		}
+		success {
+		    slackSend color: "good", message: "Build success: ${env.JOB_NAME}, ${env.BUILD_NUMBER}\nGit: ${env.GIT_COMMITTER_NAME}, ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+		}
+
+	    }
 	}
 	
 	stage('Docker') {
@@ -51,6 +60,7 @@ pipeline {
 		    }				 
 		}
 	    }
+
 	}
     }
 }
