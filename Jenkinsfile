@@ -51,17 +51,27 @@ pipeline {
 		    if (env.BRANCH_NAME == 'development') {
 			dir('tc-webapp') {
 			    img = docker.build('de4a/dev-connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
+			    docker.withRegistry('','docker-hub-token') { 
+				img.push('latest')
+				img.push('$VERSION')
+			    }				 
 			}
 		    }
 		    if (env.BRANCH_NAME == 'master') {
 			dir('tc-webapp') {
 			    img = docker.build('de4a/connector','--build-arg VERSION=$VERSION --build-arg CHASH=$COMMIT .')
+			    docker.withRegistry('','docker-hub-token') { 
+				img.push('latest')
+				img.push('$VERSION')
+			    }				 
 			}
 		    }
-		    docker.withRegistry('','docker-hub-token') { 
-			img.push('latest')
-			img.push('$VERSION')
-		    }				 
+		}
+	    }
+
+	    post {
+		always {
+		    sh 'docker system prune -f'
 		}
 	    }
 
