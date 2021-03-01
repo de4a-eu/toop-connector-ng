@@ -66,7 +66,10 @@ pipeline {
     }
     post {
 	failure {
+	    sh 'cat ${JENKINS_HOME}/jobs/${JOB_NAME}/builds/${BUILD_NUMBER}/log | grep -B 1 -A 5 >/tmp/${BUILD_NUMBER}.fail'
 	    slackSend color: "danger", message: ":darth_maul: Build fail! :darth_maul:\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.CHANGE_AUTHOR}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
+	    slackUploadFile filePath: "/tmp/${BUILD_NUMBER}.fail", initalComment: "Maven [ERROR] Log output" 
+	    sh 'rm /tmp/${BUILD_NUMBER}.fail'
 	}
 	success {
 	    script { 
