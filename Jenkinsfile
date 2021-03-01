@@ -67,18 +67,14 @@ pipeline {
     post {
 	failure {
 	    node('master') {
-	    environment {
-		ORG="${JOB_NAME}".split('/')[0]
-		REPO="${JOB_NAME}".split('/')[1]
-	    }
 	    // /var/jenkins_home/jobs/DE4A_WP5/jobs/toop-connector-ng/branches/PR-1/builds/8
 		echo "${ORG}"
 		script {
-		    echo "${JOB_NAME}".split('/')[0]
-		    sh 'cat ${JENKINS_HOME}/jobs/${ORG}/jobs/${REPO}/branches/${env.GIT_BRANCH}/builds/${BUILD_NUMBER}/log | grep -B 1 -A 5 >/tmp/${BUILD_NUMBER}.fail'
-		    slackSend color: "danger", message: ":darth_maul: Build fail! :darth_maul:\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.CHANGE_AUTHOR}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\n"
-		    slackUploadFile filePath: "/tmp/${BUILD_NUMBER}.fail", initialComment: "Maven [ERROR] Log output" 
-		    sh 'rm /tmp/${BUILD_NUMBER}.fail'
+		    env.ORG=env.JOB_NAME.split('/')[0]
+		    env.REPO=JOB_NAME.split('/')[1]
+		    env.BR=env.JOB_NAME.split('/')[2]
+		    env.ERRORLOG = sh returnStdout: true, script: "cat ${env.JENKINS_HOME}/jobs/${env.ORG}/jobs/${env.REPO}/branches/${env.BR}/builds/${BUILD_NUMBER}/log | grep -B 1 -A 5 '\\[ERROR\\]'"
+		    slackSend color: "danger", message: ":darth_maul: Build fail! :darth_maul:\nJob name: ${env.JOB_NAME}, Build number: ${env.BUILD_NUMBER}\nGit Author: ${env.CHANGE_AUTHOR}, Branch: ${env.GIT_BRANCH}, ${env.GIT_URL}\nMaven [ERROR] log below:\n ${env.ERRORLOG}"
 		}
 	    }
 	}
