@@ -79,7 +79,7 @@
     </developer>
   </developers>
 
-  dependencyManagement>
+  <dependencyManagement>
     <dependencies>
       <!-- Import all BOMs -->
       <dependency>
